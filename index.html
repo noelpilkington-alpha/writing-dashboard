@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Writing Student Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <a href="#" class="logo-link"><h1>Writing Dashboard</h1></a>
+            <nav class="nav-links">
+                <a href="#" class="nav-link active" data-page="students">Students</a>
+                <a href="#metrics" class="nav-link" data-page="metrics">Metrics</a>
+            </nav>
+        </div>
+        <div class="header-meta" id="header-meta"></div>
+    </header>
+
+    <!-- Students Page -->
+    <div class="page" id="page-students">
+        <div class="search-filters">
+            <div class="search-row">
+                <input type="text" id="search" class="search-input" placeholder="Search by name or email..." autocomplete="off">
+            </div>
+            <div class="dropdown-row">
+                <div class="dropdown-group">
+                    <label for="campus-select">Campus</label>
+                    <select id="campus-select" class="dropdown">
+                        <option value="all">All Campuses</option>
+                    </select>
+                </div>
+                <div class="dropdown-group">
+                    <label for="level-select">Level</label>
+                    <select id="level-select" class="dropdown">
+                        <option value="all">All Levels</option>
+                    </select>
+                </div>
+                <div class="dropdown-group">
+                    <label for="status-select">Status</label>
+                    <select id="status-select" class="dropdown">
+                        <option value="all">All Students</option>
+                        <option value="issues">Has Issues</option>
+                        <option value="on-track">On Track</option>
+                    </select>
+                </div>
+                <div class="results-count" id="results-count"></div>
+            </div>
+        </div>
+        <main class="main" id="main">
+            <div class="loading" id="loading">Loading dashboard data...</div>
+        </main>
+    </div>
+
+    <!-- Metrics Page -->
+    <div class="page hidden" id="page-metrics">
+        <div class="metrics-container" id="metrics-container">
+            <div class="loading">Loading metrics...</div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
