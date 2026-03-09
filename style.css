@@ -754,6 +754,87 @@ body {
     font-size: 0.8rem;
 }
 
+/* ── Test Results Page ─────────────────────────────────────────────── */
+.test-results-container { padding: 24px; }
+
+.tr-summary {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+}
+
+.tr-stat { color: var(--text-muted); }
+.tr-stat.green { color: var(--green); }
+.tr-stat.red { color: var(--red); }
+.tr-stat strong { font-size: 1.1rem; }
+
+.tr-filters {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+}
+
+.tr-count {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-left: auto;
+}
+
+.tr-date-group {
+    margin-bottom: 20px;
+}
+
+.tr-date-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 2px solid var(--border);
+}
+
+.tr-date {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text);
+}
+
+.tr-date-stats {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.tr-table { font-size: 0.8rem; }
+
+.tr-table td { vertical-align: middle; }
+
+.tr-email {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+.tr-type-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.tr-type-badge.eoc { background: var(--blue-bg); color: var(--blue); }
+.tr-type-badge.test-out { background: var(--green-bg); color: var(--green); }
+.tr-type-badge.placement { background: var(--yellow-bg); color: #7d6608; }
+
+.tr-row.hidden { display: none !important; }
+.tr-date-group.hidden { display: none !important; }
+
 /* Responsive */
 @media (max-width: 768px) {
     .header-top { flex-direction: column; align-items: flex-start; }
@@ -767,4 +848,7 @@ body {
     .metrics-grid { grid-template-columns: repeat(2, 1fr); }
     .campus-header { flex-direction: column; gap: 8px; align-items: flex-start; }
     .campus-metrics { gap: 4px; }
+    .test-results-container { padding: 12px; }
+    .tr-filters { flex-direction: column; align-items: stretch; }
+    .tr-table { font-size: 0.72rem; }
 }

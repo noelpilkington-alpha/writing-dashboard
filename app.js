@@ -27,7 +27,7 @@
   }
 
   // ── Routing ─────────────────────────────────────────────────────────
-  const PAGES = ["timeback", "timeback-metrics"];
+  const PAGES = ["timeback", "timeback-metrics", "test-results"];
 
   function handleRoute() {
     const hash = location.hash.replace("#", "") || "timeback";
@@ -41,6 +41,7 @@
       a.classList.toggle("active", a.dataset.page === page);
     });
     if (page === "timeback-metrics") renderMetrics("timeback");
+    if (page === "test-results") renderTestResults();
   }
 
   function wireNav() {
@@ -1053,6 +1054,236 @@
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
+  // ── Test Results Page ─────────────────────────────────────────────────
+  let testResultsRendered = false;
+
+  function renderTestResults() {
+    if (testResultsRendered) return;
+    testResultsRendered = true;
+
+    const container = document.getElementById("test-results-container");
+    const students = studentsForGroup("timeback");
+    const sessions = DATA.all_sessions || {};
+    const currentSession = DATA.session.name; // e.g. "S4"
+    const sess = sessions[currentSession];
+    if (!sess) {
+      container.innerHTML = '<div class="loading">No session data available.</div>';
+      return;
+    }
+
+    // Collect all tests in current session with student info
+    const rows = [];
+    const studentMap = {};
+    students.forEach((s) => {
+      studentMap[s.email] = s;
+
+      // Group EoC tests by grade to determine attempt labels
+      const eocByGrade = {};
+      const tests = s.all_tests || [];
+      for (const t of tests) {
+        if (t.test_type === "end of course") {
+          const m = t.name.match(/G(\d+\.\d+)/);
+          const gradeKey = m ? m[1] : t.name;
+          if (!eocByGrade[gradeKey]) eocByGrade[gradeKey] = [];
+          eocByGrade[gradeKey].push(t);
+        }
+      }
+      for (const gradeKey of Object.keys(eocByGrade)) {
+        eocByGrade[gradeKey].sort((a, b) => a.date.localeCompare(b.date));
+        eocByGrade[gradeKey].forEach((t, i) => { t._attemptNum = i + 1; });
+      }
+
+      for (const t of tests) {
+        if (t.date >= sess.start && t.date <= sess.end) {
+          let attemptLabel;
+          if (t.test_type === "test out") {
+            attemptLabel = "Test-Out";
+          } else if (t.test_type === "placement") {
+            attemptLabel = "Placement";
+          } else if (t._attemptNum) {
+            attemptLabel = t._attemptNum === 1 ? "Mastery Test" : `Retake ${t._attemptNum - 1}`;
+          } else {
+            attemptLabel = t.test_type || "Unknown";
+          }
+
+          rows.push({
+            name: s.name,
+            email: s.email,
+            campus: s.campus,
+            level: s.level,
+            age_grade: s.age_grade,
+            hmg: s.hmg,
+            test_name: t.name,
+            test_type: attemptLabel,
+            raw_type: t.test_type,
+            score: t.score,
+            passed: t.passed,
+            date: t.date,
+            total_questions: t.total_questions,
+            correct_questions: t.correct_questions,
+          });
+        }
+      }
+    });
+
+    // Sort by date descending (most recent first), then by student name
+    rows.sort((a, b) => b.date.localeCompare(a.date) || a.name.localeCompare(b.name));
+
+    // Summary stats
+    const totalTests = rows.length;
+    const totalPassed = rows.filter((r) => r.passed).length;
+    const totalFailed = totalTests - totalPassed;
+    const passRate = totalTests > 0 ? Math.round((totalPassed / totalTests) * 100) : 0;
+    const uniqueStudents = new Set(rows.map((r) => r.email)).size;
+
+    // Per-date grouping for the daily view
+    const byDate = {};
+    rows.forEach((r) => {
+      if (!byDate[r.date]) byDate[r.date] = [];
+      byDate[r.date].push(r);
+    });
+    const sortedDates = Object.keys(byDate).sort().reverse();
+
+    // Build filter state
+    const trFilters = { campus: "all", type: "all", result: "all", search: "" };
+
+    // Unique campuses and test types from rows
+    const campuses = [...new Set(rows.map((r) => r.campus).filter(Boolean))].sort();
+    const testTypes = [...new Set(rows.map((r) => r.test_type))].sort();
+
+    let html = `
+      <h2 style="margin-bottom:8px">${esc(sess.label || currentSession)} Test Results</h2>
+      <div class="tr-summary">
+        <span class="tr-stat"><strong>${totalTests}</strong> tests taken</span>
+        <span class="tr-stat green"><strong>${totalPassed}</strong> passed (${passRate}%)</span>
+        <span class="tr-stat red"><strong>${totalFailed}</strong> failed</span>
+        <span class="tr-stat"><strong>${uniqueStudents}</strong> students tested</span>
+      </div>
+      <div class="tr-filters">
+        <input type="text" id="tr-search" class="search-input" placeholder="Search by student name or test..." autocomplete="off" style="max-width:320px">
+        <select id="tr-campus" class="dropdown">
+          <option value="all">All Campuses</option>
+          ${campuses.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("")}
+        </select>
+        <select id="tr-type" class="dropdown">
+          <option value="all">All Types</option>
+          ${testTypes.map((t) => `<option value="${esc(t)}">${esc(t)}</option>`).join("")}
+        </select>
+        <select id="tr-result" class="dropdown">
+          <option value="all">All Results</option>
+          <option value="passed">Passed</option>
+          <option value="failed">Failed</option>
+        </select>
+        <span class="tr-count" id="tr-count">${totalTests} results</span>
+      </div>
+      <div id="tr-table-wrap">
+    `;
+
+    // Build grouped-by-date tables
+    for (const date of sortedDates) {
+      const dateRows = byDate[date];
+      const datePassed = dateRows.filter((r) => r.passed).length;
+      html += `
+        <div class="tr-date-group" data-date="${date}">
+          <div class="tr-date-header">
+            <span class="tr-date">${formatDateFull(date)}</span>
+            <span class="tr-date-stats">${dateRows.length} tests &middot; ${datePassed} passed</span>
+          </div>
+          <table class="metrics-table tr-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Campus</th>
+                <th>Level</th>
+                <th>HMG</th>
+                <th>Test</th>
+                <th>Type</th>
+                <th>Score</th>
+                <th>Questions</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+      for (const r of dateRows) {
+        const scoreCls = r.passed ? "score-pass" : "score-fail";
+        const resultLabel = r.passed ? "PASSED" : "FAILED";
+        const questions = r.total_questions
+          ? `${r.correct_questions || 0}/${r.total_questions}`
+          : "-";
+        html += `<tr class="tr-row" data-campus="${esc(r.campus)}" data-type="${esc(r.test_type)}" data-result="${r.passed ? "passed" : "failed"}" data-search="${esc((r.name + " " + r.email + " " + r.test_name).toLowerCase())}">
+          <td><strong>${esc(r.name)}</strong><br><span class="tr-email">${esc(r.email)}</span></td>
+          <td>${esc(r.campus)}</td>
+          <td>${esc(r.level)}</td>
+          <td>G${r.hmg}</td>
+          <td>${esc(r.test_name)}</td>
+          <td><span class="tr-type-badge ${r.raw_type === "test out" ? "test-out" : r.raw_type === "placement" ? "placement" : "eoc"}">${esc(r.test_type)}</span></td>
+          <td class="${scoreCls}">${r.score}%</td>
+          <td>${questions}</td>
+          <td><span class="${scoreCls}">${resultLabel}</span></td>
+        </tr>`;
+      }
+      html += `</tbody></table></div>`;
+    }
+
+    html += `</div>`;
+    container.innerHTML = html;
+
+    // Wire up filters
+    function applyTrFilters() {
+      const f = trFilters;
+      let visibleCount = 0;
+      const dateGroups = container.querySelectorAll(".tr-date-group");
+
+      dateGroups.forEach((group) => {
+        const trs = group.querySelectorAll(".tr-row");
+        let groupVisible = 0;
+        trs.forEach((tr) => {
+          let show = true;
+          if (f.campus !== "all" && tr.dataset.campus !== f.campus) show = false;
+          if (f.type !== "all" && tr.dataset.type !== f.type) show = false;
+          if (f.result !== "all" && tr.dataset.result !== f.result) show = false;
+          if (f.search && !tr.dataset.search.includes(f.search)) show = false;
+          tr.classList.toggle("hidden", !show);
+          if (show) { visibleCount++; groupVisible++; }
+        });
+        group.classList.toggle("hidden", groupVisible === 0);
+
+        // Update date header stats
+        const statsEl = group.querySelector(".tr-date-stats");
+        if (statsEl && groupVisible > 0) {
+          const visiblePassed = [...trs].filter((tr) => !tr.classList.contains("hidden") && tr.dataset.result === "passed").length;
+          statsEl.textContent = `${groupVisible} tests \u00b7 ${visiblePassed} passed`;
+        }
+      });
+
+      document.getElementById("tr-count").textContent =
+        visibleCount === totalTests ? `${totalTests} results` : `${visibleCount} of ${totalTests} results`;
+    }
+
+    document.getElementById("tr-campus").addEventListener("change", (e) => {
+      trFilters.campus = e.target.value;
+      applyTrFilters();
+    });
+    document.getElementById("tr-type").addEventListener("change", (e) => {
+      trFilters.type = e.target.value;
+      applyTrFilters();
+    });
+    document.getElementById("tr-result").addEventListener("change", (e) => {
+      trFilters.result = e.target.value;
+      applyTrFilters();
+    });
+
+    let trTimer;
+    document.getElementById("tr-search").addEventListener("input", (e) => {
+      clearTimeout(trTimer);
+      trTimer = setTimeout(() => {
+        trFilters.search = e.target.value.toLowerCase().trim();
+        applyTrFilters();
+      }, 200);
+    });
+  }
+
   // ── Helpers ──────────────────────────────────────────────────────────
   function esc(str) {
     if (str == null) return "";
@@ -1066,6 +1297,16 @@
     const parts = dateStr.split("-");
     if (parts.length === 3) return `${parts[1]}/${parts[2]}`;
     return dateStr;
+  }
+
+  function formatDateFull(dateStr) {
+    if (!dateStr) return "-";
+    try {
+      const d = new Date(dateStr + "T00:00:00");
+      const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      return `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+    } catch { return dateStr; }
   }
 
   // ── Start ───────────────────────────────────────────────────────────
