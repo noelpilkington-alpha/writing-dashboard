@@ -35,7 +35,15 @@ from writing_automation.xp_fetcher import fetch_xp_and_minutes
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
+import re as _re
+
 GRADEBOOK_BASE = "/ims/oneroster/gradebook/v1p2"
+
+_UUID_RE = _re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", _re.I)
+
+
+def _is_uuid(s: str) -> bool:
+    return bool(_UUID_RE.match(s))
 ACCURACY_THRESHOLD = 80
 OUTPUT_PATH = Path(__file__).resolve().parent / "data.json"
 
@@ -393,49 +401,122 @@ def extract_repeated_activities(raw_results: list[dict]) -> list[dict]:
     return repeated
 
 
+def compute_hmg_from_api_tests(api_tests: list[dict]) -> int:
+    """Compute HMG from API test results.
+
+    HMG = the grade of the highest Writing test the student has passed.
+    Passing any test at a grade level means that grade is mastered.
+    """
+    hmg = 2  # Pre-G3 baseline
+    for t in api_tests:
+        if not t.get("passed"):
+            continue
+        m = _re.search(r"G(\d+)", t.get("name", ""))
+        if m:
+            grade = int(m.group(1))
+            if grade > hmg:
+                hmg = grade
+    return hmg
+
+
 def infer_next_test(hmg: int, test_history: list[dict]) -> dict | None:
-    """Infer the next expected test based on HMG and test history."""
+    """Infer the next expected test based on HMG.
+
+    When a student passes a test, they advance to the next grade level.
+    So the next test is always G{HMG+1}.1.
+    """
     if hmg >= 8:
         return None  # Completed all grades
 
     next_grade = hmg + 1
-    max_seq = GRADE_SEQUENCES.get(next_grade, 0)
-    if max_seq == 0:
+    if next_grade not in GRADE_SEQUENCES:
         return None
 
-    # Find highest passed sequence at next_grade
-    passed_seqs = set()
-    for t in test_history:
-        name = t.get("name", "")
-        if f"G{next_grade}." in name and t.get("passed"):
-            # Extract sequence number
-            try:
-                seq = int(name.split(f"G{next_grade}.")[1].split()[0])
-                passed_seqs.add(seq)
-            except (IndexError, ValueError):
-                pass
+    test_name = f"G{next_grade}.1"
 
-    # Next sequence is highest_passed + 1, or 1 if none passed
-    if passed_seqs:
-        next_seq = max(passed_seqs) + 1
-        if next_seq > max_seq:
-            # All tests at this grade passed — HMG should advance
-            return None
-    else:
-        next_seq = 1
-
-    # Check if this test already exists in history (taken but not passed)
-    test_name = f"G{next_grade}.{next_seq}"
+    # Check if student has already attempted a test at this grade level
     taken = any(
-        f"G{next_grade}.{next_seq}" in t.get("name", "")
+        f"G{next_grade}." in t.get("name", "")
         for t in test_history
-        if not t.get("passed") and t.get("date", "") >= "2026-01-01"
+        if not t.get("passed")
     )
 
     return {
         "name": test_name,
-        "reason": f"HMG is G{hmg}, next in sequence is G{next_grade}.{next_seq}",
+        "reason": f"HMG is G{hmg}, next grade level is G{next_grade}",
         "status": "retaking" if taken else "pending",
+    }
+
+
+def extract_xp_details(raw_results: list[dict]) -> dict:
+    """Extract per-activity and per-test XP breakdowns from raw assessment results.
+
+    Only includes Writing-subject results to match the aggregate XP totals.
+    Returns dict with 'activity_xp' and 'test_xp' lists.
+    """
+    activity_xp_items = []
+    test_xp_items = []
+
+    for r in raw_results:
+        meta = r.get("metadata", {})
+        xp = meta.get("xp", 0) or 0
+        if xp <= 0:
+            continue
+
+        # Only include Writing-subject results (matches xp_fetcher filter)
+        subject = meta.get("subject", "")
+        if subject != "Writing":
+            continue
+
+        result_type = meta.get("resultType", "")
+        lesson_type = meta.get("lessonType", "")
+        date = (r.get("scoreDate") or "")[:10]
+
+        if result_type == "assessment":
+            # This is a writing test
+            test_xp_items.append({
+                "name": meta.get("testName", "Unknown Test"),
+                "xp": xp,
+                "score": r.get("score"),
+                "date": date,
+            })
+        else:
+            # Activity XP (AlphaWrite or mastery track)
+            ali_sid = r.get("assessmentLineItem", {}).get("sourcedId", "")
+            resolved = _resolve_activity_name(ali_sid, meta)
+            if resolved:
+                name, course = resolved
+            else:
+                # Non-AlphaWrite Writing activity (mastery track / external lesson)
+                app_name = meta.get("appName", "")
+                test_name = meta.get("testName", "")
+                name = test_name or app_name or "Writing Activity"
+                course = ""
+                # Clean up unreadable names
+                if name.startswith("caliper_") or name.startswith("Caliper_"):
+                    name = app_name or "Mastery Track Activity"
+                elif name.startswith("Nice_"):
+                    name = name.replace("Nice_", "").replace("_", " ").title()
+                elif _is_uuid(name):
+                    name = app_name or "Writing Activity"
+
+            activity_xp_items.append({
+                "name": name,
+                "course": course,
+                "xp": xp,
+                "date": date,
+                "type": "alphawrite" if lesson_type == "powerpath-100" else (
+                    "external" if lesson_type == "external-lesson" else "mastery_track"
+                ),
+            })
+
+    # Sort by date
+    activity_xp_items.sort(key=lambda x: x["date"])
+    test_xp_items.sort(key=lambda x: x["date"])
+
+    return {
+        "activity_xp": activity_xp_items,
+        "test_xp": test_xp_items,
     }
 
 
@@ -520,8 +601,15 @@ def collect(csv_path: str, session_name: str) -> dict:
         # Enrollments
         student_enrollments = enrollments.get(sid, [])
 
-        # HMG
-        hmg = hmg_map.get(email, 2)
+        # Level
+        level = _get_level(profile.age_grade)
+
+        # Fetch test history from API
+        api_tests = fetch_writing_test_results(api, sid)
+
+        # HMG — computed from API test results (highest grade with a passed test)
+        hmg = compute_hmg_from_api_tests(api_tests)
+        # Starting HMG from placement tests in CSV
         starting_hmg = 2
         student_csv = csv_by_email.get(email, [])
         if student_csv:
@@ -534,21 +622,16 @@ def collect(csv_path: str, session_name: str) -> dict:
                     else:
                         break
 
-        # Level
-        level = _get_level(profile.age_grade)
+        # G8 completion check
+        completed_g8 = hmg >= 8
 
-        # XP/Minutes
+        # XP
         xp = xp_data.get(email)
         alphawrite_xp = xp.alphawrite_xp if xp else 0
         mastery_track_xp = xp.mastery_track_xp if xp else 0
-        test_xp = xp.test_xp if xp else 0
-        total_xp = alphawrite_xp + mastery_track_xp + test_xp
-        total_minutes = xp.total_minutes if xp else 0
+        test_xp_val = xp.test_xp if xp else 0
+        total_xp = alphawrite_xp + mastery_track_xp + test_xp_val
         avg_xp = round(total_xp / school_days, 1) if school_days else 0
-        avg_min = round(total_minutes / school_days, 1) if school_days else 0
-
-        # Fetch test history from API
-        api_tests = fetch_writing_test_results(api, sid)
 
         # Last test
         last_test = None
@@ -580,7 +663,7 @@ def collect(csv_path: str, session_name: str) -> dict:
                     "rushed": is_rushed(r.time_spent_seconds, r.test_grade),
                 })
 
-        # Next expected test
+        # Next expected test (passing a test advances to next grade level)
         next_test = infer_next_test(hmg, api_tests)
 
         # Deep dive
@@ -611,68 +694,69 @@ def collect(csv_path: str, session_name: str) -> dict:
                 ],
             })
 
-        # Fetch activity results for accuracy analysis
+        # Fetch activity results for accuracy analysis and XP details
         raw_activities = fetch_activity_results(api, sid, session_start, session_end)
-        low_accuracy = extract_low_accuracy_activities(raw_activities)
-        repeated = extract_repeated_activities(raw_activities)
+        xp_details = extract_xp_details(raw_activities)
 
-        # Enrollment mismatch
-        enrollment_mismatch = None
-        if student_enrollments and hmg < 8:
-            import re
-            expected = hmg + 1
-            enrolled_grades = []
-            for e in student_enrollments:
-                m = re.search(r"G(\d+)", e)
-                if m:
-                    enrolled_grades.append(int(m.group(1)))
-            if enrolled_grades and expected not in enrolled_grades:
-                actual = ", ".join(f"G{g}" for g in enrolled_grades)
-                enrollment_mismatch = f"Expected G{expected}, enrolled in {actual}"
+        # For G8 completers, skip accuracy/deep dive/enrollment analysis
+        if completed_g8:
+            low_accuracy = []
+            repeated = []
+            enrollment_mismatch = None
+            insights = []
+        else:
+            low_accuracy = extract_low_accuracy_activities(raw_activities)
+            repeated = extract_repeated_activities(raw_activities)
 
-        # Build insights
-        insights = []
-        if dd_needed:
-            for d in dd_details:
-                rushed_txt = f" ({d['rushed_count']} rushed)" if d["rushed_count"] else ""
+            # Enrollment mismatch
+            enrollment_mismatch = None
+            if student_enrollments:
+                expected = hmg + 1
+                enrolled_grades = []
+                for e in student_enrollments:
+                    m = _re.search(r"G(\d+)", e)
+                    if m:
+                        enrolled_grades.append(int(m.group(1)))
+                if enrolled_grades and expected not in enrolled_grades:
+                    actual = ", ".join(f"G{g}" for g in enrolled_grades)
+                    enrollment_mismatch = f"Expected G{expected}, enrolled in {actual}"
+
+            # Build insights
+            insights = []
+            if dd_needed:
+                for d in dd_details:
+                    rushed_txt = f" ({d['rushed_count']} rushed)" if d["rushed_count"] else ""
+                    insights.append({
+                        "type": "deep_dive",
+                        "severity": "high",
+                        "text": f"Deep Dive at G{d['grade']}: {d['failed_count']} failed tests{rushed_txt}",
+                    })
+            if low_accuracy:
                 insights.append({
-                    "type": "deep_dive",
-                    "severity": "high",
-                    "text": f"Deep Dive at G{d['grade']}: {d['failed_count']} failed tests{rushed_txt}",
+                    "type": "low_accuracy",
+                    "severity": "medium",
+                    "text": f"{len(low_accuracy)} activit{'y' if len(low_accuracy) == 1 else 'ies'} below {ACCURACY_THRESHOLD}% accuracy",
                 })
-        if low_accuracy:
-            insights.append({
-                "type": "low_accuracy",
-                "severity": "medium",
-                "text": f"{len(low_accuracy)} activit{'y' if len(low_accuracy) == 1 else 'ies'} below {ACCURACY_THRESHOLD}% accuracy",
-            })
-        if repeated:
-            for rep in repeated[:3]:
+            if repeated:
+                for rep in repeated[:3]:
+                    insights.append({
+                        "type": "repeated",
+                        "severity": "low",
+                        "text": f"Repeating '{rep['name']}' in {rep['course']} ({rep['attempts']} attempts)",
+                    })
+            if total_xp < xp_goal and school_days > 0:
+                pct = round(100 * total_xp / xp_goal) if xp_goal > 0 else 0
                 insights.append({
-                    "type": "repeated",
-                    "severity": "low",
-                    "text": f"Repeating '{rep['name']}' in {rep['course']} ({rep['attempts']} attempts)",
+                    "type": "goal_xp",
+                    "severity": "medium",
+                    "text": f"XP behind target: {round(total_xp)}/{round(xp_goal)} ({pct}%)",
                 })
-        if total_xp < xp_goal and school_days > 0:
-            pct = round(100 * total_xp / xp_goal) if xp_goal > 0 else 0
-            insights.append({
-                "type": "goal_xp",
-                "severity": "medium",
-                "text": f"XP behind target: {round(total_xp)}/{round(xp_goal)} ({pct}%)",
-            })
-        if total_minutes < minutes_goal and school_days > 0:
-            pct = round(100 * total_minutes / minutes_goal) if minutes_goal > 0 else 0
-            insights.append({
-                "type": "goal_minutes",
-                "severity": "medium",
-                "text": f"Time behind target: {round(total_minutes)}/{round(minutes_goal)} min ({pct}%)",
-            })
-        if enrollment_mismatch:
-            insights.append({
-                "type": "enrollment_mismatch",
-                "severity": "medium",
-                "text": enrollment_mismatch,
-            })
+            if enrollment_mismatch:
+                insights.append({
+                    "type": "enrollment_mismatch",
+                    "severity": "medium",
+                    "text": enrollment_mismatch,
+                })
 
         students.append({
             "id": sid,
@@ -685,6 +769,7 @@ def collect(csv_path: str, session_name: str) -> dict:
             "hmg": hmg,
             "starting_hmg": starting_hmg,
             "grades_advanced": hmg - starting_hmg,
+            "completed_g8": completed_g8,
             "enrollments": student_enrollments,
             "still_enrolled": bool(student_enrollments),
             "last_test": last_test,
@@ -692,26 +777,21 @@ def collect(csv_path: str, session_name: str) -> dict:
             "xp": {
                 "alphawrite": round(alphawrite_xp, 1),
                 "mastery_track": round(mastery_track_xp, 1),
-                "test": round(test_xp, 1),
+                "test": round(test_xp_val, 1),
                 "total": round(total_xp, 1),
                 "goal_to_date": round(xp_goal, 1),
                 "avg_per_day": avg_xp,
                 "meets_goal": total_xp >= xp_goal,
             },
-            "minutes": {
-                "total": round(total_minutes, 1),
-                "goal_to_date": round(minutes_goal, 1),
-                "avg_per_day": avg_min,
-                "meets_goal": total_minutes >= minutes_goal,
-            },
+            "xp_details": xp_details,
             "session_tests": session_tests,
             "accuracy": {
                 "activities_below_threshold": low_accuracy,
                 "repeated_activities": repeated,
             },
             "deep_dive": {
-                "needed": dd_needed,
-                "details": dd_details,
+                "needed": dd_needed if not completed_g8 else False,
+                "details": dd_details if not completed_g8 else [],
             },
             "insights": insights,
             "enrollment_mismatch": enrollment_mismatch,

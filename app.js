@@ -216,15 +216,39 @@
     card.className = "student-card";
     card.dataset.student = JSON.stringify(s);
 
+    // G8 completers get a special display
+    if (s.completed_g8) {
+      let lastTestHtml = "";
+      if (s.last_test) {
+        lastTestHtml = `Last Test: ${esc(s.last_test.name)} (${s.last_test.score}%, ${formatDate(s.last_test.date)})`;
+      }
+      card.innerHTML = `
+        <div class="card-summary">
+          <div class="card-row1">
+            <span class="student-name">${esc(s.name)}</span>
+            <span class="student-email">${esc(s.email)}</span>
+            <span class="student-grade">G${s.age_grade}</span>
+            <span class="student-hmg">HMG: G${s.hmg}</span>
+          </div>
+          <span class="expand-icon">&#9660;</span>
+          <div class="card-row2">
+            <span class="insights-badge none">Completed G8 Writing</span>
+            ${lastTestHtml ? `<span class="last-test">${lastTestHtml}</span>` : ""}
+          </div>
+        </div>
+        <div class="card-detail">
+          ${buildDetail(s)}
+        </div>
+      `;
+      return card;
+    }
+
     const severity = s.insights.length === 0 ? "none"
       : s.insights.some((i) => i.severity === "high") ? "high"
       : s.insights.some((i) => i.severity === "medium") ? "medium" : "low";
 
     const xpPct = s.xp.goal_to_date > 0 ? Math.min(100, Math.round((s.xp.total / s.xp.goal_to_date) * 100)) : 0;
     const xpColor = s.xp.meets_goal ? "green" : xpPct >= 70 ? "orange" : "red";
-
-    const minPct = s.minutes.goal_to_date > 0 ? Math.min(100, Math.round((s.minutes.total / s.minutes.goal_to_date) * 100)) : 0;
-    const minColor = s.minutes.meets_goal ? "green" : minPct >= 70 ? "orange" : "red";
 
     let lastTestHtml = '<span class="no-data">No tests</span>';
     if (s.last_test) {
@@ -250,10 +274,6 @@
           <span class="metric">
             XP: ${Math.round(s.xp.total)}/${Math.round(s.xp.goal_to_date)} (${xpPct}%)
             <span class="metric-bar"><span class="metric-fill ${xpColor}" style="width:${xpPct}%"></span></span>
-          </span>
-          <span class="metric">
-            Time: ${Math.round(s.minutes.total)}/${Math.round(s.minutes.goal_to_date)} min (${minPct}%)
-            <span class="metric-bar"><span class="metric-fill ${minColor}" style="width:${minPct}%"></span></span>
           </span>
           ${s.insights.length > 0
             ? `<span class="insights-badge ${severity}">${s.insights.length} insight${s.insights.length > 1 ? "s" : ""}</span>`
@@ -300,6 +320,40 @@
           <td>${esc(t.name)}</td><td>${esc(t.type)}</td>
           <td class="${cls}">${t.score}%</td><td>${formatDate(t.date)}</td>
           <td>${timeMin}</td><td>${rushed}</td>
+        </tr>`;
+      }
+      html += `</table></div>`;
+    }
+
+    // XP Breakdown: Test XP
+    if (s.xp_details && s.xp_details.test_xp && s.xp_details.test_xp.length > 0) {
+      html += `<div class="detail-section"><h4>Test XP</h4>
+        <table class="detail-table">
+          <tr><th>Test</th><th>Score</th><th>XP</th><th>Date</th></tr>`;
+      for (const t of s.xp_details.test_xp) {
+        html += `<tr>
+          <td>${esc(t.name)}</td>
+          <td>${t.score != null ? t.score + "%" : "-"}</td>
+          <td>${t.xp}</td>
+          <td>${formatDate(t.date)}</td>
+        </tr>`;
+      }
+      html += `</table></div>`;
+    }
+
+    // XP Breakdown: Activity XP
+    if (s.xp_details && s.xp_details.activity_xp && s.xp_details.activity_xp.length > 0) {
+      html += `<div class="detail-section"><h4>Activity XP</h4>
+        <table class="detail-table">
+          <tr><th>Activity</th><th>Course</th><th>XP</th><th>Type</th><th>Date</th></tr>`;
+      for (const a of s.xp_details.activity_xp) {
+        const typeLabel = a.type === "alphawrite" ? "AlphaWrite"
+          : a.type === "external" ? "External"
+          : "Mastery Track";
+        html += `<tr>
+          <td>${esc(a.name)}</td><td>${esc(a.course)}</td>
+          <td>${a.xp}</td><td>${typeLabel}</td>
+          <td>${formatDate(a.date)}</td>
         </tr>`;
       }
       html += `</table></div>`;
@@ -368,24 +422,23 @@
     const container = document.getElementById("metrics-" + group);
     const students = studentsForGroup(group);
     const total = students.length;
-    const xpOk = students.filter((s) => s.xp.meets_goal).length;
-    const timeOk = students.filter((s) => s.minutes.meets_goal).length;
-    const bothOk = students.filter((s) => s.xp.meets_goal && s.minutes.meets_goal).length;
-    const dd = students.filter((s) => s.deep_dive.needed).length;
-    const accFlags = students.filter((s) => s.accuracy.activities_below_threshold.length > 0).length;
+    const g8Done = students.filter((s) => s.completed_g8).length;
+    const active = students.filter((s) => !s.completed_g8);
+    const activeCount = active.length;
+    const xpOk = active.filter((s) => s.xp.meets_goal).length;
+    const dd = active.filter((s) => s.deep_dive.needed).length;
+    const accFlags = active.filter((s) => s.accuracy.activities_below_threshold.length > 0).length;
     const noTests = students.filter((s) => !s.last_test).length;
-    const xpPct = total > 0 ? Math.round((xpOk / total) * 100) : 0;
-    const timePct = total > 0 ? Math.round((timeOk / total) * 100) : 0;
-    const bothPct = total > 0 ? Math.round((bothOk / total) * 100) : 0;
+    const xpPct = activeCount > 0 ? Math.round((xpOk / activeCount) * 100) : 0;
     const label = group === "legacy" ? "Legacy Dash" : "Timeback";
 
     const campusMap = {};
     students.forEach((s) => {
       const c = s.campus || "Unknown";
-      if (!campusMap[c]) campusMap[c] = { total: 0, xpOk: 0, timeOk: 0, dd: 0, accFlags: 0 };
+      if (!campusMap[c]) campusMap[c] = { total: 0, g8: 0, xpOk: 0, dd: 0, accFlags: 0 };
       campusMap[c].total++;
+      if (s.completed_g8) { campusMap[c].g8++; return; }
       if (s.xp.meets_goal) campusMap[c].xpOk++;
-      if (s.minutes.meets_goal) campusMap[c].timeOk++;
       if (s.deep_dive.needed) campusMap[c].dd++;
       if (s.accuracy.activities_below_threshold.length > 0) campusMap[c].accFlags++;
     });
@@ -393,10 +446,10 @@
     const levelMap = {};
     students.forEach((s) => {
       const l = s.level || "Unknown";
-      if (!levelMap[l]) levelMap[l] = { total: 0, xpOk: 0, timeOk: 0, dd: 0 };
+      if (!levelMap[l]) levelMap[l] = { total: 0, g8: 0, xpOk: 0, dd: 0 };
       levelMap[l].total++;
+      if (s.completed_g8) { levelMap[l].g8++; return; }
       if (s.xp.meets_goal) levelMap[l].xpOk++;
-      if (s.minutes.meets_goal) levelMap[l].timeOk++;
       if (s.deep_dive.needed) levelMap[l].dd++;
     });
 
@@ -407,19 +460,13 @@
           <div class="metric-label">Total Students</div>
         </div>
         <div class="metric-card">
+          <div class="metric-value green">${g8Done}</div>
+          <div class="metric-label">Completed G8 Writing</div>
+        </div>
+        <div class="metric-card">
           <div class="metric-value green">${xpOk}</div>
           <div class="metric-label">XP On Track</div>
-          <div class="metric-sub">${xpPct}% of students</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-value green">${timeOk}</div>
-          <div class="metric-label">Time On Track</div>
-          <div class="metric-sub">${timePct}% of students</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-value green">${bothOk}</div>
-          <div class="metric-label">Both Goals Met</div>
-          <div class="metric-sub">${bothPct}% of students</div>
+          <div class="metric-sub">${xpPct}% of ${activeCount} active</div>
         </div>
         <div class="metric-card">
           <div class="metric-value red">${dd}</div>
@@ -437,23 +484,23 @@
         <div class="metric-card">
           <div class="metric-value">${DATA.session.school_days_elapsed}</div>
           <div class="metric-label">School Days Elapsed</div>
-          <div class="metric-sub">Goals: ${DATA.thresholds.xp_per_day} XP/day, ${DATA.thresholds.minutes_per_day} min/day</div>
+          <div class="metric-sub">Goal: ${DATA.thresholds.xp_per_day} XP/day</div>
         </div>
       </div>
     `;
 
     html += `<div class="metrics-section"><h2>By Campus</h2>
       <table class="metrics-table">
-        <tr><th>Campus</th><th>Students</th><th>XP On Track</th><th>Time On Track</th><th>Deep Dives</th><th>Accuracy Flags</th></tr>`;
+        <tr><th>Campus</th><th>Students</th><th>G8 Done</th><th>XP On Track</th><th>Deep Dives</th><th>Accuracy Flags</th></tr>`;
     for (const c of Object.keys(campusMap).sort()) {
       const d = campusMap[c];
-      const xpPctC = d.total > 0 ? Math.round((d.xpOk / d.total) * 100) : 0;
-      const timePctC = d.total > 0 ? Math.round((d.timeOk / d.total) * 100) : 0;
+      const activeC = d.total - d.g8;
+      const xpPctC = activeC > 0 ? Math.round((d.xpOk / activeC) * 100) : 0;
       html += `<tr>
         <td>${esc(c)}</td>
         <td>${d.total}</td>
-        <td><div class="bar-cell">${d.xpOk} (${xpPctC}%) <div class="bar-bg"><div class="bar-fill ${xpPctC >= 70 ? "green" : xpPctC >= 40 ? "orange" : "red"}" style="width:${xpPctC}%"></div></div></div></td>
-        <td><div class="bar-cell">${d.timeOk} (${timePctC}%) <div class="bar-bg"><div class="bar-fill ${timePctC >= 70 ? "green" : timePctC >= 40 ? "orange" : "red"}" style="width:${timePctC}%"></div></div></div></td>
+        <td>${d.g8}</td>
+        <td><div class="bar-cell">${d.xpOk}/${activeC} (${xpPctC}%) <div class="bar-bg"><div class="bar-fill ${xpPctC >= 70 ? "green" : xpPctC >= 40 ? "orange" : "red"}" style="width:${xpPctC}%"></div></div></div></td>
         <td>${d.dd > 0 ? '<span class="score-fail">' + d.dd + '</span>' : '0'}</td>
         <td>${d.accFlags > 0 ? '<span class="score-fail">' + d.accFlags + '</span>' : '0'}</td>
       </tr>`;
@@ -462,16 +509,16 @@
 
     html += `<div class="metrics-section"><h2>By Level</h2>
       <table class="metrics-table">
-        <tr><th>Level</th><th>Students</th><th>XP On Track</th><th>Time On Track</th><th>Deep Dives</th></tr>`;
+        <tr><th>Level</th><th>Students</th><th>G8 Done</th><th>XP On Track</th><th>Deep Dives</th></tr>`;
     for (const l of Object.keys(levelMap).sort()) {
       const d = levelMap[l];
-      const xpPctL = d.total > 0 ? Math.round((d.xpOk / d.total) * 100) : 0;
-      const timePctL = d.total > 0 ? Math.round((d.timeOk / d.total) * 100) : 0;
+      const activeL = d.total - d.g8;
+      const xpPctL = activeL > 0 ? Math.round((d.xpOk / activeL) * 100) : 0;
       html += `<tr>
         <td>${esc(l)}</td>
         <td>${d.total}</td>
-        <td><div class="bar-cell">${d.xpOk} (${xpPctL}%) <div class="bar-bg"><div class="bar-fill ${xpPctL >= 70 ? "green" : xpPctL >= 40 ? "orange" : "red"}" style="width:${xpPctL}%"></div></div></div></td>
-        <td><div class="bar-cell">${d.timeOk} (${timePctL}%) <div class="bar-bg"><div class="bar-fill ${timePctL >= 70 ? "green" : timePctL >= 40 ? "orange" : "red"}" style="width:${timePctL}%"></div></div></div></td>
+        <td>${d.g8}</td>
+        <td><div class="bar-cell">${d.xpOk}/${activeL} (${xpPctL}%) <div class="bar-bg"><div class="bar-fill ${xpPctL >= 70 ? "green" : xpPctL >= 40 ? "orange" : "red"}" style="width:${xpPctL}%"></div></div></div></td>
         <td>${d.dd > 0 ? '<span class="score-fail">' + d.dd + '</span>' : '0'}</td>
       </tr>`;
     }
