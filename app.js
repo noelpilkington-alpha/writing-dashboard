@@ -212,6 +212,22 @@
           ? ` | Last XP: ${formatDate(s.xp.last_xp_date)}`
           : !s.xp.meets_goal ? " | No XP earned" : "";
 
+        // Build analysis HTML if available
+        let analysisHtml = "";
+        if (s.deep_dive && s.deep_dive.details) {
+          for (const d of s.deep_dive.details) {
+            if (d.analysis && d.analysis.error_analysis) {
+              analysisHtml += `<div class="dd-student-analysis">
+                <div class="dd-analysis-grade">G${d.grade} Analysis</div>
+                <div class="dd-analysis-field"><span class="dd-analysis-label">Errors:</span> ${esc(d.analysis.error_analysis)}</div>`;
+              if (d.analysis.recommended_actions) {
+                analysisHtml += `<div class="dd-analysis-field"><span class="dd-analysis-label">Actions:</span> ${esc(d.analysis.recommended_actions)}</div>`;
+              }
+              analysisHtml += `</div>`;
+            }
+          }
+        }
+
         listHtml += `
           <div class="dd-student-item">
             <div class="dd-student-name">${esc(s.name)} <span style="font-weight:400;color:var(--text-muted);font-size:0.78rem">${esc(s.email)}</span></div>
@@ -220,6 +236,7 @@
             <div class="dd-student-reasons">
               ${reasons.map((r) => `<span class="dd-reason ${r.type}">${esc(r.label)}</span>`).join("")}
             </div>
+            ${analysisHtml}
           </div>
         `;
       }
@@ -618,7 +635,23 @@
           const rushed = t.rushed ? '<span class="rushed-tag">RUSHED</span>' : "";
           html += `<tr><td>${esc(t.name)}</td><td class="${cls}">${t.score}%</td><td>${formatDate(t.date)}</td><td>${rushed}</td></tr>`;
         }
-        html += `</table></div>`;
+        html += `</table>`;
+        if (d.analysis && d.analysis.error_analysis) {
+          html += `<div class="dd-analysis">
+            <h5>Claude Analysis</h5>`;
+          if (d.analysis.questions_missed) {
+            html += `<div class="dd-analysis-field"><span class="dd-analysis-label">Questions Missed:</span> ${esc(d.analysis.questions_missed)}</div>`;
+          }
+          html += `<div class="dd-analysis-field"><span class="dd-analysis-label">Error Analysis:</span> ${esc(d.analysis.error_analysis)}</div>`;
+          if (d.analysis.root_causes) {
+            html += `<div class="dd-analysis-field"><span class="dd-analysis-label">Root Causes:</span> ${esc(d.analysis.root_causes)}</div>`;
+          }
+          if (d.analysis.recommended_actions) {
+            html += `<div class="dd-analysis-field"><span class="dd-analysis-label">Recommended Actions:</span> ${esc(d.analysis.recommended_actions)}</div>`;
+          }
+          html += `</div>`;
+        }
+        html += `</div>`;
       }
     }
 

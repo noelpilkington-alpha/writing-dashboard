@@ -3,6 +3,7 @@
 import argparse
 import json
 import logging
+import os
 import sys
 from collections import defaultdict
 from datetime import datetime, timedelta
@@ -22,7 +23,13 @@ from writing_automation.config import (
 )
 from writing_automation.csv_loader import load_csv
 from writing_automation.deep_dive import detect_deep_dives
-from writing_automation.deep_dive_analysis import identify_deep_dive_tests, is_rushed
+from writing_automation.deep_dive_analysis import (
+    analyze_with_claude,
+    fetch_and_parse_tests,
+    identify_deep_dive_tests,
+    is_rushed,
+    _get_anthropic_client,
+)
 from writing_automation.enrollment_fetcher import (
     fetch_student_profiles,
     fetch_writing_enrollments,
@@ -59,6 +66,159 @@ def _is_alphawrite(ali_sid: str) -> bool:
 
 ACCURACY_THRESHOLD = 80
 OUTPUT_PATH = Path(__file__).resolve().parent / "data.json"
+
+# ---------------------------------------------------------------------------
+# Session cookie helpers (interactive prompting on expiry)
+# ---------------------------------------------------------------------------
+
+def _load_session_cookie() -> str:
+    """Load the Alpha session cookie from .env, prompting if missing."""
+    from dotenv import load_dotenv
+    from writing_automation.config import ALPHA_SESSION_COOKIE_ENV, ENV_FILE
+
+    load_dotenv(ENV_FILE)
+    cookie = os.getenv(ALPHA_SESSION_COOKIE_ENV, "")
+    if not cookie:
+        cookie = _prompt_for_cookie(ENV_FILE, ALPHA_SESSION_COOKIE_ENV)
+    return cookie
+
+
+def _prompt_for_cookie(env_file, env_key: str) -> str:
+    """Prompt the user to paste a new session cookie and save it to .env."""
+    print("\n" + "=" * 60)
+    print("Session cookie required for test page fetching.")
+    print("Open Alpha in your browser, copy the 'session' cookie value,")
+    print("and paste it below.")
+    print("=" * 60)
+    cookie = input("Session cookie: ").strip()
+    if not cookie:
+        raise ValueError("No cookie provided. Cannot fetch test pages.")
+    _save_cookie_to_env(env_file, env_key, cookie)
+    os.environ[env_key] = cookie
+    return cookie
+
+
+def _save_cookie_to_env(env_file, env_key: str, cookie: str):
+    """Update or add the cookie in the .env file."""
+    env_path = Path(env_file)
+    if env_path.exists():
+        content = env_path.read_text(encoding="utf-8")
+        # Replace existing line or append
+        import re as _re2
+        pattern = _re2.compile(rf'^{_re2.escape(env_key)}=.*$', _re2.MULTILINE)
+        if pattern.search(content):
+            content = pattern.sub(f'{env_key}={cookie}', content)
+        else:
+            content = content.rstrip() + f'\n{env_key}={cookie}\n'
+        env_path.write_text(content, encoding="utf-8")
+    else:
+        env_path.write_text(f'{env_key}={cookie}\n', encoding="utf-8")
+    logger.info("Session cookie saved to %s", env_path)
+
+
+def _fetch_and_parse_with_retry(test_results, session_cookie: str) -> tuple[list[dict], str]:
+    """Fetch and parse tests, prompting for a new cookie on auth failure.
+
+    Returns (parsed_tests, final_cookie).
+    """
+    from writing_automation.config import ALPHA_SESSION_COOKIE_ENV, ENV_FILE
+
+    try:
+        parsed = fetch_and_parse_tests(test_results, session_cookie)
+        return parsed, session_cookie
+    except ValueError as e:
+        if "cookie expired" in str(e).lower():
+            logger.warning("Session cookie expired. Prompting for a new one...")
+            new_cookie = _prompt_for_cookie(ENV_FILE, ALPHA_SESSION_COOKIE_ENV)
+            parsed = fetch_and_parse_tests(test_results, new_cookie)
+            return parsed, new_cookie
+        raise
+
+
+def run_deep_dive_analysis(
+    deep_dive_tests: dict[tuple[str, int], list],
+    email_to_name: dict[str, str],
+) -> dict[tuple[str, int], dict]:
+    """Run Claude analysis for all deep dive student/grade combos.
+
+    Returns dict mapping (email, grade) -> analysis dict with keys:
+    questions_missed, error_analysis, root_causes, recommended_actions
+    """
+    if not deep_dive_tests:
+        return {}
+
+    total_tests = sum(len(v) for v in deep_dive_tests.values())
+    logger.info(
+        "Deep Dive Analysis: %d student/grade combos, %d tests to analyze",
+        len(deep_dive_tests), total_tests,
+    )
+
+    # Load cookie
+    session_cookie = _load_session_cookie()
+
+    # Init Claude client
+    client = _get_anthropic_client()
+
+    analyses = {}
+    for i, ((email, grade), test_list) in enumerate(sorted(deep_dive_tests.items()), 1):
+        name = email_to_name.get(email, email)
+        logger.info(
+            "  [%d/%d] Analyzing %s at G%d (%d tests)...",
+            i, len(deep_dive_tests), name, grade, len(test_list),
+        )
+
+        # Build rushing info
+        rushing_info = []
+        for r in test_list:
+            rushed = is_rushed(r.time_spent_seconds, grade)
+            rushing_info.append({
+                "test_name": r.test_name,
+                "time_seconds": r.time_spent_seconds,
+                "rushed": rushed,
+                "score": r.score,
+                "date": r.score_date,
+            })
+
+        # Fetch and parse test pages (with cookie retry)
+        try:
+            parsed_tests, session_cookie = _fetch_and_parse_with_retry(
+                test_list, session_cookie
+            )
+        except ValueError as e:
+            logger.error("  Cannot fetch tests for %s G%d: %s", name, grade, e)
+            analyses[(email, grade)] = {
+                "questions_missed": "",
+                "error_analysis": f"Could not fetch test pages: {e}",
+                "root_causes": "",
+                "recommended_actions": "",
+            }
+            continue
+
+        if not parsed_tests:
+            logger.warning("  No tests could be parsed for %s G%d", name, grade)
+            analyses[(email, grade)] = {
+                "questions_missed": "",
+                "error_analysis": "Could not fetch/parse test pages",
+                "root_causes": "",
+                "recommended_actions": "",
+            }
+            continue
+
+        # Analyze with Claude
+        try:
+            analysis = analyze_with_claude(client, name, grade, parsed_tests, rushing_info)
+            analyses[(email, grade)] = analysis
+            logger.info("  Analysis complete for %s G%d", name, grade)
+        except Exception as e:
+            logger.error("  Claude analysis failed for %s G%d: %s", name, grade, e)
+            analyses[(email, grade)] = {
+                "questions_missed": "",
+                "error_analysis": f"Analysis failed: {e}",
+                "root_causes": "",
+                "recommended_actions": "",
+            }
+
+    return analyses
 
 
 def _school_days_to_date(session_name: str) -> int:
@@ -635,7 +795,7 @@ def extract_xp_and_details(raw_results: list[dict]) -> dict:
 # Main collector
 # ---------------------------------------------------------------------------
 
-def collect(csv_path: str, session_name: str) -> dict:
+def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False) -> dict:
     """Collect all data and return the dashboard JSON structure."""
     session = SESSIONS[session_name]
     session_start = session["start"]
@@ -670,6 +830,16 @@ def collect(csv_path: str, session_name: str) -> dict:
     # 6. Detect deep dives
     deep_dives = detect_deep_dives(csv_results)
     deep_dive_tests = identify_deep_dive_tests(csv_results, deep_dives, session_name)
+
+    # 6b. Run Claude deep dive analysis for students in testing loops
+    email_to_name = {}
+    for r in csv_results:
+        email_to_name[r.student_email] = r.student_name
+    if skip_analysis:
+        logger.info("Skipping Claude deep dive analysis (--skip-analysis)")
+        dd_analyses = {}
+    else:
+        dd_analyses = run_deep_dive_analysis(deep_dive_tests, email_to_name)
 
     # 7. Build email -> csv results map
     csv_by_email: dict[str, list] = defaultdict(list)
@@ -798,6 +968,7 @@ def collect(csv_path: str, session_name: str) -> dict:
                     }
                     for t in dd_tests
                 ],
+                "analysis": dd_analyses.get((dd_email, dd_grade)),
             })
 
         # Fetch activity results for accuracy analysis, XP details, and XP totals
@@ -962,9 +1133,11 @@ def main():
     parser.add_argument("csv", help="Path to writing-results CSV")
     parser.add_argument("--session", default="S4", choices=list(SESSIONS.keys()))
     parser.add_argument("--output", default=str(OUTPUT_PATH), help="Output JSON path")
+    parser.add_argument("--skip-analysis", action="store_true",
+                        help="Skip Claude deep dive analysis (faster)")
     args = parser.parse_args()
 
-    data = collect(args.csv, args.session)
+    data = collect(args.csv, args.session, skip_analysis=args.skip_analysis)
 
     output = Path(args.output)
     output.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
