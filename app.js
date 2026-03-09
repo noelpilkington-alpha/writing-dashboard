@@ -2,7 +2,10 @@
   "use strict";
 
   let DATA = null;
-  let activeFilters = { campus: "all", level: "all", status: "all", search: "" };
+  const filters = {
+    timeback: { campus: "all", level: "all", status: "all", search: "" },
+    legacy:   { campus: "all", level: "all", status: "all", search: "" },
+  };
 
   // ── Boot ──────────────────────────────────────────────────────────────
   async function init() {
@@ -11,9 +14,9 @@
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       DATA = await resp.json();
       renderMeta();
-      populateDropdowns();
-      renderStudents();
-      wireEvents();
+      setupGroup("timeback");
+      setupGroup("legacy");
+      wireNav();
       handleRoute();
     } catch (e) {
       document.getElementById("loading").textContent =
@@ -21,10 +24,16 @@
     }
   }
 
+  function studentsForGroup(group) {
+    return DATA.students.filter((s) => s.dashboard === group);
+  }
+
   // ── Routing ─────────────────────────────────────────────────────────
+  const PAGES = ["timeback", "timeback-metrics", "legacy", "legacy-metrics"];
+
   function handleRoute() {
-    const hash = location.hash.replace("#", "") || "students";
-    showPage(hash === "metrics" ? "metrics" : "students");
+    const hash = location.hash.replace("#", "") || "timeback";
+    showPage(PAGES.includes(hash) ? hash : "timeback");
   }
 
   function showPage(page) {
@@ -33,7 +42,25 @@
     document.querySelectorAll(".nav-link").forEach((a) => {
       a.classList.toggle("active", a.dataset.page === page);
     });
-    if (page === "metrics") renderMetrics();
+    if (page === "timeback-metrics") renderMetrics("timeback");
+    if (page === "legacy-metrics") renderMetrics("legacy");
+  }
+
+  function wireNav() {
+    document.querySelectorAll(".nav-link").forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const page = link.dataset.page;
+        location.hash = page;
+        showPage(page);
+      });
+    });
+    document.querySelector(".logo-link").addEventListener("click", (e) => {
+      e.preventDefault();
+      location.hash = "timeback";
+      showPage("timeback");
+    });
+    window.addEventListener("hashchange", handleRoute);
   }
 
   // ── Meta ─────────────────────────────────────────────────────────────
@@ -44,12 +71,20 @@
       `Session ${s.name} | Day ${s.school_days_elapsed} | Updated: ${gen}`;
   }
 
-  // ── Dropdowns ───────────────────────────────────────────────────────
-  function populateDropdowns() {
-    const campuses = [...new Set(DATA.students.map((s) => s.campus).filter(Boolean))].sort();
-    const levels = [...new Set(DATA.students.map((s) => s.level).filter(Boolean))].sort();
+  // ── Setup a group (timeback or legacy) ──────────────────────────────
+  function setupGroup(group) {
+    const students = studentsForGroup(group);
+    populateDropdowns(group, students);
+    renderStudents(group, students);
+    wireGroupEvents(group);
+  }
 
-    const campusEl = document.getElementById("campus-select");
+  function populateDropdowns(group, students) {
+    const campuses = [...new Set(students.map((s) => s.campus).filter(Boolean))].sort();
+    const levels = [...new Set(students.map((s) => s.level).filter(Boolean))].sort();
+
+    const campusEl = document.getElementById("campus-" + group);
+    campusEl.innerHTML = '<option value="all">All Campuses</option>';
     campuses.forEach((c) => {
       const opt = document.createElement("option");
       opt.value = c;
@@ -57,7 +92,8 @@
       campusEl.appendChild(opt);
     });
 
-    const levelEl = document.getElementById("level-select");
+    const levelEl = document.getElementById("level-" + group);
+    levelEl.innerHTML = '<option value="all">All Levels</option>';
     levels.forEach((l) => {
       const opt = document.createElement("option");
       opt.value = l;
@@ -66,74 +102,57 @@
     });
   }
 
-  // ── Events ──────────────────────────────────────────────────────────
-  function wireEvents() {
-    // Dropdowns
-    document.getElementById("campus-select").addEventListener("change", (e) => {
-      activeFilters.campus = e.target.value;
-      applyFilters();
+  function wireGroupEvents(group) {
+    const f = filters[group];
+
+    document.getElementById("campus-" + group).addEventListener("change", (e) => {
+      f.campus = e.target.value;
+      applyFilters(group);
     });
-    document.getElementById("level-select").addEventListener("change", (e) => {
-      activeFilters.level = e.target.value;
-      applyFilters();
+    document.getElementById("level-" + group).addEventListener("change", (e) => {
+      f.level = e.target.value;
+      applyFilters(group);
     });
-    document.getElementById("status-select").addEventListener("change", (e) => {
-      activeFilters.status = e.target.value;
-      applyFilters();
+    document.getElementById("status-" + group).addEventListener("change", (e) => {
+      f.status = e.target.value;
+      applyFilters(group);
     });
 
-    // Search
     let timer;
-    document.getElementById("search").addEventListener("input", (e) => {
+    document.getElementById("search-" + group).addEventListener("input", (e) => {
       clearTimeout(timer);
       timer = setTimeout(() => {
-        activeFilters.search = e.target.value.toLowerCase().trim();
-        applyFilters();
+        f.search = e.target.value.toLowerCase().trim();
+        applyFilters(group);
       }, 200);
     });
 
-    // Card expand/collapse
-    document.getElementById("main").addEventListener("click", (e) => {
+    document.getElementById("main-" + group).addEventListener("click", (e) => {
       const summary = e.target.closest(".card-summary");
       if (!summary) return;
       summary.closest(".student-card").classList.toggle("expanded");
     });
-
-    // Nav links
-    document.querySelectorAll(".nav-link").forEach((link) => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        const page = link.dataset.page;
-        location.hash = page === "students" ? "" : page;
-        showPage(page);
-      });
-    });
-
-    document.querySelector(".logo-link").addEventListener("click", (e) => {
-      e.preventDefault();
-      location.hash = "";
-      showPage("students");
-    });
-
-    window.addEventListener("hashchange", handleRoute);
   }
 
   // ── Filters ─────────────────────────────────────────────────────────
-  function applyFilters() {
-    const cards = document.querySelectorAll(".student-card");
-    const groups = document.querySelectorAll(".group-header");
+  function applyFilters(group) {
+    const f = filters[group];
+    const main = document.getElementById("main-" + group);
+    const cards = main.querySelectorAll(".student-card");
+    const groups = main.querySelectorAll(".group-header");
     let visibleCount = 0;
+    const total = studentsForGroup(group).length;
 
     cards.forEach((card) => {
       const d = JSON.parse(card.dataset.student);
       let show = true;
 
-      if (activeFilters.campus !== "all" && d.campus !== activeFilters.campus) show = false;
-      if (activeFilters.level !== "all" && d.level !== activeFilters.level) show = false;
-      if (activeFilters.status === "issues" && d.insights.length === 0) show = false;
-      if (activeFilters.status === "on-track" && d.insights.length > 0) show = false;
-      if (activeFilters.search) {
-        const q = activeFilters.search;
+      if (f.campus !== "all" && d.campus !== f.campus) show = false;
+      if (f.level !== "all" && d.level !== f.level) show = false;
+      if (f.status === "issues" && d.insights.length === 0) show = false;
+      if (f.status === "on-track" && d.insights.length > 0) show = false;
+      if (f.search) {
+        const q = f.search;
         if (!d.name.toLowerCase().includes(q) && !d.email.toLowerCase().includes(q)) show = false;
       }
 
@@ -141,7 +160,6 @@
       if (show) visibleCount++;
     });
 
-    // Show/hide group headers
     groups.forEach((gh) => {
       let next = gh.nextElementSibling;
       let hasVisible = false;
@@ -155,18 +173,17 @@
       gh.classList.toggle("hidden", !hasVisible);
     });
 
-    const total = DATA.students.length;
-    document.getElementById("results-count").textContent =
+    document.getElementById("results-count-" + group).textContent =
       visibleCount === total ? `${total} students` : `${visibleCount} of ${total} students`;
   }
 
   // ── Student cards ───────────────────────────────────────────────────
-  function renderStudents() {
-    const main = document.getElementById("main");
+  function renderStudents(group, students) {
+    const main = document.getElementById("main-" + group);
     main.innerHTML = "";
 
     const grouped = {};
-    DATA.students.forEach((s) => {
+    students.forEach((s) => {
       const key = `${s.campus || "Unknown Campus"}|||${s.level || "Unknown Level"}`;
       if (!grouped[key]) grouped[key] = [];
       grouped[key].push(s);
@@ -185,13 +202,13 @@
       header.textContent = `${campus} — ${level}`;
       main.appendChild(header);
 
-      const students = grouped[key].sort((a, b) => a.name.localeCompare(b.name));
-      for (const s of students) {
+      const list = grouped[key].sort((a, b) => a.name.localeCompare(b.name));
+      for (const s of list) {
         main.appendChild(buildCard(s));
       }
     }
 
-    document.getElementById("results-count").textContent = `${DATA.students.length} students`;
+    document.getElementById("results-count-" + group).textContent = `${students.length} students`;
   }
 
   function buildCard(s) {
@@ -347,9 +364,9 @@
   }
 
   // ── Metrics Page ────────────────────────────────────────────────────
-  function renderMetrics() {
-    const container = document.getElementById("metrics-container");
-    const students = DATA.students;
+  function renderMetrics(group) {
+    const container = document.getElementById("metrics-" + group);
+    const students = studentsForGroup(group);
     const total = students.length;
     const xpOk = students.filter((s) => s.xp.meets_goal).length;
     const timeOk = students.filter((s) => s.minutes.meets_goal).length;
@@ -360,8 +377,8 @@
     const xpPct = total > 0 ? Math.round((xpOk / total) * 100) : 0;
     const timePct = total > 0 ? Math.round((timeOk / total) * 100) : 0;
     const bothPct = total > 0 ? Math.round((bothOk / total) * 100) : 0;
+    const label = group === "legacy" ? "Legacy Dash" : "Timeback";
 
-    // Campus breakdown
     const campusMap = {};
     students.forEach((s) => {
       const c = s.campus || "Unknown";
@@ -373,7 +390,6 @@
       if (s.accuracy.activities_below_threshold.length > 0) campusMap[c].accFlags++;
     });
 
-    // Level breakdown
     const levelMap = {};
     students.forEach((s) => {
       const l = s.level || "Unknown";
@@ -384,7 +400,7 @@
       if (s.deep_dive.needed) levelMap[l].dd++;
     });
 
-    let html = `
+    let html = `<h2 style="margin-bottom:16px">${esc(label)} Metrics</h2>
       <div class="metrics-grid">
         <div class="metric-card">
           <div class="metric-value blue">${total}</div>
@@ -426,7 +442,6 @@
       </div>
     `;
 
-    // Campus breakdown table
     html += `<div class="metrics-section"><h2>By Campus</h2>
       <table class="metrics-table">
         <tr><th>Campus</th><th>Students</th><th>XP On Track</th><th>Time On Track</th><th>Deep Dives</th><th>Accuracy Flags</th></tr>`;
@@ -445,7 +460,6 @@
     }
     html += `</table></div>`;
 
-    // Level breakdown table
     html += `<div class="metrics-section"><h2>By Level</h2>
       <table class="metrics-table">
         <tr><th>Level</th><th>Students</th><th>XP On Track</th><th>Time On Track</th><th>Deep Dives</th></tr>`;

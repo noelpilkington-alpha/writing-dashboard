@@ -39,48 +39,81 @@ GRADEBOOK_BASE = "/ims/oneroster/gradebook/v1p2"
 ACCURACY_THRESHOLD = 80
 OUTPUT_PATH = Path(__file__).resolve().parent / "data.json"
 
-# Campuses to exclude from the dashboard
-EXCLUDED_CAMPUSES = {
-    "AIE Elite Prep",
-    "Alpha Austin 25' AI Summer Camp",
-    "Alpha Internal Test School",
-    "AlphaLearn",
-    "BeyondAI",
-    "Beyond AI",
-    "Guide School",
-    "High School SAT Prep",
-    "Mock School Org",
-    "SPEEDRUN",
-    "Speedrun",
-    "School In The Hills",
-    "School in the Hills",
-    "Trilogy Central Support",
+# ---------------------------------------------------------------------------
+# A&D Master Roster — used as whitelist and source of truth for campus
+# ---------------------------------------------------------------------------
+
+ROSTER_PATH = Path(__file__).resolve().parent.parent / "A&D Master Roster 25-26 - Master.csv"
+
+# Student Group values that should be excluded
+_EXCLUDED_GROUPS = {"mock", "mock student", "shadow", "test", "guide"}
+
+# Legacy Dash campuses (case-insensitive matching via _normalise)
+_LEGACY_CAMPUSES = {
+    "alpha anywhere (homeschool)",
+    "alpha anywhere center",
+    "novatio",
+    "unbound academy",
+    "kairos learning solutions",
+    "lipscomb academy accelerate",
 }
 
-# Email patterns that indicate shadow/test accounts
-_EXCLUDE_EMAIL_PATTERNS = [
-    "shadow",
-    "test.account",
-    "guide.sixth",
-    "guide.fifth",
-    "leman.student",
-    "leman.test",
-    "deleted_",
-    "timeback",
-    "studyreeltest",
-    "stc3@",
-    "gt.shadow",
-    "austinhs.shadow",
-    "alpha.san.francisco.shadow",
-    "stimeback@",
-    "cs-test",
-]
+# Campuses excluded from the Timeback page (but not Legacy Dash)
+_TIMEBACK_EXCLUDED_CAMPUSES = {
+    "2 hour learning",
+    "2 hour single user",
+    "alpha k-8",
+    "aie elite prep",
+    "alpha austin 25' ai summer camp",
+    "alpha international test school",
+    "alphalearn",
+    "beyond ai",
+    "guide school",
+    "high school sat prep",
+    "mock school org",
+    "speedrun",
+    "school in the hills",
+    "trilogy central support",
+}
 
 
-def _is_excluded_account(email: str) -> bool:
-    """Return True if the email matches a shadow/test account pattern."""
-    email_lower = email.lower()
-    return any(pat in email_lower for pat in _EXCLUDE_EMAIL_PATTERNS)
+def _load_roster() -> dict[str, dict]:
+    """Load A&D Master Roster. Returns {email_lower: {campus, level, grade, group, name}}."""
+    import csv
+    roster: dict[str, dict] = {}
+    if not ROSTER_PATH.exists():
+        logger.warning("A&D Master Roster not found at %s", ROSTER_PATH)
+        return roster
+    with open(ROSTER_PATH, encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            email = row.get("Student Alpha Email", "").strip().lower()
+            status = row.get("Admission Status", "").strip()
+            group = row.get("Student Group", "").strip().lower()
+            campus = row.get("Campus", "").strip()
+            if not email or status != "Enrolled":
+                continue
+            if group in _EXCLUDED_GROUPS:
+                continue
+            roster[email] = {
+                "campus": campus,
+                "level": row.get("Current Level", "").strip(),
+                "grade": row.get("Current Grade Level", "").strip(),
+                "name": row.get("Full Name", "").strip(),
+                "group": group,
+            }
+    logger.info("Loaded %d enrolled students from A&D Master Roster", len(roster))
+    return roster
+
+
+def _classify_dashboard(campus: str) -> str:
+    """Return 'legacy' or 'timeback' for a campus, or '' if excluded."""
+    c = campus.lower()
+    if c in _LEGACY_CAMPUSES:
+        return "legacy"
+    if c in _TIMEBACK_EXCLUDED_CAMPUSES:
+        return ""
+    return "timeback"
 
 
 # ---------------------------------------------------------------------------
@@ -417,16 +450,19 @@ def collect(csv_path: str, session_name: str) -> dict:
     session_end = session["end"]
     school_days = _school_days_to_date(session_name)
 
-    # 1. Load CSV
+    # 1. Load A&D Master Roster (whitelist + campus source of truth)
+    roster = _load_roster()
+
+    # 2. Load CSV
     logger.info("Loading CSV: %s", csv_path)
     csv_results = load_csv(csv_path)
     logger.info("Loaded %d CSV results", len(csv_results))
 
-    # 2. Init API
+    # 3. Init API
     logger.info("Initializing Timeback API...")
     api = TimebackAPI()
 
-    # 3. Fetch enrollments + profiles
+    # 4. Fetch enrollments + profiles
     logger.info("Fetching Writing enrollments...")
     enrollments = fetch_writing_enrollments(api)
     student_ids = set(enrollments.keys())
@@ -466,11 +502,18 @@ def collect(csv_path: str, session_name: str) -> dict:
 
         email = profile.email
 
-        # Skip excluded campuses and shadow/test accounts
-        if profile.org_name in EXCLUDED_CAMPUSES:
+        # Only include students in the A&D Master Roster
+        roster_entry = roster.get(email.lower())
+        if not roster_entry:
             continue
-        if _is_excluded_account(email):
-            continue
+
+        # Use roster campus as source of truth
+        roster_campus = roster_entry["campus"]
+
+        # Classify into dashboard group
+        dash_group = _classify_dashboard(roster_campus)
+        if not dash_group:
+            continue  # campus excluded from both dashboards
 
         logger.info("Processing student %d/%d: %s", idx, total, email)
 
@@ -635,7 +678,8 @@ def collect(csv_path: str, session_name: str) -> dict:
             "id": sid,
             "name": profile.full_name,
             "email": email,
-            "campus": profile.org_name,
+            "campus": roster_campus,
+            "dashboard": dash_group,
             "level": level,
             "age_grade": profile.age_grade,
             "hmg": hmg,
