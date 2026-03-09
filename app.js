@@ -231,7 +231,7 @@
         listHtml += `
           <div class="dd-student-item">
             <div class="dd-student-name">${esc(s.name)} <span style="font-weight:400;color:var(--text-muted);font-size:0.78rem">${esc(s.email)}</span></div>
-            <div class="dd-student-meta">${esc(s.campus)} | ${esc(s.level)} | G${s.age_grade} | HMG: G${s.hmg} | XP: ${Math.round(s.xp.total)}/${Math.round(s.xp.goal_to_date)} (${xpPct}%)${lastXp}</div>
+            <div class="dd-student-meta">${esc(s.campus)} | ${esc(s.level)} | G${s.age_grade} | HMG: G${s.hmg}${s.effective_grade ? ` | Eff: G${s.effective_grade.effective_grade}` : ""} | XP: ${Math.round(s.xp.total)}/${Math.round(s.xp.goal_to_date)} (${xpPct}%)${lastXp}</div>
             <div class="dd-student-meta">${lastTest}</div>
             <div class="dd-student-reasons">
               ${reasons.map((r) => `<span class="dd-reason ${r.type}">${esc(r.label)}</span>`).join("")}
@@ -438,6 +438,7 @@
             <span class="student-email">${esc(s.email)}</span>
             <span class="student-grade">G${s.age_grade}</span>
             <span class="student-hmg">HMG: G${s.hmg}</span>
+            ${s.effective_grade ? `<span class="student-eff-grade">Eff: G${s.effective_grade.effective_grade}</span>` : ""}
           </div>
           <span class="expand-icon">&#9660;</span>
           <div class="card-row2">
@@ -517,6 +518,15 @@
         html += `<div class="insight-item"><span class="insight-dot ${ins.severity}"></span>${esc(ins.text)}</div>`;
       }
       html += `</div>`;
+    }
+
+    if (s.effective_grade) {
+      const eg = s.effective_grade;
+      html += `<div class="detail-section"><h4>MAP Language (Effective Grade)</h4>
+        <div style="font-size:0.85rem">
+          <strong>G${eg.effective_grade}</strong> &middot; RIT: ${eg.rit_score || "-"} &middot; Percentile: ${eg.percentile != null ? eg.percentile + "%" : "-"} &middot; ${esc(eg.term || "")} (${formatDate(eg.test_date)})
+        </div>
+      </div>`;
     }
 
     if (s.next_expected_test) {
@@ -1050,7 +1060,7 @@
       <table class="metrics-table drilldown-table">
         <tr>
           <th>Name</th><th>Email</th><th>Campus</th><th>Level</th>
-          <th>HMG</th><th>XP</th><th>Last Test</th><th>Insights</th>
+          <th>HMG</th><th>Eff. Grade</th><th>XP</th><th>Last Test</th><th>Insights</th>
         </tr>
     `;
 
@@ -1069,6 +1079,7 @@
         <td>${esc(s.campus)}</td>
         <td>${esc(s.level)}</td>
         <td>G${s.hmg}</td>
+        <td>${s.effective_grade ? `G${s.effective_grade.effective_grade}` : "-"}</td>
         <td class="${xpCls}">${Math.round(s.xp.total)}/${Math.round(s.xp.goal_to_date)} (${xpPct}%)</td>
         <td>${lastTest}</td>
         <td>${insightCount > 0 ? `<span class="score-fail">${insightCount}</span>` : '<span class="score-pass">0</span>'}</td>
@@ -1146,6 +1157,7 @@
             level: s.level,
             age_grade: s.age_grade,
             hmg: s.hmg,
+            effective_grade: s.effective_grade,
             test_name: t.name,
             test_type: attemptLabel,
             raw_type: t.test_type,
@@ -1229,6 +1241,7 @@
                 <th>Campus</th>
                 <th>Level</th>
                 <th>HMG</th>
+                <th>Eff. Grade</th>
                 <th>Test</th>
                 <th>Type</th>
                 <th>Score</th>
@@ -1249,6 +1262,7 @@
           <td>${esc(r.campus)}</td>
           <td>${esc(r.level)}</td>
           <td>G${r.hmg}</td>
+          <td>${r.effective_grade ? `G${r.effective_grade.effective_grade}` : "-"}</td>
           <td>${esc(r.test_name)}</td>
           <td><span class="tr-type-badge ${r.raw_type === "test out" ? "test-out" : r.raw_type === "placement" ? "placement" : "eoc"}">${esc(r.test_type)}</span></td>
           <td class="${scoreCls}">${r.score}%</td>

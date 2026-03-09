@@ -435,6 +435,12 @@ body {
     color: var(--blue);
 }
 
+.student-eff-grade {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #7c3aed;
+}
+
 .card-row2 {
     font-size: 0.78rem;
     color: var(--text-muted);

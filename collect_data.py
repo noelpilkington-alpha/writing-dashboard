@@ -221,6 +221,51 @@ def run_deep_dive_analysis(
     return analyses
 
 
+def fetch_map_effective_grades(api: TimebackAPI) -> dict[str, dict]:
+    """Fetch MAP Language results and return effective grade per student.
+
+    Returns dict mapping student sourcedId -> {
+        "effective_grade": float,  # Grade Level from most recent MAP Language result
+        "rit_score": int,
+        "percentile": int,
+        "term": str,
+        "test_date": str,
+    }
+    """
+    logger.info("Fetching MAP Language results for effective grades...")
+    all_results = api.get_paginated(
+        f"{GRADEBOOK_BASE}/assessmentResults/",
+        {"filter": "metadata.assessmentType='MAP_GROWTH' AND metadata.testname~'Language'"},
+        "assessmentResults",
+    )
+    logger.info("Found %d MAP Language results", len(all_results))
+
+    # For each student, keep the most recent result
+    latest_by_student: dict[str, dict] = {}
+    for r in all_results:
+        sid = r.get("student", {}).get("sourcedId", "")
+        if not sid:
+            continue
+        score_date = (r.get("scoreDate") or "")[:10]
+        meta = r.get("metadata", {})
+        grade_level = meta.get("Grade Level")
+        if grade_level is None:
+            continue
+
+        existing = latest_by_student.get(sid)
+        if existing is None or score_date > existing["test_date"]:
+            latest_by_student[sid] = {
+                "effective_grade": round(float(grade_level), 1),
+                "rit_score": meta.get("RIT Score"),
+                "percentile": meta.get("testpercentile"),
+                "term": meta.get("termname", ""),
+                "test_date": score_date,
+            }
+
+    logger.info("Resolved MAP effective grades for %d students", len(latest_by_student))
+    return latest_by_student
+
+
 def _school_days_to_date(session_name: str) -> int:
     """Count school days from session school_start to yesterday.
 
@@ -841,6 +886,9 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False) ->
     else:
         dd_analyses = run_deep_dive_analysis(deep_dive_tests, email_to_name)
 
+    # 6c. Fetch MAP effective grades
+    map_grades = fetch_map_effective_grades(api)
+
     # 7. Build email -> csv results map
     csv_by_email: dict[str, list] = defaultdict(list)
     for r in csv_results:
@@ -1066,6 +1114,7 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False) ->
             "hmg": hmg,
             "starting_hmg": starting_hmg,
             "grades_advanced": hmg - starting_hmg,
+            "effective_grade": map_grades.get(sid),
             "completed_g8": completed_g8,
             "enrollments": student_enrollments,
             "still_enrolled": bool(student_enrollments),
