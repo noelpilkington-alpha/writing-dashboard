@@ -1,11 +1,33 @@
 {
-  "generated_at": "2026-03-09T12:55:21",
+  "generated_at": "2026-03-09T13:14:34",
   "session": {
     "name": "S4",
     "start": "2026-02-21",
     "end": "2026-04-17",
     "school_start": "2026-03-02",
     "school_days_elapsed": 6
+  },
+  "all_sessions": {
+    "S1": {
+      "start": "2025-08-11",
+      "end": "2025-10-17",
+      "label": "Session 1"
+    },
+    "S2": {
+      "start": "2025-10-20",
+      "end": "2026-01-02",
+      "label": "Session 2"
+    },
+    "S3": {
+      "start": "2026-01-05",
+      "end": "2026-02-20",
+      "label": "Session 3"
+    },
+    "S4": {
+      "start": "2026-02-21",
+      "end": "2026-04-17",
+      "label": "Session 4"
+    }
   },
   "thresholds": {
     "xp_per_day": 15,
@@ -37093,6 +37115,7 @@
       "grades_advanced": 5,
       "completed_g8": false,
       "enrollments": [
+        "Essays G8 Class",
         "Standardized Writing Fundamentals G3 Class",
         "Paragraphs G3 2025-26",
         "Paragraphs G3 Class",
@@ -37371,14 +37394,8 @@
         "needed": false,
         "details": []
       },
-      "insights": [
-        {
-          "type": "enrollment_mismatch",
-          "severity": "medium",
-          "text": "Expected G8, enrolled in G3, G3, G3, G6, G7, G7"
-        }
-      ],
-      "enrollment_mismatch": "Expected G8, enrolled in G3, G3, G3, G6, G7, G7"
+      "insights": [],
+      "enrollment_mismatch": null
     },
     {
       "id": "9c5e9e16-f351-4456-9b2f-223d2055d3a4",

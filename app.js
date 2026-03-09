@@ -541,6 +541,34 @@
       placementPassed += ts.placement_passed || 0;
     });
 
+    // Per-session test breakdown
+    const sessions = DATA.all_sessions || {};
+    const sessionOrder = Object.keys(sessions).sort();
+    const sessionTestStats = {};
+    for (const sKey of sessionOrder) {
+      sessionTestStats[sKey] = { label: sessions[sKey].label || sKey, passed: 0, eoc: 0, testOut: 0, placement: 0, studentsPassing: new Set() };
+    }
+    students.forEach((s) => {
+      const tests = s.all_tests || [];
+      for (const t of tests) {
+        if (!t.passed) continue;
+        const d = t.date;
+        let matched = false;
+        for (const sKey of sessionOrder) {
+          const sess = sessions[sKey];
+          if (d >= sess.start && d <= sess.end) {
+            sessionTestStats[sKey].passed++;
+            if (t.test_type === "end of course") sessionTestStats[sKey].eoc++;
+            if (t.test_type === "test out") sessionTestStats[sKey].testOut++;
+            if (t.test_type === "placement") sessionTestStats[sKey].placement++;
+            sessionTestStats[sKey].studentsPassing.add(s.email);
+            matched = true;
+            break;
+          }
+        }
+      }
+    });
+
     // Build campus breakdown
     const campusMap = {};
     students.forEach((s) => {
@@ -632,6 +660,29 @@
             <div class="metric-label">Placement Passed</div>
           </div>
         </div>
+        <table class="metrics-table" style="margin-top:16px">
+          <tr><th>Session</th><th>Tests Passed</th><th>Students Passing</th><th>End of Course</th><th>Test-Outs</th><th>Placement</th></tr>
+          ${sessionOrder.map((sKey) => {
+            const ss = sessionTestStats[sKey];
+            const isCurrent = sKey === DATA.session.name;
+            return `<tr${isCurrent ? ' style="font-weight:600"' : ""}>
+              <td>${esc(ss.label)}${isCurrent ? " (current)" : ""}</td>
+              <td>${ss.passed}</td>
+              <td>${ss.studentsPassing.size}</td>
+              <td>${ss.eoc}</td>
+              <td>${ss.testOut}</td>
+              <td>${ss.placement}</td>
+            </tr>`;
+          }).join("")}
+          <tr style="font-weight:700;border-top:2px solid var(--border)">
+            <td>All Time</td>
+            <td>${totalTestsPassed}</td>
+            <td>${studentsPassingTests.length}</td>
+            <td>${endOfCoursePassed}</td>
+            <td>${testOutsPassed}</td>
+            <td>${placementPassed}</td>
+          </tr>
+        </table>
       </div>
     `;
 

@@ -908,6 +908,14 @@ def collect(csv_path: str, session_name: str) -> dict:
             "enrollment_mismatch": enrollment_mismatch,
         })
 
+    # All session definitions for per-session metrics
+    all_sessions = {
+        "S1": {"start": "2025-08-11", "end": "2025-10-17", "label": "Session 1"},
+        "S2": {"start": "2025-10-20", "end": "2026-01-02", "label": "Session 2"},
+        "S3": {"start": "2026-01-05", "end": "2026-02-20", "label": "Session 3"},
+        "S4": {"start": "2026-02-21", "end": "2026-04-17", "label": "Session 4"},
+    }
+
     # Top-level structure
     dashboard = {
         "generated_at": datetime.now().isoformat(timespec="seconds"),
@@ -918,6 +926,7 @@ def collect(csv_path: str, session_name: str) -> dict:
             "school_start": session.get("school_start", session_start),
             "school_days_elapsed": school_days,
         },
+        "all_sessions": all_sessions,
         "thresholds": {
             "xp_per_day": XP_GOAL_PER_DAY,
             "minutes_per_day": MINUTES_GOAL_PER_DAY,
