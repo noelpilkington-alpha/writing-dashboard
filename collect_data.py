@@ -252,18 +252,24 @@ def _resolve_activity_name(ali_sid: str, meta: dict) -> tuple[str, str] | None:
 # New data fetching functions
 # ---------------------------------------------------------------------------
 
+_WRITING_TEST_RE = _re.compile(r"Writing\s+G\d|Alpha\s+Standardized\s+Writing", _re.I)
+
+
 def fetch_writing_test_results(
     api: TimebackAPI, student_id: str
 ) -> list[dict]:
-    """Fetch standardized writing test results from the API for a student."""
+    """Fetch standardized writing test results from the API for a student.
+
+    Uses a wider search (no subject filter) and filters client-side,
+    so tests with missing metadata.subject are still captured.
+    """
     try:
         data = api.get(
             f"{GRADEBOOK_BASE}/assessmentResults/",
             {
-                "limit": 100,
+                "limit": 3000,
                 "filter": (
                     f"student.sourcedId='{student_id}'"
-                    " AND metadata.subject='Writing'"
                     " AND metadata.resultType='assessment'"
                 ),
             },
@@ -271,8 +277,13 @@ def fetch_writing_test_results(
         results = []
         for r in data.get("assessmentResults", []):
             meta = r.get("metadata", {})
+            subject = meta.get("subject", "")
+            test_name = meta.get("testName", "")
+            # Include if subject is Writing OR testName matches writing test pattern
+            if subject != "Writing" and not _WRITING_TEST_RE.search(test_name):
+                continue
             results.append({
-                "name": meta.get("testName", ""),
+                "name": test_name,
                 "test_type": meta.get("testType", ""),
                 "score": r.get("score"),
                 "date": (r.get("scoreDate") or "")[:10],
@@ -535,12 +546,18 @@ def extract_xp_and_details(raw_results: list[dict]) -> dict:
     activity_xp_items.sort(key=lambda x: x["date"])
     test_xp_items.sort(key=lambda x: x["date"])
 
+    # Determine most recent XP date
+    all_dates = [a["date"] for a in activity_xp_items if a["date"]] + \
+                [t["date"] for t in test_xp_items if t["date"]]
+    last_xp_date = max(all_dates) if all_dates else None
+
     return {
         "activity_xp": activity_xp_items,
         "test_xp": test_xp_items,
         "alphawrite_xp": alphawrite_xp_total,
         "mastery_track_xp": mastery_track_xp_total,
         "test_xp_total": test_xp_total,
+        "last_xp_date": last_xp_date,
     }
 
 
@@ -771,10 +788,14 @@ def collect(csv_path: str, session_name: str) -> dict:
                     })
             if total_xp < xp_goal and school_days > 0:
                 pct = round(100 * total_xp / xp_goal) if xp_goal > 0 else 0
+                last_xp = xp_details.get("last_xp_date")
+                xp_text = f"XP behind target: {round(total_xp)}/{round(xp_goal)} ({pct}%)"
+                if last_xp:
+                    xp_text += f" — last XP earned {last_xp}"
                 insights.append({
                     "type": "goal_xp",
                     "severity": "medium",
-                    "text": f"XP behind target: {round(total_xp)}/{round(xp_goal)} ({pct}%)",
+                    "text": xp_text,
                 })
             if enrollment_mismatch:
                 insights.append({
@@ -782,6 +803,16 @@ def collect(csv_path: str, session_name: str) -> dict:
                     "severity": "medium",
                     "text": enrollment_mismatch,
                 })
+
+        # Test summary stats (from all-time api_tests)
+        passed_tests = [t for t in api_tests if t["passed"]]
+        test_summary = {
+            "total_taken": len(api_tests),
+            "total_passed": len(passed_tests),
+            "end_of_course_passed": sum(1 for t in passed_tests if t["test_type"] == "end of course"),
+            "test_outs_passed": sum(1 for t in passed_tests if t["test_type"] == "test out"),
+            "placement_passed": sum(1 for t in passed_tests if t["test_type"] == "placement"),
+        }
 
         students.append({
             "id": sid,
@@ -799,6 +830,8 @@ def collect(csv_path: str, session_name: str) -> dict:
             "still_enrolled": bool(student_enrollments),
             "last_test": last_test,
             "next_expected_test": next_test,
+            "all_tests": api_tests,
+            "test_summary": test_summary,
             "xp": {
                 "alphawrite": round(alphawrite_xp, 1),
                 "mastery_track": round(mastery_track_xp, 1),
@@ -807,6 +840,7 @@ def collect(csv_path: str, session_name: str) -> dict:
                 "goal_to_date": round(xp_goal, 1),
                 "avg_per_day": avg_xp,
                 "meets_goal": total_xp >= xp_goal,
+                "last_xp_date": xp_details.get("last_xp_date"),
             },
             "xp_details": xp_details,
             "session_tests": session_tests,
