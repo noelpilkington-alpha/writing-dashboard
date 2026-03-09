@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-09T12:40:24",
+  "generated_at": "2026-03-09T12:55:21",
   "session": {
     "name": "S4",
     "start": "2026-02-21",
@@ -581,7 +581,17 @@
       },
       "session_tests": [],
       "accuracy": {
-        "activities_below_threshold": [],
+        "activities_below_threshold": [
+          {
+            "name": "Write a Paragraph from Prompt",
+            "course": "Paragraphs G4",
+            "accuracy": 0,
+            "questions": "0/5",
+            "xp": 0,
+            "attempt": 1,
+            "date": "2026-03-09"
+          }
+        ],
         "repeated_activities": []
       },
       "deep_dive": {
@@ -589,6 +599,11 @@
         "details": []
       },
       "insights": [
+        {
+          "type": "low_accuracy",
+          "severity": "medium",
+          "text": "1 activity below 80% accuracy"
+        },
         {
           "type": "goal_xp",
           "severity": "medium",
@@ -966,22 +981,65 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 0.0,
+        "alphawrite": 150.0,
         "mastery_track": 0.0,
         "test": 0.0,
-        "total": 0.0,
+        "total": 150.0,
         "goal_to_date": 90,
-        "avg_per_day": 0.0,
-        "meets_goal": false,
-        "last_xp_date": null
+        "avg_per_day": 25.0,
+        "meets_goal": true,
+        "last_xp_date": "2026-03-05"
       },
       "xp_details": {
-        "activity_xp": [],
+        "activity_xp": [
+          {
+            "name": "Draft (Essay 2)",
+            "course": "Essays G7",
+            "xp": 25,
+            "date": "2026-03-02",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 2)",
+            "course": "Essays G7",
+            "xp": 25,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 2)",
+            "course": "Essays G7",
+            "xp": 15,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Setup (Essay 3)",
+            "course": "Essays G7",
+            "xp": 10,
+            "date": "2026-03-04",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 3)",
+            "course": "Essays G7",
+            "xp": 50,
+            "date": "2026-03-04",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 3)",
+            "course": "Essays G7",
+            "xp": 25,
+            "date": "2026-03-05",
+            "type": "alphawrite"
+          }
+        ],
         "test_xp": [],
-        "alphawrite_xp": 0.0,
+        "alphawrite_xp": 150.0,
         "mastery_track_xp": 0.0,
         "test_xp_total": 0.0,
-        "last_xp_date": null
+        "last_xp_date": "2026-03-05"
       },
       "session_tests": [],
       "accuracy": {
@@ -992,13 +1050,7 @@
         "needed": false,
         "details": []
       },
-      "insights": [
-        {
-          "type": "goal_xp",
-          "severity": "medium",
-          "text": "XP behind target: 0/90 (0%)"
-        }
-      ],
+      "insights": [],
       "enrollment_mismatch": null
     },
     {
@@ -4858,17 +4910,164 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 406.9,
+        "alphawrite": 921.9,
         "mastery_track": 195.0,
         "test": 180.0,
-        "total": 781.9,
+        "total": 1296.9,
         "goal_to_date": 90,
-        "avg_per_day": 130.3,
+        "avg_per_day": 216.1,
         "meets_goal": true,
         "last_xp_date": "2026-03-03"
       },
       "xp_details": {
         "activity_xp": [
+          {
+            "name": "Draft (Essay 1)",
+            "course": "Essays G7",
+            "xp": 25,
+            "date": "2026-02-24",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 1)",
+            "course": "Essays G7",
+            "xp": 25,
+            "date": "2026-02-24",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 1)",
+            "course": "Essays G7",
+            "xp": 15,
+            "date": "2026-02-24",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Setup (Essay 2)",
+            "course": "Essays G7",
+            "xp": 10,
+            "date": "2026-02-24",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 2)",
+            "course": "Essays G7",
+            "xp": 50,
+            "date": "2026-02-24",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 2)",
+            "course": "Essays G7",
+            "xp": 25,
+            "date": "2026-02-24",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 3)",
+            "course": "Essays G7",
+            "xp": 15,
+            "date": "2026-02-24",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 2)",
+            "course": "Essays G7",
+            "xp": 15,
+            "date": "2026-02-24",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Setup (Essay 3)",
+            "course": "Essays G7",
+            "xp": 10,
+            "date": "2026-02-24",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 3)",
+            "course": "Essays G7",
+            "xp": 50,
+            "date": "2026-02-24",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 3)",
+            "course": "Essays G7",
+            "xp": 25,
+            "date": "2026-02-24",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Setup (Essay 4)",
+            "course": "Essays G7",
+            "xp": 10,
+            "date": "2026-02-25",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 4)",
+            "course": "Essays G7",
+            "xp": 25,
+            "date": "2026-02-25",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 4)",
+            "course": "Essays G7",
+            "xp": 15,
+            "date": "2026-02-25",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 4)",
+            "course": "Essays G7",
+            "xp": 50,
+            "date": "2026-02-25",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Setup (Essay 5)",
+            "course": "Essays G7",
+            "xp": 10,
+            "date": "2026-02-25",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 4)",
+            "course": "Essays G7",
+            "xp": 25,
+            "date": "2026-02-25",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 5)",
+            "course": "Essays G7",
+            "xp": 50,
+            "date": "2026-02-25",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 5)",
+            "course": "Essays G7",
+            "xp": 25,
+            "date": "2026-02-25",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 5)",
+            "course": "Essays G7",
+            "xp": 25,
+            "date": "2026-02-25",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 5)",
+            "course": "Essays G7",
+            "xp": 15,
+            "date": "2026-02-25",
+            "type": "alphawrite"
+          },
           {
             "name": "Alpha Test",
             "course": "",
@@ -5080,7 +5279,7 @@
             "date": "2026-03-02"
           }
         ],
-        "alphawrite_xp": 406.875,
+        "alphawrite_xp": 921.875,
         "mastery_track_xp": 195.0,
         "test_xp_total": 180.0,
         "last_xp_date": "2026-03-03"
@@ -6740,14 +6939,14 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 56.2,
+        "alphawrite": 156.2,
         "mastery_track": 150.0,
         "test": 90.0,
-        "total": 296.2,
+        "total": 396.2,
         "goal_to_date": 90,
-        "avg_per_day": 49.4,
+        "avg_per_day": 66.0,
         "meets_goal": true,
-        "last_xp_date": "2026-03-04"
+        "last_xp_date": "2026-03-05"
       },
       "xp_details": {
         "activity_xp": [
@@ -6806,6 +7005,34 @@
             "xp": 15,
             "date": "2026-03-04",
             "type": "external"
+          },
+          {
+            "name": "Draft (Essay 1)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-05",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 1)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-03-05",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Setup (Essay 1)",
+            "course": "Essays G6",
+            "xp": 10,
+            "date": "2026-03-05",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 1)",
+            "course": "Essays G6",
+            "xp": 50,
+            "date": "2026-03-05",
+            "type": "alphawrite"
           }
         ],
         "test_xp": [
@@ -6816,10 +7043,10 @@
             "date": "2026-03-02"
           }
         ],
-        "alphawrite_xp": 56.25,
+        "alphawrite_xp": 156.25,
         "mastery_track_xp": 150.0,
         "test_xp_total": 90.0,
-        "last_xp_date": "2026-03-04"
+        "last_xp_date": "2026-03-05"
       },
       "session_tests": [
         {
@@ -7404,17 +7631,108 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 0.0,
+        "alphawrite": 315.0,
         "mastery_track": 90.0,
         "test": 0.0,
-        "total": 90.0,
+        "total": 405.0,
         "goal_to_date": 90,
-        "avg_per_day": 15.0,
+        "avg_per_day": 67.5,
         "meets_goal": true,
         "last_xp_date": "2026-03-06"
       },
       "xp_details": {
         "activity_xp": [
+          {
+            "name": "Revise (Essay 3)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 3)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 3)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Setup (Essay 4)",
+            "course": "Essays G6",
+            "xp": 10,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 4)",
+            "course": "Essays G6",
+            "xp": 50,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 4)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-05",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 4)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-05",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 4)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-03-05",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Setup (Essay 5)",
+            "course": "Essays G6",
+            "xp": 10,
+            "date": "2026-03-05",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 5)",
+            "course": "Essays G6",
+            "xp": 50,
+            "date": "2026-03-05",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 5)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-06",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 5)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-03-06",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 5)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-06",
+            "type": "alphawrite"
+          },
           {
             "name": "Alpha Standardized Writing G6.2",
             "course": "",
@@ -7424,7 +7742,7 @@
           }
         ],
         "test_xp": [],
-        "alphawrite_xp": 0.0,
+        "alphawrite_xp": 315.0,
         "mastery_track_xp": 90.0,
         "test_xp_total": 0.0,
         "last_xp_date": "2026-03-06"
@@ -8416,17 +8734,24 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 28.1,
+        "alphawrite": 43.1,
         "mastery_track": 135.0,
         "test": 90.0,
-        "total": 253.1,
+        "total": 268.1,
         "goal_to_date": 90,
-        "avg_per_day": 42.2,
+        "avg_per_day": 44.7,
         "meets_goal": true,
         "last_xp_date": "2026-03-05"
       },
       "xp_details": {
         "activity_xp": [
+          {
+            "name": "Polish (Essay 5)",
+            "course": "Essays G8",
+            "xp": 15,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
           {
             "name": "Alpha Test",
             "course": "",
@@ -8485,7 +8810,7 @@
             "date": "2026-03-03"
           }
         ],
-        "alphawrite_xp": 28.125,
+        "alphawrite_xp": 43.125,
         "mastery_track_xp": 135.0,
         "test_xp_total": 90.0,
         "last_xp_date": "2026-03-05"
@@ -8502,7 +8827,17 @@
         }
       ],
       "accuracy": {
-        "activities_below_threshold": [],
+        "activities_below_threshold": [
+          {
+            "name": "Revise (Essay 5)",
+            "course": "Essays G8",
+            "accuracy": 74.21875000000001,
+            "questions": "?",
+            "xp": 0,
+            "attempt": 1,
+            "date": "2026-03-03"
+          }
+        ],
         "repeated_activities": [
           {
             "name": "Identify Appositives",
@@ -8532,6 +8867,11 @@
         "details": []
       },
       "insights": [
+        {
+          "type": "low_accuracy",
+          "severity": "medium",
+          "text": "1 activity below 80% accuracy"
+        },
         {
           "type": "repeated",
           "severity": "low",
@@ -12693,12 +13033,12 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 180.0,
+        "alphawrite": 190.0,
         "mastery_track": 15.0,
         "test": 0.0,
-        "total": 195.0,
+        "total": 205.0,
         "goal_to_date": 90,
-        "avg_per_day": 32.5,
+        "avg_per_day": 34.2,
         "meets_goal": true,
         "last_xp_date": "2026-03-05"
       },
@@ -12780,10 +13120,17 @@
             "xp": 18.75,
             "date": "2026-03-05",
             "type": "alphawrite"
+          },
+          {
+            "name": "Setup (Essay 1)",
+            "course": "Essays G7",
+            "xp": 10,
+            "date": "2026-03-05",
+            "type": "alphawrite"
           }
         ],
         "test_xp": [],
-        "alphawrite_xp": 180.0,
+        "alphawrite_xp": 190.0,
         "mastery_track_xp": 15.0,
         "test_xp_total": 0.0,
         "last_xp_date": "2026-03-05"
@@ -16094,17 +16441,38 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 14.1,
+        "alphawrite": 214.1,
         "mastery_track": 0.0,
         "test": 0.0,
-        "total": 14.1,
+        "total": 214.1,
         "goal_to_date": 90,
-        "avg_per_day": 2.3,
-        "meets_goal": false,
-        "last_xp_date": "2026-03-03"
+        "avg_per_day": 35.7,
+        "meets_goal": true,
+        "last_xp_date": "2026-03-06"
       },
       "xp_details": {
         "activity_xp": [
+          {
+            "name": "Polish (Essay 2)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-03-02",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Setup (Essay 3)",
+            "course": "Essays G6",
+            "xp": 10,
+            "date": "2026-03-02",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 3)",
+            "course": "Essays G6",
+            "xp": 50,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
           {
             "name": "Kernel Expansion",
             "course": "Sentences G3",
@@ -16118,13 +16486,48 @@
             "xp": 4.6875,
             "date": "2026-03-03",
             "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 3)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-04",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 3)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-04",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Setup (Essay 4)",
+            "course": "Essays G6",
+            "xp": 10,
+            "date": "2026-03-05",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 3)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-03-05",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 4)",
+            "course": "Essays G6",
+            "xp": 50,
+            "date": "2026-03-06",
+            "type": "alphawrite"
           }
         ],
         "test_xp": [],
-        "alphawrite_xp": 14.0625,
+        "alphawrite_xp": 214.0625,
         "mastery_track_xp": 0.0,
         "test_xp_total": 0.0,
-        "last_xp_date": "2026-03-03"
+        "last_xp_date": "2026-03-06"
       },
       "session_tests": [],
       "accuracy": {
@@ -16135,13 +16538,7 @@
         "needed": false,
         "details": []
       },
-      "insights": [
-        {
-          "type": "goal_xp",
-          "severity": "medium",
-          "text": "XP behind target: 14/90 (16%) — last XP earned 2026-03-03"
-        }
-      ],
+      "insights": [],
       "enrollment_mismatch": null
     },
     {
@@ -16634,17 +17031,31 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 65.6,
+        "alphawrite": 105.6,
         "mastery_track": 270.0,
         "test": 90.0,
-        "total": 425.6,
+        "total": 465.6,
         "goal_to_date": 90,
-        "avg_per_day": 70.9,
+        "avg_per_day": 77.6,
         "meets_goal": true,
         "last_xp_date": "2026-03-05"
       },
       "xp_details": {
         "activity_xp": [
+          {
+            "name": "Revise (Essay 4)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 4)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
           {
             "name": "Alpha Test",
             "course": "",
@@ -16759,7 +17170,7 @@
             "date": "2026-03-03"
           }
         ],
-        "alphawrite_xp": 65.625,
+        "alphawrite_xp": 105.625,
         "mastery_track_xp": 270.0,
         "test_xp_total": 90.0,
         "last_xp_date": "2026-03-05"
@@ -19193,22 +19604,58 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 0.0,
+        "alphawrite": 125.0,
         "mastery_track": 0.0,
         "test": 0.0,
-        "total": 0.0,
+        "total": 125.0,
         "goal_to_date": 90,
-        "avg_per_day": 0.0,
-        "meets_goal": false,
-        "last_xp_date": null
+        "avg_per_day": 20.8,
+        "meets_goal": true,
+        "last_xp_date": "2026-03-05"
       },
       "xp_details": {
-        "activity_xp": [],
+        "activity_xp": [
+          {
+            "name": "Outline (Essay 2)",
+            "course": "Essays G6",
+            "xp": 50,
+            "date": "2026-03-02",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 2)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 2)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-04",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 2)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-03-05",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Setup (Essay 3)",
+            "course": "Essays G6",
+            "xp": 10,
+            "date": "2026-03-05",
+            "type": "alphawrite"
+          }
+        ],
         "test_xp": [],
-        "alphawrite_xp": 0.0,
+        "alphawrite_xp": 125.0,
         "mastery_track_xp": 0.0,
         "test_xp_total": 0.0,
-        "last_xp_date": null
+        "last_xp_date": "2026-03-05"
       },
       "session_tests": [],
       "accuracy": {
@@ -19219,13 +19666,7 @@
         "needed": false,
         "details": []
       },
-      "insights": [
-        {
-          "type": "goal_xp",
-          "severity": "medium",
-          "text": "XP behind target: 0/90 (0%)"
-        }
-      ],
+      "insights": [],
       "enrollment_mismatch": null
     },
     {
@@ -19868,17 +20309,73 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 0.0,
+        "alphawrite": 190.0,
         "mastery_track": 90.0,
         "test": 90.0,
-        "total": 180.0,
+        "total": 370.0,
         "goal_to_date": 90,
-        "avg_per_day": 30.0,
+        "avg_per_day": 61.7,
         "meets_goal": true,
         "last_xp_date": "2026-03-08"
       },
       "xp_details": {
         "activity_xp": [
+          {
+            "name": "Setup (Essay 5)",
+            "course": "Essays G6",
+            "xp": 10,
+            "date": "2026-03-02",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 5)",
+            "course": "Essays G6",
+            "xp": 50,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 5)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-04",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 5)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-05",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 5)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-03-05",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 3)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-06",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 3)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-06",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 3)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-03-06",
+            "type": "alphawrite"
+          },
           {
             "name": "Alpha Test",
             "course": "",
@@ -19895,7 +20392,7 @@
             "date": "2026-03-08"
           }
         ],
-        "alphawrite_xp": 0.0,
+        "alphawrite_xp": 190.0,
         "mastery_track_xp": 90.0,
         "test_xp_total": 90.0,
         "last_xp_date": "2026-03-08"
@@ -20250,22 +20747,37 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 0.0,
+        "alphawrite": 75.0,
         "mastery_track": 0.0,
         "test": 0.0,
-        "total": 0.0,
+        "total": 75.0,
         "goal_to_date": 90,
-        "avg_per_day": 0.0,
+        "avg_per_day": 12.5,
         "meets_goal": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-03-03"
       },
       "xp_details": {
-        "activity_xp": [],
+        "activity_xp": [
+          {
+            "name": "Revise (Essay 3)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-02",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 4)",
+            "course": "Essays G6",
+            "xp": 50,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          }
+        ],
         "test_xp": [],
-        "alphawrite_xp": 0.0,
+        "alphawrite_xp": 75.0,
         "mastery_track_xp": 0.0,
         "test_xp_total": 0.0,
-        "last_xp_date": null
+        "last_xp_date": "2026-03-03"
       },
       "session_tests": [],
       "accuracy": {
@@ -20280,7 +20792,7 @@
         {
           "type": "goal_xp",
           "severity": "medium",
-          "text": "XP behind target: 0/90 (0%)"
+          "text": "XP behind target: 75/90 (83%) — last XP earned 2026-03-03"
         }
       ],
       "enrollment_mismatch": null
@@ -24797,22 +25309,51 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 0.0,
+        "alphawrite": 110.0,
         "mastery_track": 0.0,
         "test": 0.0,
-        "total": 0.0,
+        "total": 110.0,
         "goal_to_date": 90,
-        "avg_per_day": 0.0,
-        "meets_goal": false,
-        "last_xp_date": null
+        "avg_per_day": 18.3,
+        "meets_goal": true,
+        "last_xp_date": "2026-03-04"
       },
       "xp_details": {
-        "activity_xp": [],
+        "activity_xp": [
+          {
+            "name": "Setup (Essay 3)",
+            "course": "Essays G7",
+            "xp": 10,
+            "date": "2026-02-25",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 3)",
+            "course": "Essays G7",
+            "xp": 50,
+            "date": "2026-02-25",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 3)",
+            "course": "Essays G7",
+            "xp": 25,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 3)",
+            "course": "Essays G7",
+            "xp": 25,
+            "date": "2026-03-04",
+            "type": "alphawrite"
+          }
+        ],
         "test_xp": [],
-        "alphawrite_xp": 0.0,
+        "alphawrite_xp": 110.0,
         "mastery_track_xp": 0.0,
         "test_xp_total": 0.0,
-        "last_xp_date": null
+        "last_xp_date": "2026-03-04"
       },
       "session_tests": [],
       "accuracy": {
@@ -24823,13 +25364,7 @@
         "needed": false,
         "details": []
       },
-      "insights": [
-        {
-          "type": "goal_xp",
-          "severity": "medium",
-          "text": "XP behind target: 0/90 (0%)"
-        }
-      ],
+      "insights": [],
       "enrollment_mismatch": null
     },
     {
@@ -26312,22 +26847,44 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 0.0,
+        "alphawrite": 85.0,
         "mastery_track": 0.0,
         "test": 0.0,
-        "total": 0.0,
+        "total": 85.0,
         "goal_to_date": 90,
-        "avg_per_day": 0.0,
+        "avg_per_day": 14.2,
         "meets_goal": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-03-03"
       },
       "xp_details": {
-        "activity_xp": [],
+        "activity_xp": [
+          {
+            "name": "Setup (Essay 5)",
+            "course": "Essays G6",
+            "xp": 10,
+            "date": "2026-03-02",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 5)",
+            "course": "Essays G6",
+            "xp": 50,
+            "date": "2026-03-02",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 5)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          }
+        ],
         "test_xp": [],
-        "alphawrite_xp": 0.0,
+        "alphawrite_xp": 85.0,
         "mastery_track_xp": 0.0,
         "test_xp_total": 0.0,
-        "last_xp_date": null
+        "last_xp_date": "2026-03-03"
       },
       "session_tests": [],
       "accuracy": {
@@ -26342,7 +26899,7 @@
         {
           "type": "goal_xp",
           "severity": "medium",
-          "text": "XP behind target: 0/90 (0%)"
+          "text": "XP behind target: 85/90 (94%) — last XP earned 2026-03-03"
         }
       ],
       "enrollment_mismatch": null
@@ -31103,22 +31660,86 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 0.0,
+        "alphawrite": 225.0,
         "mastery_track": 0.0,
         "test": 0.0,
-        "total": 0.0,
+        "total": 225.0,
         "goal_to_date": 90,
-        "avg_per_day": 0.0,
-        "meets_goal": false,
-        "last_xp_date": null
+        "avg_per_day": 37.5,
+        "meets_goal": true,
+        "last_xp_date": "2026-03-06"
       },
       "xp_details": {
-        "activity_xp": [],
+        "activity_xp": [
+          {
+            "name": "Revise (Essay 1)",
+            "course": "Essays G7",
+            "xp": 25,
+            "date": "2026-03-02",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 1)",
+            "course": "Essays G7",
+            "xp": 15,
+            "date": "2026-03-02",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Setup (Essay 2)",
+            "course": "Essays G7",
+            "xp": 10,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 2)",
+            "course": "Essays G7",
+            "xp": 50,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 2)",
+            "course": "Essays G7",
+            "xp": 25,
+            "date": "2026-03-04",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 2)",
+            "course": "Essays G7",
+            "xp": 25,
+            "date": "2026-03-04",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 2)",
+            "course": "Essays G7",
+            "xp": 15,
+            "date": "2026-03-06",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Setup (Essay 3)",
+            "course": "Essays G7",
+            "xp": 10,
+            "date": "2026-03-06",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 3)",
+            "course": "Essays G7",
+            "xp": 50,
+            "date": "2026-03-06",
+            "type": "alphawrite"
+          }
+        ],
         "test_xp": [],
-        "alphawrite_xp": 0.0,
+        "alphawrite_xp": 225.0,
         "mastery_track_xp": 0.0,
         "test_xp_total": 0.0,
-        "last_xp_date": null
+        "last_xp_date": "2026-03-06"
       },
       "session_tests": [],
       "accuracy": {
@@ -31129,13 +31750,7 @@
         "needed": false,
         "details": []
       },
-      "insights": [
-        {
-          "type": "goal_xp",
-          "severity": "medium",
-          "text": "XP behind target: 0/90 (0%)"
-        }
-      ],
+      "insights": [],
       "enrollment_mismatch": null
     },
     {
@@ -32746,22 +33361,72 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 0.0,
+        "alphawrite": 150.0,
         "mastery_track": 0.0,
         "test": 0.0,
-        "total": 0.0,
+        "total": 150.0,
         "goal_to_date": 90,
-        "avg_per_day": 0.0,
-        "meets_goal": false,
-        "last_xp_date": null
+        "avg_per_day": 25.0,
+        "meets_goal": true,
+        "last_xp_date": "2026-03-05"
       },
       "xp_details": {
-        "activity_xp": [],
+        "activity_xp": [
+          {
+            "name": "Polish (Essay 1)",
+            "course": "Essays G7",
+            "xp": 15,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Setup (Essay 2)",
+            "course": "Essays G7",
+            "xp": 10,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 2)",
+            "course": "Essays G7",
+            "xp": 50,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 2)",
+            "course": "Essays G7",
+            "xp": 25,
+            "date": "2026-03-04",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 2)",
+            "course": "Essays G7",
+            "xp": 25,
+            "date": "2026-03-05",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 2)",
+            "course": "Essays G7",
+            "xp": 15,
+            "date": "2026-03-05",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Setup (Essay 3)",
+            "course": "Essays G7",
+            "xp": 10,
+            "date": "2026-03-05",
+            "type": "alphawrite"
+          }
+        ],
         "test_xp": [],
-        "alphawrite_xp": 0.0,
+        "alphawrite_xp": 150.0,
         "mastery_track_xp": 0.0,
         "test_xp_total": 0.0,
-        "last_xp_date": null
+        "last_xp_date": "2026-03-05"
       },
       "session_tests": [],
       "accuracy": {
@@ -32772,13 +33437,7 @@
         "needed": false,
         "details": []
       },
-      "insights": [
-        {
-          "type": "goal_xp",
-          "severity": "medium",
-          "text": "XP behind target: 0/90 (0%)"
-        }
-      ],
+      "insights": [],
       "enrollment_mismatch": null
     },
     {
@@ -33453,22 +34112,30 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 0.0,
+        "alphawrite": 50.0,
         "mastery_track": 0.0,
         "test": 0.0,
-        "total": 0.0,
+        "total": 50.0,
         "goal_to_date": 90,
-        "avg_per_day": 0.0,
+        "avg_per_day": 8.3,
         "meets_goal": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-03-02"
       },
       "xp_details": {
-        "activity_xp": [],
+        "activity_xp": [
+          {
+            "name": "Outline (Essay 5)",
+            "course": "Essays G6",
+            "xp": 50,
+            "date": "2026-03-02",
+            "type": "alphawrite"
+          }
+        ],
         "test_xp": [],
-        "alphawrite_xp": 0.0,
+        "alphawrite_xp": 50.0,
         "mastery_track_xp": 0.0,
         "test_xp_total": 0.0,
-        "last_xp_date": null
+        "last_xp_date": "2026-03-02"
       },
       "session_tests": [],
       "accuracy": {
@@ -33483,7 +34150,7 @@
         {
           "type": "goal_xp",
           "severity": "medium",
-          "text": "XP behind target: 0/90 (0%)"
+          "text": "XP behind target: 50/90 (56%) — last XP earned 2026-03-02"
         }
       ],
       "enrollment_mismatch": null
@@ -36625,17 +37292,38 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 0.0,
+        "alphawrite": 65.0,
         "mastery_track": 180.0,
         "test": 90.0,
-        "total": 270.0,
+        "total": 335.0,
         "goal_to_date": 90,
-        "avg_per_day": 45.0,
+        "avg_per_day": 55.8,
         "meets_goal": true,
         "last_xp_date": "2026-03-02"
       },
       "xp_details": {
         "activity_xp": [
+          {
+            "name": "Draft (Essay 1)",
+            "course": "Essays G7",
+            "xp": 25,
+            "date": "2026-02-26",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 1)",
+            "course": "Essays G7",
+            "xp": 25,
+            "date": "2026-02-26",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 1)",
+            "course": "Essays G7",
+            "xp": 15,
+            "date": "2026-02-26",
+            "type": "alphawrite"
+          },
           {
             "name": "Alpha Test",
             "course": "",
@@ -36659,7 +37347,7 @@
             "date": "2026-02-27"
           }
         ],
-        "alphawrite_xp": 0.0,
+        "alphawrite_xp": 65.0,
         "mastery_track_xp": 180.0,
         "test_xp_total": 90.0,
         "last_xp_date": "2026-03-02"
@@ -39943,14 +40631,14 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 0.0,
+        "alphawrite": 85.0,
         "mastery_track": 90.0,
         "test": 90.0,
-        "total": 180.0,
+        "total": 265.0,
         "goal_to_date": 90,
-        "avg_per_day": 30.0,
+        "avg_per_day": 44.2,
         "meets_goal": true,
-        "last_xp_date": "2026-03-02"
+        "last_xp_date": "2026-03-04"
       },
       "xp_details": {
         "activity_xp": [
@@ -39960,6 +40648,27 @@
             "xp": 90,
             "date": "2026-03-02",
             "type": "external"
+          },
+          {
+            "name": "Setup (Essay 1)",
+            "course": "Essays G6",
+            "xp": 10,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 1)",
+            "course": "Essays G6",
+            "xp": 50,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 1)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-04",
+            "type": "alphawrite"
           }
         ],
         "test_xp": [
@@ -39970,10 +40679,10 @@
             "date": "2026-03-02"
           }
         ],
-        "alphawrite_xp": 0.0,
+        "alphawrite_xp": 85.0,
         "mastery_track_xp": 90.0,
         "test_xp_total": 90.0,
-        "last_xp_date": "2026-03-02"
+        "last_xp_date": "2026-03-04"
       },
       "session_tests": [
         {
@@ -47816,22 +48525,79 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 0.0,
+        "alphawrite": 230.0,
         "mastery_track": 0.0,
         "test": 0.0,
-        "total": 0.0,
+        "total": 230.0,
         "goal_to_date": 90,
-        "avg_per_day": 0.0,
-        "meets_goal": false,
-        "last_xp_date": null
+        "avg_per_day": 38.3,
+        "meets_goal": true,
+        "last_xp_date": "2026-03-06"
       },
       "xp_details": {
-        "activity_xp": [],
+        "activity_xp": [
+          {
+            "name": "Draft (Essay 1)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 1)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 1)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 4)",
+            "course": "Essays G6",
+            "xp": 50,
+            "date": "2026-03-04",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 5)",
+            "course": "Essays G6",
+            "xp": 50,
+            "date": "2026-03-04",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 3)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-06",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 3)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-06",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 3)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-03-06",
+            "type": "alphawrite"
+          }
+        ],
         "test_xp": [],
-        "alphawrite_xp": 0.0,
+        "alphawrite_xp": 230.0,
         "mastery_track_xp": 0.0,
         "test_xp_total": 0.0,
-        "last_xp_date": null
+        "last_xp_date": "2026-03-06"
       },
       "session_tests": [],
       "accuracy": {
@@ -47842,13 +48608,7 @@
         "needed": false,
         "details": []
       },
-      "insights": [
-        {
-          "type": "goal_xp",
-          "severity": "medium",
-          "text": "XP behind target: 0/90 (0%)"
-        }
-      ],
+      "insights": [],
       "enrollment_mismatch": null
     },
     {
@@ -50241,26 +51001,79 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 0.0,
+        "alphawrite": 115.0,
         "mastery_track": 0.0,
         "test": 0.0,
-        "total": 0.0,
+        "total": 115.0,
         "goal_to_date": 90,
-        "avg_per_day": 0.0,
-        "meets_goal": false,
-        "last_xp_date": null
+        "avg_per_day": 19.2,
+        "meets_goal": true,
+        "last_xp_date": "2026-03-07"
       },
       "xp_details": {
-        "activity_xp": [],
+        "activity_xp": [
+          {
+            "name": "Setup (Essay 5)",
+            "course": "Essays G6",
+            "xp": 10,
+            "date": "2026-03-02",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 2)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-06",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 2)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-03-07",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 3)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-07",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 3)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-07",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 3)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-03-07",
+            "type": "alphawrite"
+          }
+        ],
         "test_xp": [],
-        "alphawrite_xp": 0.0,
+        "alphawrite_xp": 115.0,
         "mastery_track_xp": 0.0,
         "test_xp_total": 0.0,
-        "last_xp_date": null
+        "last_xp_date": "2026-03-07"
       },
       "session_tests": [],
       "accuracy": {
-        "activities_below_threshold": [],
+        "activities_below_threshold": [
+          {
+            "name": "Outline (Essay 5)",
+            "course": "Essays G6",
+            "accuracy": 76.47058823529412,
+            "questions": "?",
+            "xp": 0,
+            "attempt": 1,
+            "date": "2026-03-02"
+          }
+        ],
         "repeated_activities": []
       },
       "deep_dive": {
@@ -50269,9 +51082,9 @@
       },
       "insights": [
         {
-          "type": "goal_xp",
+          "type": "low_accuracy",
           "severity": "medium",
-          "text": "XP behind target: 0/90 (0%)"
+          "text": "1 activity below 80% accuracy"
         }
       ],
       "enrollment_mismatch": null
@@ -50779,17 +51592,38 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 0.0,
+        "alphawrite": 65.0,
         "mastery_track": 90.0,
         "test": 90.0,
-        "total": 180.0,
+        "total": 245.0,
         "goal_to_date": 90,
-        "avg_per_day": 30.0,
+        "avg_per_day": 40.8,
         "meets_goal": true,
         "last_xp_date": "2026-03-03"
       },
       "xp_details": {
         "activity_xp": [
+          {
+            "name": "Draft (Essay 3)",
+            "course": "Essays G8",
+            "xp": 25,
+            "date": "2026-02-24",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 3)",
+            "course": "Essays G8",
+            "xp": 25,
+            "date": "2026-02-24",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 3)",
+            "course": "Essays G8",
+            "xp": 15,
+            "date": "2026-02-24",
+            "type": "alphawrite"
+          },
           {
             "name": "Alpha Test",
             "course": "",
@@ -50806,7 +51640,7 @@
             "date": "2026-03-03"
           }
         ],
-        "alphawrite_xp": 0.0,
+        "alphawrite_xp": 65.0,
         "mastery_track_xp": 90.0,
         "test_xp_total": 90.0,
         "last_xp_date": "2026-03-03"
@@ -55301,12 +56135,12 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 342.2,
+        "alphawrite": 352.2,
         "mastery_track": 90.0,
         "test": 30.0,
-        "total": 462.2,
+        "total": 472.2,
         "goal_to_date": 90,
-        "avg_per_day": 77.0,
+        "avg_per_day": 78.7,
         "meets_goal": true,
         "last_xp_date": "2026-03-09"
       },
@@ -55551,6 +56385,13 @@
             "type": "alphawrite"
           },
           {
+            "name": "Setup (Essay 1)",
+            "course": "Essays G8",
+            "xp": 10,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
             "name": "Writing Single Paragraph Outlines",
             "course": "Paragraphs G8",
             "xp": 9.375,
@@ -55566,7 +56407,7 @@
             "date": "2026-02-26"
           }
         ],
-        "alphawrite_xp": 342.1875,
+        "alphawrite_xp": 352.1875,
         "mastery_track_xp": 90.0,
         "test_xp_total": 30.0,
         "last_xp_date": "2026-03-09"
@@ -57304,17 +58145,115 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 138.8,
+        "alphawrite": 463.8,
         "mastery_track": 315.0,
         "test": 180.0,
-        "total": 633.8,
+        "total": 958.8,
         "goal_to_date": 90,
-        "avg_per_day": 105.6,
+        "avg_per_day": 159.8,
         "meets_goal": true,
         "last_xp_date": "2026-03-06"
       },
       "xp_details": {
         "activity_xp": [
+          {
+            "name": "Outline (Essay 4)",
+            "course": "Essays G6",
+            "xp": 50,
+            "date": "2026-02-23",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 2)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-02-24",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 2)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-02-25",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 1)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-02-27",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 2)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-02-27",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 1)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-02-27",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 3)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-02-27",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 3)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-02-27",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 3)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-02-27",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 4)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-02-27",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 4)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-02-27",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 4)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-02-27",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 5)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-02-28",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 5)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-03-01",
+            "type": "alphawrite"
+          },
           {
             "name": "Alpha Test",
             "course": "",
@@ -57470,7 +58409,7 @@
             "date": "2026-03-03"
           }
         ],
-        "alphawrite_xp": 138.75,
+        "alphawrite_xp": 463.75,
         "mastery_track_xp": 315.0,
         "test_xp_total": 180.0,
         "last_xp_date": "2026-03-06"

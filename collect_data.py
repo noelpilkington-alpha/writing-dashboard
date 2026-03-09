@@ -44,6 +44,18 @@ _UUID_RE = _re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-
 
 def _is_uuid(s: str) -> bool:
     return bool(_UUID_RE.match(s))
+
+
+def _is_alphawrite(ali_sid: str) -> bool:
+    """Check if an assessmentLineItem sourcedId is an AlphaWrite activity.
+
+    AlphaWrite activities use two prefix formats:
+    - 'alphawrite-' (sentences, paragraphs, etc.)
+    - 'alphawrite:' (compositions/essays)
+    """
+    return ali_sid.startswith("alphawrite-") or ali_sid.startswith("alphawrite:")
+
+
 ACCURACY_THRESHOLD = 80
 OUTPUT_PATH = Path(__file__).resolve().parent / "data.json"
 
@@ -177,12 +189,50 @@ def _get_skill_plan() -> dict[str, tuple[str, str]]:
     return _SKILL_PLAN
 
 
+def _resolve_compositions_name(ali_sid: str) -> tuple[str, str]:
+    """Resolve an alphawrite:compositions: activity to (readable_name, course).
+
+    Example ali_sid: alphawrite:compositions:essays-g6:essay-3-tfxy:stage-revise:
+    Returns e.g. ("Revise (Essay 3)", "Essays G6")
+    """
+    parts = ali_sid.split(":")
+    # parts: ['alphawrite', 'compositions', 'essays-g6', 'essay-3-tfxy', 'stage-revise', '']
+    course = ""
+    stage = ""
+    essay_label = ""
+    if len(parts) >= 3:
+        # e.g. 'essays-g6' -> 'Essays G6'
+        course = parts[2].replace("-", " ").title()
+    if len(parts) >= 4:
+        # e.g. 'essay-3-tfxy' -> 'Essay 3'
+        essay_part = parts[3]
+        m = _re.match(r"essay-(\d+)", essay_part)
+        if m:
+            essay_label = f"Essay {m.group(1)}"
+    if len(parts) >= 5:
+        # e.g. 'stage-revise' or 'stage-draft:attempt-1'
+        stage_part = parts[4]
+        stage = stage_part.replace("stage-", "").replace("-", " ").title()
+        if stage.startswith("Identif"):
+            stage = "Setup"  # stage-identify maps to "Setup" in the admin
+
+    name = stage if stage else "Compositions Activity"
+    if essay_label:
+        name = f"{name} ({essay_label})"
+
+    return (name, course)
+
+
 def _resolve_activity_name(ali_sid: str, meta: dict) -> tuple[str, str] | None:
     """Resolve an AlphaWrite activity to (readable_name, course).
     Returns None if the activity is not an AlphaWrite activity."""
     # Only process AlphaWrite activities
-    if not ali_sid.startswith("alphawrite-"):
+    if not _is_alphawrite(ali_sid):
         return None
+
+    # Handle alphawrite:compositions: prefix (Essays)
+    if ali_sid.startswith("alphawrite:compositions:"):
+        return _resolve_compositions_name(ali_sid)
 
     skill_plan = _get_skill_plan()
 
@@ -471,7 +521,7 @@ def extract_xp_and_details(raw_results: list[dict]) -> dict:
 
     A result is counted as Writing XP if:
     - metadata.subject == 'Writing', OR
-    - assessmentLineItem.sourcedId starts with 'alphawrite-'
+    - assessmentLineItem.sourcedId is an AlphaWrite activity (alphawrite- or alphawrite:)
 
     Returns dict with 'activity_xp', 'test_xp' lists, and XP totals.
     """
@@ -489,7 +539,7 @@ def extract_xp_and_details(raw_results: list[dict]) -> dict:
 
         ali_sid = r.get("assessmentLineItem", {}).get("sourcedId", "")
         subject = meta.get("subject", "")
-        is_alphawrite = ali_sid.startswith("alphawrite-")
+        is_alphawrite = _is_alphawrite(ali_sid)
 
         # Only include Writing-subject OR AlphaWrite activities
         if subject != "Writing" and not is_alphawrite:
@@ -515,7 +565,9 @@ def extract_xp_and_details(raw_results: list[dict]) -> dict:
                 name, course = resolved
                 alphawrite_xp_total += xp
             elif is_alphawrite:
-                name = ali_sid.replace("alphawrite-", "").replace("-assessment-line-item", "").replace("-", " ").title()
+                # Fallback: derive readable name from ali_sid
+                clean = ali_sid.replace("alphawrite-", "").replace("alphawrite:", "")
+                name = clean.replace("-assessment-line-item", "").replace("-", " ").replace(":", " ").title()
                 course = ""
                 alphawrite_xp_total += xp
             else:
