@@ -126,6 +126,139 @@ body {
     margin-left: auto;
 }
 
+/* Deep Dive button */
+.deep-dive-btn {
+    background: var(--red);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, box-shadow 0.15s;
+    white-space: nowrap;
+}
+
+.deep-dive-btn:hover {
+    background: #c0392b;
+    box-shadow: 0 2px 8px rgba(214, 48, 49, 0.3);
+}
+
+.deep-dive-btn .dd-count {
+    background: rgba(255,255,255,0.25);
+    padding: 1px 7px;
+    border-radius: 10px;
+    margin-left: 6px;
+    font-size: 0.78rem;
+}
+
+/* Deep Dive panel */
+.deep-dive-panel {
+    background: var(--card-bg);
+    border-bottom: 2px solid var(--red);
+    padding: 20px 24px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.deep-dive-panel.hidden { display: none !important; }
+
+.dd-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.dd-panel-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--red);
+}
+
+.dd-panel-close {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 2px 8px;
+    color: var(--text-muted);
+    transition: all 0.15s;
+}
+
+.dd-panel-close:hover {
+    background: var(--red-bg);
+    color: var(--red);
+    border-color: var(--red);
+}
+
+.dd-criteria-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.dd-tab {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text-muted);
+    transition: all 0.15s;
+}
+
+.dd-tab:hover { border-color: var(--red); color: var(--red); }
+.dd-tab.active { background: var(--red); color: #fff; border-color: var(--red); }
+
+.dd-student-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.dd-student-item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+}
+
+.dd-student-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.dd-student-meta {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.dd-student-reasons {
+    margin-top: 6px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.dd-reason {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.dd-reason.testing-loop { background: var(--red-bg); color: var(--red); }
+.dd-reason.xp-behind { background: var(--orange-bg); color: var(--orange); }
+.dd-reason.low-accuracy { background: var(--yellow-bg); color: #7d6608; }
+
 /* Main content */
 .main { padding: 16px 24px; }
 

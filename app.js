@@ -137,6 +137,131 @@
       if (!summary) return;
       summary.closest(".student-card").classList.toggle("expanded");
     });
+
+    // Deep Dive button
+    wireDeepDiveButton(group);
+  }
+
+  // ── Deep Dive panel ──────────────────────────────────────────────────
+  function classifyDeepDiveStudents(students) {
+    const results = [];
+    for (const s of students) {
+      if (s.completed_g8) continue;
+      const reasons = [];
+      if (s.deep_dive && s.deep_dive.needed) {
+        reasons.push({ type: "testing-loop", label: "Testing Loop" });
+      }
+      if (!s.xp.meets_goal) {
+        reasons.push({ type: "xp-behind", label: "XP Behind" });
+      }
+      if (s.accuracy && s.accuracy.activities_below_threshold.length >= 3) {
+        reasons.push({ type: "low-accuracy", label: `${s.accuracy.activities_below_threshold.length} Low Accuracy` });
+      }
+      if (reasons.length > 0) {
+        results.push({ student: s, reasons });
+      }
+    }
+    return results;
+  }
+
+  function wireDeepDiveButton(group) {
+    const btn = document.getElementById("deep-dive-btn");
+    if (!btn) return;
+
+    const students = studentsForGroup(group);
+    const ddStudents = classifyDeepDiveStudents(students);
+    btn.innerHTML = `Deep Dives <span class="dd-count">${ddStudents.length}</span>`;
+
+    btn.addEventListener("click", () => {
+      const panel = document.getElementById("deep-dive-panel");
+      if (!panel.classList.contains("hidden")) {
+        panel.classList.add("hidden");
+        return;
+      }
+      renderDeepDivePanel(group, ddStudents);
+    });
+  }
+
+  function renderDeepDivePanel(group, ddStudents) {
+    const panel = document.getElementById("deep-dive-panel");
+
+    // Count per criteria
+    const loopCount = ddStudents.filter((d) => d.reasons.some((r) => r.type === "testing-loop")).length;
+    const xpCount = ddStudents.filter((d) => d.reasons.some((r) => r.type === "xp-behind")).length;
+    const accCount = ddStudents.filter((d) => d.reasons.some((r) => r.type === "low-accuracy")).length;
+
+    let activeFilter = "all";
+
+    function renderList(filter) {
+      activeFilter = filter;
+      const filtered = filter === "all"
+        ? ddStudents
+        : ddStudents.filter((d) => d.reasons.some((r) => r.type === filter));
+
+      // Sort: most reasons first, then alphabetical
+      filtered.sort((a, b) => b.reasons.length - a.reasons.length || a.student.name.localeCompare(b.student.name));
+
+      let listHtml = "";
+      for (const { student: s, reasons } of filtered) {
+        const xpPct = s.xp.goal_to_date > 0 ? Math.round((s.xp.total / s.xp.goal_to_date) * 100) : 0;
+        const lastTest = s.last_test
+          ? `Last Test: ${esc(s.last_test.name)} (${s.last_test.score}%, ${formatDate(s.last_test.date)})`
+          : "No tests";
+        const lastXp = !s.xp.meets_goal && s.xp.last_xp_date
+          ? ` | Last XP: ${formatDate(s.xp.last_xp_date)}`
+          : !s.xp.meets_goal ? " | No XP earned" : "";
+
+        listHtml += `
+          <div class="dd-student-item">
+            <div class="dd-student-name">${esc(s.name)} <span style="font-weight:400;color:var(--text-muted);font-size:0.78rem">${esc(s.email)}</span></div>
+            <div class="dd-student-meta">${esc(s.campus)} | ${esc(s.level)} | G${s.age_grade} | HMG: G${s.hmg} | XP: ${Math.round(s.xp.total)}/${Math.round(s.xp.goal_to_date)} (${xpPct}%)${lastXp}</div>
+            <div class="dd-student-meta">${lastTest}</div>
+            <div class="dd-student-reasons">
+              ${reasons.map((r) => `<span class="dd-reason ${r.type}">${esc(r.label)}</span>`).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      const listEl = panel.querySelector(".dd-student-list");
+      if (listEl) listEl.innerHTML = listHtml || '<div class="no-data">No students match this filter.</div>';
+
+      // Update active tab
+      panel.querySelectorAll(".dd-tab").forEach((tab) => {
+        tab.classList.toggle("active", tab.dataset.filter === filter);
+      });
+    }
+
+    panel.innerHTML = `
+      <div class="dd-panel-header">
+        <h3>Students Requiring Deep Dives (${ddStudents.length})</h3>
+        <button class="dd-panel-close">&times;</button>
+      </div>
+      <div class="dd-criteria-tabs">
+        <span class="dd-tab active" data-filter="all">All (${ddStudents.length})</span>
+        <span class="dd-tab" data-filter="testing-loop">Testing Loops (${loopCount})</span>
+        <span class="dd-tab" data-filter="xp-behind">XP Behind (${xpCount})</span>
+        <span class="dd-tab" data-filter="low-accuracy">Low Accuracy (${accCount})</span>
+      </div>
+      <div class="dd-student-list"></div>
+    `;
+
+    panel.classList.remove("hidden");
+
+    // Wire close
+    panel.querySelector(".dd-panel-close").addEventListener("click", () => {
+      panel.classList.add("hidden");
+    });
+
+    // Wire tabs
+    panel.querySelectorAll(".dd-tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        renderList(tab.dataset.filter);
+      });
+    });
+
+    // Initial render
+    renderList("all");
   }
 
   // ── Filters ─────────────────────────────────────────────────────────
@@ -571,6 +696,68 @@
       }
     });
 
+    // Differentiated EoC breakdown for S4+ sessions
+    // For each student, group their "end of course" tests by grade-level test name,
+    // sort chronologically, then label: 1st = Mastery Test, 2nd = Retake 1, etc.
+    const detailedSessionStats = {};
+    const detailedSessionOrder = sessionOrder.filter((k) => k >= "S4");
+    for (const sKey of detailedSessionOrder) {
+      detailedSessionStats[sKey] = { label: sessions[sKey].label || sKey, rows: {} };
+    }
+
+    students.forEach((s) => {
+      const tests = s.all_tests || [];
+      // Group all "end of course" tests by grade level (e.g. "G5.2") across all time
+      // to determine attempt number
+      const eocByGrade = {};
+      for (const t of tests) {
+        if (t.test_type !== "end of course") continue;
+        // Extract grade key, e.g. "G5.2" from "Alpha Standardized Writing G5.2"
+        const m = t.name.match(/G(\d+\.\d+)/);
+        const gradeKey = m ? m[1] : t.name;
+        if (!eocByGrade[gradeKey]) eocByGrade[gradeKey] = [];
+        eocByGrade[gradeKey].push(t);
+      }
+
+      // Sort each grade group by date and assign attempt numbers
+      for (const gradeKey of Object.keys(eocByGrade)) {
+        const sorted = eocByGrade[gradeKey].sort((a, b) => a.date.localeCompare(b.date));
+        sorted.forEach((t, i) => {
+          t._attemptNum = i + 1; // 1-based
+        });
+      }
+
+      // Also tag test-out and placement tests
+      for (const t of tests) {
+        if (t.test_type === "test out") t._attemptLabel = "Test-Out";
+        else if (t.test_type === "placement") t._attemptLabel = "Placement";
+      }
+
+      // Now bucket into detailed session stats
+      for (const t of tests) {
+        const d = t.date;
+        for (const sKey of detailedSessionOrder) {
+          const sess = sessions[sKey];
+          if (d >= sess.start && d <= sess.end) {
+            const stats = detailedSessionStats[sKey];
+            let label;
+            if (t._attemptLabel) {
+              label = t._attemptLabel;
+            } else if (t._attemptNum) {
+              label = t._attemptNum === 1 ? "End of Course 1 (Mastery Test)"
+                : `End of Course ${t._attemptNum} (Retake ${t._attemptNum - 1})`;
+            } else {
+              break; // not an end of course / test out / placement
+            }
+            if (!stats.rows[label]) stats.rows[label] = { taken: 0, passed: 0 };
+            stats.rows[label].taken++;
+            if (t.passed) stats.rows[label].passed++;
+            break;
+          }
+        }
+      }
+    });
+
     // Build campus breakdown
     const campusMap = {};
     students.forEach((s) => {
@@ -690,6 +877,53 @@
         </table>
       </div>
     `;
+
+    // Differentiated test breakdown tables for S4+
+    for (const sKey of detailedSessionOrder) {
+      const ds = detailedSessionStats[sKey];
+      const rowLabels = Object.keys(ds.rows);
+      if (rowLabels.length === 0) continue;
+
+      // Sort: Test-Out first, then End of Course 1, 2, 3..., then Placement
+      rowLabels.sort((a, b) => {
+        const order = (l) => {
+          if (l === "Test-Out") return 0;
+          if (l.startsWith("End of Course")) {
+            const n = parseInt(l.match(/\d+/)?.[0] || "99");
+            return 10 + n;
+          }
+          if (l === "Placement") return 100;
+          return 50;
+        };
+        return order(a) - order(b);
+      });
+
+      let totalTaken = 0, totalPassed = 0;
+      const isCurrent = sKey === DATA.session.name;
+
+      html += `<div class="metrics-section"><h2>${esc(ds.label)} Test Breakdown${isCurrent ? " (current)" : ""}</h2>
+        <table class="metrics-table">
+          <tr><th>Test Type</th><th>Taken</th><th>Passed</th><th>Pass Rate</th></tr>`;
+      for (const label of rowLabels) {
+        const r = ds.rows[label];
+        totalTaken += r.taken;
+        totalPassed += r.passed;
+        const pct = r.taken > 0 ? Math.round((r.passed / r.taken) * 100) : 0;
+        html += `<tr>
+          <td>${esc(label)}</td>
+          <td>${r.taken}</td>
+          <td>${r.passed}</td>
+          <td>${pct}%</td>
+        </tr>`;
+      }
+      const totalPct = totalTaken > 0 ? Math.round((totalPassed / totalTaken) * 100) : 0;
+      html += `<tr style="font-weight:700;border-top:2px solid var(--border)">
+        <td>Total</td>
+        <td>${totalTaken}</td>
+        <td>${totalPassed}</td>
+        <td>${totalPct}%</td>
+      </tr></table></div>`;
+    }
 
     html += `<div class="metrics-section"><h2>By Campus</h2>
       <table class="metrics-table">

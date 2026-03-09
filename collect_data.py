@@ -5,7 +5,7 @@ import json
 import logging
 import sys
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 # Add parent dir to path so we can import writing_automation
@@ -28,7 +28,8 @@ from writing_automation.enrollment_fetcher import (
     fetch_writing_enrollments,
 )
 from writing_automation.hmg_calculator import compute_all_hmg
-from writing_automation.student_progress import _get_level, _school_days_to_date
+from writing_automation.student_progress import _get_level
+from writing_automation.student_progress import _count_weekdays
 from writing_automation.test_type_mapper import classify_test_types
 # XP is now computed per-student from raw activity results (not the bulk fetcher)
 
@@ -58,6 +59,23 @@ def _is_alphawrite(ali_sid: str) -> bool:
 
 ACCURACY_THRESHOLD = 80
 OUTPUT_PATH = Path(__file__).resolve().parent / "data.json"
+
+
+def _school_days_to_date(session_name: str) -> int:
+    """Count school days from session school_start to yesterday.
+
+    Because the dashboard is always updated the following day (due to timezone
+    differences), we use ``today - 1 day`` as the cutoff so we don't
+    under-track students.
+    """
+    session = SESSIONS[session_name]
+    start = datetime.strptime(session.get("school_start", session["start"]), "%Y-%m-%d")
+    end = datetime.strptime(session["end"], "%Y-%m-%d")
+    yesterday = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
+    cutoff = min(yesterday, end)
+    if cutoff < start:
+        return 0
+    return _count_weekdays(start, cutoff)
 
 # ---------------------------------------------------------------------------
 # A&D Master Roster — used as whitelist and source of truth for campus
