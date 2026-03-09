@@ -4,7 +4,6 @@
   let DATA = null;
   const filters = {
     timeback: { campus: "all", level: "all", status: "all", search: "" },
-    legacy:   { campus: "all", level: "all", status: "all", search: "" },
   };
 
   // ── Boot ──────────────────────────────────────────────────────────────
@@ -15,7 +14,6 @@
       DATA = await resp.json();
       renderMeta();
       setupGroup("timeback");
-      setupGroup("legacy");
       wireNav();
       handleRoute();
     } catch (e) {
@@ -25,11 +23,11 @@
   }
 
   function studentsForGroup(group) {
-    return DATA.students.filter((s) => s.dashboard === group);
+    return DATA.students.filter((s) => s.dashboard === "timeback");
   }
 
   // ── Routing ─────────────────────────────────────────────────────────
-  const PAGES = ["timeback", "timeback-metrics", "legacy", "legacy-metrics"];
+  const PAGES = ["timeback", "timeback-metrics"];
 
   function handleRoute() {
     const hash = location.hash.replace("#", "") || "timeback";
@@ -43,7 +41,6 @@
       a.classList.toggle("active", a.dataset.page === page);
     });
     if (page === "timeback-metrics") renderMetrics("timeback");
-    if (page === "legacy-metrics") renderMetrics("legacy");
   }
 
   function wireNav() {

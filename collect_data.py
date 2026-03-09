@@ -30,7 +30,7 @@ from writing_automation.enrollment_fetcher import (
 from writing_automation.hmg_calculator import compute_all_hmg
 from writing_automation.student_progress import _get_level, _school_days_to_date
 from writing_automation.test_type_mapper import classify_test_types
-from writing_automation.xp_fetcher import fetch_xp_and_minutes
+# XP is now computed per-student from raw activity results (not the bulk fetcher)
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -55,6 +55,13 @@ ROSTER_PATH = Path(__file__).resolve().parent.parent / "A&D Master Roster 25-26 
 
 # Student Group values that should be excluded
 _EXCLUDED_GROUPS = {"mock", "mock student", "shadow", "test", "guide"}
+
+# Individual student emails to exclude
+_EXCLUDED_EMAILS = {
+    "lincoln.thomas@alpha.school",
+    "luka.scaletta@alpha.school",
+    "elle.liemandt@alpha.school",
+}
 
 # Legacy Dash campuses (case-insensitive matching via _normalise)
 _LEGACY_CAMPUSES = {
@@ -448,14 +455,20 @@ def infer_next_test(hmg: int, test_history: list[dict]) -> dict | None:
     }
 
 
-def extract_xp_details(raw_results: list[dict]) -> dict:
-    """Extract per-activity and per-test XP breakdowns from raw assessment results.
+def extract_xp_and_details(raw_results: list[dict]) -> dict:
+    """Extract per-activity and per-test XP breakdowns, plus compute XP totals.
 
-    Only includes Writing-subject results to match the aggregate XP totals.
-    Returns dict with 'activity_xp' and 'test_xp' lists.
+    A result is counted as Writing XP if:
+    - metadata.subject == 'Writing', OR
+    - assessmentLineItem.sourcedId starts with 'alphawrite-'
+
+    Returns dict with 'activity_xp', 'test_xp' lists, and XP totals.
     """
     activity_xp_items = []
     test_xp_items = []
+    alphawrite_xp_total = 0.0
+    mastery_track_xp_total = 0.0
+    test_xp_total = 0.0
 
     for r in raw_results:
         meta = r.get("metadata", {})
@@ -463,9 +476,12 @@ def extract_xp_details(raw_results: list[dict]) -> dict:
         if xp <= 0:
             continue
 
-        # Only include Writing-subject results (matches xp_fetcher filter)
+        ali_sid = r.get("assessmentLineItem", {}).get("sourcedId", "")
         subject = meta.get("subject", "")
-        if subject != "Writing":
+        is_alphawrite = ali_sid.startswith("alphawrite-")
+
+        # Only include Writing-subject OR AlphaWrite activities
+        if subject != "Writing" and not is_alphawrite:
             continue
 
         result_type = meta.get("resultType", "")
@@ -474,6 +490,7 @@ def extract_xp_details(raw_results: list[dict]) -> dict:
 
         if result_type == "assessment":
             # This is a writing test
+            test_xp_total += xp
             test_xp_items.append({
                 "name": meta.get("testName", "Unknown Test"),
                 "xp": xp,
@@ -481,31 +498,35 @@ def extract_xp_details(raw_results: list[dict]) -> dict:
                 "date": date,
             })
         else:
-            # Activity XP (AlphaWrite or mastery track)
-            ali_sid = r.get("assessmentLineItem", {}).get("sourcedId", "")
+            # Activity XP
             resolved = _resolve_activity_name(ali_sid, meta)
             if resolved:
                 name, course = resolved
+                alphawrite_xp_total += xp
+            elif is_alphawrite:
+                name = ali_sid.replace("alphawrite-", "").replace("-assessment-line-item", "").replace("-", " ").title()
+                course = ""
+                alphawrite_xp_total += xp
             else:
                 # Non-AlphaWrite Writing activity (mastery track / external lesson)
                 app_name = meta.get("appName", "")
                 test_name = meta.get("testName", "")
                 name = test_name or app_name or "Writing Activity"
                 course = ""
-                # Clean up unreadable names
                 if name.startswith("caliper_") or name.startswith("Caliper_"):
                     name = app_name or "Mastery Track Activity"
                 elif name.startswith("Nice_"):
                     name = name.replace("Nice_", "").replace("_", " ").title()
                 elif _is_uuid(name):
                     name = app_name or "Writing Activity"
+                mastery_track_xp_total += xp
 
             activity_xp_items.append({
                 "name": name,
                 "course": course,
                 "xp": xp,
                 "date": date,
-                "type": "alphawrite" if lesson_type == "powerpath-100" else (
+                "type": "alphawrite" if (is_alphawrite or lesson_type == "powerpath-100") else (
                     "external" if lesson_type == "external-lesson" else "mastery_track"
                 ),
             })
@@ -517,6 +538,9 @@ def extract_xp_details(raw_results: list[dict]) -> dict:
     return {
         "activity_xp": activity_xp_items,
         "test_xp": test_xp_items,
+        "alphawrite_xp": alphawrite_xp_total,
+        "mastery_track_xp": mastery_track_xp_total,
+        "test_xp_total": test_xp_total,
     }
 
 
@@ -552,11 +576,7 @@ def collect(csv_path: str, session_name: str) -> dict:
     logger.info("Fetching student profiles...")
     profiles = fetch_student_profiles(api, student_ids)
 
-    # 4. Fetch XP/minutes
-    logger.info("Fetching XP/minutes data...")
-    xp_data = fetch_xp_and_minutes(api, session_start, session_end)
-
-    # 5. Compute HMG + classify
+    # 4. Compute HMG + classify
     hmg_map = compute_all_hmg(csv_results)
     classifications = classify_test_types(csv_results)
 
@@ -588,13 +608,17 @@ def collect(csv_path: str, session_name: str) -> dict:
         if not roster_entry:
             continue
 
+        # Skip individually excluded students
+        if email.lower() in _EXCLUDED_EMAILS:
+            continue
+
         # Use roster campus as source of truth
         roster_campus = roster_entry["campus"]
 
-        # Classify into dashboard group
+        # Classify into dashboard group — only include Timeback students
         dash_group = _classify_dashboard(roster_campus)
-        if not dash_group:
-            continue  # campus excluded from both dashboards
+        if dash_group != "timeback":
+            continue
 
         logger.info("Processing student %d/%d: %s", idx, total, email)
 
@@ -624,14 +648,6 @@ def collect(csv_path: str, session_name: str) -> dict:
 
         # G8 completion check
         completed_g8 = hmg >= 8
-
-        # XP
-        xp = xp_data.get(email)
-        alphawrite_xp = xp.alphawrite_xp if xp else 0
-        mastery_track_xp = xp.mastery_track_xp if xp else 0
-        test_xp_val = xp.test_xp if xp else 0
-        total_xp = alphawrite_xp + mastery_track_xp + test_xp_val
-        avg_xp = round(total_xp / school_days, 1) if school_days else 0
 
         # Last test
         last_test = None
@@ -666,11 +682,14 @@ def collect(csv_path: str, session_name: str) -> dict:
         # Next expected test (passing a test advances to next grade level)
         next_test = infer_next_test(hmg, api_tests)
 
-        # Deep dive
-        dd_needed = any((email, g) in deep_dives for g in range(3, 9))
+        # Deep dive — only for grades NOT yet mastered (grade > hmg)
+        dd_needed = any((email, g) in deep_dives for g in range(3, 9) if g > hmg)
         dd_details = []
         for (dd_email, dd_grade), dd_tests in deep_dive_tests.items():
             if dd_email != email:
+                continue
+            # Skip deep dives for grades the student has already mastered
+            if dd_grade <= hmg:
                 continue
             failed = [t for t in dd_tests if t.score < PASS_THRESHOLD]
             rushed_count = sum(1 for t in dd_tests if is_rushed(t.time_spent_seconds, dd_grade))
@@ -694,9 +713,15 @@ def collect(csv_path: str, session_name: str) -> dict:
                 ],
             })
 
-        # Fetch activity results for accuracy analysis and XP details
+        # Fetch activity results for accuracy analysis, XP details, and XP totals
         raw_activities = fetch_activity_results(api, sid, session_start, session_end)
-        xp_details = extract_xp_details(raw_activities)
+        xp_result = extract_xp_and_details(raw_activities)
+        xp_details = xp_result
+        alphawrite_xp = xp_result["alphawrite_xp"]
+        mastery_track_xp = xp_result["mastery_track_xp"]
+        test_xp_val = xp_result["test_xp_total"]
+        total_xp = alphawrite_xp + mastery_track_xp + test_xp_val
+        avg_xp = round(total_xp / school_days, 1) if school_days else 0
 
         # For G8 completers, skip accuracy/deep dive/enrollment analysis
         if completed_g8:

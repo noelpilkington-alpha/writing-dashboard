@@ -11,16 +11,14 @@
         <div class="header-top">
             <a href="#" class="logo-link"><h1>Writing Dashboard</h1></a>
             <nav class="nav-links">
-                <a href="#timeback" class="nav-link" data-page="timeback">Timeback</a>
-                <a href="#timeback-metrics" class="nav-link" data-page="timeback-metrics">Timeback Metrics</a>
-                <a href="#legacy" class="nav-link" data-page="legacy">Legacy Dash</a>
-                <a href="#legacy-metrics" class="nav-link" data-page="legacy-metrics">Legacy Metrics</a>
+                <a href="#timeback" class="nav-link" data-page="timeback">Students</a>
+                <a href="#timeback-metrics" class="nav-link" data-page="timeback-metrics">Metrics</a>
             </nav>
         </div>
         <div class="header-meta" id="header-meta"></div>
     </header>
 
-    <!-- Timeback Students Page -->
+    <!-- Students Page -->
     <div class="page hidden" id="page-timeback">
         <div class="search-filters">
             <div class="search-row">
@@ -51,45 +49,9 @@
         </main>
     </div>
 
-    <!-- Legacy Dash Students Page -->
-    <div class="page hidden" id="page-legacy">
-        <div class="search-filters">
-            <div class="search-row">
-                <input type="text" id="search-legacy" class="search-input" placeholder="Search by name or email..." autocomplete="off" data-group="legacy">
-            </div>
-            <div class="dropdown-row">
-                <div class="dropdown-group">
-                    <label for="campus-legacy">Campus</label>
-                    <select id="campus-legacy" class="dropdown" data-group="legacy"></select>
-                </div>
-                <div class="dropdown-group">
-                    <label for="level-legacy">Level</label>
-                    <select id="level-legacy" class="dropdown" data-group="legacy"></select>
-                </div>
-                <div class="dropdown-group">
-                    <label for="status-legacy">Status</label>
-                    <select id="status-legacy" class="dropdown" data-group="legacy">
-                        <option value="all">All Students</option>
-                        <option value="issues">Has Issues</option>
-                        <option value="on-track">On Track</option>
-                    </select>
-                </div>
-                <div class="results-count" id="results-count-legacy"></div>
-            </div>
-        </div>
-        <main class="main" id="main-legacy">
-            <div class="loading">Loading dashboard data...</div>
-        </main>
-    </div>
-
-    <!-- Timeback Metrics Page -->
+    <!-- Metrics Page -->
     <div class="page hidden" id="page-timeback-metrics">
         <div class="metrics-container" id="metrics-timeback"></div>
-    </div>
-
-    <!-- Legacy Metrics Page -->
-    <div class="page hidden" id="page-legacy-metrics">
-        <div class="metrics-container" id="metrics-legacy"></div>
     </div>
 
     <script src="app.js"></script>
