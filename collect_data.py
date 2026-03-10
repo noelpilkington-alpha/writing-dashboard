@@ -1061,7 +1061,13 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
         mastery_track_xp = xp_result["mastery_track_xp"]
         test_xp_val = xp_result["test_xp_total"]
         total_xp = alphawrite_xp + mastery_track_xp + test_xp_val
-        avg_xp = round(total_xp / school_days, 1) if school_days else 0
+
+        # Split XP into school vs break periods for accurate goal tracking
+        school_start_date = session.get("school_start", session_start)
+        all_xp_items = xp_result.get("activity_xp", []) + xp_result.get("test_xp", [])
+        school_xp = sum(a["xp"] for a in all_xp_items if a.get("date", "") >= school_start_date)
+        break_xp = total_xp - school_xp
+        avg_xp = round(school_xp / school_days, 1) if school_days else 0
 
         # For G8 completers, skip accuracy/deep dive/enrollment analysis
         if completed_g8:
@@ -1109,10 +1115,10 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
                         "severity": "low",
                         "text": f"Repeating '{rep['name']}' in {rep['course']} ({rep['attempts']} attempts)",
                     })
-            if total_xp < xp_goal and school_days > 0:
-                pct = round(100 * total_xp / xp_goal) if xp_goal > 0 else 0
+            if school_xp < xp_goal and school_days > 0:
+                pct = round(100 * school_xp / xp_goal) if xp_goal > 0 else 0
                 last_xp = xp_details.get("last_xp_date")
-                xp_text = f"XP behind target: {round(total_xp)}/{round(xp_goal)} ({pct}%)"
+                xp_text = f"XP behind target: {round(school_xp)}/{round(xp_goal)} ({pct}%)"
                 if last_xp:
                     xp_text += f" — last XP earned {last_xp}"
                 insights.append({
@@ -1163,9 +1169,11 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
                 "mastery_track": round(mastery_track_xp, 1),
                 "test": round(test_xp_val, 1),
                 "total": round(total_xp, 1),
+                "school": round(school_xp, 1),
+                "break": round(break_xp, 1),
                 "goal_to_date": round(xp_goal, 1),
                 "avg_per_day": avg_xp,
-                "meets_goal": total_xp >= xp_goal,
+                "meets_goal": school_xp >= xp_goal,
                 "last_xp_date": xp_details.get("last_xp_date"),
             },
             "xp_details": xp_details,

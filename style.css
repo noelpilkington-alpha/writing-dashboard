@@ -474,6 +474,11 @@ body {
 .last-xp-date.no-xp {
     color: var(--red);
 }
+.break-xp-note {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 400;
+}
 
 .metric {
     display: flex;

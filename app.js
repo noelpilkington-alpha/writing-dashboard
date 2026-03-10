@@ -205,7 +205,8 @@
 
       let listHtml = "";
       for (const { student: s, reasons } of filtered) {
-        const xpPct = s.xp.goal_to_date > 0 ? Math.round((s.xp.total / s.xp.goal_to_date) * 100) : 0;
+        const ddSchoolXp = s.xp.school != null ? s.xp.school : s.xp.total;
+        const xpPct = s.xp.goal_to_date > 0 ? Math.round((ddSchoolXp / s.xp.goal_to_date) * 100) : 0;
         const lastTest = s.last_test
           ? `Last Test: ${esc(s.last_test.name)} (${s.last_test.score}%, ${formatDate(s.last_test.date)})`
           : "No tests";
@@ -232,7 +233,7 @@
         listHtml += `
           <div class="dd-student-item">
             <div class="dd-student-name">${esc(s.name)} <span style="font-weight:400;color:var(--text-muted);font-size:0.78rem">${esc(s.email)}</span></div>
-            <div class="dd-student-meta">${esc(s.campus)} | ${esc(s.level)} | G${s.age_grade} | HMG: G${s.hmg}${s.effective_grade ? ` | Eff: G${s.effective_grade}` : ""} | XP: ${Math.round(s.xp.total)}/${Math.round(s.xp.goal_to_date)} (${xpPct}%)${lastXp}</div>
+            <div class="dd-student-meta">${esc(s.campus)} | ${esc(s.level)} | G${s.age_grade} | HMG: G${s.hmg}${s.effective_grade ? ` | Eff: G${s.effective_grade}` : ""} | XP: ${Math.round(ddSchoolXp)}/${Math.round(s.xp.goal_to_date)} (${xpPct}%)${lastXp}</div>
             <div class="dd-student-meta">${lastTest}</div>
             <div class="dd-student-reasons">
               ${reasons.map((r) => `<span class="dd-reason ${r.type}">${esc(r.label)}</span>`).join("")}
@@ -458,7 +459,8 @@
       : s.insights.some((i) => i.severity === "high") ? "high"
       : s.insights.some((i) => i.severity === "medium") ? "medium" : "low";
 
-    const xpPct = s.xp.goal_to_date > 0 ? Math.min(100, Math.round((s.xp.total / s.xp.goal_to_date) * 100)) : 0;
+    const schoolXp = s.xp.school != null ? s.xp.school : s.xp.total;
+    const xpPct = s.xp.goal_to_date > 0 ? Math.min(100, Math.round((schoolXp / s.xp.goal_to_date) * 100)) : 0;
     const xpColor = s.xp.meets_goal ? "green" : xpPct >= 70 ? "orange" : "red";
 
     let lastTestHtml = '<span class="no-data">No tests</span>';
@@ -491,7 +493,7 @@
         </div>
         <div class="card-row3">
           <span class="metric">
-            XP: ${Math.round(s.xp.total)}/${Math.round(s.xp.goal_to_date)} (${xpPct}%)
+            XP: ${Math.round(schoolXp)}/${Math.round(s.xp.goal_to_date)} (${xpPct}%)${s.xp.break > 0 ? ` <span class="break-xp-note">+${Math.round(s.xp.break)} break</span>` : ""}
             <span class="metric-bar"><span class="metric-fill ${xpColor}" style="width:${xpPct}%"></span></span>
           </span>
           ${lastXpHtml}
@@ -991,7 +993,8 @@
 
     const sorted = [...students].sort((a, b) => a.name.localeCompare(b.name));
     for (const s of sorted) {
-      const xpPct = s.xp.goal_to_date > 0 ? Math.round((s.xp.total / s.xp.goal_to_date) * 100) : 0;
+      const drillSchoolXp = s.xp.school != null ? s.xp.school : s.xp.total;
+      const xpPct = s.xp.goal_to_date > 0 ? Math.round((drillSchoolXp / s.xp.goal_to_date) * 100) : 0;
       const xpCls = s.xp.meets_goal ? "score-pass" : "score-fail";
       const lastTest = s.last_test
         ? `${s.last_test.name} (${s.last_test.score}%) ${s.last_test.passed ? "\u2713" : "\u2717"}`
@@ -1011,7 +1014,7 @@
         <td>G${s.hmg}</td>
         <td>${s.effective_grade ? `G${s.effective_grade}` : "-"}</td>
         <td class="${egmCls}">${egmDisplay}</td>
-        <td class="${xpCls}">${Math.round(s.xp.total)}/${Math.round(s.xp.goal_to_date)} (${xpPct}%)</td>
+        <td class="${xpCls}">${Math.round(drillSchoolXp)}/${Math.round(s.xp.goal_to_date)} (${xpPct}%)</td>
         <td>${testXp > 0 ? testXp : "-"}</td>
         <td>${lastTest}</td>
         <td>${insightCount > 0 ? `<span class="score-fail">${insightCount}</span>` : '<span class="score-pass">0</span>'}</td>
@@ -1482,7 +1485,8 @@
 
     const sorted = [...students].sort((a, b) => a.name.localeCompare(b.name));
     for (const s of sorted) {
-      const xpPct = s.xp.goal_to_date > 0 ? Math.round((s.xp.total / s.xp.goal_to_date) * 100) : 0;
+      const egSchoolXp = s.xp.school != null ? s.xp.school : s.xp.total;
+      const xpPct = s.xp.goal_to_date > 0 ? Math.round((egSchoolXp / s.xp.goal_to_date) * 100) : 0;
       const xpCls = s.xp.meets_goal ? "score-pass" : "score-fail";
       const lastTest = s.last_test
         ? `${s.last_test.name} (${s.last_test.score}%) ${s.last_test.passed ? "✓" : "✗"}`
@@ -1501,7 +1505,7 @@
         <td>G${s.hmg}</td>
         <td>${s.effective_grade ? `G${s.effective_grade}` : "-"}</td>
         <td class="${egmCls}">${egmVal != null ? egmVal : "-"}</td>
-        <td class="${xpCls}">${Math.round(s.xp.total)}/${Math.round(s.xp.goal_to_date)} (${xpPct}%)</td>
+        <td class="${xpCls}">${Math.round(egSchoolXp)}/${Math.round(s.xp.goal_to_date)} (${xpPct}%)</td>
         <td>${testXp > 0 ? testXp : "-"}</td>
         <td>${lastTest}</td>
         <td>${insightCount > 0 ? `<span class="score-fail">${insightCount}</span>` : '<span class="score-pass">0</span>'}</td>
