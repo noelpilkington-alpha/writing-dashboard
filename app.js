@@ -27,7 +27,7 @@
   }
 
   // ── Routing ─────────────────────────────────────────────────────────
-  const PAGES = ["timeback", "timeback-metrics", "test-results"];
+  const PAGES = ["timeback", "timeback-metrics", "eg-analysis", "test-results"];
 
   function handleRoute() {
     const hash = location.hash.replace("#", "") || "timeback";
@@ -41,6 +41,7 @@
       a.classList.toggle("active", a.dataset.page === page);
     });
     if (page === "timeback-metrics") renderMetrics("timeback");
+    if (page === "eg-analysis") renderEGAnalysis();
     if (page === "test-results") renderTestResults();
   }
 
@@ -680,7 +681,9 @@
     return html;
   }
 
-  // ── EG Analysis ──────────────────────────────────────────────────────
+  // ── EG Analysis (separate page) ─────────────────────────────────────
+
+  const CURRICULUM_CAP = 8; // Writing curriculum max grade
 
   function computeHmgAtDate(tests, cutoffDate) {
     let hmg = 2; // baseline pre-G3
@@ -696,19 +699,31 @@
     return hmg;
   }
 
-  function buildEGAnalysis(allStudents) {
+  let egAnalysisRendered = false;
+
+  function renderEGAnalysis() {
+    if (egAnalysisRendered) return;
+    egAnalysisRendered = true;
+
+    const container = document.getElementById("eg-analysis-container");
+    const allStudents = studentsForGroup("timeback");
     const sessions = DATA.all_sessions || {};
     const sessionOrder = Object.keys(sessions).sort();
     const MAP_DATE = "2026-05-19";
     const EG_TARGET = 2;
 
-    // S4 weekly boundaries
+    // S4 weekly boundaries — S4 classes start Mar 3.
+    // Session break (Feb 21–Mar 2) tests still count toward S4 totals.
+    const S4_START = "2026-02-21"; // include break tests
+    const S4_SCHOOL_START = "2026-03-03"; // first school day
     const S4_WEEKS = {
-      Wk1: { start: "2026-02-21", end: "2026-03-01", label: "Wk1 Feb 21–Mar 1" },
-      Wk2: { start: "2026-03-02", end: "2026-03-08", label: "Wk2 Mar 2–8" },
-      Wk3: { start: "2026-03-09", end: "2026-03-15", label: "Wk3 Mar 9–15" },
+      Break: { start: "2026-02-21", end: "2026-03-02", label: "Break Feb 21–Mar 2" },
+      Wk1: { start: "2026-03-03", end: "2026-03-08", label: "Wk1 Mar 3–8" },
+      Wk2: { start: "2026-03-09", end: "2026-03-15", label: "Wk2 Mar 9–15" },
     };
     const weekOrder = Object.keys(S4_WEEKS);
+    // Only count school weeks (not break) for pace
+    const schoolWeekKeys = weekOrder.filter(k => k !== "Break");
 
     // Build both cohorts
     const cohorts = [
@@ -716,16 +731,27 @@
       { key: "all", label: "All Current Students", students: allStudents },
     ];
 
-    let html = "";
+    let html = `<h2 style="margin-bottom:16px">Effective Grade Analysis</h2>
+      <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:20px">
+        EG = R90 + 1 &middot; EGM = HMG &minus; (EG &minus; 1) &middot; Target: ${EG_TARGET} EGs/year by Spring MAP (${MAP_DATE})
+        &middot; Curriculum cap: G${CURRICULUM_CAP}
+      </div>
+      <div id="eg-drilldown" class="metric-drilldown hidden"></div>`;
 
     for (const cohort of cohorts) {
       const students = cohort.students;
       const withEG = students.filter(s => s.effective_grade != null);
       const noEG = students.filter(s => s.effective_grade == null);
 
-      // EGM buckets
+      // Separate above-curriculum students (EG > G8)
+      const aboveCurriculum = withEG.filter(s => s.effective_grade > CURRICULUM_CAP);
+      const curriculumComplete = aboveCurriculum.filter(s => s.hmg >= CURRICULUM_CAP);
+      const cappedProgressing = aboveCurriculum.filter(s => s.hmg < CURRICULUM_CAP);
+      const trackable = withEG.filter(s => s.effective_grade <= CURRICULUM_CAP);
+
+      // EGM buckets (only for trackable students)
       const buckets = { 0: [], 1: [], 2: [], "3+": [] };
-      for (const s of withEG) {
+      for (const s of trackable) {
         const egm = s.effective_grades_mastered || 0;
         if (egm === 0) buckets[0].push(s);
         else if (egm === 1) buckets[1].push(s);
@@ -734,15 +760,15 @@
       }
 
       const onTarget = buckets[2].length + buckets["3+"].length;
-      const onTargetPct = withEG.length > 0 ? Math.round((onTarget / withEG.length) * 100) : 0;
+      const onTargetPct = trackable.length > 0 ? Math.round((onTarget / trackable.length) * 100) : 0;
 
-      // EGs passed by session
+      // EGs passed by session (trackable only)
       const sessionEGs = {};
       for (const sk of sessionOrder) sessionEGs[sk] = { total: 0, students: new Set() };
       const weekEGs = {};
       for (const wk of weekOrder) weekEGs[wk] = { total: 0, students: new Set() };
 
-      for (const s of withEG) {
+      for (const s of trackable) {
         const r90 = s.effective_grade - 1;
         const tests = (s.all_tests || []).slice().sort((a, b) => a.date.localeCompare(b.date));
         let prevEgm = 0;
@@ -774,39 +800,36 @@
         }
       }
 
-      // Pace analysis
+      // Pace analysis (based on school weeks only, not break)
       const totalNeeded = buckets[0].length * 2 + buckets[1].length * 1;
       const today = new Date();
       const mapDate = new Date(MAP_DATE);
       const weeksRemaining = Math.max(1, Math.round((mapDate - today) / (7 * 86400000) * 10) / 10);
       const paceNeeded = Math.round(totalNeeded / weeksRemaining * 10) / 10;
-      const s4Total = sessionEGs["S4"] ? sessionEGs["S4"].total : 0;
-      const s4WeeksElapsed = weekOrder.length;
-      const s4Pace = s4WeeksElapsed > 0 ? Math.round(s4Total / s4WeeksElapsed * 10) / 10 : 0;
+      const s4SchoolEGs = schoolWeekKeys.reduce((sum, wk) => sum + weekEGs[wk].total, 0);
+      const s4WeeksElapsed = schoolWeekKeys.length;
+      const s4Pace = s4WeeksElapsed > 0 ? Math.round(s4SchoolEGs / s4WeeksElapsed * 10) / 10 : 0;
       const onPace = s4Pace >= paceNeeded;
 
-      // Campus EG breakdown
+      // Campus EG breakdown (trackable only)
       const campusEG = {};
-      for (const s of students) {
+      for (const s of trackable) {
         const c = s.campus || "Unknown";
-        if (!campusEG[c]) campusEG[c] = { total: 0, withEG: 0, eg0: 0, eg1: 0, eg2plus: 0, noEG: 0 };
+        if (!campusEG[c]) campusEG[c] = { total: 0, eg0: 0, eg1: 0, eg2plus: 0, students: [] };
         campusEG[c].total++;
-        if (s.effective_grade != null) {
-          campusEG[c].withEG++;
-          const egm = s.effective_grades_mastered || 0;
-          if (egm === 0) campusEG[c].eg0++;
-          else if (egm === 1) campusEG[c].eg1++;
-          else campusEG[c].eg2plus++;
-        } else {
-          campusEG[c].noEG++;
-        }
+        campusEG[c].students.push(s);
+        const egm = s.effective_grades_mastered || 0;
+        if (egm === 0) campusEG[c].eg0++;
+        else if (egm === 1) campusEG[c].eg1++;
+        else campusEG[c].eg2plus++;
       }
 
       html += `<div class="metrics-section eg-section" data-cohort="${cohort.key}">
-        <h2>EG Analysis: ${esc(cohort.label)}</h2>
+        <h2>${esc(cohort.label)}</h2>
         <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
-          ${students.length} students${noEG.length > 0 ? ` (${noEG.length} without EG data)` : ""}
-          &middot; EG = R90 + 1 &middot; EGM = HMG − (EG − 1) &middot; Target: ${EG_TARGET} EGs/year by MAP (${MAP_DATE})
+          ${students.length} students &middot; ${trackable.length} trackable
+          ${aboveCurriculum.length > 0 ? ` &middot; ${aboveCurriculum.length} above curriculum (EG &gt; G${CURRICULUM_CAP})` : ""}
+          ${noEG.length > 0 ? ` &middot; ${noEG.length} without EG data` : ""}
         </div>
 
         <div class="metrics-grid">
@@ -830,6 +853,11 @@
             <div class="metric-label">3+ EGs Mastered</div>
             <div class="metric-sub">Ahead</div>
           </div>
+          ${aboveCurriculum.length > 0 ? `<div class="metric-card clickable" data-metric="aboveCurr-${cohort.key}">
+            <div class="metric-value blue">${aboveCurriculum.length}</div>
+            <div class="metric-label">Above Curriculum</div>
+            <div class="metric-sub">EG &gt; G${CURRICULUM_CAP} (${curriculumComplete.length} complete, ${cappedProgressing.length} progressing)</div>
+          </div>` : ""}
           ${noEG.length > 0 ? `<div class="metric-card clickable" data-metric="noEG-${cohort.key}">
             <div class="metric-value">${noEG.length}</div>
             <div class="metric-label">No EG Data</div>
@@ -837,11 +865,12 @@
         </div>
 
         <div class="eg-pace-box ${onPace ? "on-pace" : "off-pace"}">
-          <strong>Pace:</strong> ${s4Pace} EGs/week in S4 ${onPace
+          <strong>Pace:</strong> ${s4Pace} EGs/week in S4 (${s4WeeksElapsed} school weeks) ${onPace
             ? `&mdash; on track (need ${paceNeeded}/wk)`
             : `&mdash; behind (need ${paceNeeded}/wk, gap: ${Math.round((paceNeeded - s4Pace) * 10) / 10}/wk)`}
-          &middot; ${totalNeeded} EGs still needed &middot; ${weeksRemaining} weeks remaining to MAP
-          &middot; ${onTargetPct}% of students on target (${onTarget}/${withEG.length})
+          &middot; ${totalNeeded} EGs still needed across ${trackable.length} trackable students
+          &middot; ${weeksRemaining} weeks to MAP
+          &middot; ${onTargetPct}% on target (${onTarget}/${trackable.length})
         </div>
 
         <table class="metrics-table" style="margin-top:12px">
@@ -858,7 +887,7 @@
           <tr style="font-weight:700;border-top:2px solid var(--border)">
             <td>Total</td>
             <td>${sessionOrder.reduce((sum, sk) => sum + sessionEGs[sk].total, 0)}</td>
-            <td>—</td>
+            <td>&mdash;</td>
           </tr>
         </table>
 
@@ -866,8 +895,9 @@
           <tr><th>S4 Week</th><th>EGs Passed</th><th>Students Advancing</th></tr>
           ${weekOrder.map((wk) => {
             const w = weekEGs[wk];
-            return `<tr>
-              <td>${esc(S4_WEEKS[wk].label)}</td>
+            const isBreak = wk === "Break";
+            return `<tr${isBreak ? ' style="color:var(--text-muted);font-style:italic"' : ""}>
+              <td>${esc(S4_WEEKS[wk].label)}${isBreak ? " (session break)" : ""}</td>
               <td>${w.total}</td>
               <td>${w.students.size}</td>
             </tr>`;
@@ -875,17 +905,16 @@
         </table>
 
         <table class="metrics-table" style="margin-top:12px">
-          <tr><th>Campus</th><th>Students</th><th>0 EG</th><th>1 EG</th><th>2+ EGs</th><th>No Data</th><th>On Target %</th></tr>
+          <tr><th>Campus</th><th>Trackable</th><th>0 EG</th><th>1 EG</th><th>2+ EGs</th><th>On Target %</th></tr>
           ${Object.keys(campusEG).sort().map((c) => {
             const d = campusEG[c];
-            const otPct = d.withEG > 0 ? Math.round((d.eg2plus / d.withEG) * 100) : 0;
+            const otPct = d.total > 0 ? Math.round((d.eg2plus / d.total) * 100) : 0;
             return `<tr class="clickable-row" data-metric="egCampus-${cohort.key}" data-campus="${esc(c)}">
               <td>${esc(c)}</td>
               <td>${d.total}</td>
               <td>${d.eg0 > 0 ? '<span class="score-fail">' + d.eg0 + '</span>' : '0'}</td>
               <td>${d.eg1 > 0 ? '<span style="color:var(--orange)">' + d.eg1 + '</span>' : '0'}</td>
               <td>${d.eg2plus > 0 ? '<span class="score-pass">' + d.eg2plus + '</span>' : '0'}</td>
-              <td>${d.noEG || 0}</td>
               <td><div class="bar-cell">${otPct}% <div class="bar-bg"><div class="bar-fill ${otPct >= 50 ? "green" : otPct >= 25 ? "orange" : "red"}" style="width:${otPct}%"></div></div></div></td>
             </tr>`;
           }).join("")}
@@ -893,7 +922,142 @@
       </div>`;
     }
 
-    return html;
+    container.innerHTML = html;
+
+    // Wire up clickable metrics
+    const s1Students = allStudents.filter(s => s.s1_cohort === true);
+
+    function egBucket(list, egmValue) {
+      return list.filter(s => {
+        if (s.effective_grade == null || s.effective_grade > CURRICULUM_CAP) return false;
+        const egm = s.effective_grades_mastered || 0;
+        if (egmValue === "3+") return egm >= 3;
+        return egm === egmValue;
+      });
+    }
+
+    const egMetricLookup = {
+      "eg0-s1": { title: "S1 Cohort: 0 EGs Mastered", list: egBucket(s1Students, 0) },
+      "eg1-s1": { title: "S1 Cohort: 1 EG Mastered", list: egBucket(s1Students, 1) },
+      "eg2-s1": { title: "S1 Cohort: 2 EGs Mastered", list: egBucket(s1Students, 2) },
+      "eg3plus-s1": { title: "S1 Cohort: 3+ EGs Mastered", list: egBucket(s1Students, "3+") },
+      "aboveCurr-s1": { title: "S1 Cohort: Above Curriculum (EG > G8)", list: s1Students.filter(s => s.effective_grade != null && s.effective_grade > CURRICULUM_CAP) },
+      "noEG-s1": { title: "S1 Cohort: No EG Data", list: s1Students.filter(s => s.effective_grade == null) },
+      "eg0-all": { title: "All Students: 0 EGs Mastered", list: egBucket(allStudents, 0) },
+      "eg1-all": { title: "All Students: 1 EG Mastered", list: egBucket(allStudents, 1) },
+      "eg2-all": { title: "All Students: 2 EGs Mastered", list: egBucket(allStudents, 2) },
+      "eg3plus-all": { title: "All Students: 3+ EGs Mastered", list: egBucket(allStudents, "3+") },
+      "aboveCurr-all": { title: "All Students: Above Curriculum (EG > G8)", list: allStudents.filter(s => s.effective_grade != null && s.effective_grade > CURRICULUM_CAP) },
+      "noEG-all": { title: "All Students: No EG Data", list: allStudents.filter(s => s.effective_grade == null) },
+    };
+
+    container.querySelectorAll(".metric-card.clickable").forEach((card) => {
+      card.addEventListener("click", () => {
+        const key = card.dataset.metric;
+        const info = egMetricLookup[key];
+        if (info) showEGDrilldown(info.title, info.list);
+      });
+    });
+
+    container.querySelectorAll(".clickable-row").forEach((row) => {
+      row.addEventListener("click", () => {
+        const metric = row.dataset.metric;
+        if (metric && metric.startsWith("egCampus-")) {
+          const cohortKey = metric.replace("egCampus-", "");
+          const campus = row.dataset.campus;
+          const cohortList = cohortKey === "s1" ? s1Students : allStudents;
+          const list = cohortList.filter(s => s.effective_grade != null && s.effective_grade <= CURRICULUM_CAP && (s.campus || "Unknown") === campus);
+          showEGDrilldown(`${cohortKey === "s1" ? "S1 Cohort" : "All Students"} — Campus: ${campus}`, list);
+        }
+      });
+    });
+  }
+
+  function showEGDrilldown(title, students) {
+    const el = document.getElementById("eg-drilldown");
+    if (!el) return;
+
+    let html = `
+      <div class="drilldown-header">
+        <h3>${esc(title)} (${students.length})</h3>
+        <button class="drilldown-close">&times;</button>
+      </div>
+      <table class="metrics-table drilldown-table">
+        <tr>
+          <th>Name</th><th>Email</th><th>Campus</th><th>Level</th>
+          <th>HMG</th><th>EG</th><th>EGM</th><th>XP</th><th>Test XP</th><th>Last Test</th><th>Insights</th>
+        </tr>
+    `;
+
+    const sorted = [...students].sort((a, b) => a.name.localeCompare(b.name));
+    for (const s of sorted) {
+      const xpPct = s.xp.goal_to_date > 0 ? Math.round((s.xp.total / s.xp.goal_to_date) * 100) : 0;
+      const xpCls = s.xp.meets_goal ? "score-pass" : "score-fail";
+      const lastTest = s.last_test
+        ? `${s.last_test.name} (${s.last_test.score}%) ${s.last_test.passed ? "\u2713" : "\u2717"}`
+        : "-";
+      const insightCount = s.insights.length;
+      const testXp = s.xp_details && s.xp_details.test_xp_total ? Math.round(s.xp_details.test_xp_total) : (s.xp.test ? Math.round(s.xp.test) : 0);
+      const egmVal = s.effective_grades_mastered;
+      const aboveCurr = s.effective_grade != null && s.effective_grade > CURRICULUM_CAP;
+      const egmDisplay = aboveCurr ? (s.hmg >= CURRICULUM_CAP ? "Complete" : "Capped") : (egmVal != null ? egmVal : "-");
+      const egmCls = aboveCurr ? "score-pass" : (egmVal == null ? "" : egmVal >= 2 ? "score-pass" : egmVal === 0 ? "score-fail" : "");
+
+      html += `<tr class="drilldown-student-row" data-student-id="${esc(s.id || s.email)}">
+        <td><strong class="drilldown-student-link">${esc(s.name)}</strong></td>
+        <td>${esc(s.email)}</td>
+        <td>${esc(s.campus)}</td>
+        <td>${esc(s.level)}</td>
+        <td>G${s.hmg}</td>
+        <td>${s.effective_grade ? `G${s.effective_grade}` : "-"}</td>
+        <td class="${egmCls}">${egmDisplay}</td>
+        <td class="${xpCls}">${Math.round(s.xp.total)}/${Math.round(s.xp.goal_to_date)} (${xpPct}%)</td>
+        <td>${testXp > 0 ? testXp : "-"}</td>
+        <td>${lastTest}</td>
+        <td>${insightCount > 0 ? `<span class="score-fail">${insightCount}</span>` : '<span class="score-pass">0</span>'}</td>
+      </tr>`;
+
+      if (insightCount > 0) {
+        html += `<tr class="drilldown-insights-row hidden" data-for="${esc(s.id || s.email)}">
+          <td colspan="11">
+            <div class="drilldown-insights">
+              ${s.insights.map((ins) => `<div class="insight-item"><span class="insight-dot ${ins.severity}"></span>${esc(ins.text)}</div>`).join("")}
+              ${s.session_tests && s.session_tests.length > 0 ? `
+                <div style="margin-top:8px"><strong>Session Tests:</strong></div>
+                <table class="detail-table" style="margin-top:4px">
+                  <tr><th>Test</th><th>Type</th><th>Score</th><th>Date</th><th>XP</th><th></th></tr>
+                  ${s.session_tests.map((t) => {
+                    const cls = t.passed ? "score-pass" : "score-fail";
+                    const rushed = t.rushed ? '<span class="rushed-tag">RUSHED</span>' : "";
+                    const tXp = s.xp_details && s.xp_details.test_xp
+                      ? s.xp_details.test_xp.find((x) => x.name === t.name && x.date === t.date)
+                      : null;
+                    return `<tr><td>${esc(t.name)}</td><td>${esc(t.type)}</td><td class="${cls}">${t.score}%</td><td>${formatDate(t.date)}</td><td>${tXp ? tXp.xp : "-"}</td><td>${rushed}</td></tr>`;
+                  }).join("")}
+                </table>` : ""}
+            </div>
+          </td>
+        </tr>`;
+      }
+    }
+    html += `</table>`;
+
+    el.innerHTML = html;
+    el.classList.remove("hidden");
+
+    el.querySelector(".drilldown-close").addEventListener("click", () => {
+      el.classList.add("hidden");
+    });
+
+    el.querySelectorAll(".drilldown-student-row").forEach((row) => {
+      row.addEventListener("click", () => {
+        const sid = row.dataset.studentId;
+        const insightsRow = el.querySelector(`.drilldown-insights-row[data-for="${sid}"]`);
+        if (insightsRow) insightsRow.classList.toggle("hidden");
+      });
+    });
+
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   // ── Metrics Page ────────────────────────────────────────────────────
@@ -1223,24 +1387,9 @@
     }
     html += `</table></div>`;
 
-    // ── EG Analysis Section ────────────────────────────────────────────
-    html += buildEGAnalysis(students);
-
     container.innerHTML = html;
 
     // Wire up clickable metrics
-    const s1Students = students.filter(s => s.s1_cohort === true);
-
-    // EG bucket helper
-    function egBucket(list, egmValue) {
-      return list.filter(s => {
-        if (s.effective_grade == null) return false;
-        const egm = s.effective_grades_mastered || 0;
-        if (egmValue === "3+") return egm >= 3;
-        return egm === egmValue;
-      });
-    }
-
     const metricLookup = {
       total: { title: "All Students", list: students },
       g8: { title: "Completed G8 Writing", list: g8Done },
@@ -1254,18 +1403,6 @@
       eocPassed: { title: "Students with End of Course Passes", list: students.filter(s => (s.test_summary || {}).end_of_course_passed > 0) },
       toPassed: { title: "Students with Test-Out Passes", list: students.filter(s => (s.test_summary || {}).test_outs_passed > 0) },
       placementPassed: { title: "Students with Placement Passes", list: students.filter(s => (s.test_summary || {}).placement_passed > 0) },
-      // EG metrics — S1 cohort
-      "eg0-s1": { title: "S1 Cohort: 0 EGs Mastered", list: egBucket(s1Students, 0) },
-      "eg1-s1": { title: "S1 Cohort: 1 EG Mastered", list: egBucket(s1Students, 1) },
-      "eg2-s1": { title: "S1 Cohort: 2 EGs Mastered", list: egBucket(s1Students, 2) },
-      "eg3plus-s1": { title: "S1 Cohort: 3+ EGs Mastered", list: egBucket(s1Students, "3+") },
-      "noEG-s1": { title: "S1 Cohort: No EG Data", list: s1Students.filter(s => s.effective_grade == null) },
-      // EG metrics — all students
-      "eg0-all": { title: "All Students: 0 EGs Mastered", list: egBucket(students, 0) },
-      "eg1-all": { title: "All Students: 1 EG Mastered", list: egBucket(students, 1) },
-      "eg2-all": { title: "All Students: 2 EGs Mastered", list: egBucket(students, 2) },
-      "eg3plus-all": { title: "All Students: 3+ EGs Mastered", list: egBucket(students, "3+") },
-      "noEG-all": { title: "All Students: No EG Data", list: students.filter(s => s.effective_grade == null) },
     };
 
     container.querySelectorAll(".metric-card.clickable").forEach((card) => {
@@ -1287,12 +1424,6 @@
           const level = row.dataset.level;
           const list = (levelMap[level] || {}).students || [];
           showDrilldown(`Level: ${level}`, list);
-        } else if (metric && metric.startsWith("egCampus-")) {
-          const cohortKey = metric.replace("egCampus-", "");
-          const campus = row.dataset.campus;
-          const cohortList = cohortKey === "s1" ? s1Students : students;
-          const list = cohortList.filter(s => (s.campus || "Unknown") === campus);
-          showDrilldown(`${cohortKey === "s1" ? "S1 Cohort" : "All Students"} — Campus: ${campus}`, list);
         }
       });
     });
