@@ -798,6 +798,69 @@ body {
     font-size: 0.8rem;
 }
 
+/* ── EG Analysis ──────────────────────────────────────────────────── */
+.eg-section {
+    border-top: 3px solid var(--blue);
+    padding-top: 16px;
+}
+
+.eg-pace-box {
+    font-size: 0.85rem;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin: 12px 0;
+    line-height: 1.5;
+}
+
+.eg-pace-box.on-pace {
+    background: var(--green-bg, #e8f5e9);
+    border: 1px solid var(--green, #2e7d32);
+    color: var(--green, #2e7d32);
+}
+
+.eg-pace-box.off-pace {
+    background: var(--red-bg, #ffebee);
+    border: 1px solid var(--red, #c62828);
+    color: var(--red, #c62828);
+}
+
+.drilldown-student-row {
+    cursor: pointer;
+}
+
+.drilldown-student-row:hover {
+    background: var(--hover-bg, rgba(0,0,0,0.03));
+}
+
+.drilldown-student-link {
+    color: var(--blue);
+    cursor: pointer;
+}
+
+.drilldown-student-link:hover {
+    text-decoration: underline;
+}
+
+.drilldown-insights-row td {
+    padding: 8px 12px;
+    background: var(--card-bg, #fafbfc);
+    border-top: none;
+}
+
+.drilldown-insights {
+    padding: 4px 0;
+}
+
+.drilldown-insights .insight-item {
+    padding: 3px 0;
+    font-size: 0.82rem;
+}
+
+.drilldown-insights .detail-table {
+    margin-top: 4px;
+    font-size: 0.78rem;
+}
+
 /* ── Test Results Page ─────────────────────────────────────────────── */
 .test-results-container { padding: 24px; }
 

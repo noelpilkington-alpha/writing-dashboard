@@ -67,6 +67,57 @@ def _is_alphawrite(ali_sid: str) -> bool:
 ACCURACY_THRESHOLD = 80
 OUTPUT_PATH = Path(__file__).resolve().parent / "data.json"
 
+# Default paths for EG and S1 snapshot data
+DEFAULT_EG_CSV = Path(__file__).resolve().parent.parent / "Student_Progress_Tra_1773079782808.csv"
+DEFAULT_S1_SNAPSHOT = Path(__file__).resolve().parent.parent / "SY25-26 Session 1 Snapshot (Academics).xlsx"
+
+# Nickname -> full name mappings for S1 snapshot matching
+_S1_NAME_OVERRIDES = {
+    "abi constain": "abigail constain",
+    "benny valles": "benjamin valles",
+    "bobbi brown": "bobbi sue brown",
+    "cami fernandez": "camila fernandez",
+    "dario poyatos ramos": "dario ramos",
+    "daveyp paul": "david paul",
+    "dax hummel": "daxon hummel",
+    "des pardi": "desmond pardi",
+    "izzy vicente": "isabella vicente",
+    "ju orloff": "juliana orloff",
+    "nathan scharf": "nathaniel scharf",
+    "penny marty": "penelope marty",
+    "saeed tarawneh": "said tarawneh",
+    "sebi cobas": "sebastian cobas",
+    "bella barba": "isabella barba",
+    "ben de amorim": "ben deamorim",
+    "gus haig": "august haig",
+    "grey walker": "greyson walker",
+}
+
+
+def load_s1_writing_names(snapshot_path: str) -> set[str]:
+    """Load S1 Writing-enrolled student names from the S1 Snapshot spreadsheet.
+
+    Uses the XPschoolday sheet — students with Writing XP > 0 in S1.
+    Returns a set of lowercase names, with nickname overrides applied.
+    """
+    import openpyxl
+
+    wb = openpyxl.load_workbook(str(snapshot_path), data_only=True)
+    ws = wb["XPschoolday"]
+    names = set()
+    for row in ws.iter_rows(min_row=2, values_only=True):
+        fullname = row[2]
+        subject = row[3]
+        xp = row[4]
+        if not fullname or not isinstance(fullname, str):
+            continue
+        if str(subject).strip() == "Writing" and isinstance(xp, (int, float)) and xp > 0:
+            raw = fullname.strip().lower()
+            names.add(_S1_NAME_OVERRIDES.get(raw, raw))
+    wb.close()
+    logger.info("Loaded %d S1 Writing students from snapshot", len(names))
+    return names
+
 # ---------------------------------------------------------------------------
 # Session cookie helpers (interactive prompting on expiry)
 # ---------------------------------------------------------------------------
@@ -817,7 +868,7 @@ def extract_xp_and_details(raw_results: list[dict]) -> dict:
 # Main collector
 # ---------------------------------------------------------------------------
 
-def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, effective_grades_csv: str | None = None) -> dict:
+def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, effective_grades_csv: str | None = None, s1_snapshot_path: str | None = None) -> dict:
     """Collect all data and return the dashboard JSON structure."""
     session = SESSIONS[session_name]
     session_start = session["start"]
@@ -863,10 +914,15 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
     else:
         dd_analyses = run_deep_dive_analysis(deep_dive_tests, email_to_name)
 
-    # 6c. Load effective grades from CSV (Language-based)
+    # 6c. Load effective grades from CSV
     eg_by_name: dict[str, int] = {}
     if effective_grades_csv:
         eg_by_name = load_effective_grades(effective_grades_csv)
+
+    # 6d. Load S1 cohort names
+    s1_names: set[str] = set()
+    if s1_snapshot_path:
+        s1_names = load_s1_writing_names(s1_snapshot_path)
 
     # 7. Build email -> csv results map
     csv_by_email: dict[str, list] = defaultdict(list)
@@ -1095,6 +1151,7 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
             "grades_advanced": hmg - starting_hmg,
             "effective_grade": eg_by_name.get(profile.full_name.lower()),
             "effective_grades_mastered": max(0, hmg - (eg_by_name.get(profile.full_name.lower(), hmg + 1) - 1)) if eg_by_name.get(profile.full_name.lower()) else None,
+            "s1_cohort": profile.full_name.lower() in s1_names if s1_names else None,
             "completed_g8": completed_g8,
             "enrollments": student_enrollments,
             "still_enrolled": bool(student_enrollments),
@@ -1164,12 +1221,17 @@ def main():
     parser.add_argument("--output", default=str(OUTPUT_PATH), help="Output JSON path")
     parser.add_argument("--skip-analysis", action="store_true",
                         help="Skip Claude deep dive analysis (faster)")
-    parser.add_argument("--effective-grades", default=None,
+    parser.add_argument("--effective-grades",
+                        default=str(DEFAULT_EG_CSV) if DEFAULT_EG_CSV.exists() else None,
                         help="Path to Student Progress Tracker CSV with effective grades")
+    parser.add_argument("--s1-snapshot",
+                        default=str(DEFAULT_S1_SNAPSHOT) if DEFAULT_S1_SNAPSHOT.exists() else None,
+                        help="Path to S1 Snapshot Excel for S1 cohort identification")
     args = parser.parse_args()
 
     data = collect(args.csv, args.session, skip_analysis=args.skip_analysis,
-                   effective_grades_csv=args.effective_grades)
+                   effective_grades_csv=args.effective_grades,
+                   s1_snapshot_path=args.s1_snapshot)
 
     output = Path(args.output)
     output.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
