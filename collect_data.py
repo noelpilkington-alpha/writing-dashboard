@@ -329,7 +329,6 @@ _EXCLUDED_EMAILS = {
 # Legacy Dash campuses (case-insensitive matching via _normalise)
 _LEGACY_CAMPUSES = {
     "alpha anywhere (homeschool)",
-    "alpha anywhere center",
     "novatio",
     "unbound academy",
     "kairos learning solutions",
