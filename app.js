@@ -1017,7 +1017,8 @@
         <td>${insightCount > 0 ? `<span class="score-fail">${insightCount}</span>` : '<span class="score-pass">0</span>'}</td>
       </tr>`;
 
-      if (insightCount > 0) {
+      if (hasExpandableContent(s)) {
+        const ddAnalysis = buildDeepDiveAnalysisHTML(s);
         html += `<tr class="drilldown-insights-row hidden" data-for="${esc(s.id || s.email)}">
           <td colspan="11">
             <div class="drilldown-insights">
@@ -1035,6 +1036,7 @@
                     return `<tr><td>${esc(t.name)}</td><td>${esc(t.type)}</td><td class="${cls}">${t.score}%</td><td>${formatDate(t.date)}</td><td>${tXp ? tXp.xp : "-"}</td><td>${rushed}</td></tr>`;
                   }).join("")}
                 </table>` : ""}
+              ${ddAnalysis}
             </div>
           </td>
         </tr>`;
@@ -1429,6 +1431,38 @@
     });
   }
 
+  // ── Deep Dive Analysis HTML helper ──────────────────────────────────
+  function buildDeepDiveAnalysisHTML(s) {
+    if (!s.deep_dive || !s.deep_dive.needed || !s.deep_dive.details || s.deep_dive.details.length === 0) return "";
+    let html = "";
+    for (const d of s.deep_dive.details) {
+      html += `<div style="margin-top:8px"><strong>Deep Dive: G${d.grade}</strong>
+        <span style="font-size:0.78rem;color:var(--text-muted);margin-left:8px">${d.failed_count} failed / ${d.rushed_count} rushed / avg ${d.avg_time_minutes} min</span>
+      </div>`;
+      if (d.analysis && d.analysis.error_analysis) {
+        html += `<div class="dd-student-analysis">`;
+        if (d.analysis.questions_missed) {
+          html += `<div class="dd-analysis-field"><span class="dd-analysis-label">Questions Missed:</span> ${esc(d.analysis.questions_missed)}</div>`;
+        }
+        html += `<div class="dd-analysis-field"><span class="dd-analysis-label">Error Analysis:</span> ${esc(d.analysis.error_analysis)}</div>`;
+        if (d.analysis.root_causes) {
+          html += `<div class="dd-analysis-field"><span class="dd-analysis-label">Root Causes:</span> ${esc(d.analysis.root_causes)}</div>`;
+        }
+        if (d.analysis.recommended_actions) {
+          html += `<div class="dd-analysis-field"><span class="dd-analysis-label">Recommended Actions:</span> ${esc(d.analysis.recommended_actions)}</div>`;
+        }
+        html += `</div>`;
+      }
+    }
+    return html;
+  }
+
+  function hasExpandableContent(s) {
+    return s.insights.length > 0
+      || (s.session_tests && s.session_tests.length > 0)
+      || (s.deep_dive && s.deep_dive.needed && s.deep_dive.details && s.deep_dive.details.length > 0);
+  }
+
   // ── Drill-down panel ────────────────────────────────────────────────
   function showDrilldown(title, students) {
     const el = document.getElementById("metric-drilldown");
@@ -1473,8 +1507,9 @@
         <td>${insightCount > 0 ? `<span class="score-fail">${insightCount}</span>` : '<span class="score-pass">0</span>'}</td>
       </tr>`;
 
-      // Hidden insights row
-      if (insightCount > 0) {
+      // Hidden expandable row (insights + session tests + deep dive analysis)
+      if (hasExpandableContent(s)) {
+        const ddAnalysis = buildDeepDiveAnalysisHTML(s);
         html += `<tr class="drilldown-insights-row hidden" data-for="${esc(s.id || s.email)}">
           <td colspan="11">
             <div class="drilldown-insights">
@@ -1492,6 +1527,7 @@
                     return `<tr><td>${esc(t.name)}</td><td>${esc(t.type)}</td><td class="${cls}">${t.score}%</td><td>${formatDate(t.date)}</td><td>${tXp ? tXp.xp : "-"}</td><td>${rushed}</td></tr>`;
                   }).join("")}
                 </table>` : ""}
+              ${ddAnalysis}
             </div>
           </td>
         </tr>`;
