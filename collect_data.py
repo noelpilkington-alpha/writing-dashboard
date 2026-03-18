@@ -351,6 +351,9 @@ _TIMEBACK_EXCLUDED_CAMPUSES = {
     "speedrun",
     "school in the hills",
     "trilogy central support",
+    "centner academy",
+    "colearn academy",
+    "the st. james performance academy",
 }
 
 
