@@ -233,7 +233,7 @@
         listHtml += `
           <div class="dd-student-item">
             <div class="dd-student-name">${esc(s.name)} <span style="font-weight:400;color:var(--text-muted);font-size:0.78rem">${esc(s.email)}</span></div>
-            <div class="dd-student-meta">${esc(s.campus)} | ${esc(s.level)} | G${s.age_grade} | HMG: G${s.hmg}${s.effective_grade ? ` | Eff: G${s.effective_grade}` : ""} | XP: ${Math.round(ddSchoolXp)}/${Math.round(s.xp.goal_to_date)} (${xpPct}%)${lastXp}</div>
+            <div class="dd-student-meta">${esc(s.campus)} | ${esc(s.level)} | G${s.age_grade} | HMG: G${s.hmg}${s.effective_grade ? ` | EG: G${s.effective_grade}` : ""} | XP: ${Math.round(ddSchoolXp)}/${Math.round(s.xp.goal_to_date)} (${xpPct}%)${lastXp}</div>
             <div class="dd-student-meta">${lastTest}</div>
             <div class="dd-student-reasons">
               ${reasons.map((r) => `<span class="dd-reason ${r.type}">${esc(r.label)}</span>`).join("")}
@@ -440,7 +440,7 @@
             <span class="student-email">${esc(s.email)}</span>
             <span class="student-grade">G${s.age_grade}</span>
             <span class="student-hmg">HMG: G${s.hmg}</span>
-            ${s.effective_grade ? `<span class="student-eff-grade">Eff: G${s.effective_grade}</span>` : ""}
+            ${s.effective_grade ? `<span class="student-eff-grade">EG: G${s.effective_grade}</span>` : ""}
           </div>
           <span class="expand-icon">&#9660;</span>
           <div class="card-row2">
@@ -714,18 +714,19 @@
     const MAP_DATE = "2026-05-19";
     const EG_TARGET = 2;
 
-    // S4 weekly boundaries — S4 classes start Mar 3.
-    // Session break (Feb 21–Mar 2) tests still count toward S4 totals.
-    const S4_START = "2026-02-21"; // include break tests
-    const S4_SCHOOL_START = "2026-03-03"; // first school day
-    const S4_WEEKS = {
-      Break: { start: "2026-02-21", end: "2026-03-02", label: "Break Feb 21–Mar 2" },
-      Wk1: { start: "2026-03-03", end: "2026-03-08", label: "Wk1 Mar 3–8" },
-      Wk2: { start: "2026-03-09", end: "2026-03-15", label: "Wk2 Mar 9–15" },
-    };
-    const weekOrder = Object.keys(S4_WEEKS);
-    // Only count school weeks (not break) for pace
-    const schoolWeekKeys = weekOrder.filter(k => k !== "Break");
+    // Compute S4 weekly boundaries dynamically
+    const currentSess = sessions[DATA.session.name];
+    const s4Weeks = computeSessionWeeks(DATA.session.name, currentSess);
+    const S4_WEEKS = {};
+    for (const w of s4Weeks) S4_WEEKS[w.key] = { start: w.start, end: w.end, label: w.label };
+    const weekOrder = s4Weeks.map(w => w.key);
+    const schoolWeekKeys = s4Weeks.filter(w => !w.isBreak).map(w => w.key);
+
+    // Compute weeks for ALL sessions (for cross-session EG comparison)
+    const egSessionWeeksMap = {};
+    for (const sk of sessionOrder) {
+      egSessionWeeksMap[sk] = computeSessionWeeks(sk, sessions[sk]).filter(w => !w.isBreak);
+    }
 
     // Build both cohorts
     const cohorts = [
@@ -770,6 +771,15 @@
       const weekEGs = {};
       for (const wk of weekOrder) weekEGs[wk] = { total: 0, students: new Set() };
 
+      // Weekly EGs for ALL sessions (for cross-session comparison)
+      const allSessionWeekEGs = {};
+      for (const sk of sessionOrder) {
+        allSessionWeekEGs[sk] = {};
+        for (const w of egSessionWeeksMap[sk]) {
+          allSessionWeekEGs[sk][w.key] = { total: 0, students: new Set() };
+        }
+      }
+
       for (const s of trackable) {
         const r90 = s.effective_grade - 1;
         const tests = (s.all_tests || []).slice().sort((a, b) => a.date.localeCompare(b.date));
@@ -784,9 +794,24 @@
             sessionEGs[sk].students.add(s.email);
           }
           prevEgm = egmAtEnd;
+
+          // Weekly EGs for this session
+          const sessWeeks = egSessionWeeksMap[sk];
+          const hmgBefore = computeHmgAtDate(tests, new Date(new Date(sess.start + "T00:00:00").getTime() - 86400000).toISOString().slice(0, 10));
+          let prevWkEgmSess = Math.max(0, hmgBefore - r90);
+          for (const w of sessWeeks) {
+            const hmgAtWk = computeHmgAtDate(tests, w.end);
+            const egmAtWk = Math.max(0, hmgAtWk - r90);
+            const d = egmAtWk - prevWkEgmSess;
+            if (d > 0) {
+              allSessionWeekEGs[sk][w.key].total += d;
+              allSessionWeekEGs[sk][w.key].students.add(s.email);
+            }
+            prevWkEgmSess = egmAtWk;
+          }
         }
 
-        // S4 weekly
+        // S4 weekly (current session detail with break)
         const hmgBeforeS4 = computeHmgAtDate(tests, "2026-02-20");
         let prevWkEgm = Math.max(0, hmgBeforeS4 - r90);
         for (const wk of weekOrder) {
@@ -906,6 +931,34 @@
           }).join("")}
         </table>
 
+        <h3 style="margin-top:16px;margin-bottom:8px">EGs Passed — Week-by-Week Session Comparison</h3>
+        <table class="metrics-table" style="margin-top:4px">
+          <tr><th>Week</th>${sessionOrder.map(sk => `<th>${esc(sessions[sk].label || sk)}</th>`).join("")}</tr>
+          ${(() => {
+            const maxWks = Math.max(...sessionOrder.map(sk => egSessionWeeksMap[sk].length));
+            let rows = "";
+            for (let i = 0; i < maxWks; i++) {
+              rows += `<tr><td>Wk${i + 1}</td>`;
+              for (const sk of sessionOrder) {
+                const wks = egSessionWeeksMap[sk];
+                const w = wks[i];
+                if (!w) { rows += `<td style="color:var(--text-muted)">—</td>`; continue; }
+                const d = allSessionWeekEGs[sk][w.key];
+                rows += `<td>${d ? d.total : 0}</td>`;
+              }
+              rows += `</tr>`;
+            }
+            rows += `<tr style="font-weight:700;border-top:2px solid var(--border)"><td>Total</td>`;
+            for (const sk of sessionOrder) {
+              const wks = egSessionWeeksMap[sk];
+              const total = wks.reduce((sum, w) => sum + (allSessionWeekEGs[sk][w.key]?.total || 0), 0);
+              rows += `<td>${total}</td>`;
+            }
+            rows += `</tr>`;
+            return rows;
+          })()}
+        </table>
+
         <table class="metrics-table" style="margin-top:12px">
           <tr><th>Campus</th><th>Trackable</th><th>0 EG</th><th>1 EG</th><th>2+ EGs</th><th>On Target %</th></tr>
           ${Object.keys(campusEG).sort().map((c) => {
@@ -921,6 +974,38 @@
             </tr>`;
           }).join("")}
         </table>
+
+        ${(() => {
+          // Language EG mastered but not Writing EG
+          const langMasteredNotWriting = students.filter(s => {
+            if (!s.language_eg || !s.effective_grade) return false;
+            const langEgm = Math.max(0, s.hmg - (s.language_eg - 1));
+            const writingEgm = s.effective_grades_mastered || 0;
+            return langEgm >= 2 && writingEgm < 2;
+          });
+          if (langMasteredNotWriting.length === 0) return "";
+          return `
+            <h3 style="margin-top:16px;margin-bottom:8px">Language EG Mastered, Writing EG Not Mastered (${langMasteredNotWriting.length})</h3>
+            <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:8px">
+              Students who have mastered their EG in Language (2+ EGM) but not in Writing (&lt; 2 EGM).
+            </p>
+            <table class="metrics-table">
+              <tr><th>Name</th><th>Campus</th><th>HMG</th><th>Writing EG</th><th>Writing EGM</th><th>Language EG</th><th>Language EGM</th></tr>
+              ${langMasteredNotWriting.sort((a, b) => a.name.localeCompare(b.name)).map(s => {
+                const wEgm = s.effective_grades_mastered || 0;
+                const lEgm = Math.max(0, s.hmg - (s.language_eg - 1));
+                return `<tr>
+                  <td>${esc(s.name)}</td>
+                  <td>${esc(s.campus)}</td>
+                  <td>G${s.hmg}</td>
+                  <td>G${s.effective_grade}</td>
+                  <td class="${wEgm < 2 ? 'score-fail' : 'score-pass'}">${wEgm}</td>
+                  <td>G${s.language_eg}</td>
+                  <td class="score-pass">${lEgm}</td>
+                </tr>`;
+              }).join("")}
+            </table>`;
+        })()}
       </div>`;
     }
 
@@ -1657,6 +1742,77 @@
     const campuses = [...new Set(rows.map((r) => r.campus).filter(Boolean))].sort();
     const testTypes = [...new Set(rows.map((r) => r.test_type))].sort();
 
+    // ── Week-by-week tests passed comparison across all sessions ──
+    const sessionKeys = Object.keys(sessions).sort();
+    const allTests = [];
+    students.forEach((s) => {
+      for (const t of s.all_tests || []) {
+        allTests.push({ ...t, email: s.email });
+      }
+    });
+
+    // Compute weeks for each session
+    const sessionWeeksMap = {};
+    let maxWeeks = 0;
+    for (const sk of sessionKeys) {
+      const wks = computeSessionWeeks(sk, sessions[sk]);
+      const schoolWks = wks.filter(w => !w.isBreak);
+      sessionWeeksMap[sk] = schoolWks;
+      if (schoolWks.length > maxWeeks) maxWeeks = schoolWks.length;
+    }
+
+    // Count tests passed per session per week
+    const weeklyTestsPassed = {};
+    const weeklyTestsTaken = {};
+    for (const sk of sessionKeys) {
+      weeklyTestsPassed[sk] = {};
+      weeklyTestsTaken[sk] = {};
+      const wks = sessionWeeksMap[sk];
+      for (const w of wks) {
+        weeklyTestsPassed[sk][w.key] = 0;
+        weeklyTestsTaken[sk][w.key] = 0;
+      }
+      for (const t of allTests) {
+        for (const w of wks) {
+          if (t.date >= w.start && t.date <= w.end) {
+            weeklyTestsTaken[sk][w.key]++;
+            if (t.passed) weeklyTestsPassed[sk][w.key]++;
+            break;
+          }
+        }
+      }
+    }
+
+    // Build comparison table
+    let weekCompareHtml = `
+      <h3 style="margin-top:16px;margin-bottom:8px">Week-by-Week Tests Passed — All Sessions</h3>
+      <table class="metrics-table" style="margin-bottom:20px">
+        <tr><th>Week</th>${sessionKeys.map(sk => `<th>${esc(sessions[sk].label || sk)}</th>`).join("")}</tr>`;
+    for (let i = 0; i < maxWeeks; i++) {
+      const wkLabel = `Wk${i + 1}`;
+      weekCompareHtml += `<tr>
+        <td>${wkLabel}</td>
+        ${sessionKeys.map(sk => {
+          const wks = sessionWeeksMap[sk];
+          const w = wks[i];
+          if (!w) return `<td style="color:var(--text-muted)">—</td>`;
+          const passed = weeklyTestsPassed[sk][w.key] || 0;
+          const taken = weeklyTestsTaken[sk][w.key] || 0;
+          return `<td>${passed} / ${taken}</td>`;
+        }).join("")}
+      </tr>`;
+    }
+    // Totals row
+    weekCompareHtml += `<tr style="font-weight:700;border-top:2px solid var(--border)">
+      <td>Total</td>
+      ${sessionKeys.map(sk => {
+        const wks = sessionWeeksMap[sk];
+        const totalP = wks.reduce((s, w) => s + (weeklyTestsPassed[sk][w.key] || 0), 0);
+        const totalT = wks.reduce((s, w) => s + (weeklyTestsTaken[sk][w.key] || 0), 0);
+        return `<td>${totalP} / ${totalT}</td>`;
+      }).join("")}
+    </tr></table>`;
+
     let html = `
       <h2 style="margin-bottom:8px">${esc(sess.label || currentSession)} Test Results</h2>
       <div class="tr-summary">
@@ -1665,6 +1821,7 @@
         <span class="tr-stat red"><strong>${totalFailed}</strong> failed</span>
         <span class="tr-stat"><strong>${uniqueStudents}</strong> students tested</span>
       </div>
+      ${weekCompareHtml}
       <div class="tr-filters">
         <input type="text" id="tr-search" class="search-input" placeholder="Search by student name or test..." autocomplete="off" style="max-width:320px">
         <select id="tr-campus" class="dropdown">
@@ -1702,7 +1859,7 @@
                 <th>Campus</th>
                 <th>Level</th>
                 <th>HMG</th>
-                <th>Eff. Grade</th>
+                <th>EG</th>
                 <th>Test</th>
                 <th>Type</th>
                 <th>Score</th>
@@ -1793,6 +1950,63 @@
   }
 
   // ── Helpers ──────────────────────────────────────────────────────────
+
+  /**
+   * Compute week boundaries for a session.
+   * Returns array of {key, start, end, label} objects.
+   * S4 includes a Break week before school starts.
+   */
+  function computeSessionWeeks(sessionName, sessionData) {
+    const weeks = [];
+    const schoolStart = sessionData.school_start || sessionData.start;
+
+    // S4 has a break week before school starts
+    if (sessionData.school_start && sessionData.start < sessionData.school_start) {
+      const breakEnd = new Date(new Date(schoolStart + "T00:00:00").getTime() - 86400000);
+      weeks.push({
+        key: "Break",
+        start: sessionData.start,
+        end: breakEnd.toISOString().slice(0, 10),
+        label: `Break`,
+        isBreak: true,
+      });
+    }
+
+    const start = new Date(schoolStart + "T00:00:00");
+    const end = new Date(sessionData.end + "T00:00:00");
+    // Find the Saturday of the start week (Mon-Sat school week)
+    let wkStart = new Date(start);
+    let wkNum = 1;
+    while (wkStart <= end) {
+      // Week ends on Saturday, or on session end
+      const sat = new Date(wkStart);
+      sat.setDate(sat.getDate() + (6 - sat.getDay()) % 7 || 7); // next Saturday
+      // Actually compute Sun end-of-week
+      const sun = new Date(wkStart);
+      const daysToSun = (7 - sun.getDay()) % 7;
+      sun.setDate(sun.getDate() + daysToSun);
+      const wkEnd = sun > end ? end : sun;
+
+      weeks.push({
+        key: `Wk${wkNum}`,
+        start: wkStart.toISOString().slice(0, 10),
+        end: wkEnd.toISOString().slice(0, 10),
+        label: `Wk${wkNum}`,
+        isBreak: false,
+      });
+
+      // Next Monday
+      const nextMon = new Date(wkEnd);
+      nextMon.setDate(nextMon.getDate() + 1);
+      // If wkEnd is already Sunday, nextMon is Monday
+      // If wkEnd is end-of-session mid-week, we're done
+      if (nextMon > end) break;
+      wkStart = nextMon;
+      wkNum++;
+    }
+    return weeks;
+  }
+
   function esc(str) {
     if (str == null) return "";
     const d = document.createElement("div");

@@ -272,26 +272,39 @@ def run_deep_dive_analysis(
     return analyses
 
 
-def load_effective_grades(csv_path: str) -> dict[str, int]:
+def load_effective_grades(csv_path: str) -> tuple[dict[str, int], dict[str, int]]:
     """Load effective grades from the Student Progress Tracker CSV.
 
-    Returns dict mapping student name (lowercase) -> effective grade (int).
+    The CSV may contain rows for multiple subjects. We separate Writing
+    and Language EGs.
+
+    Returns (writing_eg_by_name, language_eg_by_name) both mapping
+    student name (lowercase) -> effective grade (int).
     """
     import csv as _csv
 
-    eg_by_name: dict[str, int] = {}
+    writing_eg: dict[str, int] = {}
+    language_eg: dict[str, int] = {}
     with open(csv_path, encoding="utf-8-sig") as f:
         for row in _csv.DictReader(f):
             name = row.get("Student", "").strip()
             eg = row.get("Effective Grade", "").strip()
-            if name and eg:
-                try:
-                    eg_by_name[name.lower()] = int(eg)
-                except ValueError:
-                    pass
+            subject = row.get("Subject", "Writing").strip()
+            if not name or not eg:
+                continue
+            try:
+                eg_val = int(eg)
+            except ValueError:
+                continue
+            key = name.lower()
+            if subject == "Language":
+                language_eg[key] = eg_val
+            else:
+                writing_eg[key] = eg_val
 
-    logger.info("Loaded effective grades for %d students from %s", len(eg_by_name), csv_path)
-    return eg_by_name
+    logger.info("Loaded effective grades: %d Writing, %d Language from %s",
+                len(writing_eg), len(language_eg), csv_path)
+    return writing_eg, language_eg
 
 
 def _school_days_to_date(session_name: str) -> int:
@@ -918,8 +931,9 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
 
     # 6c. Load effective grades from CSV
     eg_by_name: dict[str, int] = {}
+    lang_eg_by_name: dict[str, int] = {}
     if effective_grades_csv:
-        eg_by_name = load_effective_grades(effective_grades_csv)
+        eg_by_name, lang_eg_by_name = load_effective_grades(effective_grades_csv)
 
     # 6d. Load S1 cohort names
     s1_names: set[str] = set()
@@ -1159,6 +1173,7 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
             "grades_advanced": hmg - starting_hmg,
             "effective_grade": eg_by_name.get(profile.full_name.lower()),
             "effective_grades_mastered": max(0, hmg - (eg_by_name.get(profile.full_name.lower(), hmg + 1) - 1)) if eg_by_name.get(profile.full_name.lower()) else None,
+            "language_eg": lang_eg_by_name.get(profile.full_name.lower()),
             "s1_cohort": profile.full_name.lower() in s1_names if s1_names else None,
             "completed_g8": completed_g8,
             "enrollments": student_enrollments,
