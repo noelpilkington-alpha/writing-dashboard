@@ -2,6 +2,7 @@
   "use strict";
 
   let DATA = null;
+  let LOOP_DATA = null;
   const filters = {
     timeback: { campus: "all", level: "all", status: "all", search: "" },
   };
@@ -27,7 +28,7 @@
   }
 
   // ── Routing ─────────────────────────────────────────────────────────
-  const PAGES = ["timeback", "timeback-metrics", "eg-analysis", "test-results"];
+  const PAGES = ["timeback", "timeback-metrics", "eg-analysis", "test-results", "testing-loops"];
 
   function handleRoute() {
     const hash = location.hash.replace("#", "") || "timeback";
@@ -43,6 +44,7 @@
     if (page === "timeback-metrics") renderMetrics("timeback");
     if (page === "eg-analysis") renderEGAnalysis();
     if (page === "test-results") renderTestResults();
+    if (page === "testing-loops") renderTestingLoops();
   }
 
   function wireNav() {
@@ -1947,6 +1949,294 @@
         applyTrFilters();
       }, 200);
     });
+  }
+
+  // ── Testing Loops page ──────────────────────────────────────────────
+  let testingLoopsRendered = false;
+
+  async function loadLoopData() {
+    if (LOOP_DATA) return LOOP_DATA;
+    try {
+      const resp = await fetch("loop_data.json");
+      if (!resp.ok) return null;
+      LOOP_DATA = await resp.json();
+      return LOOP_DATA;
+    } catch { return null; }
+  }
+
+  async function renderTestingLoops() {
+    if (testingLoopsRendered) return;
+    testingLoopsRendered = true;
+
+    const container = document.getElementById("testing-loops-container");
+    const loopData = await loadLoopData();
+
+    if (!loopData || !loopData.students || loopData.students.length === 0) {
+      container.innerHTML = '<div class="loading">No testing loop data available. Run collect_loop_data.py to generate loop_data.json.</div>';
+      return;
+    }
+
+    const students = loopData.students;
+    const trends = loopData.trends || {};
+
+    // Summary stats
+    const totalStudents = students.length;
+    const totalRushing = students.filter(s => s.flags && s.flags.rushing).length;
+    const totalWithMasteredGaps = students.filter(s => s.flags && s.flags.mastered_in_alphawrite_not_tests && s.flags.mastered_in_alphawrite_not_tests.length > 0).length;
+    const totalDepreciating = students.filter(s => s.flags && s.flags.depreciating_skills && s.flags.depreciating_skills.length > 0).length;
+
+    // Grade distribution
+    const gradeCount = {};
+    students.forEach(s => {
+      (s.loop_details || []).forEach(d => {
+        const g = d.grade;
+        gradeCount[g] = (gradeCount[g] || 0) + 1;
+      });
+    });
+
+    let html = `
+      <h2 style="margin-bottom:8px">Testing Loops Analysis</h2>
+      <div class="tr-summary" style="margin-bottom:16px">
+        <span class="tr-stat"><strong>${totalStudents}</strong> students in loops</span>
+        <span class="tr-stat red"><strong>${totalRushing}</strong> with rushing</span>
+        <span class="tr-stat" style="color:var(--orange)"><strong>${totalDepreciating}</strong> with depreciating skills</span>
+        <span class="tr-stat" style="color:var(--purple,#9b59b6)"><strong>${totalWithMasteredGaps}</strong> with AlphaWrite/test gaps</span>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+        ${Object.entries(gradeCount).sort(([a],[b]) => a-b).map(([g, c]) =>
+          `<div class="metric-card" style="min-width:80px;text-align:center;padding:8px 12px">
+            <div style="font-size:1.3rem;font-weight:700">G${g}</div>
+            <div style="font-size:0.8rem;color:var(--text-muted)">${c} student${c>1?'s':''}</div>
+          </div>`
+        ).join("")}
+      </div>`;
+
+    // General trends section (if Claude analysis available)
+    if (trends.common_skill_gaps) {
+      html += `<div class="loop-trends" style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:20px">
+        <h3 style="margin-bottom:12px">General Trends</h3>`;
+      if (trends.common_skill_gaps) {
+        html += `<div style="margin-bottom:8px"><strong>Common Skill Gaps:</strong><br>${esc(trends.common_skill_gaps)}</div>`;
+      }
+      if (trends.curriculum_gaps) {
+        html += `<div style="margin-bottom:8px"><strong>Curriculum Gaps:</strong><br>${esc(trends.curriculum_gaps)}</div>`;
+      }
+      if (trends.rushing_trends) {
+        html += `<div style="margin-bottom:8px"><strong>Rushing Trends:</strong><br>${esc(trends.rushing_trends)}</div>`;
+      }
+      if (trends.grade_level_patterns) {
+        html += `<div style="margin-bottom:8px"><strong>Grade Level Patterns:</strong><br>${esc(trends.grade_level_patterns)}</div>`;
+      }
+      if (trends.top_recommendations) {
+        html += `<div style="margin-bottom:8px"><strong>Recommendations:</strong><br>${esc(trends.top_recommendations)}</div>`;
+      }
+      html += `</div>`;
+    }
+
+    // Filters
+    html += `
+      <div class="tr-filters" style="margin-bottom:16px">
+        <input type="text" id="loop-search" class="search-input" placeholder="Search by student name..." autocomplete="off" style="max-width:280px">
+        <select id="loop-grade-filter" class="dropdown">
+          <option value="all">All Grades</option>
+          ${Object.keys(gradeCount).sort().map(g => `<option value="${g}">G${g}</option>`).join("")}
+        </select>
+        <select id="loop-flag-filter" class="dropdown">
+          <option value="all">All Flags</option>
+          <option value="rushing">Rushing</option>
+          <option value="depreciating">Depreciating Skills</option>
+          <option value="aw-gap">AlphaWrite/Test Gap</option>
+        </select>
+        <span class="tr-count" id="loop-count">${totalStudents} students</span>
+      </div>`;
+
+    // Student cards
+    html += `<div id="loop-students">`;
+    const sorted = [...students].sort((a, b) => a.name.localeCompare(b.name));
+    for (const s of sorted) {
+      const loopGrades = (s.loop_details || []).map(d => `G${d.grade}`).join(", ");
+      const flagBadges = [];
+      if (s.flags?.rushing) flagBadges.push('<span class="loop-badge rush">Rushing</span>');
+      if (s.flags?.depreciating_skills?.length) flagBadges.push('<span class="loop-badge deprec">Depreciating</span>');
+      if (s.flags?.mastered_in_alphawrite_not_tests?.length) flagBadges.push('<span class="loop-badge aw-gap">AW/Test Gap</span>');
+
+      const priority = s.analysis?.priority || "";
+      const priorityCls = priority === "high" ? "priority-high" : priority === "medium" ? "priority-med" : "";
+
+      html += `
+        <div class="loop-card" data-name="${esc(s.name.toLowerCase())}" data-grades="${(s.loop_details||[]).map(d=>d.grade).join(",")}" data-flags="${s.flags?.rushing?'rushing ':'' }${s.flags?.depreciating_skills?.length?'depreciating ':'' }${s.flags?.mastered_in_alphawrite_not_tests?.length?'aw-gap':''}">
+          <div class="loop-card-header" onclick="this.parentElement.classList.toggle('expanded')">
+            <div class="loop-card-summary">
+              <strong>${esc(s.name)}</strong>
+              <span class="loop-meta">HMG G${s.hmg} ${s.effective_grade ? `| EG G${s.effective_grade}` : ""} | Loop at ${loopGrades} | ${s.total_failed_tests} failed tests</span>
+              ${flagBadges.join(" ")}
+              ${priorityCls ? `<span class="loop-badge ${priorityCls}">${esc(priority)}</span>` : ""}
+            </div>
+            <span class="loop-expand-icon">&#9660;</span>
+          </div>
+          <div class="loop-card-detail">
+            ${buildLoopStudentDetail(s)}
+          </div>
+        </div>`;
+    }
+    html += `</div>`;
+
+    container.innerHTML = html;
+
+    // Wire filters
+    const loopFilters = { search: "", grade: "all", flag: "all" };
+    function applyLoopFilters() {
+      const cards = container.querySelectorAll(".loop-card");
+      let visible = 0;
+      cards.forEach(card => {
+        const nameMatch = !loopFilters.search || card.dataset.name.includes(loopFilters.search);
+        const gradeMatch = loopFilters.grade === "all" || card.dataset.grades.split(",").includes(loopFilters.grade);
+        const flagMatch = loopFilters.flag === "all" || card.dataset.flags.includes(loopFilters.flag);
+        const show = nameMatch && gradeMatch && flagMatch;
+        card.classList.toggle("hidden", !show);
+        if (show) visible++;
+      });
+      document.getElementById("loop-count").textContent = `${visible} of ${totalStudents} students`;
+    }
+
+    document.getElementById("loop-grade-filter").addEventListener("change", e => {
+      loopFilters.grade = e.target.value;
+      applyLoopFilters();
+    });
+    document.getElementById("loop-flag-filter").addEventListener("change", e => {
+      loopFilters.flag = e.target.value;
+      applyLoopFilters();
+    });
+    let loopTimer;
+    document.getElementById("loop-search").addEventListener("input", e => {
+      clearTimeout(loopTimer);
+      loopTimer = setTimeout(() => {
+        loopFilters.search = e.target.value.toLowerCase().trim();
+        applyLoopFilters();
+      }, 200);
+    });
+  }
+
+  function buildLoopStudentDetail(s) {
+    let html = "";
+
+    // Claude analysis summary
+    const a = s.analysis || {};
+    if (a.pattern_summary) {
+      html += `<div class="loop-section">
+        <h4>Analysis</h4>
+        <div class="loop-analysis-field"><strong>Pattern:</strong> ${esc(a.pattern_summary)}</div>`;
+      if (a.skill_gaps) html += `<div class="loop-analysis-field"><strong>Skill Gaps:</strong> ${esc(a.skill_gaps)}</div>`;
+      if (a.alphawrite_vs_test) html += `<div class="loop-analysis-field"><strong>AlphaWrite vs Test:</strong> ${esc(a.alphawrite_vs_test)}</div>`;
+      if (a.rushing_impact) html += `<div class="loop-analysis-field"><strong>Rushing Impact:</strong> ${esc(a.rushing_impact)}</div>`;
+      if (a.recommended_activities) html += `<div class="loop-analysis-field"><strong>Recommended Activities:</strong><br>${esc(a.recommended_activities).replace(/\n/g, '<br>')}</div>`;
+      html += `</div>`;
+    }
+
+    // Flags detail
+    const flags = s.flags || {};
+    if (flags.rushing || flags.depreciating_skills?.length || flags.mastered_in_alphawrite_not_tests?.length) {
+      html += `<div class="loop-section"><h4>Flags</h4>`;
+      if (flags.rushing) {
+        html += `<div class="loop-flag rush-flag">Rushed ${flags.rushed_count} test(s)</div>`;
+      }
+      if (flags.depreciating_skills?.length) {
+        html += `<div class="loop-flag deprec-flag">Depreciating skills:</div><ul>`;
+        for (const sk of flags.depreciating_skills) {
+          html += `<li>${esc(sk.course ? sk.course + " > " : "")}${esc(sk.skill)}: ${sk.best_accuracy}% &rarr; ${sk.latest_accuracy}%</li>`;
+        }
+        html += `</ul>`;
+      }
+      if (flags.mastered_in_alphawrite_not_tests?.length) {
+        html += `<div class="loop-flag aw-flag">Mastered in AlphaWrite but failing tests (${flags.mastered_in_alphawrite_not_tests.length} skills)</div>`;
+      }
+      html += `</div>`;
+    }
+
+    // Test results with dropdown per test
+    if (s.tests && s.tests.length > 0) {
+      html += `<div class="loop-section"><h4>Test Results (${s.tests.length})</h4>`;
+      for (const t of s.tests) {
+        const wrongCount = t.incorrect_questions ? t.incorrect_questions.length : 0;
+        const rushed = t.rushed ? ' <span class="loop-badge rush">RUSHED</span>' : "";
+        html += `
+          <div class="loop-test">
+            <div class="loop-test-header" onclick="this.parentElement.classList.toggle('test-expanded')">
+              <span class="loop-test-name">${esc(t.test_name)}</span>
+              <span class="loop-test-meta">${t.score}% | ${t.date} | ${wrongCount} wrong${rushed}</span>
+              <span class="loop-expand-icon">&#9660;</span>
+            </div>
+            <div class="loop-test-detail">`;
+
+        // Show questions
+        if (t.questions && t.questions.length > 0) {
+          html += `<table class="metrics-table loop-q-table">
+            <thead><tr><th>Q#</th><th>Type</th><th>Result</th><th>Prompt</th><th>Student Answer</th></tr></thead>
+            <tbody>`;
+          for (const q of t.questions) {
+            const frac = q.correct_fraction;
+            const resultCls = frac === null ? "" : frac >= 1.0 ? "score-pass" : frac > 0 ? "score-partial" : "score-fail";
+            const resultLabel = frac === null ? "N/A" : frac >= 1.0 ? "Correct" : frac > 0 ? `Partial (${Math.round(frac*100)}%)` : "Incorrect";
+            const prompt = (q.prompt || "").slice(0, 200);
+            const answer = (q.student_answer || "").slice(0, 300);
+            html += `<tr class="${resultCls}">
+              <td>${q.number || "?"}</td>
+              <td>${esc(q.title || q.type || "")}</td>
+              <td><span class="${resultCls}">${resultLabel}</span></td>
+              <td class="loop-q-text">${esc(prompt)}${prompt.length >= 200 ? "..." : ""}</td>
+              <td class="loop-q-text">${esc(answer)}${answer.length >= 300 ? "..." : ""}</td>
+            </tr>`;
+          }
+          html += `</tbody></table>`;
+        }
+
+        html += `</div></div>`;
+      }
+      html += `</div>`;
+    }
+
+    // AlphaWrite skill performance
+    if (s.skills && s.skills.length > 0) {
+      // Group by course
+      const byCourse = {};
+      for (const sk of s.skills) {
+        const course = sk.course || "Other";
+        if (!byCourse[course]) byCourse[course] = [];
+        byCourse[course].push(sk);
+      }
+
+      html += `<div class="loop-section"><h4>AlphaWrite Skills (${s.skills.length})</h4>`;
+      for (const [course, skills] of Object.entries(byCourse).sort()) {
+        html += `<div class="loop-skill-course">
+          <div class="loop-skill-course-header" onclick="this.parentElement.classList.toggle('course-expanded')">
+            <strong>${esc(course)}</strong> <span style="color:var(--text-muted)">(${skills.length} skills)</span>
+            <span class="loop-expand-icon">&#9660;</span>
+          </div>
+          <div class="loop-skill-course-detail">
+            <table class="metrics-table loop-skill-table">
+              <thead><tr><th>Skill</th><th>Attempts</th><th>Best</th><th>Latest</th><th>Mastered</th><th>Flags</th></tr></thead>
+              <tbody>`;
+        for (const sk of skills) {
+          const flags = [];
+          if (sk.mastered) flags.push('<span class="loop-badge mastered">Mastered</span>');
+          if (sk.depreciating) flags.push('<span class="loop-badge deprec">Depreciating</span>');
+          const bestCls = sk.best_accuracy !== null && sk.best_accuracy >= 80 ? "score-pass" : "score-fail";
+          const latestCls = sk.latest_accuracy !== null && sk.latest_accuracy >= 80 ? "score-pass" : "score-fail";
+          html += `<tr>
+            <td>${esc(sk.skill)}</td>
+            <td>${sk.attempts}</td>
+            <td class="${bestCls}">${sk.best_accuracy !== null ? sk.best_accuracy + "%" : "-"}</td>
+            <td class="${latestCls}">${sk.latest_accuracy !== null ? Math.round(sk.latest_accuracy) + "%" : "-"}</td>
+            <td>${sk.mastered ? "Yes" : "No"}</td>
+            <td>${flags.join(" ")}</td>
+          </tr>`;
+        }
+        html += `</tbody></table></div></div>`;
+      }
+      html += `</div>`;
+    }
+
+    return html;
   }
 
   // ── Helpers ──────────────────────────────────────────────────────────

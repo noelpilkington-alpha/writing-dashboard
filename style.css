@@ -947,6 +947,100 @@ body {
 .tr-row.hidden { display: none !important; }
 .tr-date-group.hidden { display: none !important; }
 
+/* Testing Loops */
+.loop-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+.loop-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    cursor: pointer;
+    gap: 12px;
+}
+.loop-card-header:hover { background: var(--bg); }
+.loop-card-summary { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; flex: 1; }
+.loop-meta { font-size: 0.8rem; color: var(--text-muted); }
+.loop-expand-icon { font-size: 0.7rem; color: var(--text-muted); transition: transform 0.2s; }
+.loop-card.expanded > .loop-card-header .loop-expand-icon,
+.loop-test.test-expanded > .loop-test-header .loop-expand-icon,
+.loop-skill-course.course-expanded > .loop-skill-course-header .loop-expand-icon {
+    transform: rotate(180deg);
+}
+.loop-card-detail { display: none; padding: 0 16px 16px; }
+.loop-card.expanded > .loop-card-detail { display: block; }
+
+.loop-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+.loop-badge.rush { background: var(--red-bg); color: var(--red); }
+.loop-badge.deprec { background: var(--orange-bg); color: var(--orange); }
+.loop-badge.aw-gap { background: #f0e6ff; color: #9b59b6; }
+.loop-badge.mastered { background: var(--green-bg); color: var(--green); }
+.loop-badge.priority-high { background: var(--red-bg); color: var(--red); }
+.loop-badge.priority-med { background: var(--orange-bg); color: var(--orange); }
+
+.loop-section { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+.loop-section h4 { margin-bottom: 8px; font-size: 0.88rem; }
+.loop-analysis-field { margin-bottom: 6px; font-size: 0.82rem; line-height: 1.5; }
+
+.loop-flag { font-size: 0.82rem; margin-bottom: 4px; }
+.loop-flag.rush-flag { color: var(--red); }
+.loop-flag.deprec-flag { color: var(--orange); }
+.loop-flag.aw-flag { color: #9b59b6; }
+.loop-section ul { margin-left: 20px; font-size: 0.8rem; }
+
+.loop-test { border: 1px solid var(--border); border-radius: 6px; margin-bottom: 6px; overflow: hidden; }
+.loop-test-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    cursor: pointer;
+    gap: 10px;
+    font-size: 0.84rem;
+}
+.loop-test-header:hover { background: var(--bg); }
+.loop-test-name { font-weight: 600; }
+.loop-test-meta { color: var(--text-muted); font-size: 0.78rem; }
+.loop-test-detail { display: none; padding: 8px 12px; }
+.loop-test.test-expanded > .loop-test-detail { display: block; }
+
+.loop-q-table { font-size: 0.76rem; }
+.loop-q-table th { font-size: 0.72rem; }
+.loop-q-text { max-width: 300px; white-space: pre-wrap; word-break: break-word; font-size: 0.74rem; }
+.loop-q-table tr.score-fail { background: var(--red-bg); }
+.loop-q-table tr.score-partial { background: var(--orange-bg); }
+.loop-q-table .score-pass { color: var(--green); font-weight: 600; }
+.loop-q-table .score-fail { color: var(--red); font-weight: 600; }
+.loop-q-table .score-partial { color: var(--orange); font-weight: 600; }
+.loop-skill-table .score-pass { color: var(--green); font-weight: 600; }
+.loop-skill-table .score-fail { color: var(--red); font-weight: 600; }
+
+.loop-skill-course { border: 1px solid var(--border); border-radius: 6px; margin-bottom: 6px; overflow: hidden; }
+.loop-skill-course-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 0.84rem;
+}
+.loop-skill-course-header:hover { background: var(--bg); }
+.loop-skill-course-detail { display: none; padding: 0 12px 8px; }
+.loop-skill-course.course-expanded > .loop-skill-course-detail { display: block; }
+.loop-skill-table { font-size: 0.78rem; }
+.loop-skill-table th { font-size: 0.72rem; }
+
 /* Responsive */
 @media (max-width: 768px) {
     .header-top { flex-direction: column; align-items: flex-start; }

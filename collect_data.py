@@ -339,6 +339,12 @@ _EXCLUDED_EMAILS = {
     "elle.liemandt@alpha.school",
 }
 
+# Students whose roster status should be treated as "Enrolled" (e.g. transfers)
+_STATUS_OVERRIDES = {
+    "quinn.oneal@2hourlearning.com",
+    "robin.oneal@2hourlearning.com",
+}
+
 # Legacy Dash campuses (case-insensitive matching via _normalise)
 _LEGACY_CAMPUSES = {
     "alpha anywhere (homeschool)",
@@ -384,7 +390,7 @@ def _load_roster() -> dict[str, dict]:
             status = row.get("Admission Status", "").strip()
             group = row.get("Student Group", "").strip().lower()
             campus = row.get("Campus", "").strip()
-            if not email or status != "Enrolled":
+            if not email or (status != "Enrolled" and email not in _STATUS_OVERRIDES):
                 continue
             if group in _EXCLUDED_GROUPS:
                 continue
