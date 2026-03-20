@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-20T11:32:43",
+  "generated_at": "2026-03-20T13:35:04",
   "session": {
     "name": "S4",
     "start": "2026-02-21",
@@ -2716,12 +2716,7 @@
                 "rushed": false
               }
             ],
-            "analysis": {
-              "questions_missed": "Q1/Q3 (appositive construction), Q5 (transitional words), Q7/Q8/Q9 (sentence construction with missing punctuation), Q10/Q11 (paragraph development and spelling)",
-              "error_analysis": "The student consistently fails to construct proper appositives, instead writing compound sentences or adding unrelated clauses. Comma usage is inconsistent, particularly missing commas after introductory clauses and in complex sentences. Spelling errors appear frequently in longer responses (\"obsesson,\" \"immidately,\" \"sence,\" \"contrey\"), and the student struggles to maintain parallel structure within paragraphs.",
-              "root_causes": "Cannot distinguish between appositives and other sentence structures, consistently producing compound sentences instead of the required appositive constructions. Lacks understanding of comma placement rules, especially after introductory dependent clauses and around appositives. Demonstrates weak spelling patterns for multisyllabic words and suffers from incomplete sentence completion when responses are cut off or rushed.",
-              "recommended_actions": "Assign Grammar G3 KGs specifically targeting appositive identification and construction with hands-on sentence combining exercises. Practice comma placement rules through targeted drills focusing on introductory clauses and appositive phrases. Implement spelling intervention focusing on common multisyllabic word patterns and provide extended time accommodations to prevent incomplete responses on longer writing tasks."
-            }
+            "analysis": null
           }
         ]
       },
@@ -3747,12 +3742,7 @@
                 "rushed": true
               }
             ],
-            "analysis": {
-              "questions_missed": "Q11",
-              "error_analysis": "The student consistently struggles with expository essay writing, scoring only 70-75% on Q11 across all three tests despite different topics. The student also missed a basic grammar question about \"because\" usage in Test 2, indicating fundamental sentence construction issues. The repeated \"$2b\" responses suggest either incomplete submissions or technical/formatting problems with essay responses.",
-              "root_causes": "Inability to construct well-developed expository essays with required structural elements (thesis statements, topic sentences, body paragraph development). Deficient understanding of subordinating conjunctions and sentence relationships as evidenced by the \"because\" usage error. Potential issues with test completion or response formatting that result in inadequate essay submissions.",
-              "recommended_actions": "Assign intensive expository writing practice with structured templates focusing on thesis development and topic sentence construction before retesting. Provide targeted grammar instruction on subordinating conjunctions and complex sentence formation through Grammar G6 KGs. Investigate and address potential technical issues or test-taking strategies that may be causing incomplete essay responses, including time management skills for longer writing tasks."
-            }
+            "analysis": null
           }
         ]
       },
@@ -6173,12 +6163,7 @@
                 "rushed": false
               }
             ],
-            "analysis": {
-              "questions_missed": "Q1, Q5, Q10, Q11",
-              "error_analysis": "Kanhai consistently struggles with appositive construction, making errors in article usage (\"a adventourous\" instead of \"an adventurous\") and failing to properly integrate appositives into sentences. He also has persistent issues with pronoun case (\"Me and grandma\" instead of \"Grandma and I\") and frequently writes incomplete or run-on sentences when combining clauses. His paragraph writing deteriorates significantly under pressure, culminating in complete breakdown with nonsensical text in the final test.",
-              "root_causes": "Cannot properly construct appositives with correct article usage and sentence integration; struggles with subject pronoun case in compound subjects; lacks ability to write well-developed paragraphs under time pressure, defaulting to single sentences or incomplete thoughts instead of organized multi-sentence responses.",
-              "recommended_actions": "Assign Sentences G4-G5 KGs focusing specifically on appositive construction and article usage with guided practice exercises. Practice pronoun case rules with compound subjects through targeted grammar drills. Implement timed paragraph writing practice with structured templates to build stamina and organization skills before retesting on Q11-style extended responses."
-            }
+            "analysis": null
           }
         ]
       },
@@ -7492,12 +7477,7 @@
                 "rushed": false
               }
             ],
-            "analysis": {
-              "questions_missed": "Q1, Q2, Q4, Q6, Q8, Q9, Q11",
-              "error_analysis": "Joan consistently struggles with sentence combining and transformation tasks, particularly creating appositives, forming questions, and combining sentences with conjunctions. Her spelling errors are frequent and consistent (witch/which, ether/either, tryed/tried, decited/decided), and she often provides incomplete or grammatically incorrect responses to sentence manipulation prompts.",
-              "root_causes": "Cannot construct proper appositives or understand appositive structure (writes \"My family has two dogs, witch names are Lucy and Rocket\" instead of using proper appositive format). Lacks mastery of basic spelling patterns and homophones (witch/which, are/our, ether/either). Struggles with sentence transformation mechanics, particularly converting statements to questions and combining sentences with specific conjunctions while maintaining grammatical correctness.",
-              "recommended_actions": "Assign Sentences G3 KGs focusing specifically on appositive construction and sentence combining with coordinating conjunctions. Provide targeted spelling instruction on common homophones and sight words before retesting. Practice structured sentence transformation exercises (statement to question, fragment to complete sentence) with immediate feedback to build mechanical writing skills."
-            }
+            "analysis": null
           }
         ]
       },
@@ -17735,6 +17715,453 @@
       "enrollment_mismatch": null
     },
     {
+      "id": "38401bd5-da79-4ed9-a059-8dff735d30b7",
+      "name": "Lincoln  Kloiber ",
+      "email": "lincoln.kloiber@alpha.school",
+      "campus": "Alpha School Austin",
+      "dashboard": "timeback",
+      "level": "Middle School",
+      "age_grade": 7,
+      "hmg": 2,
+      "starting_hmg": 2,
+      "grades_advanced": 0,
+      "effective_grade": null,
+      "effective_grades_mastered": null,
+      "language_eg": null,
+      "s1_cohort": false,
+      "completed_g8": false,
+      "enrollments": [
+        "[AlphaWrite] Writing G3 hole-filling Class"
+      ],
+      "still_enrolled": true,
+      "last_test": {
+        "name": "Alpha Standardized Writing - G3.3",
+        "type": "end of course",
+        "score": 80,
+        "date": "2026-03-18",
+        "passed": false
+      },
+      "next_expected_test": {
+        "name": "G3.1",
+        "reason": "HMG is G2, next grade level is G3",
+        "status": "retaking"
+      },
+      "all_tests": [
+        {
+          "name": "Alpha Standardized Writing G3.1",
+          "test_type": "placement",
+          "score": 58,
+          "date": "2025-09-02",
+          "assigned_at": "",
+          "assignment_id": "8497",
+          "test_link": "https://masterytrack.ai/assignment/8497",
+          "total_questions": null,
+          "correct_questions": null,
+          "passed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G3.2",
+          "test_type": "end of course",
+          "score": 89,
+          "date": "2026-03-09",
+          "assigned_at": "2026-03-06",
+          "assignment_id": 38286,
+          "test_link": "https://alphatest.alpha.school/assignment/38286",
+          "total_questions": 45,
+          "correct_questions": 40,
+          "passed": false
+        },
+        {
+          "name": "Alpha Standardized Writing - G3.3",
+          "test_type": "end of course",
+          "score": 80,
+          "date": "2026-03-18",
+          "assigned_at": "2026-03-17",
+          "assignment_id": 40494,
+          "test_link": "https://alphatest.alpha.school/assignment/40494",
+          "total_questions": 45,
+          "correct_questions": 36,
+          "passed": false
+        }
+      ],
+      "test_summary": {
+        "total_taken": 3,
+        "total_passed": 0,
+        "end_of_course_passed": 0,
+        "test_outs_passed": 0,
+        "placement_passed": 0
+      },
+      "xp": {
+        "alphawrite": 149.1,
+        "mastery_track": 345.0,
+        "test": 120.0,
+        "total": 614.1,
+        "school": 614.1,
+        "break": 0.0,
+        "goal_to_date": 175.0,
+        "avg_per_day": 43.9,
+        "meets_goal": true,
+        "last_xp_date": "2026-03-19"
+      },
+      "xp_details": {
+        "activity_xp": [
+          {
+            "name": "Unscramble Sentences",
+            "course": "Sentences G3",
+            "xp": 15,
+            "date": "2026-03-02",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Write Topic Sentences from Details",
+            "course": "Paragraphs G3",
+            "xp": 18.75,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Write Concluding Sentences from Details",
+            "course": "Paragraphs G3",
+            "xp": 15,
+            "date": "2026-03-05",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Use Three Strategies",
+            "course": "Paragraphs G3",
+            "xp": 15,
+            "date": "2026-03-05",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alpha Test",
+            "course": "",
+            "xp": 90,
+            "date": "2026-03-09",
+            "type": "external"
+          },
+          {
+            "name": "Combine Sentences",
+            "course": "Sentences G3",
+            "xp": 4.6875,
+            "date": "2026-03-10",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-10",
+            "type": "external"
+          },
+          {
+            "name": "Because, But, So",
+            "course": "Sentences G3",
+            "xp": 7.5,
+            "date": "2026-03-10",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-10",
+            "type": "external"
+          },
+          {
+            "name": "Complete Subordinative Conjunctions",
+            "course": "Sentences G3",
+            "xp": 7.5,
+            "date": "2026-03-12",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-12",
+            "type": "external"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-12",
+            "type": "external"
+          },
+          {
+            "name": "Identify Topic Sentences",
+            "course": "Paragraphs G3",
+            "xp": 7.5,
+            "date": "2026-03-12",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-13",
+            "type": "external"
+          },
+          {
+            "name": "Make Topic Sentences",
+            "course": "Paragraphs G3",
+            "xp": 7.5,
+            "date": "2026-03-13",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Eliminate Irrelevant Sentences",
+            "course": "Paragraphs G3",
+            "xp": 7.5,
+            "date": "2026-03-13",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-13",
+            "type": "external"
+          },
+          {
+            "name": "Identify Topic Sentence and Sequence Details",
+            "course": "Paragraphs G3",
+            "xp": 9.375,
+            "date": "2026-03-16",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-16",
+            "type": "external"
+          },
+          {
+            "name": "Turn Paragraph into Single Paragraph Outline",
+            "course": "Paragraphs G3",
+            "xp": 9.375,
+            "date": "2026-03-16",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-16",
+            "type": "external"
+          },
+          {
+            "name": "Write Concluding Sentences from Details",
+            "course": "Paragraphs G3",
+            "xp": 7.5,
+            "date": "2026-03-17",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-17",
+            "type": "external"
+          },
+          {
+            "name": "Alpha Test",
+            "course": "",
+            "xp": 90,
+            "date": "2026-03-18",
+            "type": "external"
+          },
+          {
+            "name": "Identify Appositives",
+            "course": "Sentences G3",
+            "xp": 7.5,
+            "date": "2026-03-19",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-19",
+            "type": "external"
+          },
+          {
+            "name": "Write Appositives",
+            "course": "Sentences G3",
+            "xp": 9.375,
+            "date": "2026-03-19",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-19",
+            "type": "external"
+          }
+        ],
+        "test_xp": [
+          {
+            "name": "Alpha Standardized Writing G3.2",
+            "xp": 30,
+            "score": 89,
+            "date": "2026-03-09"
+          },
+          {
+            "name": "Alpha Standardized Writing - G3.3",
+            "xp": 90,
+            "score": 80,
+            "date": "2026-03-18"
+          }
+        ],
+        "alphawrite_xp": 149.0625,
+        "mastery_track_xp": 345.0,
+        "test_xp_total": 120.0,
+        "last_xp_date": "2026-03-19"
+      },
+      "session_tests": [
+        {
+          "name": "Alpha Standardized Writing G3.2",
+          "type": "Mastery Test",
+          "score": 89.0,
+          "date": "2026-03-09",
+          "passed": false,
+          "time_seconds": 1537.0,
+          "rushed": false
+        },
+        {
+          "name": "Alpha Standardized Writing - G3.3",
+          "type": "Retake",
+          "score": 80.0,
+          "date": "2026-03-18",
+          "passed": false,
+          "time_seconds": 1303.0,
+          "rushed": true
+        }
+      ],
+      "accuracy": {
+        "activities_below_threshold": [
+          {
+            "name": "Write Questions About a Picture",
+            "course": "Sentences G3",
+            "accuracy": 75,
+            "questions": "42/56",
+            "xp": 0,
+            "attempt": 3,
+            "date": "2026-03-02"
+          }
+        ],
+        "repeated_activities": [
+          {
+            "name": "Write Concluding Sentences from Details",
+            "course": "Paragraphs G3",
+            "attempts": 2,
+            "best_accuracy": 89,
+            "latest_accuracy": 83
+          },
+          {
+            "name": "Combine Sentences",
+            "course": "Sentences G3",
+            "attempts": 3,
+            "best_accuracy": 100,
+            "latest_accuracy": 100
+          },
+          {
+            "name": "Because, But, So",
+            "course": "Sentences G3",
+            "attempts": 2,
+            "best_accuracy": 93,
+            "latest_accuracy": 93
+          },
+          {
+            "name": "Complete Subordinative Conjunctions",
+            "course": "Sentences G3",
+            "attempts": 2,
+            "best_accuracy": 83,
+            "latest_accuracy": 83
+          },
+          {
+            "name": "Identify Topic Sentences",
+            "course": "Paragraphs G3",
+            "attempts": 2,
+            "best_accuracy": 95,
+            "latest_accuracy": 95
+          },
+          {
+            "name": "Make Topic Sentences",
+            "course": "Paragraphs G3",
+            "attempts": 2,
+            "best_accuracy": 83,
+            "latest_accuracy": 83
+          },
+          {
+            "name": "Eliminate Irrelevant Sentences",
+            "course": "Paragraphs G3",
+            "attempts": 2,
+            "best_accuracy": 82,
+            "latest_accuracy": 82
+          },
+          {
+            "name": "Turn Paragraph into Single Paragraph Outline",
+            "course": "Paragraphs G3",
+            "attempts": 2,
+            "best_accuracy": 100,
+            "latest_accuracy": 100
+          },
+          {
+            "name": "Identify Topic Sentence and Sequence Details",
+            "course": "Paragraphs G3",
+            "attempts": 2,
+            "best_accuracy": 100,
+            "latest_accuracy": 100
+          },
+          {
+            "name": "Identify Appositives",
+            "course": "Sentences G3",
+            "attempts": 2,
+            "best_accuracy": 88,
+            "latest_accuracy": 88
+          },
+          {
+            "name": "Write Appositives",
+            "course": "Sentences G3",
+            "attempts": 2,
+            "best_accuracy": 100,
+            "latest_accuracy": 100
+          }
+        ]
+      },
+      "deep_dive": {
+        "needed": false,
+        "details": []
+      },
+      "insights": [
+        {
+          "type": "low_accuracy",
+          "severity": "medium",
+          "text": "1 activity below 80% accuracy"
+        },
+        {
+          "type": "repeated",
+          "severity": "low",
+          "text": "Repeating 'Write Concluding Sentences from Details' in Paragraphs G3 (2 attempts)"
+        },
+        {
+          "type": "repeated",
+          "severity": "low",
+          "text": "Repeating 'Combine Sentences' in Sentences G3 (3 attempts)"
+        },
+        {
+          "type": "repeated",
+          "severity": "low",
+          "text": "Repeating 'Because, But, So' in Sentences G3 (2 attempts)"
+        }
+      ],
+      "enrollment_mismatch": null
+    },
+    {
       "id": "39179ef3-2dce-4410-bf39-badaae261b54",
       "name": "Aileya Klinefelter",
       "email": "aileya.klinefelter@alpha.school",
@@ -17899,16 +18326,16 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 676.2,
+        "alphawrite": 716.2,
         "mastery_track": 165.0,
         "test": 0.0,
-        "total": 841.2,
-        "school": 841.2,
+        "total": 881.2,
+        "school": 881.2,
         "break": 0.0,
         "goal_to_date": 175.0,
-        "avg_per_day": 60.1,
+        "avg_per_day": 62.9,
         "meets_goal": true,
-        "last_xp_date": "2026-03-18"
+        "last_xp_date": "2026-03-20"
       },
       "xp_details": {
         "activity_xp": [
@@ -18212,13 +18639,27 @@
             "xp": 25,
             "date": "2026-03-18",
             "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 4)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-20",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 4)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-03-20",
+            "type": "alphawrite"
           }
         ],
         "test_xp": [],
-        "alphawrite_xp": 676.25,
+        "alphawrite_xp": 716.25,
         "mastery_track_xp": 165.0,
         "test_xp_total": 0.0,
-        "last_xp_date": "2026-03-18"
+        "last_xp_date": "2026-03-20"
       },
       "session_tests": [
         {
@@ -20450,12 +20891,7 @@
                 "rushed": true
               }
             ],
-            "analysis": {
-              "questions_missed": "Q11, Q1, Q5, Q7, Q8",
-              "error_analysis": "The student consistently fails extended writing tasks (Q11 paragraph prompts), providing non-responses like \"idk\" or single inadequate sentences instead of well-organized paragraphs. Early tests show complete disengagement with nonsense answers like \"asdasd\" and \"ksjsjss,\" while later tests demonstrate improved sentence-level responses but continued failure on complex grammar tasks like identifying appositives, creating interrogative sentences, and combining sentences with conjunctions.",
-              "root_causes": "Cannot construct organized paragraphs with central ideas and supporting details, instead writing single sentences or unrelated responses to multi-sentence prompts. Lacks understanding of sentence types and grammar structures, consistently failing to identify or create interrogative sentences, appositives, and proper conjunction usage. Shows test anxiety or avoidance behaviors, especially under time pressure, leading to random keystrokes instead of attempting answers.",
-              "recommended_actions": "Assign paragraph development activities with structured graphic organizers and sentence starters before attempting any timed assessments. Focus on Grammar Fundamentals KGs covering sentence types (declarative vs. interrogative), appositives, and conjunction usage with hands-on practice. Implement untimed, low-stakes practice sessions to address test anxiety and build confidence before formal retesting."
-            }
+            "analysis": null
           }
         ]
       },
@@ -21896,12 +22332,7 @@
                 "rushed": false
               }
             ],
-            "analysis": {
-              "questions_missed": "Q1, Q2, Q4, Q11",
-              "error_analysis": "DaveyP consistently struggles with sentence transformation tasks (converting statements to questions, combining sentences with appositives) and frequently produces grammatically incorrect or incomplete responses. The student shows particular difficulty with appositives, often creating run-on sentences or misplacing punctuation when attempting to combine ideas. While paragraph writing has improved over time (Q11 scores progressed from 60% to 85%), early responses lacked development and failed to address the full prompt requirements.",
-              "root_causes": "Cannot properly construct appositive phrases or combine sentences using grammatical structures beyond simple coordination. Struggles with sentence transformation mechanics, particularly converting declarative sentences to interrogative form and maintaining proper word order. Demonstrates inconsistent punctuation usage, especially with comma placement in complex sentences and missing end punctuation.",
-              "recommended_actions": "Assign Sentences G4 KGs focusing specifically on appositive construction and sentence combining techniques with guided practice. Provide structured sentence transformation drills targeting statement-to-question conversions with emphasis on proper word order and question word selection. Practice comma usage rules through targeted exercises before attempting complex sentence structures in future assessments."
-            }
+            "analysis": null
           }
         ]
       },
@@ -23196,12 +23627,7 @@
                 "rushed": true
               }
             ],
-            "analysis": {
-              "questions_missed": "Q3, Q11",
-              "error_analysis": "Jacob consistently fails multiple choice questions about sentence combining and conjunctions (Q3 on Tests 1 and 3), suggesting difficulty with logical connectors and sentence structure. His essay responses consistently receive 75% scores with coded answers \"$2b\" across all three tests, indicating a systematic issue with expository essay writing that prevents him from achieving full points on the highest-weighted questions.",
-              "root_causes": "Inability to identify and use appropriate conjunctions and logical connectors in sentence combining tasks. Consistently incomplete or inadequately developed expository essays that meet basic requirements but lack the depth, organization, or textual evidence needed for full credit on the 20-point essay questions.",
-              "recommended_actions": "Assign targeted practice on conjunctions and sentence combining through Grammar G6 KGs focusing specifically on coordinating and subordinating conjunctions. Provide structured expository essay practice with explicit instruction on incorporating textual evidence and developing body paragraphs before retesting, and consider extending time limits given the consistent rushed completion pattern."
-            }
+            "analysis": null
           }
         ]
       },
@@ -26562,12 +26988,7 @@
                 "rushed": false
               }
             ],
-            "analysis": {
-              "questions_missed": "Q11, Q1, Q3, Q5",
-              "error_analysis": "Jack consistently struggles with extended writing tasks (Q11 paragraph responses), often providing underdeveloped paragraphs that lack proper organization and fail to fully address the prompt requirements. He also has difficulty with sentence transformation tasks, particularly understanding conjunctions vs. alternative connecting words, and struggles with vocabulary/context clues when selecting appropriate transition words.",
-              "root_causes": "Inadequate paragraph development skills - writes brief, unorganized responses instead of well-structured paragraphs with clear topic sentences and supporting details. Poor understanding of sentence combining techniques, specifically confusion between conjunctions and other connecting devices. Weak contextual vocabulary skills affecting his ability to select appropriate words for sentence completion tasks.",
-              "recommended_actions": "Assign Writing Structure G3-G4 KGs focusing on paragraph organization with topic sentences and supporting details, using guided paragraph frames. Practice Sentence Combining G3 KGs specifically targeting conjunctions vs. appositives vs. other connecting methods with immediate feedback. Implement vocabulary in context exercises using cloze passages before attempting full writing assessments."
-            }
+            "analysis": null
           }
         ]
       },
@@ -27770,12 +28191,7 @@
                 "rushed": false
               }
             ],
-            "analysis": {
-              "questions_missed": "Q1, Q3, Q11",
-              "error_analysis": "Harper consistently fails appositive construction tasks (Q1 and Q3 across multiple tests), either ignoring the prompt entirely or adding descriptive phrases instead of true appositives. The student also struggles with paragraph development in Q11, writing overly brief responses that lack organization and detailed explanations, despite having the content knowledge to provide basic information.",
-              "root_causes": "Cannot construct appositive phrases - consistently adds coordinating conjunctions or descriptive details instead of embedding noun phrases as appositives. Writes underdeveloped paragraphs with minimal supporting details and lacks organizational structure for extended writing responses. Shows persistent spelling errors that suggest weak phonetic encoding skills.",
-              "recommended_actions": "Assign Sentences G3-G4 KGs specifically targeting appositive construction with guided practice on embedding noun phrases without conjunctions. Focus on paragraph development activities that require topic sentences plus 3-4 supporting detail sentences before attempting full assessments. Implement structured spelling intervention targeting high-frequency words and phonetic patterns before retesting."
-            }
+            "analysis": null
           }
         ]
       },
@@ -33402,12 +33818,7 @@
                 "rushed": false
               }
             ],
-            "analysis": {
-              "questions_missed": "Q1, Q11",
-              "error_analysis": "The student consistently struggles with sentence combining tasks, making errors in grammar and word choice (e.g., \"fell\" instead of \"feel,\" missing words like \"to\" in \"cut down bamboo forests build farms\"). In paragraph writing, the student demonstrates inconsistent sentence structure and frequently includes incomplete sentences or run-on sentences, though content understanding is generally strong.",
-              "root_causes": "Inability to properly combine sentences using coordinating conjunctions and transitional phrases while maintaining grammatical accuracy. Frequent spelling errors particularly with common words (\"fell/feel,\" \"disapearing,\" \"leared,\" \"tounge\"). Inconsistent sentence boundary recognition leading to fragments and run-on sentences in both short responses and extended writing.",
-              "recommended_actions": "Assign Sentences G4 KGs focusing on sentence combining with coordinating conjunctions and complex sentence construction. Practice spelling common Grade 4 vocabulary words through targeted spelling activities. Complete paragraph structure exercises emphasizing complete sentences and proper sentence boundaries before attempting the next retest."
-            }
+            "analysis": null
           }
         ]
       },
@@ -34164,16 +34575,16 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 195.0,
+        "alphawrite": 228.8,
         "mastery_track": 465.0,
         "test": 210.0,
-        "total": 870.0,
-        "school": 870.0,
+        "total": 903.8,
+        "school": 903.8,
         "break": 0.0,
         "goal_to_date": 175.0,
-        "avg_per_day": 62.1,
+        "avg_per_day": 64.6,
         "meets_goal": true,
-        "last_xp_date": "2026-03-19"
+        "last_xp_date": "2026-03-20"
       },
       "xp_details": {
         "activity_xp": [
@@ -34456,6 +34867,20 @@
             "xp": 18.75,
             "date": "2026-03-19",
             "type": "alphawrite"
+          },
+          {
+            "name": "Complete Subordinating Conjunctions",
+            "course": "Sentences G4",
+            "xp": 18.75,
+            "date": "2026-03-20",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Write Sentence from a Prompt",
+            "course": "Sentences G4",
+            "xp": 15,
+            "date": "2026-03-20",
+            "type": "alphawrite"
           }
         ],
         "test_xp": [
@@ -34478,10 +34903,10 @@
             "date": "2026-03-18"
           }
         ],
-        "alphawrite_xp": 195.0,
+        "alphawrite_xp": 228.75,
         "mastery_track_xp": 465.0,
         "test_xp_total": 210.0,
-        "last_xp_date": "2026-03-19"
+        "last_xp_date": "2026-03-20"
       },
       "session_tests": [
         {
@@ -34540,6 +34965,24 @@
             "xp": 0,
             "attempt": 1,
             "date": "2026-03-19"
+          },
+          {
+            "name": "Because, But, So",
+            "course": "Sentences G4",
+            "accuracy": 50,
+            "questions": "6/12",
+            "xp": 0,
+            "attempt": 1,
+            "date": "2026-03-20"
+          },
+          {
+            "name": "Write Appositives",
+            "course": "Sentences G4",
+            "accuracy": 50,
+            "questions": "2/4",
+            "xp": 0,
+            "attempt": 1,
+            "date": "2026-03-20"
           }
         ],
         "repeated_activities": [
@@ -34630,7 +35073,7 @@
         {
           "type": "low_accuracy",
           "severity": "medium",
-          "text": "3 activities below 80% accuracy"
+          "text": "5 activities below 80% accuracy"
         },
         {
           "type": "repeated",
@@ -39324,12 +39767,7 @@
                 "rushed": false
               }
             ],
-            "analysis": {
-              "questions_missed": "Q11 (extended paragraph writing), Q4/Q3 (appositive construction), Q7/Q10 (explanation questions requiring reasoning)",
-              "error_analysis": "The student consistently struggles with appositive construction, either rewriting sentences completely instead of adding appositives (Test 1 Q3) or using coordinating conjunctions instead of appositive phrases (Test 3 Q4). Extended paragraph responses lack development and supporting details, often providing only 2-3 basic sentences when complex explanations are required. The student also shows inconsistent capitalization and makes frequent spelling errors (\"awnser,\" \"swimm\").",
-              "root_causes": "Cannot properly construct appositive phrases and instead substitutes relative clauses or coordinate structures. Lacks paragraph development skills, writing brief responses without elaboration or supporting evidence when prompts require well-organized, detailed paragraphs. Rushes through tests (completed in 16-25 minutes) leading to mechanical errors and underdeveloped responses.",
-              "recommended_actions": "Assign Grammar G3-G4 KGs specifically targeting appositive phrase construction with hands-on sentence combining practice. Practice structured paragraph writing using graphic organizers that require topic sentences, supporting details, and conclusions before retesting. Implement timed practice sessions to build stamina and reduce rushing while maintaining quality responses."
-            }
+            "analysis": null
           }
         ]
       },
@@ -39902,12 +40340,7 @@
                 "rushed": true
               }
             ],
-            "analysis": {
-              "questions_missed": "Q11",
-              "error_analysis": "Parker consistently scores 75% on the major essay question (Q11) across all four tests, indicating a systematic issue with expository essay writing. The student appears to rush through tests (completing them in 19-28 minutes) and provides minimal responses coded as \"$2b\" for complex essay prompts requiring multi-paragraph structure. Additionally, Parker missed a conjunction question on the first test, suggesting difficulty with sentence combining and logical connections.",
-              "root_causes": "Parker writes underdeveloped essay responses that fail to meet the required 5-paragraph structure (introduction, 3 body paragraphs, conclusion) consistently demanded across all prompts. The extremely short completion times (19-28 minutes) indicate insufficient time spent on planning and developing extended written responses. Parker also demonstrates weakness in understanding logical conjunctions and sentence combining techniques needed for coherent academic writing.",
-              "recommended_actions": "Assign extended writing practice with timed scaffolding exercises, starting with 45-minute guided essay sessions before progressing to independent work. Focus on paragraph structure KGs that explicitly teach introduction-body-conclusion organization with topic sentences and supporting details. Practice sentence combining and conjunction usage through targeted grammar exercises before attempting full essay assessments."
-            }
+            "analysis": null
           }
         ]
       },
@@ -41854,6 +42287,429 @@
       "enrollment_mismatch": null
     },
     {
+      "id": "66194be6-ab3d-4efd-afd0-5563391d2b1f",
+      "name": "Eva Quintero",
+      "email": "eva.quintero@2hourlearning.com",
+      "campus": "Alpha School Miami",
+      "dashboard": "timeback",
+      "level": "Level 3",
+      "age_grade": 5,
+      "hmg": 2,
+      "starting_hmg": 2,
+      "grades_advanced": 0,
+      "effective_grade": null,
+      "effective_grades_mastered": null,
+      "language_eg": null,
+      "s1_cohort": false,
+      "completed_g8": false,
+      "enrollments": [
+        "[AlphaWrite] Writing G3 hole-filling Class"
+      ],
+      "still_enrolled": true,
+      "last_test": {
+        "name": "Alpha Standardized Writing G3.2",
+        "type": "test out",
+        "score": 69,
+        "date": "2026-03-10",
+        "passed": false
+      },
+      "next_expected_test": {
+        "name": "G3.1",
+        "reason": "HMG is G2, next grade level is G3",
+        "status": "retaking"
+      },
+      "all_tests": [
+        {
+          "name": "Alpha Standardized Writing G3.1",
+          "test_type": "test out",
+          "score": 60,
+          "date": "2026-03-02",
+          "assigned_at": "2026-03-02",
+          "assignment_id": 37198,
+          "test_link": "https://alphatest.alpha.school/assignment/37198",
+          "total_questions": 45,
+          "correct_questions": 27,
+          "passed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G3.2",
+          "test_type": "test out",
+          "score": 69,
+          "date": "2026-03-10",
+          "assigned_at": "2026-03-06",
+          "assignment_id": 38383,
+          "test_link": "https://alphatest.alpha.school/assignment/38383",
+          "total_questions": 45,
+          "correct_questions": 31,
+          "passed": false
+        }
+      ],
+      "test_summary": {
+        "total_taken": 2,
+        "total_passed": 0,
+        "end_of_course_passed": 0,
+        "test_outs_passed": 0,
+        "placement_passed": 0
+      },
+      "xp": {
+        "alphawrite": 277.5,
+        "mastery_track": 285.0,
+        "test": 60.0,
+        "total": 622.5,
+        "school": 468.8,
+        "break": 153.8,
+        "goal_to_date": 175.0,
+        "avg_per_day": 33.5,
+        "meets_goal": true,
+        "last_xp_date": "2026-03-18"
+      },
+      "xp_details": {
+        "activity_xp": [
+          {
+            "name": "Unscramble Sentences",
+            "course": "Sentences G3",
+            "xp": 18.75,
+            "date": "2026-02-25",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Change Sentences into Questions",
+            "course": "Sentences G3",
+            "xp": 15,
+            "date": "2026-02-25",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Change the Sentence Type",
+            "course": "Sentences G3",
+            "xp": 15,
+            "date": "2026-02-25",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Write Questions About a Picture",
+            "course": "Sentences G3",
+            "xp": 18.75,
+            "date": "2026-02-27",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Write the Sentence Type",
+            "course": "Sentences G3",
+            "xp": 18.75,
+            "date": "2026-02-27",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Because, But, So",
+            "course": "Sentences G3",
+            "xp": 18.75,
+            "date": "2026-02-27",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Identify Appositives",
+            "course": "Sentences G3",
+            "xp": 15,
+            "date": "2026-02-27",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Write Appositives",
+            "course": "Sentences G3",
+            "xp": 18.75,
+            "date": "2026-02-27",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Complete Subordinative Conjunctions",
+            "course": "Sentences G3",
+            "xp": 15,
+            "date": "2026-02-27",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alpha Test",
+            "course": "",
+            "xp": 30,
+            "date": "2026-03-02",
+            "type": "external"
+          },
+          {
+            "name": "Because, But, So",
+            "course": "Sentences G3",
+            "xp": 7.5,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-03",
+            "type": "external"
+          },
+          {
+            "name": "Write Sentence from a Prompt",
+            "course": "Sentences G3",
+            "xp": 18.75,
+            "date": "2026-03-04",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-04",
+            "type": "external"
+          },
+          {
+            "name": "Identify Topic Sentence and Sequence Details",
+            "course": "Paragraphs G3",
+            "xp": 18.75,
+            "date": "2026-03-04",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-04",
+            "type": "external"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-06",
+            "type": "external"
+          },
+          {
+            "name": "Alpha Test",
+            "course": "",
+            "xp": 90,
+            "date": "2026-03-10",
+            "type": "external"
+          },
+          {
+            "name": "Because, But, So",
+            "course": "Sentences G3",
+            "xp": 3.75,
+            "date": "2026-03-16",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-16",
+            "type": "external"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-16",
+            "type": "external"
+          },
+          {
+            "name": "Combine Sentences",
+            "course": "Sentences G3",
+            "xp": 18.75,
+            "date": "2026-03-16",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-17",
+            "type": "external"
+          },
+          {
+            "name": "Change Sentences into Questions",
+            "course": "Sentences G3",
+            "xp": 7.5,
+            "date": "2026-03-17",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Fragment or Sentence?",
+            "course": "Sentences G3",
+            "xp": 7.5,
+            "date": "2026-03-17",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-17",
+            "type": "external"
+          },
+          {
+            "name": "Write Sentence from a Prompt",
+            "course": "Sentences G3",
+            "xp": 7.5,
+            "date": "2026-03-18",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-18",
+            "type": "external"
+          },
+          {
+            "name": "Identify Topic Sentences",
+            "course": "Paragraphs G3",
+            "xp": 18.75,
+            "date": "2026-03-18",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-18",
+            "type": "external"
+          },
+          {
+            "name": "Make Topic Sentences",
+            "course": "Paragraphs G3",
+            "xp": 15,
+            "date": "2026-03-18",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-18",
+            "type": "external"
+          }
+        ],
+        "test_xp": [
+          {
+            "name": "Alpha Standardized Writing G3.1",
+            "xp": 30,
+            "score": 60,
+            "date": "2026-03-02"
+          },
+          {
+            "name": "Alpha Standardized Writing G3.2",
+            "xp": 30,
+            "score": 69,
+            "date": "2026-03-10"
+          }
+        ],
+        "alphawrite_xp": 277.5,
+        "mastery_track_xp": 285.0,
+        "test_xp_total": 60.0,
+        "last_xp_date": "2026-03-18"
+      },
+      "session_tests": [
+        {
+          "name": "Alpha Standardized Writing G3.1",
+          "type": "Test-Out",
+          "score": 60.0,
+          "date": "2026-03-02",
+          "passed": false,
+          "time_seconds": 2504.0,
+          "rushed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G3.2",
+          "type": "Test-Out",
+          "score": 69.0,
+          "date": "2026-03-10",
+          "passed": false,
+          "time_seconds": 7279.0,
+          "rushed": false
+        }
+      ],
+      "accuracy": {
+        "activities_below_threshold": [
+          {
+            "name": "Identify the Sentence Type",
+            "course": "Sentences G3",
+            "accuracy": 71,
+            "questions": "10/14",
+            "xp": 0,
+            "attempt": 1,
+            "date": "2026-02-25"
+          },
+          {
+            "name": "Write a Paragraph from Prompt",
+            "course": "Paragraphs G3",
+            "accuracy": 0,
+            "questions": "0/3",
+            "xp": 0,
+            "attempt": 1,
+            "date": "2026-03-06"
+          }
+        ],
+        "repeated_activities": [
+          {
+            "name": "Change Sentences into Questions",
+            "course": "Sentences G3",
+            "attempts": 2,
+            "best_accuracy": 88,
+            "latest_accuracy": 86
+          },
+          {
+            "name": "Because, But, So",
+            "course": "Sentences G3",
+            "attempts": 3,
+            "best_accuracy": 100,
+            "latest_accuracy": 95
+          },
+          {
+            "name": "Write Sentence from a Prompt",
+            "course": "Sentences G3",
+            "attempts": 2,
+            "best_accuracy": 100,
+            "latest_accuracy": 86
+          },
+          {
+            "name": "Fragment or Sentence?",
+            "course": "Sentences G3",
+            "attempts": 2,
+            "best_accuracy": 86,
+            "latest_accuracy": 86
+          }
+        ]
+      },
+      "deep_dive": {
+        "needed": false,
+        "details": []
+      },
+      "insights": [
+        {
+          "type": "low_accuracy",
+          "severity": "medium",
+          "text": "2 activities below 80% accuracy"
+        },
+        {
+          "type": "repeated",
+          "severity": "low",
+          "text": "Repeating 'Change Sentences into Questions' in Sentences G3 (2 attempts)"
+        },
+        {
+          "type": "repeated",
+          "severity": "low",
+          "text": "Repeating 'Because, But, So' in Sentences G3 (3 attempts)"
+        },
+        {
+          "type": "repeated",
+          "severity": "low",
+          "text": "Repeating 'Write Sentence from a Prompt' in Sentences G3 (2 attempts)"
+        }
+      ],
+      "enrollment_mismatch": null
+    },
+    {
       "id": "663a5401-ec40-4b32-ab98-b4f32df70829",
       "name": "Alyan Slizza",
       "email": "alyan.slizza@alpha.school",
@@ -43526,12 +44382,7 @@
                 "rushed": true
               }
             ],
-            "analysis": {
-              "questions_missed": "Q11 (extended writing prompts), Q2 (sentence combining with specific conjunctions), Q4 (sentence type identification)",
-              "error_analysis": "Connor consistently struggles with extended paragraph writing, producing single sentences or very brief responses instead of well-developed paragraphs as required by Q11 prompts across all tests. He also has difficulty following specific grammatical instructions, such as using the required subordinating conjunction \"since\" in Q2, where he substituted \"so\" instead. Additionally, he shows inconsistent performance on basic grammar concepts like sentence type identification.",
-              "root_causes": "Inability to develop extended written responses beyond single sentences when multi-sentence paragraphs are required; failure to follow specific grammatical instructions and apply targeted conjunctions or sentence structures as directed; inconsistent mastery of fundamental sentence analysis skills including identifying sentence types.",
-              "recommended_actions": "Assign paragraph development activities focusing on topic sentences, supporting details, and conclusion sentences before attempting extended writing prompts again. Practice sentence combining exercises specifically targeting subordinating conjunctions with immediate feedback on correct usage. Review and drill basic sentence types (declarative, interrogative, exclamatory, imperative) with multiple practice examples before retesting."
-            }
+            "analysis": null
           }
         ]
       },
@@ -49283,12 +50134,7 @@
                 "rushed": false
               }
             ],
-            "analysis": {
-              "questions_missed": "Q11",
-              "error_analysis": "Mila consistently struggles with expository essay writing, scoring only 75-80% on the major essay question across all three tests. The student appears to have fundamental issues with essay structure and development, as indicated by the cryptic \"$2b\" responses that suggest incomplete or improperly formatted submissions. Additionally, she missed a basic conjunction question (Q3) on the first test, indicating gaps in sentence combining skills.",
-              "root_causes": "Student cannot properly structure and develop expository essays with required components (thesis, topic sentences, body paragraphs, conclusion). Student lacks proficiency in logical sentence combining using conjunctions. Student may have technical difficulties with rich text essay submission format, as evidenced by the repeated \"$2b\" coded responses instead of actual essay content.",
-              "recommended_actions": "Assign Writing Structure G6 KGs focusing on expository essay organization and paragraph development with explicit instruction on thesis statements and topic sentences. Practice sentence combining exercises with coordinating and subordinating conjunctions before retesting. Provide technical training on rich text essay submission format to ensure responses are properly captured in the testing system."
-            }
+            "analysis": null
           }
         ]
       },
@@ -51162,12 +52008,7 @@
                 "rushed": false
               }
             ],
-            "analysis": {
-              "questions_missed": "Q11, Q1, Q2, Q6, Q8",
-              "error_analysis": "Ian consistently struggles with sentence combining and revision tasks, often misunderstanding instructions (e.g., adding words instead of creating appositives, incorrect word order corrections). His paragraph responses are severely underdeveloped, frequently off-topic (writing about tacos instead of Ferdinand Cheval), and lack the required evidence from source texts. He shows persistent comma misuse, subject-verb disagreement, and spelling errors throughout all tests.",
-              "root_causes": "Cannot construct well-organized paragraphs with supporting evidence from texts - writes single sentences or completely unrelated content instead of developed responses. Lacks understanding of sentence revision techniques including appositives, exclamatory sentences, and proper sentence combining with conjunctions. Demonstrates poor reading comprehension when extracting specific information from passages to support written responses.",
-              "recommended_actions": "Assign Paragraph Development G4 KGs focusing on text-based evidence and topic sentences before attempting extended responses. Practice sentence revision techniques through Sentences G4 KGs emphasizing appositives, combining with conjunctions, and correcting fragments. Implement guided reading comprehension exercises that require identifying and citing specific textual evidence before retesting."
-            }
+            "analysis": null
           }
         ]
       },
@@ -51962,12 +52803,7 @@
                 "rushed": false
               }
             ],
-            "analysis": {
-              "questions_missed": "Q5, Q6, Q7, Q8, Q9, Q10, Q11",
-              "error_analysis": "Nathan shows consistent grammatical errors in sentence construction, particularly with subject-verb agreement (\"Bluebonnet are wildflower\"), question formation (\"Did the shawl dance began\"), and appositive placement. His early test shows complete test avoidance with repeated \"i do not want to pass\" responses, but later tests demonstrate steady improvement in paragraph writing and sentence complexity, though spelling and punctuation errors persist throughout all tests.",
-              "root_causes": "Subject-verb agreement confusion (consistently writes \"are\" with singular subjects), inability to properly construct questions from statements (adds auxiliary verbs incorrectly), and inadequate understanding of appositive phrase structure (either omits them entirely or places them incorrectly without proper punctuation).",
-              "recommended_actions": "Assign Grammar G4 KGs focusing specifically on subject-verb agreement patterns and question formation rules. Practice appositive construction with guided templates before attempting complex sentence combinations. Address test anxiety/avoidance behaviors through shorter, low-stakes writing exercises to build confidence before full test retakes."
-            }
+            "analysis": null
           }
         ]
       },
@@ -56258,12 +57094,7 @@
                 "rushed": true
               }
             ],
-            "analysis": {
-              "questions_missed": "Q1, Q2, Q4, Q9, Q11",
-              "error_analysis": "Brooklyn consistently struggles with sentence transformation tasks (rewriting as questions, combining with conjunctions) and frequently misunderstands the specific requirements of prompts. Her spelling errors are pervasive across all tests (\"imagin,\" \"actullly,\" \"genlty,\" \"animlas,\" \"coulorful\"), and she often provides incomplete or incorrect responses to grammar-focused questions while showing better comprehension in content-based responses.",
-              "root_causes": "Inability to accurately transform sentence structures (declarative to interrogative, combining with specific conjunctions as requested), persistent phonetic spelling that indicates weak spelling pattern recognition, and tendency to rush through technical grammar questions while spending more effort on paragraph writing tasks.",
-              "recommended_actions": "Assign Sentence Structure KGs focusing on question formation and conjunction usage with explicit practice in following prompt requirements exactly. Implement systematic spelling instruction targeting high-frequency word patterns and common spelling rules before retesting. Provide timed practice sessions that emphasize accuracy over speed, particularly for grammar transformation tasks."
-            }
+            "analysis": null
           }
         ]
       },
@@ -60594,12 +61425,7 @@
                 "rushed": false
               }
             ],
-            "analysis": {
-              "questions_missed": "Q11, Q4, Q5",
-              "error_analysis": "Elias consistently fails extended writing tasks (Q11) by providing minimal responses instead of well-organized paragraphs, scoring 0-15% on all paragraph prompts. He struggles with sentence combination and conjunction usage, often adding unnecessary words or misunderstanding the grammatical structure required. Additionally, he demonstrates confusion with appositives, consistently adding adjectives or descriptive phrases instead of creating true appositive constructions.",
-              "root_causes": "Cannot construct organized paragraphs with multiple sentences and supporting details, instead writing single phrases or sentences for extended responses. Lacks understanding of specific grammatical structures including appositives, proper conjunction usage, and sentence types. Demonstrates inconsistent grasp of complete sentence construction and appropriate word choice for sentence completion tasks.",
-              "recommended_actions": "Assign Paragraph Writing G3 KGs focusing on topic sentences, supporting details, and paragraph organization before attempting extended responses. Practice Grammar G3 KGs specifically targeting appositives, conjunctions, and sentence combining with guided instruction and multiple examples. Implement structured paragraph templates and sentence frames to scaffold longer writing responses before retesting."
-            }
+            "analysis": null
           }
         ]
       },
@@ -64547,12 +65373,7 @@
                 "rushed": true
               }
             ],
-            "analysis": {
-              "questions_missed": "Q6, Q7, Q8, Q9, Q10",
-              "error_analysis": "Marcus consistently struggles with sentence construction and following specific prompt instructions. He frequently misses the exact requirements (like using specific conjunctions or identifying sentence types) and instead provides alternative responses that show understanding but don't match the task. His writing also shows persistent spelling errors (\"minuites,\" \"coverd,\" \"libary,\" \"spacling\") and grammatical issues with contractions and possessives.",
-              "root_causes": "Failure to read and follow specific prompt instructions precisely, leading to incorrect responses even when content knowledge is demonstrated. Inconsistent spelling and grammar mechanics, particularly with common words and contractions. Rushed test-taking behavior (all tests completed in under 25 minutes) prevents careful review and self-correction.",
-              "recommended_actions": "Assign Grammar G3 KGs focusing on sentence types, conjunctions, and following specific writing instructions with practice in reading prompts carefully. Practice spelling and mechanics drills for commonly misspelled words and contractions/possessives. Implement timed writing practice with emphasis on using remaining time for proofreading and checking that answers match prompt requirements exactly."
-            }
+            "analysis": null
           }
         ]
       },
@@ -67161,15 +67982,15 @@
       },
       "xp": {
         "alphawrite": 148.1,
-        "mastery_track": 0.0,
+        "mastery_track": 90.0,
         "test": 0.0,
-        "total": 148.1,
-        "school": 148.1,
+        "total": 238.1,
+        "school": 238.1,
         "break": 0.0,
         "goal_to_date": 175.0,
-        "avg_per_day": 10.6,
-        "meets_goal": false,
-        "last_xp_date": "2026-03-17"
+        "avg_per_day": 17.0,
+        "meets_goal": true,
+        "last_xp_date": "2026-03-20"
       },
       "xp_details": {
         "activity_xp": [
@@ -67235,13 +68056,20 @@
             "xp": 18.75,
             "date": "2026-03-17",
             "type": "alphawrite"
+          },
+          {
+            "name": "Alpha Standardized Writing G3.2",
+            "course": "",
+            "xp": 90,
+            "date": "2026-03-20",
+            "type": "mastery_track"
           }
         ],
         "test_xp": [],
         "alphawrite_xp": 148.125,
-        "mastery_track_xp": 0.0,
+        "mastery_track_xp": 90.0,
         "test_xp_total": 0.0,
-        "last_xp_date": "2026-03-17"
+        "last_xp_date": "2026-03-20"
       },
       "session_tests": [
         {
@@ -67322,11 +68150,6 @@
           "type": "low_accuracy",
           "severity": "medium",
           "text": "6 activities below 80% accuracy"
-        },
-        {
-          "type": "goal_xp",
-          "severity": "medium",
-          "text": "XP behind target: 148/175 (85%) — last XP earned 2026-03-17"
         }
       ],
       "enrollment_mismatch": null
@@ -68589,12 +69412,7 @@
                 "rushed": false
               }
             ],
-            "analysis": {
-              "questions_missed": "Q11 (extended paragraph responses), Q1 (sentence rewrites), Q4 (sentence combining), Q8 (spelling in complete sentence responses)",
-              "error_analysis": "Ariel consistently struggles with spelling common words (\"teaddy\" for \"teddy,\" \"lesen\" for \"listen,\" \"their\" for \"there\"), creating run-on sentences with improper comma usage, and fails to develop organized paragraphs that address prompt requirements. In extended writing tasks (Q11), she writes brief, unfocused responses that don't follow the structured paragraph format or address the central question being asked.",
-              "root_causes": "Cannot construct proper compound sentences using conjunctions and appositives correctly; writes single sentences or very short responses instead of developed paragraphs with supporting details; lacks spelling accuracy for grade-appropriate vocabulary; struggles with reading comprehension requirements that ask for evidence-based responses from given texts.",
-              "recommended_actions": "Assign Sentences G3-G4 KGs focusing on compound sentence construction, conjunctions, and appositives before retesting sentence combining questions. Practice structured paragraph writing with graphic organizers that require topic sentences, supporting details, and conclusions using grade-level texts. Complete targeted spelling intervention focusing on common word patterns and high-frequency vocabulary before attempting any writing assessments."
-            }
+            "analysis": null
           }
         ]
       },
@@ -74461,12 +75279,7 @@
                 "rushed": true
               }
             ],
-            "analysis": {
-              "questions_missed": "Q11",
-              "error_analysis": "Lorenzo consistently struggles with expository essay writing, earning only 70-75% on the main essay question across all three tests. The student appears to rush through tests (17-36 minutes) and provides minimal responses (indicated by \"$2b\" notation suggesting very brief answers). He also missed a basic conjunction question, indicating gaps in sentence combining skills.",
-              "root_causes": "Student writes underdeveloped essay responses that lack the required structural elements (strong thesis, topic sentences, conclusion), likely producing single paragraphs instead of full 5-paragraph essays. Time management issues cause rushed completion, preventing adequate essay development and revision. Fundamental gaps in understanding how to combine sentences using logical conjunctions.",
-              "recommended_actions": "Assign extended practice with structured expository essay templates requiring students to write full introductions, body paragraphs with topic sentences, and conclusions before attempting timed assessments. Implement time management strategies and require minimum time limits (45+ minutes) for essay portions. Practice sentence combining exercises focusing on coordinating and subordinating conjunctions before retesting."
-            }
+            "analysis": null
           }
         ]
       },
@@ -77899,12 +78712,7 @@
                 "rushed": true
               }
             ],
-            "analysis": {
-              "questions_missed": "Q5, Q11, and appositive-related questions (Q1 in Test 1, Q4 in Test 5)",
-              "error_analysis": "Cristobal consistently struggles with sentence construction, particularly appositives (using semicolons instead of commas, or missing punctuation entirely), and converting sentence fragments to complete sentences (adding words without fixing the core structural problem). His paragraph responses show repetitive sentence structures and lack of development, often restating the same idea multiple times rather than expanding with supporting details.",
-              "root_causes": "Cannot properly construct appositives using correct punctuation and placement; struggles to identify and fix sentence fragments by adding subjects or predicates; writes underdeveloped paragraphs that restate the main idea rather than building supporting arguments with evidence from text.",
-              "recommended_actions": "Assign Sentences G3-G4 KGs focusing specifically on appositive construction and fragment identification exercises; practice structured paragraph writing using graphic organizers that require topic sentence + 2-3 supporting details + conclusion before attempting timed assessments; implement untimed practice sessions to address rushing behavior that leads to spelling errors and incomplete responses."
-            }
+            "analysis": null
           }
         ]
       },
@@ -80110,12 +80918,7 @@
                 "rushed": true
               }
             ],
-            "analysis": {
-              "questions_missed": "Q1, Q2, Q3, Q8, Q11",
-              "error_analysis": "The student consistently struggles with sentence transformation tasks (converting statements to questions, combining sentences with specific conjunctions) and frequently ignores specific prompt requirements. Spelling errors are pervasive across all tests (\"becuase,\" \"camra,\" \"scuptures,\" \"disesion\"), and the student often substitutes different grammatical structures instead of following exact instructions (using \"so\" instead of \"since\" for conjunction tasks).",
-              "root_causes": "Inability to follow specific grammatical instructions precisely - substitutes familiar structures for required ones; consistent phonetic spelling patterns indicating weak spelling foundations; rushed test-taking behavior evidenced by shorter completion times in later tests leading to increased errors.",
-              "recommended_actions": "Assign Grammar G3 KGs focusing specifically on sentence combining with subordinating conjunctions and statement-to-question conversions with guided practice. Implement structured spelling intervention targeting high-frequency words and common phonetic patterns before retesting. Require practice with timed writing exercises that emphasize accuracy over speed to address rushing behavior."
-            }
+            "analysis": null
           }
         ]
       },
@@ -95331,12 +96134,7 @@
                 "rushed": true
               }
             ],
-            "analysis": {
-              "questions_missed": "Q3, Q11",
-              "error_analysis": "The student consistently struggles with multiple choice questions about sentence combining, conjunctions, and transition words, missing Q3 in Tests 1 and 2, and similar conjunction/transition questions across all tests. On essay questions (Q11), the student demonstrates incomplete responses - either providing minimal coded responses ($2b) or writing essays that are cut off mid-sentence and lack proper structure, consistently scoring 65-75% instead of full points.",
-              "root_causes": "Cannot properly identify and use logical conjunctions and transition words to connect ideas in sentences and paragraphs. Rushes through tests (14-21 minutes when more time is needed) leading to incomplete essay responses that lack required components like proper conclusions and fully developed body paragraphs.",
-              "recommended_actions": "Assign Grammar G6 KGs specifically focused on conjunctions, transition words, and sentence combining before retesting. Require timed practice essays with structured templates to ensure all required components (thesis, 3 body paragraphs, conclusion) are completed within extended time limits. Implement pacing strategies and require the student to spend minimum 25-30 minutes on writing tests to reduce rushing behavior."
-            }
+            "analysis": null
           }
         ]
       },
@@ -95651,12 +96449,7 @@
                 "rushed": false
               }
             ],
-            "analysis": {
-              "questions_missed": "Q3, Q4, Q5, Q11",
-              "error_analysis": "Reed consistently struggles with sentence transformation tasks, particularly converting statements to interrogative sentences and understanding appositives versus other sentence structures. He frequently misinterprets prompts (e.g., writing a question when asked to identify sentence type, or adding dependent clauses instead of appositives). His paragraph responses show limited development and often miss the central focus of the prompt, addressing peripheral topics instead of the main question asked.",
-              "root_causes": "Cannot distinguish between different sentence types or properly construct interrogative sentences from declarative statements. Lacks understanding of appositive phrases and substitutes them with dependent clauses or compound sentences. Writes underdeveloped paragraphs that lack topic sentences and supporting details, often addressing tangential ideas rather than the prompt's central focus.",
-              "recommended_actions": "Assign Sentences G3-G4 KGs focusing on interrogative sentence construction and appositive phrase identification/creation. Practice structured paragraph writing with explicit topic sentence and supporting detail frameworks before retesting. Provide direct instruction on prompt analysis to help Reed identify what is specifically being asked versus related but off-topic information."
-            }
+            "analysis": null
           }
         ]
       },
@@ -96089,7 +96882,8 @@
       "enrollments": [
         "Sentences G6 2025-26",
         "Standardized Writing Fundamentals G3 Class",
-        "Alphawrite Sentences III Class"
+        "Alphawrite Sentences III Class",
+        "Essays G6 Class"
       ],
       "still_enrolled": true,
       "last_test": {
@@ -97426,12 +98220,7 @@
                 "rushed": false
               }
             ],
-            "analysis": {
-              "questions_missed": "Q11, Q3-Q8 (sentence combining/grammar questions)",
-              "error_analysis": "Evelyn consistently struggles with sentence combining techniques, particularly appositives (using \"so\" instead of appositive phrases) and omitting key words when combining sentences. Her paragraph responses (Q11) are severely underdeveloped, typically consisting of single sentences rather than well-organized paragraphs with supporting details. She also shows persistent spelling errors (\"becouse,\" \"exited,\" \"acheve\") and capitalization mistakes.",
-              "root_causes": "Cannot construct appositive phrases correctly, instead defaulting to conjunctions like \"so\"; writes single-sentence responses instead of developed paragraphs with topic sentences and supporting evidence; lacks understanding of paragraph structure and development requirements for extended writing tasks.",
-              "recommended_actions": "Assign Sentences G4 KGs focusing specifically on appositive construction and sentence combining techniques; practice paragraph development with structured graphic organizers that require topic sentence + 2-3 supporting details before retesting; implement spelling intervention targeting frequently misspelled words and basic spelling patterns."
-            }
+            "analysis": null
           }
         ]
       },
@@ -98123,6 +98912,353 @@
           "text": "Repeating 'Identify Topic Sentence and Sequence Details' in Paragraphs G5 (2 attempts)"
         }
       ],
+      "enrollment_mismatch": null
+    },
+    {
+      "id": "f4db0192-1e6e-4ffd-bc03-a2fb65a8b186",
+      "name": "Scarlett ONeal",
+      "email": "scarlett.oneal@2hourlearning.com",
+      "campus": "GT Anywhere",
+      "dashboard": "timeback",
+      "level": "Middle School",
+      "age_grade": 7,
+      "hmg": 6,
+      "starting_hmg": 2,
+      "grades_advanced": 4,
+      "effective_grade": null,
+      "effective_grades_mastered": null,
+      "language_eg": null,
+      "s1_cohort": false,
+      "completed_g8": false,
+      "enrollments": [
+        "[AlphaWrite] Writing G7 hole-filling Class"
+      ],
+      "still_enrolled": true,
+      "last_test": {
+        "name": "Alpha Standardized Writing G7.1",
+        "type": "test out",
+        "score": 80,
+        "date": "2026-03-16",
+        "passed": false
+      },
+      "next_expected_test": {
+        "name": "G7.1",
+        "reason": "HMG is G6, next grade level is G7",
+        "status": "retaking"
+      },
+      "all_tests": [
+        {
+          "name": "Alpha Standardized Writing G6.1",
+          "test_type": "end of course",
+          "score": 90,
+          "date": "2026-03-13",
+          "assigned_at": "2026-03-13",
+          "assignment_id": 39967,
+          "test_link": "https://alphatest.alpha.school/assignment/39967",
+          "total_questions": 30,
+          "correct_questions": 27,
+          "passed": true
+        },
+        {
+          "name": "Alpha Standardized Writing G7.1",
+          "test_type": "test out",
+          "score": 80,
+          "date": "2026-03-16",
+          "assigned_at": "2026-03-15",
+          "assignment_id": 40014,
+          "test_link": "https://alphatest.alpha.school/assignment/40014",
+          "total_questions": 30,
+          "correct_questions": 24,
+          "passed": false
+        }
+      ],
+      "test_summary": {
+        "total_taken": 2,
+        "total_passed": 1,
+        "end_of_course_passed": 1,
+        "test_outs_passed": 0,
+        "placement_passed": 0
+      },
+      "xp": {
+        "alphawrite": 528.1,
+        "mastery_track": 315.0,
+        "test": 240.0,
+        "total": 1083.1,
+        "school": 933.1,
+        "break": 150.0,
+        "goal_to_date": 175.0,
+        "avg_per_day": 66.7,
+        "meets_goal": true,
+        "last_xp_date": "2026-03-19"
+      },
+      "xp_details": {
+        "activity_xp": [
+          {
+            "name": "Revise (Essay 2)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-02-23",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 2)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-02-24",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Setup (Essay 3)",
+            "course": "Essays G6",
+            "xp": 10,
+            "date": "2026-02-24",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 3)",
+            "course": "Essays G6",
+            "xp": 50,
+            "date": "2026-02-25",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 3)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-02-26",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 3)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-02-27",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 3)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-03-02",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Setup (Essay 4)",
+            "course": "Essays G6",
+            "xp": 10,
+            "date": "2026-03-02",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 4)",
+            "course": "Essays G6",
+            "xp": 50,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 4)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-04",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 4)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-06",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 4)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-03-09",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Setup (Essay 5)",
+            "course": "Essays G6",
+            "xp": 10,
+            "date": "2026-03-09",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Outline (Essay 5)",
+            "course": "Essays G6",
+            "xp": 50,
+            "date": "2026-03-10",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Draft (Essay 5)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-11",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Revise (Essay 5)",
+            "course": "Essays G6",
+            "xp": 25,
+            "date": "2026-03-12",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Polish (Essay 5)",
+            "course": "Essays G6",
+            "xp": 15,
+            "date": "2026-03-13",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alpha Test",
+            "course": "",
+            "xp": 120,
+            "date": "2026-03-13",
+            "type": "external"
+          },
+          {
+            "name": "Alpha Test",
+            "course": "",
+            "xp": 120,
+            "date": "2026-03-16",
+            "type": "external"
+          },
+          {
+            "name": "Because, But, So",
+            "course": "Sentences G7",
+            "xp": 18.75,
+            "date": "2026-03-17",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-17",
+            "type": "external"
+          },
+          {
+            "name": "Complete Subordinating Conjunctions",
+            "course": "Sentences G7",
+            "xp": 18.75,
+            "date": "2026-03-17",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-17",
+            "type": "external"
+          },
+          {
+            "name": "Elaborate on Paragraphs",
+            "course": "Paragraphs G7",
+            "xp": 18.75,
+            "date": "2026-03-18",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-18",
+            "type": "external"
+          },
+          {
+            "name": "Identify Topic Sentence and Sequence Details",
+            "course": "Paragraphs G3",
+            "xp": 9.375,
+            "date": "2026-03-18",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Identify Topic Sentence and Sequence Details",
+            "course": "Paragraphs G7",
+            "xp": 18.75,
+            "date": "2026-03-18",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-18",
+            "type": "external"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-19",
+            "type": "external"
+          },
+          {
+            "name": "Setup (Essay 1)",
+            "course": "Essays G7",
+            "xp": 10,
+            "date": "2026-03-19",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Writing Single Paragraph Outlines",
+            "course": "Paragraphs G7",
+            "xp": 18.75,
+            "date": "2026-03-19",
+            "type": "alphawrite"
+          }
+        ],
+        "test_xp": [
+          {
+            "name": "Alpha Standardized Writing G6.1",
+            "xp": 120,
+            "score": 90,
+            "date": "2026-03-13"
+          },
+          {
+            "name": "Alpha Standardized Writing G7.1",
+            "xp": 120,
+            "score": 80,
+            "date": "2026-03-16"
+          }
+        ],
+        "alphawrite_xp": 528.125,
+        "mastery_track_xp": 315.0,
+        "test_xp_total": 240.0,
+        "last_xp_date": "2026-03-19"
+      },
+      "session_tests": [
+        {
+          "name": "Alpha Standardized Writing G6.1",
+          "type": "Mastery Test",
+          "score": 90.0,
+          "date": "2026-03-13",
+          "passed": true,
+          "time_seconds": 1030.0,
+          "rushed": true
+        },
+        {
+          "name": "Alpha Standardized Writing G7.1",
+          "type": "Test-Out",
+          "score": 80.0,
+          "date": "2026-03-16",
+          "passed": false,
+          "time_seconds": 1488.0,
+          "rushed": true
+        }
+      ],
+      "accuracy": {
+        "activities_below_threshold": [],
+        "repeated_activities": []
+      },
+      "deep_dive": {
+        "needed": false,
+        "details": []
+      },
+      "insights": [],
       "enrollment_mismatch": null
     },
     {
@@ -99927,6 +101063,278 @@
           "type": "goal_xp",
           "severity": "medium",
           "text": "XP behind target: 68/175 (39%) — last XP earned 2026-03-19"
+        }
+      ],
+      "enrollment_mismatch": null
+    },
+    {
+      "id": "ffb93b38-50af-4836-9e46-5c76dee51193",
+      "name": "Atlas Kloiber",
+      "email": "atlas.kloiber@alpha.school",
+      "campus": "Alpha School Austin",
+      "dashboard": "timeback",
+      "level": "Level 3",
+      "age_grade": 5,
+      "hmg": 2,
+      "starting_hmg": 2,
+      "grades_advanced": 0,
+      "effective_grade": null,
+      "effective_grades_mastered": null,
+      "language_eg": null,
+      "s1_cohort": false,
+      "completed_g8": false,
+      "enrollments": [
+        "Alphawrite Sentences I 2024-25",
+        "Sentences G3 2025-26",
+        "[AlphaWrite] Writing G3 hole-filling Class"
+      ],
+      "still_enrolled": true,
+      "last_test": {
+        "name": "Alpha Standardized Writing G3.1",
+        "type": "end of course",
+        "score": 63,
+        "date": "2026-03-18",
+        "passed": false
+      },
+      "next_expected_test": {
+        "name": "G3.1",
+        "reason": "HMG is G2, next grade level is G3",
+        "status": "retaking"
+      },
+      "all_tests": [
+        {
+          "name": "Alpha Standardized Writing G3.1",
+          "test_type": "end of course",
+          "score": 63,
+          "date": "2026-03-18",
+          "assigned_at": "2026-03-18",
+          "assignment_id": 40667,
+          "test_link": "https://alphatest.alpha.school/assignment/40667",
+          "total_questions": 45,
+          "correct_questions": 28.5,
+          "passed": false
+        }
+      ],
+      "test_summary": {
+        "total_taken": 1,
+        "total_passed": 0,
+        "end_of_course_passed": 0,
+        "test_outs_passed": 0,
+        "placement_passed": 0
+      },
+      "xp": {
+        "alphawrite": 95.6,
+        "mastery_track": 150.0,
+        "test": 90.0,
+        "total": 335.6,
+        "school": 335.6,
+        "break": 0.0,
+        "goal_to_date": 175.0,
+        "avg_per_day": 24.0,
+        "meets_goal": true,
+        "last_xp_date": "2026-03-19"
+      },
+      "xp_details": {
+        "activity_xp": [
+          {
+            "name": "Fragment or Sentence?",
+            "course": "Sentences G3",
+            "xp": 9.375,
+            "date": "2026-03-02",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Identify the Sentence Type",
+            "course": "Sentences G3",
+            "xp": 9.375,
+            "date": "2026-03-02",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Unscramble Sentences",
+            "course": "Sentences G3",
+            "xp": 9.375,
+            "date": "2026-03-02",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Write Topic Sentences from Details",
+            "course": "Paragraphs G3",
+            "xp": 15,
+            "date": "2026-03-03",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Use Three Strategies",
+            "course": "Paragraphs G3",
+            "xp": 15,
+            "date": "2026-03-04",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alpha Test",
+            "course": "",
+            "xp": 90,
+            "date": "2026-03-18",
+            "type": "external"
+          },
+          {
+            "name": "Identify Appositives",
+            "course": "Sentences G3",
+            "xp": 9.375,
+            "date": "2026-03-19",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-19",
+            "type": "external"
+          },
+          {
+            "name": "Write Appositives",
+            "course": "Sentences G3",
+            "xp": 9.375,
+            "date": "2026-03-19",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-19",
+            "type": "external"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-19",
+            "type": "external"
+          },
+          {
+            "name": "Change Sentences into Questions",
+            "course": "Sentences G3",
+            "xp": 9.375,
+            "date": "2026-03-19",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-03-19",
+            "type": "external"
+          },
+          {
+            "name": "Because, But, So",
+            "course": "Sentences G3",
+            "xp": 9.375,
+            "date": "2026-03-19",
+            "type": "alphawrite"
+          }
+        ],
+        "test_xp": [
+          {
+            "name": "Alpha Standardized Writing G3.1",
+            "xp": 90,
+            "score": 63,
+            "date": "2026-03-18"
+          }
+        ],
+        "alphawrite_xp": 95.625,
+        "mastery_track_xp": 150.0,
+        "test_xp_total": 90.0,
+        "last_xp_date": "2026-03-19"
+      },
+      "session_tests": [
+        {
+          "name": "Alpha Standardized Writing G3.1",
+          "type": "Mastery Test",
+          "score": 63.0,
+          "date": "2026-03-18",
+          "passed": false,
+          "time_seconds": 800.0,
+          "rushed": true
+        }
+      ],
+      "accuracy": {
+        "activities_below_threshold": [
+          {
+            "name": "Write Concluding Sentences from Details",
+            "course": "Paragraphs G3",
+            "accuracy": 77,
+            "questions": "18/22",
+            "xp": 0,
+            "attempt": 1,
+            "date": "2026-03-04"
+          },
+          {
+            "name": "Write a Paragraph from Prompt",
+            "course": "Paragraphs G3",
+            "accuracy": 40,
+            "questions": "2/5",
+            "xp": 0,
+            "attempt": 1,
+            "date": "2026-03-16"
+          }
+        ],
+        "repeated_activities": [
+          {
+            "name": "Identify Appositives",
+            "course": "Sentences G3",
+            "attempts": 2,
+            "best_accuracy": 100,
+            "latest_accuracy": 100
+          },
+          {
+            "name": "Write Appositives",
+            "course": "Sentences G3",
+            "attempts": 2,
+            "best_accuracy": 100,
+            "latest_accuracy": 100
+          },
+          {
+            "name": "Because, But, So",
+            "course": "Sentences G3",
+            "attempts": 2,
+            "best_accuracy": 100,
+            "latest_accuracy": 100
+          },
+          {
+            "name": "Change Sentences into Questions",
+            "course": "Sentences G3",
+            "attempts": 2,
+            "best_accuracy": 100,
+            "latest_accuracy": 100
+          }
+        ]
+      },
+      "deep_dive": {
+        "needed": false,
+        "details": []
+      },
+      "insights": [
+        {
+          "type": "low_accuracy",
+          "severity": "medium",
+          "text": "2 activities below 80% accuracy"
+        },
+        {
+          "type": "repeated",
+          "severity": "low",
+          "text": "Repeating 'Identify Appositives' in Sentences G3 (2 attempts)"
+        },
+        {
+          "type": "repeated",
+          "severity": "low",
+          "text": "Repeating 'Write Appositives' in Sentences G3 (2 attempts)"
+        },
+        {
+          "type": "repeated",
+          "severity": "low",
+          "text": "Repeating 'Because, But, So' in Sentences G3 (2 attempts)"
         }
       ],
       "enrollment_mismatch": null

@@ -343,6 +343,10 @@ _EXCLUDED_EMAILS = {
 _STATUS_OVERRIDES = {
     "quinn.oneal@2hourlearning.com",
     "robin.oneal@2hourlearning.com",
+    "atlas.kloiber@alpha.school",
+    "lincoln.kloiber@alpha.school",
+    "eva.quintero@2hourlearning.com",
+    "scarlett.oneal@2hourlearning.com",
 }
 
 # Legacy Dash campuses (case-insensitive matching via _normalise)
