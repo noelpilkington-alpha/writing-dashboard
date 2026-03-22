@@ -579,6 +579,53 @@ def _resolve_activity_name(ali_sid: str, meta: dict) -> tuple[str, str] | None:
 # ---------------------------------------------------------------------------
 
 _WRITING_TEST_RE = _re.compile(r"Writing\s+G\d|Alpha\s+Standardized\s+Writing", _re.I)
+_GRADE_SUB_RE = _re.compile(r"G(\d+)\.(\d+)")
+
+
+def _classify_unknown_test_types(tests: list[dict]) -> list[dict]:
+    """Retroactively classify tests with empty test_type.
+
+    Logic:
+    - First ever test at G3.1 → 'placement'
+    - .1 at a new grade after passing the previous grade → 'test out'
+    - All other tests within a grade → 'end of course'
+    """
+    if not tests:
+        return tests
+
+    passed_grades: set[int] = set()
+    first_test_seen = False
+
+    for t in tests:  # already sorted by date
+        if t.get("test_type"):
+            # Track passed grades from known-type tests too
+            m = _GRADE_SUB_RE.search(t.get("name", ""))
+            if m and t.get("passed"):
+                passed_grades.add(int(m.group(1)))
+            first_test_seen = True
+            continue
+
+        m = _GRADE_SUB_RE.search(t.get("name", ""))
+        if not m:
+            t["test_type"] = "end of course"
+            first_test_seen = True
+            continue
+
+        grade = int(m.group(1))
+        sub = int(m.group(2))
+
+        if not first_test_seen and sub == 1 and grade == 3:
+            t["test_type"] = "placement"
+        elif sub == 1 and (grade - 1) in passed_grades:
+            t["test_type"] = "test out"
+        else:
+            t["test_type"] = "end of course"
+
+        if t.get("passed"):
+            passed_grades.add(grade)
+        first_test_seen = True
+
+    return tests
 
 
 def fetch_writing_test_results(
@@ -621,7 +668,7 @@ def fetch_writing_test_results(
                 "passed": (r.get("score") or 0) >= PASS_THRESHOLD,
             })
         results.sort(key=lambda x: x["date"])
-        return results
+        return _classify_unknown_test_types(results)
     except Exception as e:
         logger.warning("Failed to fetch test results for %s: %s", student_id, e)
         return []
