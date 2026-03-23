@@ -2080,6 +2080,7 @@
       <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:20px">
         Based on ${allEoC.length} End of Course tests across ${allStudents.length} students
         &middot; Pass threshold: 90%
+        <br>This page analyzes only End of Course (EoC) tests. A "student-grade combo" is one student's attempts at one grade level (e.g., Student A attempting G4). "First-Attempt Pass Rate" is the % of student-grade combos that passed on the very first try. "Still In Progress" means the student hasn't passed that grade yet.
       </div>`;
 
     html += `<div class="metrics-grid">
@@ -2107,6 +2108,9 @@
 
     // ── Section 2: By Grade Level ──
     html += `<div class="metrics-section"><h2>By Grade Level</h2>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
+        Breaks down EoC test performance by grade level (G3–G8). Shows how many student-grade combos attempted each grade, the overall pass rate across all attempts, and how many attempts it typically takes to pass.
+      </p>
       <table class="metrics-table">
         <tr><th>Grade</th><th>EoC Tests</th><th>Student-Grade Combos</th><th>Pass Rate (All)</th><th>First-Attempt Pass Rate</th><th>Avg Attempts to Pass</th><th>Median</th><th>Still In Progress</th></tr>`;
 
@@ -2132,6 +2136,9 @@
 
     // ── Section 3: By Session (when test was taken) ──
     html += `<div class="metrics-section"><h2>By Session (When Test Was Taken)</h2>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
+        Groups EoC tests by which session they were taken in, regardless of when the student started. "First-Attempt Pass Rate" here only counts student-grade combos whose first-ever attempt at that grade happened in this session. "Grades Passed" is the number of grade levels passed during this session (including retakes that started earlier).
+      </p>
       <table class="metrics-table">
         <tr><th>Session</th><th>EoC Tests Taken</th><th>All-Attempt Pass Rate</th><th>First-Attempt Pass Rate</th><th>Grades Passed</th><th>Avg Attempts of Passes</th></tr>`;
 
@@ -2177,6 +2184,9 @@
 
     // ── Section 4: By Cohort ──
     html += `<div class="metrics-section"><h2>By Student Cohort (Session of First Test)</h2>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
+        Students are grouped into cohorts based on which session they took their very first test (any test type, not just EoC). This shows how each "generation" of students performs across all their EoC tests over time. Earlier cohorts have had more time in the system and more opportunities to attempt and pass grades.
+      </p>
       <table class="metrics-table">
         <tr><th>Cohort</th><th>Students</th><th>Grades Attempted</th><th>Grades Passed</th><th>First-Attempt Pass Rate</th><th>Avg Attempts to Pass</th><th>Median</th><th>Still In Progress</th></tr>`;
 
@@ -2207,7 +2217,7 @@
     // ── Section 5: Cohort x Session Matrix ──
     html += `<div class="metrics-section"><h2>Cohort x Session Matrix</h2>
       <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
-        Each cell shows: grades passed / EoC attempts (pass rate). Read across to see how each cohort performs over time.
+        Cross-references cohorts (rows) with sessions (columns). Each cell shows grades passed / EoC attempts (pass rate) for that cohort during that session. Read across a row to see how a cohort's performance evolves over time. Read down a column to compare how different cohorts perform during the same session.
       </p>
       <table class="metrics-table">
         <tr><th>Cohort \\ Session</th>${sessionOrder.map(sn => `<th>${esc(sessions[sn].label || sn)}</th>`).join("")}<th>Total</th></tr>`;
@@ -2253,6 +2263,9 @@
 
     // ── Section 6: Attempts Distribution ──
     html += `<div class="metrics-section"><h2>Attempts Distribution (Grades That Were Passed)</h2>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
+        For student-grade combos that eventually passed, shows how many attempts it took. "1 Attempt" means they passed on the first try. A high percentage in the "1 Attempt" column indicates strong first-attempt readiness. Broken down by cohort so you can see if newer cohorts are passing more efficiently.
+      </p>
       <table class="metrics-table">
         <tr><th>Cohort</th><th>1 Attempt</th><th>2 Attempts</th><th>3 Attempts</th><th>4 Attempts</th><th>5+</th><th>Total Passed</th><th>Avg</th><th>Median</th></tr>`;
 
