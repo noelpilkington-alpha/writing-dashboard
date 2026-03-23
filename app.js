@@ -2182,6 +2182,76 @@
     }
     html += `</table></div>`;
 
+    // ── Section 3b: By Date-Based Cohort (matching spreadsheet) ──
+    const dateCohorts = [
+      { name: "Cohort 1 — Before Updates", start: "2025-08-01", end: "2025-10-14" },
+      { name: "Cohort 2 — After Updates", start: "2025-10-15", end: "2026-04-17" },
+    ];
+
+    html += `<div class="metrics-section"><h2>Cohorts: Before and After Updates</h2>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
+        Groups EoC tests by date range, matching the cohort definitions from the AlphaWrite Tests Graded spreadsheet. Cohort 1 covers tests before AlphaWrite updates (Aug 1 – Oct 14). Cohort 2 covers tests after updates through end of Fall (Oct 15 – Dec 31). Cohort 3 covers Spring 2026. Each cohort shows two rows: "All Attempts" (passes / total attempts) and "1st Attempt" (student-grade combos whose first-ever attempt at that grade fell in this window).
+      </p>
+      <table class="metrics-table">
+        <tr><th>Cohort</th><th>Dates</th><th>Metric</th><th>G3</th><th>G4</th><th>G5</th><th>G6</th><th>G7</th><th>G8</th><th>Total</th></tr>`;
+
+    for (const dc of dateCohorts) {
+      const byGrade = {};
+      for (let g = 3; g <= 8; g++) byGrade[g] = { attempted: 0, passed: 0, firstAtt: 0, firstPass: 0 };
+      let totalAtt = 0, totalPass = 0, totalFirstAtt = 0, totalFirstPass = 0;
+
+      for (const t of allEoC) {
+        const d = (t.date || "").slice(0, 10);
+        if (d < dc.start || d > dc.end) continue;
+        const g = t._grade;
+        if (!g || g < 3 || g > 8) continue;
+        byGrade[g].attempted++;
+        totalAtt++;
+        if ((t.score || 0) >= 90) { byGrade[g].passed++; totalPass++; }
+      }
+
+      // First-attempt pass rate: find student-grade combos whose first EoC attempt falls in this window
+      for (const key in sg) {
+        const first = sg[key].tests[0];
+        const d = (first.date || "").slice(0, 10);
+        if (d < dc.start || d > dc.end) continue;
+        const g = sg[key].grade;
+        if (g < 3 || g > 8) continue;
+        byGrade[g].firstAtt++;
+        totalFirstAtt++;
+        if ((first.score || 0) >= 90) { byGrade[g].firstPass++; totalFirstPass++; }
+      }
+
+      if (totalAtt === 0) continue;
+      const fmtRate = (p, a) => a > 0 ? `${(100*p/a).toFixed(1)}%` : "-";
+      const dateLabel = `${dc.start.slice(5)} – ${dc.end.slice(5)}`;
+
+      // Row 1: All-attempt pass rate
+      html += `<tr><td rowspan="2" style="vertical-align:middle"><strong>${esc(dc.name)}</strong></td><td rowspan="2" style="vertical-align:middle;font-size:0.8rem">${dateLabel}</td>`;
+      html += `<td style="font-size:0.75rem;color:var(--text-muted);padding:2px 4px">All Attempts</td>`;
+      for (let g = 3; g <= 8; g++) {
+        const rate = fmtRate(byGrade[g].passed, byGrade[g].attempted);
+        const cls = byGrade[g].attempted > 0 ? (byGrade[g].passed / byGrade[g].attempted >= 0.4 ? "score-pass" : "score-fail") : "";
+        html += `<td class="${cls}">${rate} <span style="font-weight:400;color:var(--text-muted);font-size:0.75rem">(${byGrade[g].passed}/${byGrade[g].attempted})</span></td>`;
+      }
+      const totalRate = fmtRate(totalPass, totalAtt);
+      const totalCls = totalPass / totalAtt >= 0.4 ? "score-pass" : "score-fail";
+      html += `<td class="${totalCls}"><strong>${totalRate}</strong> <span style="font-weight:400;color:var(--text-muted);font-size:0.75rem">(${totalPass}/${totalAtt})</span></td></tr>`;
+
+      // Row 2: First-attempt pass rate
+      html += `<tr><td style="font-size:0.75rem;color:var(--text-muted);padding:2px 4px">1st Attempt</td>`;
+      for (let g = 3; g <= 8; g++) {
+        const rate = fmtRate(byGrade[g].firstPass, byGrade[g].firstAtt);
+        const cls = byGrade[g].firstAtt > 0 ? (byGrade[g].firstPass / byGrade[g].firstAtt >= 0.4 ? "score-pass" : "score-fail") : "";
+        html += `<td class="${cls}">${rate} <span style="font-weight:400;color:var(--text-muted);font-size:0.75rem">(${byGrade[g].firstPass}/${byGrade[g].firstAtt})</span></td>`;
+      }
+      const totalFirstRate = fmtRate(totalFirstPass, totalFirstAtt);
+      const totalFirstCls = totalFirstAtt > 0 && totalFirstPass / totalFirstAtt >= 0.4 ? "score-pass" : "score-fail";
+      html += `<td class="${totalFirstCls}"><strong>${totalFirstRate}</strong> <span style="font-weight:400;color:var(--text-muted);font-size:0.75rem">(${totalFirstPass}/${totalFirstAtt})</span></td></tr>`;
+    }
+
+    html += `</table></div>`;
+
     // ── Section 4: By Cohort ──
     html += `<div class="metrics-section"><h2>By Student Cohort (Session of First Test)</h2>
       <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
