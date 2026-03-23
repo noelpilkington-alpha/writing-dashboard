@@ -28,7 +28,7 @@
   }
 
   // ── Routing ─────────────────────────────────────────────────────────
-  const PAGES = ["timeback", "timeback-metrics", "eg-analysis", "test-results", "testing-loops"];
+  const PAGES = ["timeback", "timeback-metrics", "eg-analysis", "test-results", "test-analysis", "testing-loops"];
 
   function handleRoute() {
     const hash = location.hash.replace("#", "") || "timeback";
@@ -44,6 +44,7 @@
     if (page === "timeback-metrics") renderMetrics("timeback");
     if (page === "eg-analysis") renderEGAnalysis();
     if (page === "test-results") renderTestResults();
+    if (page === "test-analysis") renderTestAnalysis();
     if (page === "testing-loops") renderTestingLoops();
   }
 
@@ -1962,6 +1963,336 @@
       LOOP_DATA = await resp.json();
       return LOOP_DATA;
     } catch { return null; }
+  }
+
+  // ── Test Analysis (separate page) ───────────────────────────────────
+
+  let testAnalysisRendered = false;
+
+  function renderTestAnalysis() {
+    if (testAnalysisRendered) return;
+    testAnalysisRendered = true;
+
+    const container = document.getElementById("test-analysis-container");
+    const allStudents = studentsForGroup("timeback");
+    const sessions = DATA.all_sessions || {};
+    const sessionOrder = Object.keys(sessions).sort();
+
+    function getSession(dateStr) {
+      if (!dateStr) return null;
+      const d = dateStr.slice(0, 10);
+      for (const sn of sessionOrder) {
+        if (d >= sessions[sn].start && d <= sessions[sn].end) return sn;
+      }
+      return null;
+    }
+
+    function extractGrade(name) {
+      const m = name.match(/G(\d+)/);
+      return m ? parseInt(m[1]) : null;
+    }
+
+    // Gather all EoC tests
+    const allEoC = [];
+    for (const s of allStudents) {
+      for (const t of (s.all_tests || [])) {
+        const tt = (t.test_type || "").toLowerCase();
+        if (tt === "end of course") {
+          allEoC.push({ ...t, _email: s.email, _name: s.name, _grade: extractGrade(t.name || "") });
+        }
+      }
+    }
+
+    // Group by student+grade
+    const sg = {};
+    for (const t of allEoC) {
+      if (!t._grade) continue;
+      const key = t._email + "|" + t._grade;
+      if (!sg[key]) sg[key] = { email: t._email, name: t._name, grade: t._grade, tests: [] };
+      sg[key].tests.push(t);
+    }
+    for (const key in sg) {
+      sg[key].tests.sort((a, b) => (a.date || "").localeCompare(b.date || ""));
+    }
+
+    // Determine student cohort (session of first-ever test)
+    const studentCohort = {};
+    for (const s of allStudents) {
+      const tests = (s.all_tests || []).slice().sort((a, b) => (a.date || "").localeCompare(b.date || ""));
+      if (tests.length > 0) {
+        const sess = getSession(tests[0].date);
+        if (sess) studentCohort[s.email] = sess;
+      }
+    }
+
+    // Helper: compute metrics for a set of student-grade groups
+    function computeMetrics(groups) {
+      const firstAttempts = [];
+      const attemptsToPass = [];
+      let stillInProgress = 0;
+      let totalAttempts = 0;
+      let totalPassed = 0;
+
+      for (const key in groups) {
+        const g = groups[key];
+        totalAttempts += g.tests.length;
+        firstAttempts.push(g.tests[0]);
+        let found = false;
+        for (let i = 0; i < g.tests.length; i++) {
+          if ((g.tests[i].score || 0) >= 90) {
+            attemptsToPass.push(i + 1);
+            totalPassed += 1;
+            found = true;
+            break;
+          }
+        }
+        if (!found) stillInProgress++;
+      }
+
+      const firstPassed = firstAttempts.filter(t => (t.score || 0) >= 90).length;
+      const totalGroups = Object.keys(groups).length;
+      const avgAttempts = attemptsToPass.length > 0
+        ? (attemptsToPass.reduce((a, b) => a + b, 0) / attemptsToPass.length)
+        : 0;
+      const median = attemptsToPass.length > 0
+        ? (() => { const s = attemptsToPass.slice().sort((a,b) => a-b); const m = Math.floor(s.length/2); return s.length % 2 ? s[m] : (s[m-1]+s[m])/2; })()
+        : 0;
+
+      // Distribution
+      const dist = {};
+      for (const a of attemptsToPass) {
+        const bucket = a >= 5 ? "5+" : String(a);
+        dist[bucket] = (dist[bucket] || 0) + 1;
+      }
+
+      return {
+        totalGroups, totalAttempts, totalPassed, stillInProgress,
+        firstAttemptRate: totalGroups > 0 ? (100 * firstPassed / totalGroups) : 0,
+        firstPassed, avgAttempts, median, dist, attemptsToPass,
+        passRate: totalAttempts > 0 ? (100 * totalPassed / totalAttempts) : 0,
+      };
+    }
+
+    // ── Section 1: Overall Snapshot ──
+    const overall = computeMetrics(sg);
+
+    let html = `<h2 style="margin-bottom:16px">End-of-Course Test Analysis</h2>
+      <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:20px">
+        Based on ${allEoC.length} End of Course tests across ${allStudents.length} students
+        &middot; Pass threshold: 90%
+      </div>`;
+
+    html += `<div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-value blue">${allEoC.length}</div>
+        <div class="metric-label">Total EoC Tests</div>
+        <div class="metric-sub">${overall.totalGroups} student-grade combos</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value ${overall.firstAttemptRate >= 40 ? "green" : overall.firstAttemptRate >= 25 ? "orange" : "red"}">${overall.firstAttemptRate.toFixed(1)}%</div>
+        <div class="metric-label">First-Attempt Pass Rate</div>
+        <div class="metric-sub">${overall.firstPassed} / ${overall.totalGroups}</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value blue">${overall.avgAttempts.toFixed(2)}</div>
+        <div class="metric-label">Avg Attempts to Pass</div>
+        <div class="metric-sub">Median: ${overall.median}</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value ${overall.stillInProgress > 50 ? "red" : "orange"}">${overall.stillInProgress}</div>
+        <div class="metric-label">Still In Progress</div>
+        <div class="metric-sub">${overall.totalPassed} grades passed</div>
+      </div>
+    </div>`;
+
+    // ── Section 2: By Grade Level ──
+    html += `<div class="metrics-section"><h2>By Grade Level</h2>
+      <table class="metrics-table">
+        <tr><th>Grade</th><th>EoC Tests</th><th>Student-Grade Combos</th><th>Pass Rate (All)</th><th>First-Attempt Pass Rate</th><th>Avg Attempts to Pass</th><th>Median</th><th>Still In Progress</th></tr>`;
+
+    for (let g = 3; g <= 8; g++) {
+      const gradeGroups = {};
+      for (const key in sg) {
+        if (sg[key].grade === g) gradeGroups[key] = sg[key];
+      }
+      const m = computeMetrics(gradeGroups);
+      if (m.totalGroups === 0) continue;
+      html += `<tr>
+        <td><strong>G${g}</strong></td>
+        <td>${m.totalAttempts}</td>
+        <td>${m.totalGroups}</td>
+        <td>${m.passRate.toFixed(1)}%</td>
+        <td class="${m.firstAttemptRate >= 40 ? "score-pass" : "score-fail"}">${m.firstAttemptRate.toFixed(1)}%</td>
+        <td>${m.avgAttempts.toFixed(2)}</td>
+        <td>${m.median}</td>
+        <td>${m.stillInProgress}</td>
+      </tr>`;
+    }
+    html += `</table></div>`;
+
+    // ── Section 3: By Session (when test was taken) ──
+    html += `<div class="metrics-section"><h2>By Session (When Test Was Taken)</h2>
+      <table class="metrics-table">
+        <tr><th>Session</th><th>EoC Tests Taken</th><th>All-Attempt Pass Rate</th><th>First-Attempt Pass Rate</th><th>Grades Passed</th><th>Avg Attempts of Passes</th></tr>`;
+
+    for (const sn of sessionOrder) {
+      // Collect groups where first attempt happened this session (for first-attempt rate)
+      const sessFirstGroups = {};
+      for (const key in sg) {
+        const first = sg[key].tests[0];
+        if (getSession(first.date) === sn) sessFirstGroups[key] = sg[key];
+      }
+      const fMetrics = computeMetrics(sessFirstGroups);
+
+      // All EoC tests taken this session (for all-attempt pass rate)
+      const sessTests = allEoC.filter(t => getSession(t.date) === sn);
+      const sessPassed = sessTests.filter(t => (t.score || 0) >= 90).length;
+      const sessPassRate = sessTests.length > 0 ? (100 * sessPassed / sessTests.length) : 0;
+
+      // Grades passed this session with attempt count
+      const sessPassAttempts = [];
+      for (const key in sg) {
+        for (let i = 0; i < sg[key].tests.length; i++) {
+          if ((sg[key].tests[i].score || 0) >= 90 && getSession(sg[key].tests[i].date) === sn) {
+            sessPassAttempts.push(i + 1);
+            break;
+          }
+        }
+      }
+      const avgPassAttempts = sessPassAttempts.length > 0
+        ? (sessPassAttempts.reduce((a, b) => a + b, 0) / sessPassAttempts.length)
+        : 0;
+
+      if (sessTests.length === 0) continue;
+      html += `<tr>
+        <td><strong>${esc(sessions[sn].label || sn)}</strong></td>
+        <td>${sessTests.length}</td>
+        <td>${sessPassRate.toFixed(1)}%</td>
+        <td class="${fMetrics.firstAttemptRate >= 40 ? "score-pass" : "score-fail"}">${fMetrics.firstAttemptRate.toFixed(1)}% <span style="font-weight:400;color:var(--text-muted)">(${fMetrics.firstPassed}/${fMetrics.totalGroups})</span></td>
+        <td>${sessPassAttempts.length}</td>
+        <td>${avgPassAttempts.toFixed(2)}</td>
+      </tr>`;
+    }
+    html += `</table></div>`;
+
+    // ── Section 4: By Cohort ──
+    html += `<div class="metrics-section"><h2>By Student Cohort (Session of First Test)</h2>
+      <table class="metrics-table">
+        <tr><th>Cohort</th><th>Students</th><th>Grades Attempted</th><th>Grades Passed</th><th>First-Attempt Pass Rate</th><th>Avg Attempts to Pass</th><th>Median</th><th>Still In Progress</th></tr>`;
+
+    for (const sn of sessionOrder) {
+      const cohortEmails = new Set();
+      for (const email in studentCohort) {
+        if (studentCohort[email] === sn) cohortEmails.add(email);
+      }
+      const cohortGroups = {};
+      for (const key in sg) {
+        if (cohortEmails.has(sg[key].email)) cohortGroups[key] = sg[key];
+      }
+      const m = computeMetrics(cohortGroups);
+      if (cohortEmails.size === 0) continue;
+      html += `<tr>
+        <td><strong>${esc(sessions[sn].label || sn)} Cohort</strong></td>
+        <td>${cohortEmails.size}</td>
+        <td>${m.totalGroups}</td>
+        <td>${m.totalPassed}</td>
+        <td class="${m.firstAttemptRate >= 40 ? "score-pass" : "score-fail"}">${m.firstAttemptRate.toFixed(1)}%</td>
+        <td>${m.avgAttempts.toFixed(2)}</td>
+        <td>${m.median}</td>
+        <td>${m.stillInProgress}</td>
+      </tr>`;
+    }
+    html += `</table></div>`;
+
+    // ── Section 5: Cohort x Session Matrix ──
+    html += `<div class="metrics-section"><h2>Cohort x Session Matrix</h2>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
+        Each cell shows: grades passed / EoC attempts (pass rate). Read across to see how each cohort performs over time.
+      </p>
+      <table class="metrics-table">
+        <tr><th>Cohort \\ Session</th>${sessionOrder.map(sn => `<th>${esc(sessions[sn].label || sn)}</th>`).join("")}<th>Total</th></tr>`;
+
+    for (const cohortSn of sessionOrder) {
+      const cohortEmails = new Set();
+      for (const email in studentCohort) {
+        if (studentCohort[email] === cohortSn) cohortEmails.add(email);
+      }
+
+      let rowHtml = `<tr><td><strong>${esc(sessions[cohortSn].label || cohortSn)} Cohort</strong></td>`;
+      let totalPassed = 0, totalAttempts = 0;
+
+      for (const sessSn of sessionOrder) {
+        // For this cohort's students, count EoC tests taken during this session
+        let attempts = 0, passed = 0;
+        for (const key in sg) {
+          if (!cohortEmails.has(sg[key].email)) continue;
+          for (const t of sg[key].tests) {
+            if (getSession(t.date) === sessSn) {
+              attempts++;
+              if ((t.score || 0) >= 90) passed++;
+            }
+          }
+        }
+        totalPassed += passed;
+        totalAttempts += attempts;
+
+        if (attempts === 0) {
+          rowHtml += `<td style="color:var(--text-muted)">—</td>`;
+        } else {
+          const rate = (100 * passed / attempts).toFixed(0);
+          const cls = passed > 0 && rate >= 40 ? "score-pass" : rate > 0 ? "" : "score-fail";
+          rowHtml += `<td class="${cls}">${passed}/${attempts} (${rate}%)</td>`;
+        }
+      }
+
+      const totalRate = totalAttempts > 0 ? (100 * totalPassed / totalAttempts).toFixed(0) : 0;
+      rowHtml += `<td><strong>${totalPassed}/${totalAttempts} (${totalRate}%)</strong></td></tr>`;
+      html += rowHtml;
+    }
+    html += `</table></div>`;
+
+    // ── Section 6: Attempts Distribution ──
+    html += `<div class="metrics-section"><h2>Attempts Distribution (Grades That Were Passed)</h2>
+      <table class="metrics-table">
+        <tr><th>Cohort</th><th>1 Attempt</th><th>2 Attempts</th><th>3 Attempts</th><th>4 Attempts</th><th>5+</th><th>Total Passed</th><th>Avg</th><th>Median</th></tr>`;
+
+    // Overall row
+    const distRow = (label, metrics) => {
+      const total = metrics.attemptsToPass.length;
+      if (total === 0) return "";
+      const counts = [1,2,3,4].map(n => metrics.attemptsToPass.filter(a => a === n).length);
+      counts.push(metrics.attemptsToPass.filter(a => a >= 5).length);
+      return `<tr>
+        <td><strong>${label}</strong></td>
+        ${counts.map((c, i) => {
+          const pct = (100 * c / total).toFixed(0);
+          const cls = i === 0 ? "score-pass" : "";
+          return `<td class="${cls}">${c} (${pct}%)</td>`;
+        }).join("")}
+        <td>${total}</td>
+        <td>${metrics.avgAttempts.toFixed(2)}</td>
+        <td>${metrics.median}</td>
+      </tr>`;
+    };
+
+    html += distRow("Overall", overall);
+
+    for (const sn of sessionOrder) {
+      const cohortEmails = new Set();
+      for (const email in studentCohort) {
+        if (studentCohort[email] === sn) cohortEmails.add(email);
+      }
+      const cohortGroups = {};
+      for (const key in sg) {
+        if (cohortEmails.has(sg[key].email)) cohortGroups[key] = sg[key];
+      }
+      const m = computeMetrics(cohortGroups);
+      html += distRow(`${sessions[sn].label || sn} Cohort`, m);
+    }
+
+    html += `</table></div>`;
+
+    container.innerHTML = html;
   }
 
   async function renderTestingLoops() {
