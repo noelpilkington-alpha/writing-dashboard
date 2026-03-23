@@ -1992,18 +1992,19 @@
       return m ? parseInt(m[1]) : null;
     }
 
-    // Gather all EoC tests
+    // Gather all EoC and Test-Out tests
     const allEoC = [];
+    const allTO = [];
     for (const s of allStudents) {
       for (const t of (s.all_tests || [])) {
         const tt = (t.test_type || "").toLowerCase();
-        if (tt === "end of course") {
-          allEoC.push({ ...t, _email: s.email, _name: s.name, _grade: extractGrade(t.name || "") });
-        }
+        const entry = { ...t, _email: s.email, _name: s.name, _grade: extractGrade(t.name || "") };
+        if (tt === "end of course") allEoC.push(entry);
+        else if (tt === "test out") allTO.push(entry);
       }
     }
 
-    // Group by student+grade
+    // Group by student+grade (EoC)
     const sg = {};
     for (const t of allEoC) {
       if (!t._grade) continue;
@@ -2013,6 +2014,18 @@
     }
     for (const key in sg) {
       sg[key].tests.sort((a, b) => (a.date || "").localeCompare(b.date || ""));
+    }
+
+    // Group by student+grade (Test-Outs)
+    const sgTO = {};
+    for (const t of allTO) {
+      if (!t._grade) continue;
+      const key = t._email + "|" + t._grade;
+      if (!sgTO[key]) sgTO[key] = { email: t._email, name: t._name, grade: t._grade, tests: [] };
+      sgTO[key].tests.push(t);
+    }
+    for (const key in sgTO) {
+      sgTO[key].tests.sort((a, b) => (a.date || "").localeCompare(b.date || ""));
     }
 
     // Determine student cohort (session of first-ever test)
@@ -2075,15 +2088,17 @@
 
     // ── Section 1: Overall Snapshot ──
     const overall = computeMetrics(sg);
+    const overallTO = computeMetrics(sgTO);
 
-    let html = `<h2 style="margin-bottom:16px">End-of-Course Test Analysis</h2>
+    let html = `<h2 style="margin-bottom:16px">Writing Test Analysis</h2>
       <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:20px">
-        Based on ${allEoC.length} End of Course tests across ${allStudents.length} students
+        Based on ${allEoC.length} End of Course tests and ${allTO.length} Test-Outs across ${allStudents.length} students
         &middot; Pass threshold: 90%
-        <br>This page analyzes only End of Course (EoC) tests. A "student-grade combo" is one student's attempts at one grade level (e.g., Student A attempting G4). "First-Attempt Pass Rate" is the % of student-grade combos that passed on the very first try. "Still In Progress" means the student hasn't passed that grade yet.
+        <br>A "student-grade combo" is one student's attempts at one grade level (e.g., Student A attempting G4). "First-Attempt Pass Rate" is the % of student-grade combos that passed on the very first try. "Still In Progress" means the student hasn't passed that grade yet.
       </div>`;
 
-    html += `<div class="metrics-grid">
+    html += `<h3 style="margin-bottom:8px">End of Course Tests</h3>
+    <div class="metrics-grid">
       <div class="metric-card">
         <div class="metric-value blue">${allEoC.length}</div>
         <div class="metric-label">Total EoC Tests</div>
@@ -2106,13 +2121,36 @@
       </div>
     </div>`;
 
+    html += `<h3 style="margin:20px 0 8px">Test-Outs</h3>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-value blue">${allTO.length}</div>
+        <div class="metric-label">Total Test-Outs</div>
+        <div class="metric-sub">${overallTO.totalGroups} student-grade combos</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value ${overallTO.totalGroups > 0 && (100 * overallTO.totalPassed / overallTO.totalGroups) >= 40 ? "green" : (100 * overallTO.totalPassed / overallTO.totalGroups) >= 25 ? "orange" : "red"}">${overallTO.totalGroups > 0 ? (100 * overallTO.totalPassed / overallTO.totalGroups).toFixed(1) : "0.0"}%</div>
+        <div class="metric-label">Pass Rate</div>
+        <div class="metric-sub">${overallTO.totalPassed} / ${overallTO.totalGroups}</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value green">${overallTO.totalPassed}</div>
+        <div class="metric-label">Passed</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value ${(overallTO.totalGroups - overallTO.totalPassed) > 0 ? "red" : "green"}">${overallTO.totalGroups - overallTO.totalPassed}</div>
+        <div class="metric-label">Failed</div>
+      </div>
+    </div>`;
+
     // ── Section 2: By Grade Level ──
     html += `<div class="metrics-section"><h2>By Grade Level</h2>
       <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
-        Breaks down EoC test performance by grade level (G3–G8). Shows how many student-grade combos attempted each grade, the overall pass rate across all attempts, and how many attempts it typically takes to pass.
+        Breaks down test performance by grade level (G3–G8). Shows how many student-grade combos attempted each grade, the overall pass rate across all attempts, and how many attempts it typically takes to pass. EoC and Test-Out results shown separately.
       </p>
+      <h3>End of Course</h3>
       <table class="metrics-table">
-        <tr><th>Grade</th><th>EoC Tests</th><th>Student-Grade Combos</th><th>Pass Rate (All)</th><th>First-Attempt Pass Rate</th><th>Avg Attempts to Pass</th><th>Median</th><th>Still In Progress</th></tr>`;
+        <tr><th>Grade</th><th>Tests</th><th>Student-Grade Combos</th><th>Pass Rate (All)</th><th>First-Attempt Pass Rate</th><th>Avg Attempts to Pass</th><th>Median</th><th>Still In Progress</th></tr>`;
 
     for (let g = 3; g <= 8; g++) {
       const gradeGroups = {};
@@ -2132,55 +2170,94 @@
         <td>${m.stillInProgress}</td>
       </tr>`;
     }
-    html += `</table></div>`;
+    html += `</table>`;
 
-    // ── Section 3: By Session (when test was taken) ──
-    html += `<div class="metrics-section"><h2>By Session (When Test Was Taken)</h2>
-      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
-        Groups EoC tests by which session they were taken in, regardless of when the student started. "First-Attempt Pass Rate" here only counts student-grade combos whose first-ever attempt at that grade happened in this session. "Grades Passed" is the number of grade levels passed during this session (including retakes that started earlier).
-      </p>
+    html += `<h3 style="margin-top:16px">Test-Outs</h3>
       <table class="metrics-table">
-        <tr><th>Session</th><th>EoC Tests Taken</th><th>All-Attempt Pass Rate</th><th>First-Attempt Pass Rate</th><th>Grades Passed</th><th>Avg Attempts of Passes</th></tr>`;
+        <tr><th>Grade</th><th>Tests</th><th>Pass Rate</th><th>Passed</th><th>Failed</th></tr>`;
 
-    for (const sn of sessionOrder) {
-      // Collect groups where first attempt happened this session (for first-attempt rate)
-      const sessFirstGroups = {};
-      for (const key in sg) {
-        const first = sg[key].tests[0];
-        if (getSession(first.date) === sn) sessFirstGroups[key] = sg[key];
+    for (let g = 3; g <= 8; g++) {
+      const gradeGroups = {};
+      for (const key in sgTO) {
+        if (sgTO[key].grade === g) gradeGroups[key] = sgTO[key];
       }
-      const fMetrics = computeMetrics(sessFirstGroups);
-
-      // All EoC tests taken this session (for all-attempt pass rate)
-      const sessTests = allEoC.filter(t => getSession(t.date) === sn);
-      const sessPassed = sessTests.filter(t => (t.score || 0) >= 90).length;
-      const sessPassRate = sessTests.length > 0 ? (100 * sessPassed / sessTests.length) : 0;
-
-      // Grades passed this session with attempt count
-      const sessPassAttempts = [];
-      for (const key in sg) {
-        for (let i = 0; i < sg[key].tests.length; i++) {
-          if ((sg[key].tests[i].score || 0) >= 90 && getSession(sg[key].tests[i].date) === sn) {
-            sessPassAttempts.push(i + 1);
-            break;
-          }
-        }
-      }
-      const avgPassAttempts = sessPassAttempts.length > 0
-        ? (sessPassAttempts.reduce((a, b) => a + b, 0) / sessPassAttempts.length)
-        : 0;
-
-      if (sessTests.length === 0) continue;
+      const m = computeMetrics(gradeGroups);
+      if (m.totalGroups === 0) continue;
+      const passRate = m.totalGroups > 0 ? (100 * m.totalPassed / m.totalGroups).toFixed(1) : "0.0";
       html += `<tr>
-        <td><strong>${esc(sessions[sn].label || sn)}</strong></td>
-        <td>${sessTests.length}</td>
-        <td>${sessPassRate.toFixed(1)}%</td>
-        <td class="${fMetrics.firstAttemptRate >= 40 ? "score-pass" : "score-fail"}">${fMetrics.firstAttemptRate.toFixed(1)}% <span style="font-weight:400;color:var(--text-muted)">(${fMetrics.firstPassed}/${fMetrics.totalGroups})</span></td>
-        <td>${sessPassAttempts.length}</td>
-        <td>${avgPassAttempts.toFixed(2)}</td>
+        <td><strong>G${g}</strong></td>
+        <td>${m.totalGroups}</td>
+        <td class="${passRate >= 40 ? "score-pass" : "score-fail"}">${passRate}%</td>
+        <td>${m.totalPassed}</td>
+        <td>${m.totalGroups - m.totalPassed}</td>
       </tr>`;
     }
     html += `</table></div>`;
+
+    // ── Section 3: By Session (when test was taken) ──
+    const renderSessionTable = (label, tests, groups, singleAttempt) => {
+      const headers = singleAttempt
+        ? `<tr><th>Session</th><th>Tests</th><th>Pass Rate</th><th>Passed</th><th>Failed</th></tr>`
+        : `<tr><th>Session</th><th>Tests Taken</th><th>All-Attempt Pass Rate</th><th>First-Attempt Pass Rate</th><th>Grades Passed</th><th>Avg Attempts of Passes</th></tr>`;
+      let h = `<h3${label === "Test-Outs" ? ' style="margin-top:16px"' : ""}>${label}</h3>
+        <table class="metrics-table">${headers}`;
+
+      for (const sn of sessionOrder) {
+        const sessTests = tests.filter(t => getSession(t.date) === sn);
+        if (sessTests.length === 0) continue;
+        const sessPassed = sessTests.filter(t => (t.score || 0) >= 90).length;
+        const sessPassRate = sessTests.length > 0 ? (100 * sessPassed / sessTests.length) : 0;
+
+        if (singleAttempt) {
+          h += `<tr>
+            <td><strong>${esc(sessions[sn].label || sn)}</strong></td>
+            <td>${sessTests.length}</td>
+            <td class="${sessPassRate >= 40 ? "score-pass" : "score-fail"}">${sessPassRate.toFixed(1)}%</td>
+            <td>${sessPassed}</td>
+            <td>${sessTests.length - sessPassed}</td>
+          </tr>`;
+        } else {
+          const sessFirstGroups = {};
+          for (const key in groups) {
+            const first = groups[key].tests[0];
+            if (getSession(first.date) === sn) sessFirstGroups[key] = groups[key];
+          }
+          const fMetrics = computeMetrics(sessFirstGroups);
+
+          const sessPassAttempts = [];
+          for (const key in groups) {
+            for (let i = 0; i < groups[key].tests.length; i++) {
+              if ((groups[key].tests[i].score || 0) >= 90 && getSession(groups[key].tests[i].date) === sn) {
+                sessPassAttempts.push(i + 1);
+                break;
+              }
+            }
+          }
+          const avgPassAttempts = sessPassAttempts.length > 0
+            ? (sessPassAttempts.reduce((a, b) => a + b, 0) / sessPassAttempts.length)
+            : 0;
+
+          h += `<tr>
+            <td><strong>${esc(sessions[sn].label || sn)}</strong></td>
+            <td>${sessTests.length}</td>
+            <td>${sessPassRate.toFixed(1)}%</td>
+            <td class="${fMetrics.firstAttemptRate >= 40 ? "score-pass" : "score-fail"}">${fMetrics.firstAttemptRate.toFixed(1)}% <span style="font-weight:400;color:var(--text-muted)">(${fMetrics.firstPassed}/${fMetrics.totalGroups})</span></td>
+            <td>${sessPassAttempts.length}</td>
+            <td>${avgPassAttempts.toFixed(2)}</td>
+          </tr>`;
+        }
+      }
+      h += `</table>`;
+      return h;
+    };
+
+    html += `<div class="metrics-section"><h2>By Session (When Test Was Taken)</h2>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
+        Groups tests by which session they were taken in, regardless of when the student started. "First-Attempt Pass Rate" here only counts student-grade combos whose first-ever attempt at that grade happened in this session. "Grades Passed" is the number of grade levels passed during this session (including retakes that started earlier).
+      </p>`;
+    html += renderSessionTable("End of Course", allEoC, sg, false);
+    html += renderSessionTable("Test-Outs", allTO, sgTO, true);
+    html += `</div>`;
 
     // ── Section 3b: By Date-Based Cohort (matching spreadsheet) ──
     const dateCohorts = [
@@ -2188,158 +2265,201 @@
       { name: "Cohort 2 — After Updates", start: "2025-10-15", end: "2026-04-17" },
     ];
 
-    html += `<div class="metrics-section"><h2>Cohorts: Before and After Updates</h2>
-      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
-        Groups EoC tests by date range, matching the cohort definitions from the AlphaWrite Tests Graded spreadsheet. Cohort 1 covers tests before AlphaWrite updates (Aug 1 – Oct 14). Cohort 2 covers tests after updates through end of Fall (Oct 15 – Dec 31). Cohort 3 covers Spring 2026. Each cohort shows two rows: "All Attempts" (passes / total attempts) and "1st Attempt" (student-grade combos whose first-ever attempt at that grade fell in this window).
-      </p>
-      <table class="metrics-table">
-        <tr><th>Cohort</th><th>Dates</th><th>Metric</th><th>G3</th><th>G4</th><th>G5</th><th>G6</th><th>G7</th><th>G8</th><th>Total</th></tr>`;
-
-    for (const dc of dateCohorts) {
-      const byGrade = {};
-      for (let g = 3; g <= 8; g++) byGrade[g] = { attempted: 0, passed: 0, firstAtt: 0, firstPass: 0 };
-      let totalAtt = 0, totalPass = 0, totalFirstAtt = 0, totalFirstPass = 0;
-
-      for (const t of allEoC) {
-        const d = (t.date || "").slice(0, 10);
-        if (d < dc.start || d > dc.end) continue;
-        const g = t._grade;
-        if (!g || g < 3 || g > 8) continue;
-        byGrade[g].attempted++;
-        totalAtt++;
-        if ((t.score || 0) >= 90) { byGrade[g].passed++; totalPass++; }
-      }
-
-      // First-attempt pass rate: find student-grade combos whose first EoC attempt falls in this window
-      for (const key in sg) {
-        const first = sg[key].tests[0];
-        const d = (first.date || "").slice(0, 10);
-        if (d < dc.start || d > dc.end) continue;
-        const g = sg[key].grade;
-        if (g < 3 || g > 8) continue;
-        byGrade[g].firstAtt++;
-        totalFirstAtt++;
-        if ((first.score || 0) >= 90) { byGrade[g].firstPass++; totalFirstPass++; }
-      }
-
-      if (totalAtt === 0) continue;
+    const renderDateCohortTable = (label, tests, groups, singleAttempt) => {
       const fmtRate = (p, a) => a > 0 ? `${(100*p/a).toFixed(1)}%` : "-";
-      const dateLabel = `${dc.start.slice(5)} – ${dc.end.slice(5)}`;
+      const headerCols = singleAttempt
+        ? `<tr><th>Cohort</th><th>Dates</th><th>G3</th><th>G4</th><th>G5</th><th>G6</th><th>G7</th><th>G8</th><th>Total</th></tr>`
+        : `<tr><th>Cohort</th><th>Dates</th><th>Metric</th><th>G3</th><th>G4</th><th>G5</th><th>G6</th><th>G7</th><th>G8</th><th>Total</th></tr>`;
+      let h = `<h3${label === "Test-Outs" ? ' style="margin-top:16px"' : ""}>${label}</h3>
+        <table class="metrics-table">${headerCols}`;
 
-      // Row 1: All-attempt pass rate
-      html += `<tr><td rowspan="2" style="vertical-align:middle"><strong>${esc(dc.name)}</strong></td><td rowspan="2" style="vertical-align:middle;font-size:0.8rem">${dateLabel}</td>`;
-      html += `<td style="font-size:0.75rem;color:var(--text-muted);padding:2px 4px">All Attempts</td>`;
-      for (let g = 3; g <= 8; g++) {
-        const rate = fmtRate(byGrade[g].passed, byGrade[g].attempted);
-        const cls = byGrade[g].attempted > 0 ? (byGrade[g].passed / byGrade[g].attempted >= 0.4 ? "score-pass" : "score-fail") : "";
-        html += `<td class="${cls}">${rate} <span style="font-weight:400;color:var(--text-muted);font-size:0.75rem">(${byGrade[g].passed}/${byGrade[g].attempted})</span></td>`;
-      }
-      const totalRate = fmtRate(totalPass, totalAtt);
-      const totalCls = totalPass / totalAtt >= 0.4 ? "score-pass" : "score-fail";
-      html += `<td class="${totalCls}"><strong>${totalRate}</strong> <span style="font-weight:400;color:var(--text-muted);font-size:0.75rem">(${totalPass}/${totalAtt})</span></td></tr>`;
+      for (const dc of dateCohorts) {
+        const byGrade = {};
+        for (let g = 3; g <= 8; g++) byGrade[g] = { attempted: 0, passed: 0, firstAtt: 0, firstPass: 0 };
+        let totalAtt = 0, totalPass = 0, totalFirstAtt = 0, totalFirstPass = 0;
 
-      // Row 2: First-attempt pass rate
-      html += `<tr><td style="font-size:0.75rem;color:var(--text-muted);padding:2px 4px">1st Attempt</td>`;
-      for (let g = 3; g <= 8; g++) {
-        const rate = fmtRate(byGrade[g].firstPass, byGrade[g].firstAtt);
-        const cls = byGrade[g].firstAtt > 0 ? (byGrade[g].firstPass / byGrade[g].firstAtt >= 0.4 ? "score-pass" : "score-fail") : "";
-        html += `<td class="${cls}">${rate} <span style="font-weight:400;color:var(--text-muted);font-size:0.75rem">(${byGrade[g].firstPass}/${byGrade[g].firstAtt})</span></td>`;
-      }
-      const totalFirstRate = fmtRate(totalFirstPass, totalFirstAtt);
-      const totalFirstCls = totalFirstAtt > 0 && totalFirstPass / totalFirstAtt >= 0.4 ? "score-pass" : "score-fail";
-      html += `<td class="${totalFirstCls}"><strong>${totalFirstRate}</strong> <span style="font-weight:400;color:var(--text-muted);font-size:0.75rem">(${totalFirstPass}/${totalFirstAtt})</span></td></tr>`;
-    }
+        for (const t of tests) {
+          const d = (t.date || "").slice(0, 10);
+          if (d < dc.start || d > dc.end) continue;
+          const g = t._grade;
+          if (!g || g < 3 || g > 8) continue;
+          byGrade[g].attempted++;
+          totalAtt++;
+          if ((t.score || 0) >= 90) { byGrade[g].passed++; totalPass++; }
+        }
 
-    html += `</table></div>`;
-
-    // ── Section 4: By Cohort ──
-    html += `<div class="metrics-section"><h2>By Student Cohort (Session of First Test)</h2>
-      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
-        Students are grouped into cohorts based on which session they took their very first test (any test type, not just EoC). This shows how each "generation" of students performs across all their EoC tests over time. Earlier cohorts have had more time in the system and more opportunities to attempt and pass grades.
-      </p>
-      <table class="metrics-table">
-        <tr><th>Cohort</th><th>Students</th><th>Grades Attempted</th><th>Grades Passed</th><th>First-Attempt Pass Rate</th><th>Avg Attempts to Pass</th><th>Median</th><th>Still In Progress</th></tr>`;
-
-    for (const sn of sessionOrder) {
-      const cohortEmails = new Set();
-      for (const email in studentCohort) {
-        if (studentCohort[email] === sn) cohortEmails.add(email);
-      }
-      const cohortGroups = {};
-      for (const key in sg) {
-        if (cohortEmails.has(sg[key].email)) cohortGroups[key] = sg[key];
-      }
-      const m = computeMetrics(cohortGroups);
-      if (cohortEmails.size === 0) continue;
-      html += `<tr>
-        <td><strong>${esc(sessions[sn].label || sn)} Cohort</strong></td>
-        <td>${cohortEmails.size}</td>
-        <td>${m.totalGroups}</td>
-        <td>${m.totalPassed}</td>
-        <td class="${m.firstAttemptRate >= 40 ? "score-pass" : "score-fail"}">${m.firstAttemptRate.toFixed(1)}%</td>
-        <td>${m.avgAttempts.toFixed(2)}</td>
-        <td>${m.median}</td>
-        <td>${m.stillInProgress}</td>
-      </tr>`;
-    }
-    html += `</table></div>`;
-
-    // ── Section 5: Cohort x Session Matrix ──
-    html += `<div class="metrics-section"><h2>Cohort x Session Matrix</h2>
-      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
-        Cross-references cohorts (rows) with sessions (columns). Each cell shows grades passed / EoC attempts (pass rate) for that cohort during that session. Read across a row to see how a cohort's performance evolves over time. Read down a column to compare how different cohorts perform during the same session.
-      </p>
-      <table class="metrics-table">
-        <tr><th>Cohort \\ Session</th>${sessionOrder.map(sn => `<th>${esc(sessions[sn].label || sn)}</th>`).join("")}<th>Total</th></tr>`;
-
-    for (const cohortSn of sessionOrder) {
-      const cohortEmails = new Set();
-      for (const email in studentCohort) {
-        if (studentCohort[email] === cohortSn) cohortEmails.add(email);
-      }
-
-      let rowHtml = `<tr><td><strong>${esc(sessions[cohortSn].label || cohortSn)} Cohort</strong></td>`;
-      let totalPassed = 0, totalAttempts = 0;
-
-      for (const sessSn of sessionOrder) {
-        // For this cohort's students, count EoC tests taken during this session
-        let attempts = 0, passed = 0;
-        for (const key in sg) {
-          if (!cohortEmails.has(sg[key].email)) continue;
-          for (const t of sg[key].tests) {
-            if (getSession(t.date) === sessSn) {
-              attempts++;
-              if ((t.score || 0) >= 90) passed++;
-            }
+        if (!singleAttempt) {
+          for (const key in groups) {
+            const first = groups[key].tests[0];
+            const d = (first.date || "").slice(0, 10);
+            if (d < dc.start || d > dc.end) continue;
+            const g = groups[key].grade;
+            if (g < 3 || g > 8) continue;
+            byGrade[g].firstAtt++;
+            totalFirstAtt++;
+            if ((first.score || 0) >= 90) { byGrade[g].firstPass++; totalFirstPass++; }
           }
         }
-        totalPassed += passed;
-        totalAttempts += attempts;
 
-        if (attempts === 0) {
-          rowHtml += `<td style="color:var(--text-muted)">—</td>`;
+        if (totalAtt === 0) continue;
+        const dateLabel = `${dc.start.slice(5)} – ${dc.end.slice(5)}`;
+
+        if (singleAttempt) {
+          h += `<tr><td><strong>${esc(dc.name)}</strong></td><td style="font-size:0.8rem">${dateLabel}</td>`;
+          for (let g = 3; g <= 8; g++) {
+            const rate = fmtRate(byGrade[g].passed, byGrade[g].attempted);
+            const cls = byGrade[g].attempted > 0 ? (byGrade[g].passed / byGrade[g].attempted >= 0.4 ? "score-pass" : "score-fail") : "";
+            h += `<td class="${cls}">${rate} <span style="font-weight:400;color:var(--text-muted);font-size:0.75rem">(${byGrade[g].passed}/${byGrade[g].attempted})</span></td>`;
+          }
+          const totalRate = fmtRate(totalPass, totalAtt);
+          const totalCls = totalPass / totalAtt >= 0.4 ? "score-pass" : "score-fail";
+          h += `<td class="${totalCls}"><strong>${totalRate}</strong> <span style="font-weight:400;color:var(--text-muted);font-size:0.75rem">(${totalPass}/${totalAtt})</span></td></tr>`;
         } else {
-          const rate = (100 * passed / attempts).toFixed(0);
-          const cls = passed > 0 && rate >= 40 ? "score-pass" : rate > 0 ? "" : "score-fail";
-          rowHtml += `<td class="${cls}">${passed}/${attempts} (${rate}%)</td>`;
+          h += `<tr><td rowspan="2" style="vertical-align:middle"><strong>${esc(dc.name)}</strong></td><td rowspan="2" style="vertical-align:middle;font-size:0.8rem">${dateLabel}</td>`;
+          h += `<td style="font-size:0.75rem;color:var(--text-muted);padding:2px 4px">All Attempts</td>`;
+          for (let g = 3; g <= 8; g++) {
+            const rate = fmtRate(byGrade[g].passed, byGrade[g].attempted);
+            const cls = byGrade[g].attempted > 0 ? (byGrade[g].passed / byGrade[g].attempted >= 0.4 ? "score-pass" : "score-fail") : "";
+            h += `<td class="${cls}">${rate} <span style="font-weight:400;color:var(--text-muted);font-size:0.75rem">(${byGrade[g].passed}/${byGrade[g].attempted})</span></td>`;
+          }
+          const totalRate = fmtRate(totalPass, totalAtt);
+          const totalCls = totalPass / totalAtt >= 0.4 ? "score-pass" : "score-fail";
+          h += `<td class="${totalCls}"><strong>${totalRate}</strong> <span style="font-weight:400;color:var(--text-muted);font-size:0.75rem">(${totalPass}/${totalAtt})</span></td></tr>`;
+
+          h += `<tr><td style="font-size:0.75rem;color:var(--text-muted);padding:2px 4px">1st Attempt</td>`;
+          for (let g = 3; g <= 8; g++) {
+            const rate = fmtRate(byGrade[g].firstPass, byGrade[g].firstAtt);
+            const cls = byGrade[g].firstAtt > 0 ? (byGrade[g].firstPass / byGrade[g].firstAtt >= 0.4 ? "score-pass" : "score-fail") : "";
+            h += `<td class="${cls}">${rate} <span style="font-weight:400;color:var(--text-muted);font-size:0.75rem">(${byGrade[g].firstPass}/${byGrade[g].firstAtt})</span></td>`;
+          }
+          const totalFirstRate = fmtRate(totalFirstPass, totalFirstAtt);
+          const totalFirstCls = totalFirstAtt > 0 && totalFirstPass / totalFirstAtt >= 0.4 ? "score-pass" : "score-fail";
+          h += `<td class="${totalFirstCls}"><strong>${totalFirstRate}</strong> <span style="font-weight:400;color:var(--text-muted);font-size:0.75rem">(${totalFirstPass}/${totalFirstAtt})</span></td></tr>`;
         }
       }
 
-      const totalRate = totalAttempts > 0 ? (100 * totalPassed / totalAttempts).toFixed(0) : 0;
-      rowHtml += `<td><strong>${totalPassed}/${totalAttempts} (${totalRate}%)</strong></td></tr>`;
-      html += rowHtml;
-    }
-    html += `</table></div>`;
+      h += `</table>`;
+      return h;
+    };
+
+    html += `<div class="metrics-section"><h2>Cohorts: Before and After Updates</h2>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
+        Groups tests by date range, matching the cohort definitions from the AlphaWrite Tests Graded spreadsheet. Cohort 1 covers tests before AlphaWrite updates (Aug 1 – Oct 14). Cohort 2 covers tests after updates (Oct 15 onward). EoC shows two rows per cohort: "All Attempts" and "1st Attempt". Test-Outs show a single pass rate since each student only gets one attempt per grade.
+      </p>`;
+    html += renderDateCohortTable("End of Course", allEoC, sg, false);
+    html += renderDateCohortTable("Test-Outs", allTO, sgTO, true);
+    html += `</div>`;
+
+    // ── Section 4: By Cohort ──
+    const renderStudentCohortTable = (label, groups, singleAttempt) => {
+      const headers = singleAttempt
+        ? `<tr><th>Cohort</th><th>Students</th><th>Tests</th><th>Pass Rate</th><th>Passed</th><th>Failed</th></tr>`
+        : `<tr><th>Cohort</th><th>Students</th><th>Grades Attempted</th><th>Grades Passed</th><th>First-Attempt Pass Rate</th><th>Avg Attempts to Pass</th><th>Median</th><th>Still In Progress</th></tr>`;
+      let h = `<h3${label === "Test-Outs" ? ' style="margin-top:16px"' : ""}>${label}</h3>
+        <table class="metrics-table">${headers}`;
+
+      for (const sn of sessionOrder) {
+        const cohortEmails = new Set();
+        for (const email in studentCohort) {
+          if (studentCohort[email] === sn) cohortEmails.add(email);
+        }
+        const cohortGroups = {};
+        for (const key in groups) {
+          if (cohortEmails.has(groups[key].email)) cohortGroups[key] = groups[key];
+        }
+        const m = computeMetrics(cohortGroups);
+        if (cohortEmails.size === 0) continue;
+
+        if (singleAttempt) {
+          const passRate = m.totalGroups > 0 ? (100 * m.totalPassed / m.totalGroups).toFixed(1) : "0.0";
+          h += `<tr>
+            <td><strong>${esc(sessions[sn].label || sn)} Cohort</strong></td>
+            <td>${cohortEmails.size}</td>
+            <td>${m.totalGroups}</td>
+            <td class="${passRate >= 40 ? "score-pass" : "score-fail"}">${passRate}%</td>
+            <td>${m.totalPassed}</td>
+            <td>${m.totalGroups - m.totalPassed}</td>
+          </tr>`;
+        } else {
+          h += `<tr>
+            <td><strong>${esc(sessions[sn].label || sn)} Cohort</strong></td>
+            <td>${cohortEmails.size}</td>
+            <td>${m.totalGroups}</td>
+            <td>${m.totalPassed}</td>
+            <td class="${m.firstAttemptRate >= 40 ? "score-pass" : "score-fail"}">${m.firstAttemptRate.toFixed(1)}%</td>
+            <td>${m.avgAttempts.toFixed(2)}</td>
+            <td>${m.median}</td>
+            <td>${m.stillInProgress}</td>
+          </tr>`;
+        }
+      }
+      h += `</table>`;
+      return h;
+    };
+
+    html += `<div class="metrics-section"><h2>By Student Cohort (Session of First Test)</h2>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
+        Students are grouped into cohorts based on which session they took their very first test (any test type, not just EoC). This shows how each "generation" of students performs over time. Earlier cohorts have had more time in the system and more opportunities to attempt and pass grades.
+      </p>`;
+    html += renderStudentCohortTable("End of Course", sg, false);
+    html += renderStudentCohortTable("Test-Outs", sgTO, true);
+    html += `</div>`;
+
+    // ── Section 5: Cohort x Session Matrix ──
+    const renderCohortMatrix = (label, groups) => {
+      let h = `<h3${label === "Test-Outs" ? ' style="margin-top:16px"' : ""}>${label}</h3>
+        <table class="metrics-table">
+          <tr><th>Cohort \\ Session</th>${sessionOrder.map(sn => `<th>${esc(sessions[sn].label || sn)}</th>`).join("")}<th>Total</th></tr>`;
+
+      for (const cohortSn of sessionOrder) {
+        const cohortEmails = new Set();
+        for (const email in studentCohort) {
+          if (studentCohort[email] === cohortSn) cohortEmails.add(email);
+        }
+
+        let rowHtml = `<tr><td><strong>${esc(sessions[cohortSn].label || cohortSn)} Cohort</strong></td>`;
+        let totalPassed = 0, totalAttempts = 0;
+
+        for (const sessSn of sessionOrder) {
+          let attempts = 0, passed = 0;
+          for (const key in groups) {
+            if (!cohortEmails.has(groups[key].email)) continue;
+            for (const t of groups[key].tests) {
+              if (getSession(t.date) === sessSn) {
+                attempts++;
+                if ((t.score || 0) >= 90) passed++;
+              }
+            }
+          }
+          totalPassed += passed;
+          totalAttempts += attempts;
+
+          if (attempts === 0) {
+            rowHtml += `<td style="color:var(--text-muted)">—</td>`;
+          } else {
+            const rate = (100 * passed / attempts).toFixed(0);
+            const cls = passed > 0 && rate >= 40 ? "score-pass" : rate > 0 ? "" : "score-fail";
+            rowHtml += `<td class="${cls}">${passed}/${attempts} (${rate}%)</td>`;
+          }
+        }
+
+        const totalRate = totalAttempts > 0 ? (100 * totalPassed / totalAttempts).toFixed(0) : 0;
+        rowHtml += `<td><strong>${totalPassed}/${totalAttempts} (${totalRate}%)</strong></td></tr>`;
+        h += rowHtml;
+      }
+      h += `</table>`;
+      return h;
+    };
+
+    html += `<div class="metrics-section"><h2>Cohort x Session Matrix</h2>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
+        Cross-references cohorts (rows) with sessions (columns). Each cell shows grades passed / attempts (pass rate) for that cohort during that session. Read across a row to see how a cohort's performance evolves over time. Read down a column to compare how different cohorts perform during the same session.
+      </p>`;
+    html += renderCohortMatrix("End of Course", sg);
+    html += renderCohortMatrix("Test-Outs", sgTO);
+    html += `</div>`;
 
     // ── Section 6: Attempts Distribution ──
-    html += `<div class="metrics-section"><h2>Attempts Distribution (Grades That Were Passed)</h2>
-      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
-        For student-grade combos that eventually passed, shows how many attempts it took. "1 Attempt" means they passed on the first try. A high percentage in the "1 Attempt" column indicates strong first-attempt readiness. Broken down by cohort so you can see if newer cohorts are passing more efficiently.
-      </p>
-      <table class="metrics-table">
-        <tr><th>Cohort</th><th>1 Attempt</th><th>2 Attempts</th><th>3 Attempts</th><th>4 Attempts</th><th>5+</th><th>Total Passed</th><th>Avg</th><th>Median</th></tr>`;
-
-    // Overall row
     const distRow = (label, metrics) => {
       const total = metrics.attemptsToPass.length;
       if (total === 0) return "";
@@ -2358,22 +2478,33 @@
       </tr>`;
     };
 
-    html += distRow("Overall", overall);
-
-    for (const sn of sessionOrder) {
-      const cohortEmails = new Set();
-      for (const email in studentCohort) {
-        if (studentCohort[email] === sn) cohortEmails.add(email);
+    const renderDistTable = (label, overallMetrics, groups) => {
+      let h = `<h3${label === "Test-Outs" ? ' style="margin-top:16px"' : ""}>${label}</h3>
+        <table class="metrics-table">
+          <tr><th>Cohort</th><th>1 Attempt</th><th>2 Attempts</th><th>3 Attempts</th><th>4 Attempts</th><th>5+</th><th>Total Passed</th><th>Avg</th><th>Median</th></tr>`;
+      h += distRow("Overall", overallMetrics);
+      for (const sn of sessionOrder) {
+        const cohortEmails = new Set();
+        for (const email in studentCohort) {
+          if (studentCohort[email] === sn) cohortEmails.add(email);
+        }
+        const cohortGroups = {};
+        for (const key in groups) {
+          if (cohortEmails.has(groups[key].email)) cohortGroups[key] = groups[key];
+        }
+        const m = computeMetrics(cohortGroups);
+        h += distRow(`${sessions[sn].label || sn} Cohort`, m);
       }
-      const cohortGroups = {};
-      for (const key in sg) {
-        if (cohortEmails.has(sg[key].email)) cohortGroups[key] = sg[key];
-      }
-      const m = computeMetrics(cohortGroups);
-      html += distRow(`${sessions[sn].label || sn} Cohort`, m);
-    }
+      h += `</table>`;
+      return h;
+    };
 
-    html += `</table></div>`;
+    html += `<div class="metrics-section"><h2>Attempts Distribution (Grades That Were Passed)</h2>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
+        For student-grade combos that eventually passed, shows how many attempts it took. "1 Attempt" means they passed on the first try. A high percentage in the "1 Attempt" column indicates strong first-attempt readiness. Broken down by cohort so you can see if newer cohorts are passing more efficiently.
+      </p>`;
+    html += renderDistTable("End of Course", overall, sg);
+    html += `</div>`;
 
     container.innerHTML = html;
   }
