@@ -2405,58 +2405,383 @@
     html += renderStudentCohortTable("Test-Outs", sgTO, true);
     html += `</div>`;
 
-    // ── Section 5: Cohort x Session Matrix ──
-    const renderCohortMatrix = (label, groups) => {
+    // ── Section 5: Cohort Journey ──
+    function buildCohortJourney(groups) {
+      const journeys = [];
+      for (const cohortSn of sessionOrder) {
+        const cohortEmails = new Set();
+        for (const email in studentCohort) {
+          if (studentCohort[email] === cohortSn) cohortEmails.add(email);
+        }
+        if (cohortEmails.size === 0) continue;
+
+        const cohortGroups = {};
+        for (const key in groups) {
+          if (cohortEmails.has(groups[key].email)) cohortGroups[key] = groups[key];
+        }
+
+        const sessData = [];
+        const studentPassedGrades = {};
+        for (const email of cohortEmails) studentPassedGrades[email] = new Set();
+
+        let cumGradesPassed = 0;
+        let cumStudentsWithPass = new Set();
+
+        for (const sessSn of sessionOrder) {
+          let attempts = 0, passed = 0;
+          const scores = [];
+          const testedEmails = new Set();
+          const gradesTested = {};
+          const gradesPassed = {};
+
+          for (const key in cohortGroups) {
+            const g = cohortGroups[key];
+            for (const t of g.tests) {
+              if (getSession(t.date) !== sessSn) continue;
+              attempts++;
+              scores.push(t.score || 0);
+              testedEmails.add(g.email);
+              const gr = g.grade;
+              gradesTested[gr] = (gradesTested[gr] || 0) + 1;
+              if ((t.score || 0) >= 90) {
+                passed++;
+                gradesPassed[gr] = (gradesPassed[gr] || 0) + 1;
+                studentPassedGrades[g.email].add(gr);
+              }
+            }
+          }
+
+          // Update cumulative counters
+          cumGradesPassed = 0;
+          cumStudentsWithPass = new Set();
+          for (const email of cohortEmails) {
+            const pg = studentPassedGrades[email];
+            cumGradesPassed += pg.size;
+            if (pg.size > 0) cumStudentsWithPass.add(email);
+          }
+
+          // Student status
+          const completedAll = new Set();
+          const activelyTesting = new Set();
+          const notYetTested = new Set();
+          // Stuck count: students with 3+ cumulative attempts on any single grade without passing
+          let stuckCount = 0;
+          const stuckEmails = new Set();
+
+          for (const email of cohortEmails) {
+            let hasTested = false;
+            let allPassed = true;
+            for (const key in cohortGroups) {
+              if (cohortGroups[key].email !== email) continue;
+              const testsUpToNow = cohortGroups[key].tests.filter(t => {
+                const s = getSession(t.date);
+                return s && sessionOrder.indexOf(s) <= sessionOrder.indexOf(sessSn);
+              });
+              if (testsUpToNow.length > 0) {
+                hasTested = true;
+                const didPass = testsUpToNow.some(t => (t.score || 0) >= 90);
+                if (!didPass) {
+                  allPassed = false;
+                  if (testsUpToNow.length >= 3) stuckEmails.add(email);
+                }
+              }
+            }
+            if (!hasTested) {
+              if (sessionOrder.indexOf(sessSn) >= sessionOrder.indexOf(cohortSn)) notYetTested.add(email);
+            } else if (allPassed) {
+              completedAll.add(email);
+            } else {
+              activelyTesting.add(email);
+            }
+          }
+          stuckCount = stuckEmails.size;
+
+          const gradeKeys = Object.keys(gradesTested).map(Number).sort((a,b) => a-b);
+          const avgScore = scores.length > 0 ? (scores.reduce((a,b) => a+b, 0) / scores.length) : null;
+
+          // Median grade tested this session
+          let medianGrade = null;
+          if (gradeKeys.length > 0) {
+            const allGrades = [];
+            for (const g of gradeKeys) {
+              for (let i = 0; i < gradesTested[g]; i++) allGrades.push(g);
+            }
+            allGrades.sort((a,b) => a-b);
+            const mid = Math.floor(allGrades.length / 2);
+            medianGrade = allGrades.length % 2 ? allGrades[mid] : (allGrades[mid-1] + allGrades[mid]) / 2;
+          }
+
+          sessData.push({
+            session: sessSn,
+            label: sessions[sessSn].label || sessSn,
+            attempts, passed, scores, avgScore,
+            testedStudents: testedEmails.size,
+            activelyTesting: activelyTesting.size,
+            completedAll: completedAll.size,
+            notYetTested: notYetTested.size,
+            stuckCount,
+            gradesTested, gradesPassed, gradeKeys,
+            medianGrade,
+            cumGradesPassed,
+            cumStudentsWithPass: cumStudentsWithPass.size,
+          });
+        }
+
+        journeys.push({
+          cohortSn,
+          label: sessions[cohortSn].label || cohortSn,
+          totalStudents: cohortEmails.size,
+          sessData,
+        });
+      }
+      return journeys;
+    }
+
+    // Trend arrow helper
+    const trend = (curr, prev) => {
+      if (prev === null || curr === null) return "";
+      const diff = curr - prev;
+      if (Math.abs(diff) < 0.5) return ` <span style="color:var(--text-muted)">→</span>`;
+      return diff > 0
+        ? ` <span style="color:#22c55e">↑</span>`
+        : ` <span style="color:#ef4444">↓</span>`;
+    };
+
+    const renderCohortJourney = (label, groups, singleAttempt) => {
+      const journeys = buildCohortJourney(groups);
+      let h = `<h3${label === "Test-Outs" ? ' style="margin-top:16px"' : ""}>${label}</h3>`;
+
+      for (const j of journeys) {
+        const startIdx = sessionOrder.indexOf(j.cohortSn);
+        const relevantSess = j.sessData.filter((_, i) => i >= startIdx);
+        if (relevantSess.length === 0) continue;
+
+        h += `<h4 style="margin:16px 0 6px;font-size:0.95rem">${esc(j.label)} Cohort <span style="font-weight:400;color:var(--text-muted)">(${j.totalStudents} students)</span></h4>`;
+        h += `<table class="metrics-table">`;
+
+        // Header
+        h += `<tr><th style="min-width:150px">Metric</th>`;
+        for (const sd of relevantSess) h += `<th>${esc(sd.label)}</th>`;
+        h += `</tr>`;
+
+        // Row: Pass Rate + trend
+        h += `<tr><td><strong>Pass Rate</strong></td>`;
+        for (let i = 0; i < relevantSess.length; i++) {
+          const sd = relevantSess[i];
+          if (sd.attempts === 0) { h += `<td style="color:var(--text-muted)">—</td>`; continue; }
+          const rate = 100 * sd.passed / sd.attempts;
+          const prevRate = i > 0 && relevantSess[i-1].attempts > 0 ? 100 * relevantSess[i-1].passed / relevantSess[i-1].attempts : null;
+          const cls = rate >= 40 ? "score-pass" : rate > 0 ? "" : "score-fail";
+          h += `<td class="${cls}">${sd.passed}/${sd.attempts} (${rate.toFixed(0)}%)${trend(rate, prevRate)}</td>`;
+        }
+        h += `</tr>`;
+
+        // Row: Avg Score + trend
+        h += `<tr><td><strong>Avg Score</strong></td>`;
+        for (let i = 0; i < relevantSess.length; i++) {
+          const sd = relevantSess[i];
+          if (sd.avgScore === null) { h += `<td style="color:var(--text-muted)">—</td>`; continue; }
+          const prevAvg = i > 0 ? relevantSess[i-1].avgScore : null;
+          const cls = sd.avgScore >= 90 ? "score-pass" : sd.avgScore >= 75 ? "" : "score-fail";
+          h += `<td class="${cls}">${sd.avgScore.toFixed(1)}${trend(sd.avgScore, prevAvg)}</td>`;
+        }
+        h += `</tr>`;
+
+        // Row: Median Grade + trend
+        h += `<tr><td><strong>Median Grade</strong></td>`;
+        for (let i = 0; i < relevantSess.length; i++) {
+          const sd = relevantSess[i];
+          if (sd.medianGrade === null) { h += `<td style="color:var(--text-muted)">—</td>`; continue; }
+          const prevMed = i > 0 ? relevantSess[i-1].medianGrade : null;
+          h += `<td>G${sd.medianGrade % 1 === 0 ? sd.medianGrade : sd.medianGrade.toFixed(1)}${trend(sd.medianGrade, prevMed)}</td>`;
+        }
+        h += `</tr>`;
+
+        if (!singleAttempt) {
+          // Row: Cumulative Progress
+          h += `<tr><td><strong>Cumulative Progress</strong></td>`;
+          for (const sd of relevantSess) {
+            if (sd.cumGradesPassed === 0 && sd.cumStudentsWithPass === 0) { h += `<td style="color:var(--text-muted)">—</td>`; continue; }
+            const pctStudents = (100 * sd.cumStudentsWithPass / j.totalStudents).toFixed(0);
+            h += `<td>${sd.cumGradesPassed} grades passed<br><span style="font-size:0.75rem;color:var(--text-muted)">${sd.cumStudentsWithPass}/${j.totalStudents} students (${pctStudents}%)</span></td>`;
+          }
+          h += `</tr>`;
+
+          // Row: Student Status
+          h += `<tr><td><strong>Students Testing</strong></td>`;
+          for (const sd of relevantSess) {
+            if (sd.testedStudents === 0 && sd.activelyTesting === 0) { h += `<td style="color:var(--text-muted)">—</td>`; continue; }
+            h += `<td>${sd.testedStudents} tested<br><span style="font-size:0.75rem;color:var(--text-muted)">${sd.activelyTesting} in progress · ${sd.completedAll} done</span></td>`;
+          }
+          h += `</tr>`;
+
+          // Row: Stuck (3+ attempts without passing)
+          h += `<tr><td><strong>Stuck (3+ attempts)</strong></td>`;
+          for (const sd of relevantSess) {
+            if (sd.stuckCount === 0) {
+              h += sd.attempts > 0 ? `<td class="score-pass">0</td>` : `<td style="color:var(--text-muted)">—</td>`;
+              continue;
+            }
+            const cls = sd.stuckCount >= 5 ? "score-fail" : "";
+            h += `<td class="${cls}">${sd.stuckCount} students</td>`;
+          }
+          h += `</tr>`;
+
+          // Row: Grade Distribution
+          h += `<tr><td><strong>Grades Tested</strong></td>`;
+          for (const sd of relevantSess) {
+            if (sd.gradeKeys.length === 0) { h += `<td style="color:var(--text-muted)">—</td>`; continue; }
+            const parts = sd.gradeKeys.map(g => {
+              const tested = sd.gradesTested[g] || 0;
+              const passed = sd.gradesPassed[g] || 0;
+              const cls = tested > 0 && passed/tested >= 0.4 ? "score-pass" : "";
+              return `<span class="${cls}">G${g}: ${passed}/${tested}</span>`;
+            });
+            h += `<td style="font-size:0.8rem;line-height:1.6">${parts.join("<br>")}</td>`;
+          }
+          h += `</tr>`;
+        }
+
+        h += `</table>`;
+      }
+
+      // ── Normalized comparison: "Sessions Since Start" ──
+      if (!singleAttempt && journeys.length > 1) {
+        h += `<h4 style="margin:20px 0 6px;font-size:0.95rem">Cohort Comparison (Normalized by Sessions Since Start)</h4>`;
+        const maxSessions = Math.max(...journeys.map(j => {
+          const startIdx = sessionOrder.indexOf(j.cohortSn);
+          return j.sessData.length - startIdx;
+        }));
+
+        // Header
+        h += `<table class="metrics-table"><tr><th>Cohort</th><th>Metric</th>`;
+        for (let i = 0; i < maxSessions; i++) h += `<th>Session ${i+1}</th>`;
+        h += `</tr>`;
+
+        for (const j of journeys) {
+          const startIdx = sessionOrder.indexOf(j.cohortSn);
+          const relevantSess = j.sessData.slice(startIdx);
+
+          // Pass Rate row
+          h += `<tr><td rowspan="3" style="vertical-align:middle"><strong>${esc(j.label)}</strong><br><span style="font-size:0.75rem;color:var(--text-muted)">(${j.totalStudents} students)</span></td>`;
+          h += `<td style="font-size:0.8rem">Pass Rate</td>`;
+          for (let i = 0; i < maxSessions; i++) {
+            const sd = relevantSess[i];
+            if (!sd || sd.attempts === 0) { h += `<td style="color:var(--text-muted)">—</td>`; continue; }
+            const rate = (100 * sd.passed / sd.attempts).toFixed(0);
+            const cls = rate >= 40 ? "score-pass" : rate > 0 ? "" : "score-fail";
+            h += `<td class="${cls}">${rate}%</td>`;
+          }
+          h += `</tr>`;
+
+          // Avg Score row
+          h += `<tr><td style="font-size:0.8rem">Avg Score</td>`;
+          for (let i = 0; i < maxSessions; i++) {
+            const sd = relevantSess[i];
+            if (!sd || sd.avgScore === null) { h += `<td style="color:var(--text-muted)">—</td>`; continue; }
+            const cls = sd.avgScore >= 90 ? "score-pass" : sd.avgScore >= 75 ? "" : "score-fail";
+            h += `<td class="${cls}">${sd.avgScore.toFixed(1)}</td>`;
+          }
+          h += `</tr>`;
+
+          // Median Grade row
+          h += `<tr><td style="font-size:0.8rem">Median Grade</td>`;
+          for (let i = 0; i < maxSessions; i++) {
+            const sd = relevantSess[i];
+            if (!sd || sd.medianGrade === null) { h += `<td style="color:var(--text-muted)">—</td>`; continue; }
+            h += `<td>G${sd.medianGrade % 1 === 0 ? sd.medianGrade : sd.medianGrade.toFixed(1)}</td>`;
+          }
+          h += `</tr>`;
+        }
+
+        h += `</table>`;
+      }
+
+      return h;
+    };
+
+    html += `<div class="metrics-section"><h2>Cohort Journey</h2>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
+        Tracks each starting cohort through subsequent sessions. For each cohort, shows per-session pass rates, average scores, median grade level, cumulative progress, student status, stuck count (3+ attempts without passing on any grade), and grade-level breakdown. Trend arrows (↑↓→) compare to the prior session. The normalized comparison at the bottom aligns all cohorts by "sessions since start" so you can compare how different cohorts perform at the same stage of their journey.
+      </p>`;
+    html += renderCohortJourney("End of Course", sg, false);
+    html += renderCohortJourney("Test-Outs", sgTO, true);
+    html += `</div>`;
+
+    // ── Section 5b: Cohort x Grade Level Matrix ──
+    const renderCohortGradeMatrix = (label, groups, singleAttempt) => {
+      const grades = [3,4,5,6,7,8];
+      const headerCols = singleAttempt
+        ? `<tr><th>Starting Cohort</th><th>Students</th>${grades.map(g => `<th>G${g}</th>`).join("")}<th>Total</th></tr>`
+        : `<tr><th>Starting Cohort</th><th>Students</th><th>Metric</th>${grades.map(g => `<th>G${g}</th>`).join("")}<th>Total</th></tr>`;
       let h = `<h3${label === "Test-Outs" ? ' style="margin-top:16px"' : ""}>${label}</h3>
-        <table class="metrics-table">
-          <tr><th>Cohort \\ Session</th>${sessionOrder.map(sn => `<th>${esc(sessions[sn].label || sn)}</th>`).join("")}<th>Total</th></tr>`;
+        <table class="metrics-table">${headerCols}`;
 
       for (const cohortSn of sessionOrder) {
         const cohortEmails = new Set();
         for (const email in studentCohort) {
           if (studentCohort[email] === cohortSn) cohortEmails.add(email);
         }
+        if (cohortEmails.size === 0) continue;
 
-        let rowHtml = `<tr><td><strong>${esc(sessions[cohortSn].label || cohortSn)} Cohort</strong></td>`;
-        let totalPassed = 0, totalAttempts = 0;
+        // Collect per-grade metrics for this cohort
+        const byGrade = {};
+        for (const g of grades) byGrade[g] = { attempts: 0, passed: 0, firstAtt: 0, firstPass: 0 };
+        let totalAtt = 0, totalPass = 0, totalFirstAtt = 0, totalFirstPass = 0;
 
-        for (const sessSn of sessionOrder) {
-          let attempts = 0, passed = 0;
-          for (const key in groups) {
-            if (!cohortEmails.has(groups[key].email)) continue;
-            for (const t of groups[key].tests) {
-              if (getSession(t.date) === sessSn) {
-                attempts++;
-                if ((t.score || 0) >= 90) passed++;
-              }
-            }
-          }
-          totalPassed += passed;
-          totalAttempts += attempts;
-
-          if (attempts === 0) {
-            rowHtml += `<td style="color:var(--text-muted)">—</td>`;
-          } else {
-            const rate = (100 * passed / attempts).toFixed(0);
-            const cls = passed > 0 && rate >= 40 ? "score-pass" : rate > 0 ? "" : "score-fail";
-            rowHtml += `<td class="${cls}">${passed}/${attempts} (${rate}%)</td>`;
-          }
+        for (const key in groups) {
+          if (!cohortEmails.has(groups[key].email)) continue;
+          const g = groups[key].grade;
+          if (g < 3 || g > 8) continue;
+          byGrade[g].attempts++;
+          totalAtt++;
+          byGrade[g].firstAtt++;
+          totalFirstAtt++;
+          const first = groups[key].tests[0];
+          if ((first.score || 0) >= 90) { byGrade[g].firstPass++; totalFirstPass++; }
+          const didPass = groups[key].tests.some(t => (t.score || 0) >= 90);
+          if (didPass) { byGrade[g].passed++; totalPass++; }
         }
 
-        const totalRate = totalAttempts > 0 ? (100 * totalPassed / totalAttempts).toFixed(0) : 0;
-        rowHtml += `<td><strong>${totalPassed}/${totalAttempts} (${totalRate}%)</strong></td></tr>`;
-        h += rowHtml;
+        if (totalAtt === 0) continue;
+        const fmtRate = (p, a) => a > 0 ? `${(100*p/a).toFixed(0)}%` : "—";
+        const fmtCell = (p, a) => {
+          if (a === 0) return `<td style="color:var(--text-muted)">—</td>`;
+          const rate = 100*p/a;
+          const cls = rate >= 40 ? "score-pass" : rate > 0 ? "" : "score-fail";
+          return `<td class="${cls}">${p}/${a} (${rate.toFixed(0)}%)</td>`;
+        };
+
+        const cohortLabel = esc(sessions[cohortSn].label || cohortSn);
+
+        if (singleAttempt) {
+          h += `<tr><td><strong>${cohortLabel} Cohort</strong></td><td>${cohortEmails.size}</td>`;
+          for (const g of grades) h += fmtCell(byGrade[g].passed, byGrade[g].attempts);
+          h += `<td><strong>${totalPass}/${totalAtt} (${fmtRate(totalPass, totalAtt)})</strong></td></tr>`;
+        } else {
+          // Row 1: Pass rate (student-grade combos that passed)
+          h += `<tr><td rowspan="2" style="vertical-align:middle"><strong>${cohortLabel} Cohort</strong></td>`;
+          h += `<td rowspan="2" style="vertical-align:middle">${cohortEmails.size}</td>`;
+          h += `<td style="font-size:0.75rem;color:var(--text-muted);padding:2px 4px">Pass Rate</td>`;
+          for (const g of grades) h += fmtCell(byGrade[g].passed, byGrade[g].attempts);
+          h += `<td><strong>${totalPass}/${totalAtt} (${fmtRate(totalPass, totalAtt)})</strong></td></tr>`;
+          // Row 2: First-attempt pass rate
+          h += `<tr><td style="font-size:0.75rem;color:var(--text-muted);padding:2px 4px">1st Attempt</td>`;
+          for (const g of grades) h += fmtCell(byGrade[g].firstPass, byGrade[g].firstAtt);
+          h += `<td><strong>${totalFirstPass}/${totalFirstAtt} (${fmtRate(totalFirstPass, totalFirstAtt)})</strong></td></tr>`;
+        }
       }
+
       h += `</table>`;
       return h;
     };
 
-    html += `<div class="metrics-section"><h2>Cohort x Session Matrix</h2>
+    html += `<div class="metrics-section"><h2>Starting Cohort x Grade Level</h2>
       <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
-        Cross-references cohorts (rows) with sessions (columns). Each cell shows grades passed / attempts (pass rate) for that cohort during that session. Read across a row to see how a cohort's performance evolves over time. Read down a column to compare how different cohorts perform during the same session.
+        Shows cumulative school-year-to-date test results for each starting cohort (session of first test) broken down by grade level. "Pass Rate" is the % of student-grade combos that eventually passed. "1st Attempt" is the % that passed on their very first try. Read across a row to see which grades a cohort is testing at and how they perform. Earlier cohorts tend to have progressed to higher grades.
       </p>`;
-    html += renderCohortMatrix("End of Course", sg);
-    html += renderCohortMatrix("Test-Outs", sgTO);
+    html += renderCohortGradeMatrix("End of Course", sg, false);
+    html += renderCohortGradeMatrix("Test-Outs", sgTO, true);
     html += `</div>`;
 
     // ── Section 6: Attempts Distribution ──
