@@ -3048,13 +3048,23 @@
             const resultCls = frac === null ? "" : frac >= 1.0 ? "score-pass" : frac > 0 ? "score-partial" : "score-fail";
             const resultLabel = frac === null ? "N/A" : frac >= 1.0 ? "Correct" : frac > 0 ? `Partial (${Math.round(frac*100)}%)` : "Incorrect";
             const prompt = (q.prompt || "").slice(0, 200);
-            const answer = (q.student_answer || "").slice(0, 300);
+            const fullAnswer = q.student_answer || "";
+            const isEssay = q.type === "extended-text" || (q.title || "").toLowerCase().includes("essay");
+            const shortAnswer = fullAnswer.slice(0, 300);
+            const needsExpand = isEssay && fullAnswer.length > 300;
+            const answerId = needsExpand ? `loop-essay-${t.test_name.replace(/\W/g,"")}-q${q.number}` : "";
+            let answerHtml;
+            if (needsExpand) {
+              answerHtml = `<span id="${answerId}-short">${esc(shortAnswer)}... <a href="#" onclick="document.getElementById('${answerId}-short').style.display='none';document.getElementById('${answerId}-full').style.display='inline';return false" style="color:var(--color-primary);font-weight:500">[show full essay]</a></span><span id="${answerId}-full" style="display:none;white-space:pre-wrap">${esc(fullAnswer)} <a href="#" onclick="document.getElementById('${answerId}-full').style.display='none';document.getElementById('${answerId}-short').style.display='inline';return false" style="color:var(--color-primary);font-weight:500">[collapse]</a></span>`;
+            } else {
+              answerHtml = esc(fullAnswer.length > 300 ? shortAnswer + "..." : fullAnswer);
+            }
             html += `<tr class="${resultCls}">
               <td>${q.number || "?"}</td>
               <td>${esc(q.title || q.type || "")}</td>
               <td><span class="${resultCls}">${resultLabel}</span></td>
               <td class="loop-q-text">${esc(prompt)}${prompt.length >= 200 ? "..." : ""}</td>
-              <td class="loop-q-text">${esc(answer)}${answer.length >= 300 ? "..." : ""}</td>
+              <td class="loop-q-text">${answerHtml}</td>
             </tr>`;
           }
           html += `</tbody></table>`;
