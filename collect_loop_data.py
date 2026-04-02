@@ -247,7 +247,7 @@ def build_test_analysis_data(parsed_tests: list[dict]) -> list[dict]:
                 "title": q.get("question_title", ""),
                 "type": q.get("question_type", ""),
                 "prompt": q.get("prompt", "")[:500],
-                "student_answer": str(q.get("student_answer", ""))[:800],
+                "student_answer": str(q.get("student_answer", "")),
                 "correct_fraction": q.get("correct_fraction"),
                 "max_score": q.get("max_score", 1),
                 "actual_score": q.get("actual_score"),
