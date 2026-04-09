@@ -38,18 +38,76 @@ GRADEBOOK_BASE = "/ims/oneroster/gradebook/v1p2"
 OUTPUT_PATH = Path(__file__).resolve().parent / "loop_data.json"
 DATA_PATH = Path(__file__).resolve().parent / "data.json"
 
+# Manual overrides — students who should be in the testing loop but aren't
+# auto-detected (e.g., test types are "test out" or "placement" instead of
+# "end of course", or below the 3-failure threshold).
+MANUAL_LOOP_EMAILS = {
+    "austin.pederson@2hourlearning.com",
+    "ford.radde@2hourlearning.com",
+}
+
 
 def _is_alphawrite(sid: str) -> bool:
     return sid.startswith("alphawrite-") or sid.startswith("alphawrite:")
 
 
+def _build_deep_dive_details(student: dict) -> list[dict]:
+    """Build deep_dive details for a manually overridden student from all_tests."""
+    by_grade = defaultdict(list)
+    for t in student.get("all_tests", []):
+        m = re.search(r"G(\d+)\.", t.get("name", ""))
+        if m:
+            by_grade[int(m.group(1))].append(t)
+
+    hmg = student.get("hmg", 0) or 0
+    details = []
+    for grade, tests in sorted(by_grade.items()):
+        if grade <= hmg:
+            continue
+        failed = [t for t in tests if not t.get("passed")]
+        if len(failed) < 2:
+            continue
+        details.append({
+            "grade": grade,
+            "total_tests": len(tests),
+            "failed_count": len(failed),
+            "rushed_count": 0,
+            "avg_time_minutes": 0,
+            "tests": [
+                {
+                    "name": t.get("name", ""),
+                    "score": t.get("score", 0),
+                    "date": t.get("date", ""),
+                    "rushed": False,
+                }
+                for t in tests
+            ],
+        })
+    return details
+
+
 def get_loop_students(data: dict) -> list[dict]:
-    """Extract students with deep_dive.needed == True from data.json."""
+    """Extract students with deep_dive.needed == True or in manual overrides."""
     loop = []
+    seen_ids = set()
     for s in data["students"]:
         dd = s.get("deep_dive", {})
         if dd.get("needed"):
             loop.append(s)
+            seen_ids.add(s.get("id"))
+
+    # Add manually overridden students
+    for s in data["students"]:
+        if s.get("id") in seen_ids:
+            continue
+        if s.get("email", "").lower() in MANUAL_LOOP_EMAILS:
+            details = _build_deep_dive_details(s)
+            if details:
+                s["deep_dive"] = {"needed": True, "details": details}
+                loop.append(s)
+                seen_ids.add(s.get("id"))
+                logger.info("Manual override: added %s to loop students", s["name"])
+
     return loop
 
 
@@ -206,8 +264,11 @@ def fetch_and_parse_student_tests(student: dict, session_cookie: str) -> list[di
             if not match or not match.get("test_link") or not match.get("assignment_id"):
                 continue
 
-            url = match["test_link"]
             test_id = str(match["assignment_id"])
+            # Use timebackanalytics.com URL — the API's testLink points to
+            # alphatest.alpha.school which returns a Vite SPA stub, not the
+            # actual test page with question data.
+            url = f"https://timebackanalytics.com/test/{test_id}"
 
             html, status = fetch_page(url, test_id, session_cookie)
             if html is None:
