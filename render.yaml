@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: writing-dashboard-api
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: API_KEYS
+        sync: false
