@@ -28,7 +28,7 @@
   }
 
   // ── Routing ─────────────────────────────────────────────────────────
-  const PAGES = ["timeback", "timeback-metrics", "eg-analysis", "test-results", "test-analysis", "testing-loops"];
+  const PAGES = ["timeback", "timeback-metrics", "eg-analysis", "test-results", "test-analysis", "testing-loops", "cohort-profile"];
 
   function handleRoute() {
     const hash = location.hash.replace("#", "") || "timeback";
@@ -46,6 +46,7 @@
     if (page === "test-results") renderTestResults();
     if (page === "test-analysis") renderTestAnalysis();
     if (page === "testing-loops") renderTestingLoops();
+    if (page === "cohort-profile") renderCohortProfile();
   }
 
   function wireNav() {
@@ -3165,6 +3166,80 @@
       wkNum++;
     }
     return weeks;
+  }
+
+  // ── Cohort Profile ──────────────────────────────────────────────────
+  let cohortProfileRendered = false;
+
+  function renderCohortProfile() {
+    if (cohortProfileRendered) return;
+    cohortProfileRendered = true;
+
+    const container = document.getElementById("cohort-profile-container");
+    const allStudents = studentsForGroup("timeback");
+
+    const cohorts = [
+      { key: "s1", label: "S1 Writing Cohort", students: allStudents.filter(s => s.s1_cohort === true) },
+      { key: "all", label: "All Current Students", students: allStudents },
+    ];
+
+    const gradeLabel = (g) => g === 0 ? "K" : String(g);
+
+    let html = `<h2 style="margin-bottom:16px">Cohort Profile</h2>
+      <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:20px">
+        Student count breakdown by school grade for each cohort.
+      </div>`;
+
+    for (const cohort of cohorts) {
+      const students = cohort.students;
+
+      const gradeCounts = {};
+      for (let g = 0; g <= 12; g++) gradeCounts[g] = 0;
+      for (const s of students) {
+        const g = s.age_grade;
+        if (g != null && g >= 0 && g <= 12) gradeCounts[g]++;
+      }
+
+      const maxCount = Math.max(...Object.values(gradeCounts), 1);
+      const totalStudents = students.length;
+
+      html += `<div class="metrics-section eg-section" data-cohort="${cohort.key}">
+        <h2>${esc(cohort.label)}</h2>
+        <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
+          ${totalStudents} total students
+        </div>
+
+        <table class="metrics-table" style="margin-top:12px">
+          <tr><th>Grade</th><th>Students</th><th>% of Cohort</th><th>Distribution</th></tr>`;
+
+      for (let g = 0; g <= 12; g++) {
+        const count = gradeCounts[g];
+        const pct = totalStudents > 0 ? Math.round((count / totalStudents) * 100) : 0;
+        const barWidth = maxCount > 0 ? Math.round((count / maxCount) * 100) : 0;
+
+        html += `<tr>
+          <td><strong>${gradeLabel(g)}</strong></td>
+          <td>${count}</td>
+          <td>${pct}%</td>
+          <td><div class="bar-cell">
+            <div class="bar-bg" style="max-width:200px">
+              <div class="bar-fill green" style="width:${barWidth}%"></div>
+            </div>
+          </div></td>
+        </tr>`;
+      }
+
+      html += `<tr style="font-weight:700;border-top:2px solid var(--border)">
+          <td>Total</td>
+          <td>${totalStudents}</td>
+          <td>100%</td>
+          <td></td>
+        </tr>
+        </table>
+      </div>`;
+    }
+
+    container.innerHTML = html;
   }
 
   function esc(str) {
