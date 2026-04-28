@@ -28,7 +28,7 @@
   }
 
   // ── Routing ─────────────────────────────────────────────────────────
-  const PAGES = ["timeback", "timeback-metrics", "eg-analysis", "test-results", "test-analysis", "testing-loops", "cohort-profile"];
+  const PAGES = ["timeback", "timeback-metrics", "eg-analysis", "test-results", "test-analysis", "testing-loops", "cohort-profile", "remediation"];
 
   function handleRoute() {
     const hash = location.hash.replace("#", "") || "timeback";
@@ -47,6 +47,7 @@
     if (page === "test-analysis") renderTestAnalysis();
     if (page === "testing-loops") renderTestingLoops();
     if (page === "cohort-profile") renderCohortProfile();
+    if (page === "remediation") renderRemediation();
   }
 
   function wireNav() {
@@ -3240,6 +3241,173 @@
     }
 
     container.innerHTML = html;
+  }
+
+  // ── Remediation Courses page ─────────────────────────────────────────
+  let remediationRendered = false;
+  let REMEDIATION_DATA = null;
+
+  async function loadRemediationData() {
+    if (REMEDIATION_DATA) return REMEDIATION_DATA;
+    try {
+      const resp = await fetch("remediation_data.json");
+      if (!resp.ok) return null;
+      REMEDIATION_DATA = await resp.json();
+      return REMEDIATION_DATA;
+    } catch { return null; }
+  }
+
+  async function renderRemediation() {
+    if (remediationRendered) return;
+    remediationRendered = true;
+    const container = document.getElementById("remediation-container");
+    const data = await loadRemediationData();
+    if (!data) {
+      container.innerHTML = '<div class="loading">No remediation data available. Run build_remediation_dashboard_data.py to generate remediation_data.json.</div>';
+      return;
+    }
+
+    const students = data.students || [];
+    const found = students.filter(s => s.found);
+    const totalEngaged = found.reduce((sum, s) => sum + (s.lessons_engaged || 0), 0);
+    const avgAcc = found.length > 0
+      ? Math.round(found.reduce((sum, s) => sum + (s.overall_accuracy_pct || 0), 0) / found.length)
+      : 0;
+    const totalXp = found.reduce((sum, s) => sum + (s.total_writing_xp || 0), 0);
+    const started = found.filter(s => (s.lessons_engaged || 0) > 0).length;
+
+    const gen = data.generated_at ? new Date(data.generated_at).toLocaleString() : "";
+
+    let html = `<h2 style="margin-bottom:8px">Writing Remediation Courses</h2>
+      <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:20px">
+        Custom remediation courses for 15 students stuck in testing loops. Data generated: ${gen}
+      </div>
+
+      <div class="metrics-grid" style="margin-bottom:24px">
+        <div class="metric-card">
+          <div class="metric-value blue">${found.length}</div>
+          <div class="metric-label">Students with Remediation Course</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value ${started >= 10 ? 'green' : started >= 5 ? 'orange' : 'red'}">${started}/${found.length}</div>
+          <div class="metric-label">Students Who Have Started</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value blue">${totalEngaged}</div>
+          <div class="metric-label">Total Lessons Engaged</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value ${avgAcc >= 75 ? 'green' : avgAcc >= 60 ? 'orange' : 'red'}">${avgAcc}%</div>
+          <div class="metric-label">Avg Accuracy (Started Students)</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value blue">${Math.round(totalXp)}</div>
+          <div class="metric-label">Total Writing XP Earned</div>
+        </div>
+      </div>
+
+      <div class="metrics-section eg-section">
+        <h2>Per-Student Progress</h2>
+        <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
+          Sorted by accuracy (highest first). Click a student row to expand lesson detail.
+        </div>
+        <table class="metrics-table">
+          <tr>
+            <th>Student</th>
+            <th>Course</th>
+            <th>Assigned</th>
+            <th>Engaged</th>
+            <th>Questions</th>
+            <th>Accuracy</th>
+            <th>Writing XP</th>
+          </tr>`;
+
+    // Sort: started students by accuracy desc, then not-started
+    const sorted = [...found].sort((a, b) => {
+      const aStart = (a.lessons_engaged || 0) > 0 ? 1 : 0;
+      const bStart = (b.lessons_engaged || 0) > 0 ? 1 : 0;
+      if (aStart !== bStart) return bStart - aStart;
+      return (b.overall_accuracy_pct || 0) - (a.overall_accuracy_pct || 0);
+    });
+
+    for (const s of sorted) {
+      const assigned = s.assigned_lessons?.length || 0;
+      const engaged = s.lessons_engaged || 0;
+      const acc = s.overall_accuracy_pct || 0;
+      const accCls = engaged === 0 ? "" : acc >= 75 ? "score-pass" : "score-fail";
+      const rowId = `rem-row-${(s.email || s.target_name).replace(/[^a-z0-9]/gi, "")}`;
+      html += `<tr class="clickable-row" data-target="${rowId}" style="cursor:pointer">
+        <td><strong>${esc(s.target_name)}</strong><br>
+            <span style="font-size:0.72rem;color:var(--text-muted)">${esc(s.student_name || "")}</span></td>
+        <td>${esc(s.class_title || "")}</td>
+        <td>${assigned}</td>
+        <td>${engaged}</td>
+        <td>${s.total_correct}/${s.total_questions}</td>
+        <td class="${accCls}">${engaged > 0 ? acc + "%" : "—"}</td>
+        <td>${s.total_writing_xp || 0}</td>
+      </tr>`;
+      // Drilldown row
+      let drilldownHtml = '';
+      if (engaged > 0 && s.engaged_lessons) {
+        drilldownHtml = `<tr id="${rowId}" class="hidden"><td colspan="7" style="background:#fafbfc">
+          <div style="padding:12px 20px">
+            <strong style="font-size:0.85rem">Lesson Activity (since ${esc(s.beginDate)})</strong>
+            <table class="metrics-table" style="margin-top:8px">
+              <tr>
+                <th>Lesson</th>
+                <th>Questions Attempted</th>
+                <th>Correct</th>
+                <th>Accuracy</th>
+                <th>Last Attempt</th>
+              </tr>`;
+        for (const l of s.engaged_lessons) {
+          const lacc = l.accuracy_pct;
+          const lcls = lacc >= 75 ? "score-pass" : "score-fail";
+          drilldownHtml += `<tr>
+            <td>${esc(l.lesson_title || "(no title)")}</td>
+            <td>${l.questions_attempted}</td>
+            <td>${l.questions_correct}</td>
+            <td class="${lcls}">${lacc}%</td>
+            <td>${esc(l.last_attempt || "")}</td>
+          </tr>`;
+        }
+        drilldownHtml += `</table>
+            <div style="margin-top:10px;font-size:0.75rem;color:var(--text-muted)">
+              <strong>Assigned Lessons (curriculum):</strong>
+              ${s.assigned_lessons.map(l => esc(l.title)).join(", ")}
+            </div>
+          </div></td></tr>`;
+      } else if (assigned > 0) {
+        drilldownHtml = `<tr id="${rowId}" class="hidden"><td colspan="7" style="background:#fafbfc">
+          <div style="padding:12px 20px;font-size:0.85rem">
+            <strong>No activity yet.</strong> Assigned lessons:<br>
+            <span style="color:var(--text-muted)">${s.assigned_lessons.map(l => esc(l.title)).join(", ")}</span>
+          </div></td></tr>`;
+      }
+      html += drilldownHtml;
+    }
+
+    html += `</table>
+      </div>`;
+
+    // Not found students
+    const notFound = students.filter(s => !s.found);
+    if (notFound.length > 0) {
+      html += `<div class="metrics-section" style="margin-top:24px">
+        <h3>Students Without Matched Remediation Course</h3>
+        <ul>${notFound.map(s => `<li>${esc(s.target_name)}</li>`).join("")}</ul>
+      </div>`;
+    }
+
+    container.innerHTML = html;
+
+    // Wire up row expansion
+    container.querySelectorAll(".clickable-row[data-target]").forEach(row => {
+      row.addEventListener("click", () => {
+        const target = document.getElementById(row.dataset.target);
+        if (target) target.classList.toggle("hidden");
+      });
+    });
   }
 
   function esc(str) {
