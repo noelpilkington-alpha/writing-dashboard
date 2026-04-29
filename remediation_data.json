@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-28T13:25:53.177762Z",
+  "generated_at": "2026-04-29T11:36:36.981200Z",
   "students": [
     {
       "target_name": "Ariel Martel",
@@ -32,12 +32,41 @@
           "title": "Appositives"
         }
       ],
-      "total_questions": 0,
-      "total_correct": 0,
-      "overall_accuracy_pct": 0,
-      "total_writing_xp": 0,
-      "lessons_engaged": 0,
-      "engaged_lessons": []
+      "total_questions": 40,
+      "total_correct": 30,
+      "overall_accuracy_pct": 75,
+      "total_writing_xp": 78.0,
+      "lessons_engaged": 4,
+      "engaged_lessons": [
+        {
+          "lesson_title": "PowerPath Test: Write a Sentence from a Prompt",
+          "questions_attempted": 12,
+          "questions_correct": 9,
+          "accuracy_pct": 75,
+          "last_attempt": "2026-04-29"
+        },
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 10,
+          "questions_correct": 8,
+          "accuracy_pct": 80,
+          "last_attempt": "2026-04-29"
+        },
+        {
+          "lesson_title": "PowerPath Test: Sentence or Fragment?",
+          "questions_attempted": 10,
+          "questions_correct": 8,
+          "accuracy_pct": 80,
+          "last_attempt": "2026-04-28"
+        },
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 8,
+          "questions_correct": 5,
+          "accuracy_pct": 62,
+          "last_attempt": "2026-04-28"
+        }
+      ]
     },
     {
       "target_name": "Asher Hackworth",
@@ -70,12 +99,26 @@
           "title": "Appositives"
         }
       ],
-      "total_questions": 18,
-      "total_correct": 14,
-      "overall_accuracy_pct": 78,
-      "total_writing_xp": 38.0,
-      "lessons_engaged": 2,
+      "total_questions": 31,
+      "total_correct": 23,
+      "overall_accuracy_pct": 74,
+      "total_writing_xp": 308.0,
+      "lessons_engaged": 4,
       "engaged_lessons": [
+        {
+          "lesson_title": "Alpha Standardized Writing G3.8",
+          "questions_attempted": 12,
+          "questions_correct": 9,
+          "accuracy_pct": 75,
+          "last_attempt": "2026-04-28"
+        },
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 1,
+          "questions_correct": 0,
+          "accuracy_pct": 0,
+          "last_attempt": "2026-04-28"
+        },
         {
           "lesson_title": "(no parent - top-level?)",
           "questions_attempted": 8,
@@ -165,12 +208,26 @@
           "title": "Sentence or Fragment?"
         }
       ],
-      "total_questions": 40,
-      "total_correct": 30,
+      "total_questions": 52,
+      "total_correct": 39,
       "overall_accuracy_pct": 75,
-      "total_writing_xp": 168.0,
-      "lessons_engaged": 5,
+      "total_writing_xp": 258.0,
+      "lessons_engaged": 6,
       "engaged_lessons": [
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 12,
+          "questions_correct": 9,
+          "accuracy_pct": 75,
+          "last_attempt": "2026-04-28"
+        },
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 1,
+          "questions_correct": 0,
+          "accuracy_pct": 0,
+          "last_attempt": "2026-04-28"
+        },
         {
           "lesson_title": "PowerPath Test: Appositives",
           "questions_attempted": 11,
@@ -183,13 +240,6 @@
           "questions_attempted": 10,
           "questions_correct": 8,
           "accuracy_pct": 80,
-          "last_attempt": "2026-04-27"
-        },
-        {
-          "lesson_title": "(no parent - top-level?)",
-          "questions_attempted": 1,
-          "questions_correct": 0,
-          "accuracy_pct": 0,
           "last_attempt": "2026-04-27"
         },
         {
@@ -235,12 +285,19 @@
           "title": "Change Sentences into Questions"
         }
       ],
-      "total_questions": 9,
-      "total_correct": 5,
-      "overall_accuracy_pct": 56,
-      "total_writing_xp": 41.0,
-      "lessons_engaged": 2,
+      "total_questions": 20,
+      "total_correct": 15,
+      "overall_accuracy_pct": 75,
+      "total_writing_xp": 69.0,
+      "lessons_engaged": 3,
       "engaged_lessons": [
+        {
+          "lesson_title": "PowerPath Test: Appositives",
+          "questions_attempted": 11,
+          "questions_correct": 10,
+          "accuracy_pct": 91,
+          "last_attempt": "2026-04-28"
+        },
         {
           "lesson_title": "PowerPath Test: Echo the Question",
           "questions_attempted": 8,
@@ -288,12 +345,26 @@
           "title": "Appositives"
         }
       ],
-      "total_questions": 18,
-      "total_correct": 14,
+      "total_questions": 37,
+      "total_correct": 29,
       "overall_accuracy_pct": 78,
-      "total_writing_xp": 45.0,
-      "lessons_engaged": 2,
+      "total_writing_xp": 77.0,
+      "lessons_engaged": 4,
       "engaged_lessons": [
+        {
+          "lesson_title": "PowerPath Test: What Kind of Sentence?",
+          "questions_attempted": 9,
+          "questions_correct": 8,
+          "accuracy_pct": 89,
+          "last_attempt": "2026-04-28"
+        },
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 10,
+          "questions_correct": 7,
+          "accuracy_pct": 70,
+          "last_attempt": "2026-04-28"
+        },
         {
           "lesson_title": "PowerPath Test: Echo the Question",
           "questions_attempted": 8,
@@ -337,12 +408,20 @@
           "title": "Sentence or Fragment?"
         }
       ],
-      "total_questions": 0,
-      "total_correct": 0,
-      "overall_accuracy_pct": 0,
-      "total_writing_xp": 0,
-      "lessons_engaged": 0,
-      "engaged_lessons": []
+      "total_questions": 8,
+      "total_correct": 6,
+      "overall_accuracy_pct": 75,
+      "total_writing_xp": 20.0,
+      "lessons_engaged": 1,
+      "engaged_lessons": [
+        {
+          "lesson_title": "PowerPath Test: Echo the Question",
+          "questions_attempted": 8,
+          "questions_correct": 6,
+          "accuracy_pct": 75,
+          "last_attempt": "2026-04-28"
+        }
+      ]
     },
     {
       "target_name": "Valentina Litchfield",
@@ -371,12 +450,47 @@
           "title": "Appositives"
         }
       ],
-      "total_questions": 8,
-      "total_correct": 5,
-      "overall_accuracy_pct": 62,
-      "total_writing_xp": 20.0,
-      "lessons_engaged": 1,
+      "total_questions": 51,
+      "total_correct": 34,
+      "overall_accuracy_pct": 67,
+      "total_writing_xp": 246.0,
+      "lessons_engaged": 6,
       "engaged_lessons": [
+        {
+          "lesson_title": "PowerPath Test: Elaborate",
+          "questions_attempted": 10,
+          "questions_correct": 7,
+          "accuracy_pct": 70,
+          "last_attempt": "2026-04-28"
+        },
+        {
+          "lesson_title": "Alpha Standardized Writing G3.7",
+          "questions_attempted": 12,
+          "questions_correct": 6,
+          "accuracy_pct": 50,
+          "last_attempt": "2026-04-28"
+        },
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 11,
+          "questions_correct": 10,
+          "accuracy_pct": 91,
+          "last_attempt": "2026-04-28"
+        },
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 9,
+          "questions_correct": 6,
+          "accuracy_pct": 67,
+          "last_attempt": "2026-04-28"
+        },
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 1,
+          "questions_correct": 0,
+          "accuracy_pct": 0,
+          "last_attempt": "2026-04-28"
+        },
         {
           "lesson_title": "(no parent - top-level?)",
           "questions_attempted": 8,
@@ -413,12 +527,27 @@
           "title": "What Kind of Sentence?"
         }
       ],
-      "total_questions": 0,
-      "total_correct": 0,
-      "overall_accuracy_pct": 0,
-      "total_writing_xp": 0,
-      "lessons_engaged": 0,
-      "engaged_lessons": []
+      "total_questions": 18,
+      "total_correct": 15,
+      "overall_accuracy_pct": 83,
+      "total_writing_xp": 43.0,
+      "lessons_engaged": 2,
+      "engaged_lessons": [
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 10,
+          "questions_correct": 9,
+          "accuracy_pct": 90,
+          "last_attempt": "2026-04-28"
+        },
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 8,
+          "questions_correct": 6,
+          "accuracy_pct": 75,
+          "last_attempt": "2026-04-28"
+        }
+      ]
     },
     {
       "target_name": "Evelyn Gabler",
@@ -497,12 +626,26 @@
           "title": "Elaborate"
         }
       ],
-      "total_questions": 20,
-      "total_correct": 15,
-      "overall_accuracy_pct": 75,
-      "total_writing_xp": 44.0,
-      "lessons_engaged": 2,
+      "total_questions": 41,
+      "total_correct": 34,
+      "overall_accuracy_pct": 83,
+      "total_writing_xp": 102.0,
+      "lessons_engaged": 4,
       "engaged_lessons": [
+        {
+          "lesson_title": "PowerPath Test: Appositives",
+          "questions_attempted": 11,
+          "questions_correct": 10,
+          "accuracy_pct": 91,
+          "last_attempt": "2026-04-28"
+        },
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 10,
+          "questions_correct": 9,
+          "accuracy_pct": 90,
+          "last_attempt": "2026-04-28"
+        },
         {
           "lesson_title": "(no parent - top-level?)",
           "questions_attempted": 8,
@@ -580,12 +723,54 @@
           "title": "Elaborate"
         }
       ],
-      "total_questions": 2,
-      "total_correct": 0,
-      "overall_accuracy_pct": 0,
-      "total_writing_xp": 30.0,
-      "lessons_engaged": 2,
+      "total_questions": 27,
+      "total_correct": 16,
+      "overall_accuracy_pct": 59,
+      "total_writing_xp": 208.0,
+      "lessons_engaged": 8,
       "engaged_lessons": [
+        {
+          "lesson_title": "PowerPath Test: Echo the Question",
+          "questions_attempted": 8,
+          "questions_correct": 5,
+          "accuracy_pct": 62,
+          "last_attempt": "2026-04-28"
+        },
+        {
+          "lesson_title": "PowerPath Test: Combine Two Sentences",
+          "questions_attempted": 2,
+          "questions_correct": 2,
+          "accuracy_pct": 100,
+          "last_attempt": "2026-04-28"
+        },
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 1,
+          "questions_correct": 0,
+          "accuracy_pct": 0,
+          "last_attempt": "2026-04-28"
+        },
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 1,
+          "questions_correct": 0,
+          "accuracy_pct": 0,
+          "last_attempt": "2026-04-28"
+        },
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 12,
+          "questions_correct": 9,
+          "accuracy_pct": 75,
+          "last_attempt": "2026-04-28"
+        },
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 1,
+          "questions_correct": 0,
+          "accuracy_pct": 0,
+          "last_attempt": "2026-04-28"
+        },
         {
           "lesson_title": "(no parent - top-level?)",
           "questions_attempted": 1,
@@ -625,12 +810,19 @@
           "title": "Elaborate"
         }
       ],
-      "total_questions": 49,
+      "total_questions": 50,
       "total_correct": 32,
-      "overall_accuracy_pct": 65,
-      "total_writing_xp": 256.4,
-      "lessons_engaged": 9,
+      "overall_accuracy_pct": 64,
+      "total_writing_xp": 266.4,
+      "lessons_engaged": 10,
       "engaged_lessons": [
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 1,
+          "questions_correct": 0,
+          "accuracy_pct": 0,
+          "last_attempt": "2026-04-29"
+        },
         {
           "lesson_title": "(no parent - top-level?)",
           "questions_attempted": 1,
@@ -723,12 +915,19 @@
           "title": "Appositives"
         }
       ],
-      "total_questions": 12,
-      "total_correct": 9,
-      "overall_accuracy_pct": 75,
-      "total_writing_xp": 37.0,
-      "lessons_engaged": 2,
+      "total_questions": 51,
+      "total_correct": 39,
+      "overall_accuracy_pct": 76,
+      "total_writing_xp": 227.0,
+      "lessons_engaged": 6,
       "engaged_lessons": [
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 12,
+          "questions_correct": 9,
+          "accuracy_pct": 75,
+          "last_attempt": "2026-04-28"
+        },
         {
           "lesson_title": "(no parent - top-level?)",
           "questions_attempted": 11,
@@ -741,6 +940,27 @@
           "questions_attempted": 1,
           "questions_correct": 0,
           "accuracy_pct": 0,
+          "last_attempt": "2026-04-28"
+        },
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 11,
+          "questions_correct": 10,
+          "accuracy_pct": 91,
+          "last_attempt": "2026-04-28"
+        },
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 1,
+          "questions_correct": 0,
+          "accuracy_pct": 0,
+          "last_attempt": "2026-04-28"
+        },
+        {
+          "lesson_title": "(no parent - top-level?)",
+          "questions_attempted": 15,
+          "questions_correct": 11,
+          "accuracy_pct": 73,
           "last_attempt": "2026-04-28"
         }
       ]
