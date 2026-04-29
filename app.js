@@ -2833,6 +2833,183 @@
     html += renderDistTable("End of Course", overall, sg);
     html += `</div>`;
 
+    // ── Pass Rates by Session × Grade ────────────────────────────────
+    // Three matrices: All-Attempt, First-At-Grade, and Gap
+    // Session cohort size = unique students who took ANY test in that session
+    {
+      // Collect all writing tests across all students
+      const allWritingTests = [];
+      for (const s of allStudents) {
+        for (const t of (s.all_tests || [])) {
+          const grade = extractGrade(t.name || "");
+          const session = getSession(t.date);
+          if (!grade || !session) continue;
+          allWritingTests.push({
+            email: s.email,
+            grade,
+            session,
+            name: t.name,
+            date: t.date,
+            passed: !!t.passed,
+          });
+        }
+      }
+
+      // All-attempt: count every test; pass if t.passed
+      const allAttempt = {};  // session -> grade -> {taken, passed, students}
+      // First-at-grade: for each (email, session, grade), keep only the earliest test
+      const firstAtGradeMap = new Map();  // `${email}|${session}|${grade}` -> earliest test
+      // Cohort: unique students per session (took at least one test)
+      const sessionCohort = {};  // session -> Set(email)
+
+      for (const t of allWritingTests) {
+        // All-attempt
+        if (!allAttempt[t.session]) allAttempt[t.session] = {};
+        if (!allAttempt[t.session][t.grade]) {
+          allAttempt[t.session][t.grade] = { taken: 0, passed: 0, students: new Set() };
+        }
+        const cell = allAttempt[t.session][t.grade];
+        cell.taken++;
+        cell.students.add(t.email);
+        if (t.passed) cell.passed++;
+
+        // Cohort
+        if (!sessionCohort[t.session]) sessionCohort[t.session] = new Set();
+        sessionCohort[t.session].add(t.email);
+
+        // First-at-grade bookkeeping
+        const fk = `${t.email}|${t.session}|${t.grade}`;
+        const existing = firstAtGradeMap.get(fk);
+        if (!existing || t.date < existing.date) {
+          firstAtGradeMap.set(fk, t);
+        }
+      }
+
+      // First-at-grade matrix (one row per student-session-grade, earliest test)
+      const firstAttempt = {};
+      for (const t of firstAtGradeMap.values()) {
+        if (!firstAttempt[t.session]) firstAttempt[t.session] = {};
+        if (!firstAttempt[t.session][t.grade]) {
+          firstAttempt[t.session][t.grade] = { taken: 0, passed: 0 };
+        }
+        const cell = firstAttempt[t.session][t.grade];
+        cell.taken++;
+        if (t.passed) cell.passed++;
+      }
+
+      // Determine grades to show (any grade with any test)
+      const gradesInView = new Set();
+      for (const ses of Object.keys(allAttempt)) {
+        for (const g of Object.keys(allAttempt[ses])) gradesInView.add(parseInt(g));
+      }
+      const gradeList = [...gradesInView].sort((a, b) => a - b);
+
+      function cellPct(cell) {
+        if (!cell || cell.taken === 0) return null;
+        return { pct: Math.round(100 * cell.passed / cell.taken), taken: cell.taken, passed: cell.passed };
+      }
+
+      function cellClass(pct) {
+        if (pct == null) return "";
+        if (pct >= 60) return "score-pass";
+        if (pct >= 40) return "";
+        return "score-fail";
+      }
+
+      function renderMatrix(title, description, matrix, showGap) {
+        let h = `<div class="metrics-section"><h2>${title}</h2>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">${description}</p>
+          <table class="metrics-table">
+            <tr><th>Session</th><th>Cohort Size</th>`;
+        for (const g of gradeList) h += `<th>G${g}</th>`;
+        h += `<th>Total</th></tr>`;
+
+        for (const sn of sessionOrder) {
+          const cohortSize = sessionCohort[sn] ? sessionCohort[sn].size : 0;
+          const sesStart = (sessions[sn] && sessions[sn].start) || "";
+          const sesEnd = (sessions[sn] && sessions[sn].end) || "";
+          h += `<tr><td><strong>${sn}</strong><br><span style="font-size:0.68rem;color:var(--text-muted)">${sesStart} → ${sesEnd}</span></td>
+            <td style="text-align:center">${cohortSize}</td>`;
+          let sessionTaken = 0, sessionPassed = 0;
+          for (const g of gradeList) {
+            const c = matrix[sn] && matrix[sn][g];
+            const info = cellPct(c);
+            if (!info) {
+              h += `<td style="text-align:center;color:#ccc">—</td>`;
+            } else {
+              sessionTaken += info.taken;
+              sessionPassed += info.passed;
+              if (showGap) {
+                const sign = info.pct > 0 ? "+" : "";
+                const cls = info.pct > 0 ? "score-pass" : info.pct < 0 ? "score-fail" : "";
+                h += `<td class="${cls}" style="text-align:center">${sign}${info.pct}<br><span style="font-size:0.68rem;color:var(--text-muted)">${info.passed}/${info.taken}</span></td>`;
+              } else {
+                const cls = cellClass(info.pct);
+                h += `<td class="${cls}" style="text-align:center">${info.pct}%<br><span style="font-size:0.68rem;color:var(--text-muted)">${info.passed}/${info.taken}</span></td>`;
+              }
+            }
+          }
+          // Row total
+          if (sessionTaken > 0) {
+            const totalPct = Math.round(100 * sessionPassed / sessionTaken);
+            if (showGap) {
+              const sign = totalPct > 0 ? "+" : "";
+              const cls = totalPct > 0 ? "score-pass" : totalPct < 0 ? "score-fail" : "";
+              h += `<td class="${cls}" style="text-align:center;font-weight:700">${sign}${totalPct}<br><span style="font-size:0.68rem;color:var(--text-muted)">${sessionPassed}/${sessionTaken}</span></td>`;
+            } else {
+              const cls = cellClass(totalPct);
+              h += `<td class="${cls}" style="text-align:center;font-weight:700">${totalPct}%<br><span style="font-size:0.68rem;color:var(--text-muted)">${sessionPassed}/${sessionTaken}</span></td>`;
+            }
+          } else {
+            h += `<td style="text-align:center;color:#ccc">—</td>`;
+          }
+          h += `</tr>`;
+        }
+        h += `</table></div>`;
+        return h;
+      }
+
+      // Build gap matrix: firstAttempt - allAttempt (pass rate difference in pct points)
+      const gapMatrix = {};
+      for (const sn of sessionOrder) {
+        gapMatrix[sn] = {};
+        for (const g of gradeList) {
+          const a = allAttempt[sn] && allAttempt[sn][g];
+          const f = firstAttempt[sn] && firstAttempt[sn][g];
+          if (!a || !f || a.taken === 0 || f.taken === 0) continue;
+          const aPct = 100 * a.passed / a.taken;
+          const fPct = 100 * f.passed / f.taken;
+          const gap = Math.round(fPct - aPct);
+          gapMatrix[sn][g] = { taken: f.taken, passed: f.passed, pct: gap };
+        }
+      }
+
+      html += `<div class="metrics-section"><h2 style="border-top:3px solid var(--indigo);padding-top:16px;margin-top:24px">Pass Rates by Session × Grade</h2>
+        <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px">
+          Three views. <strong>All-Attempt</strong> counts every test taken during the session. <strong>First-At-Grade</strong> counts only the earliest test each student attempted at that grade in the session — this isolates fresh-readiness from progress on later tests in the same grade (e.g., a G3 student who fails G3.1 but passes G3.2 and G3.3 counts 1 test in first-at-grade but 3 in all-attempt). The <strong>Gap</strong> shows pct-point difference (first-at-grade minus all-attempt). Negative gap = students perform better on later tests than on their first; positive gap = students perform worse after initial success (uncommon).
+        </p>`;
+
+      html += renderMatrix(
+        "All-Attempt Pass Rate",
+        "Every test attempt counted. Each cell shows pass % and passed/taken. Cohort = unique students who took any test that session.",
+        allAttempt, false
+      );
+
+      html += renderMatrix(
+        "First-At-Grade Pass Rate",
+        "Only the earliest test at each grade per student per session is counted. Better signal of whether students are test-ready the first time they attempt a grade in a session.",
+        firstAttempt, false
+      );
+
+      html += renderMatrix(
+        "Gap: First-At-Grade minus All-Attempt (pct points)",
+        "Negative = students perform better on subsequent tests (they improve as they work through G3.1, G3.2, G3.3...). Positive = first test is their strongest. Near zero = no meaningful improvement from continued attempts.",
+        gapMatrix, true
+      );
+
+      html += `</div>`;
+    }
+
     container.innerHTML = html;
   }
 
