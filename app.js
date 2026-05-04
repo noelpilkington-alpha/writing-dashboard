@@ -28,7 +28,7 @@
   }
 
   // ── Routing ─────────────────────────────────────────────────────────
-  const PAGES = ["timeback", "timeback-metrics", "eg-analysis", "test-results", "test-analysis", "testing-loops", "cohort-profile", "remediation"];
+  const PAGES = ["timeback", "timeback-metrics", "eg-analysis", "test-results", "test-analysis", "testing-loops", "cohort-profile", "remediation", "inactive"];
 
   function handleRoute() {
     const hash = location.hash.replace("#", "") || "timeback";
@@ -48,6 +48,7 @@
     if (page === "testing-loops") renderTestingLoops();
     if (page === "cohort-profile") renderCohortProfile();
     if (page === "remediation") renderRemediation();
+    if (page === "inactive") renderInactive();
   }
 
   function wireNav() {
@@ -3592,6 +3593,159 @@
         const target = document.getElementById(row.dataset.target);
         if (target) target.classList.toggle("hidden");
       });
+    });
+  }
+
+  // ── Inactive Students Page ──────────────────────────────────────────
+  const inactiveState = { minDays: 5, campus: "all", kind: "all" };
+
+  function renderInactive() {
+    const container = document.getElementById("inactive-container");
+    const all = studentsForGroup("timeback");
+    const flagged = all.filter((s) =>
+      s.still_enrolled &&
+      !s.completed_g8 &&
+      s.inactivity &&
+      s.inactivity.days_inactive >= inactiveState.minDays
+    );
+
+    const campuses = [...new Set(flagged.map((s) => s.campus || "Unknown"))].sort();
+
+    const visible = flagged.filter((s) => {
+      if (inactiveState.campus !== "all" && (s.campus || "Unknown") !== inactiveState.campus) return false;
+      if (inactiveState.kind === "fell" && s.inactivity.never_active_this_session) return false;
+      if (inactiveState.kind === "never" && !s.inactivity.never_active_this_session) return false;
+      return true;
+    });
+
+    const totalFlagged = flagged.length;
+    const fellCount = flagged.filter((s) => !s.inactivity.never_active_this_session).length;
+    const neverCount = flagged.filter((s) => s.inactivity.never_active_this_session).length;
+    const severeCount = flagged.filter((s) => s.inactivity.days_inactive >= 10).length;
+
+    const sessionEnd = DATA.session.end;
+    const gen = DATA.generated_at ? new Date(DATA.generated_at).toLocaleString() : "";
+
+    // Group visible students by campus
+    const byCampus = {};
+    visible.forEach((s) => {
+      const c = s.campus || "Unknown";
+      (byCampus[c] = byCampus[c] || []).push(s);
+    });
+    const sortedCampuses = Object.keys(byCampus).sort();
+
+    let html = `<h2 style="margin-bottom:8px">Inactive Students</h2>
+      <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:16px">
+        Students with no writing XP for ${inactiveState.minDays}+ school days (weekdays only, capped at session end ${sessionEnd}). Excludes G8 completers and unenrolled students. Data generated: ${gen}
+      </div>
+
+      <div class="metrics-grid" style="margin-bottom:20px">
+        <div class="metric-card">
+          <div class="metric-value red">${totalFlagged}</div>
+          <div class="metric-label">Total Flagged</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value orange">${fellCount}</div>
+          <div class="metric-label">Fell Inactive</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value ${neverCount > 0 ? 'red' : 'green'}">${neverCount}</div>
+          <div class="metric-label">Never Started Session</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value ${severeCount > 0 ? 'red' : 'green'}">${severeCount}</div>
+          <div class="metric-label">Severe (10+ days)</div>
+        </div>
+      </div>
+
+      <div class="search-filters" style="margin-bottom:20px">
+        <div class="dropdown-row">
+          <div class="dropdown-group">
+            <label for="inactive-min-days">Min Days</label>
+            <select id="inactive-min-days" class="dropdown">
+              <option value="5" ${inactiveState.minDays === 5 ? "selected" : ""}>5+ days</option>
+              <option value="7" ${inactiveState.minDays === 7 ? "selected" : ""}>7+ days</option>
+              <option value="10" ${inactiveState.minDays === 10 ? "selected" : ""}>10+ days</option>
+              <option value="15" ${inactiveState.minDays === 15 ? "selected" : ""}>15+ days</option>
+              <option value="20" ${inactiveState.minDays === 20 ? "selected" : ""}>20+ days</option>
+            </select>
+          </div>
+          <div class="dropdown-group">
+            <label for="inactive-campus">Campus</label>
+            <select id="inactive-campus" class="dropdown">
+              <option value="all">All Campuses</option>
+              ${campuses.map((c) => `<option value="${esc(c)}" ${inactiveState.campus === c ? "selected" : ""}>${esc(c)}</option>`).join("")}
+            </select>
+          </div>
+          <div class="dropdown-group">
+            <label for="inactive-kind">Type</label>
+            <select id="inactive-kind" class="dropdown">
+              <option value="all" ${inactiveState.kind === "all" ? "selected" : ""}>All (${totalFlagged})</option>
+              <option value="fell" ${inactiveState.kind === "fell" ? "selected" : ""}>Fell Inactive (${fellCount})</option>
+              <option value="never" ${inactiveState.kind === "never" ? "selected" : ""}>Never Started (${neverCount})</option>
+            </select>
+          </div>
+          <div class="results-count">${visible.length} shown</div>
+        </div>
+      </div>`;
+
+    if (visible.length === 0) {
+      html += `<div class="no-data" style="padding:40px;text-align:center;color:var(--text-muted)">No inactive students match the current filters.</div>`;
+    } else {
+      for (const campus of sortedCampuses) {
+        const items = byCampus[campus].sort((a, b) => b.inactivity.days_inactive - a.inactivity.days_inactive || a.name.localeCompare(b.name));
+        html += `<div class="metrics-section">
+          <h2>${esc(campus)} <span style="font-size:0.85rem;font-weight:500;color:var(--text-muted)">(${items.length})</span></h2>
+          <table class="metrics-table">
+            <tr>
+              <th>Days Inactive</th>
+              <th>Student</th>
+              <th>Grade / HMG</th>
+              <th>Last XP</th>
+              <th>XP Progress</th>
+              <th>Last Test</th>
+            </tr>`;
+        for (const s of items) {
+          const days = s.inactivity.days_inactive;
+          const daysCls = days >= 15 ? "score-fail" : days >= 10 ? "" : "";
+          const daysStyle = days >= 15 ? "color:var(--red);font-weight:700" : days >= 10 ? "color:var(--orange);font-weight:700" : "font-weight:600";
+          const lastXp = s.inactivity.never_active_this_session
+            ? `<span style="color:var(--red);font-style:italic">never this session</span>`
+            : formatDate(s.inactivity.last_xp_date);
+          const xpSchool = s.xp.school != null ? s.xp.school : s.xp.total;
+          const xpPct = s.xp.goal_to_date > 0 ? Math.round((xpSchool / s.xp.goal_to_date) * 100) : 0;
+          const xpCls = s.xp.meets_goal ? "score-pass" : "score-fail";
+          const lastTest = s.last_test
+            ? `${esc(s.last_test.name.replace("Alpha Standardized Writing ", ""))} (${s.last_test.score}%, ${formatDate(s.last_test.date)})`
+            : "—";
+          html += `<tr>
+            <td style="${daysStyle}">${days}d</td>
+            <td><strong>${esc(s.name)}</strong><br>
+              <span style="font-size:0.72rem;color:var(--text-muted)">${esc(s.email)}</span></td>
+            <td>G${s.age_grade} / HMG G${s.hmg}</td>
+            <td>${lastXp}</td>
+            <td class="${xpCls}">${Math.round(xpSchool)}/${Math.round(s.xp.goal_to_date)} (${xpPct}%)</td>
+            <td>${lastTest}</td>
+          </tr>`;
+        }
+        html += `</table></div>`;
+      }
+    }
+
+    container.innerHTML = html;
+
+    // Wire filters
+    document.getElementById("inactive-min-days").addEventListener("change", (e) => {
+      inactiveState.minDays = parseInt(e.target.value, 10);
+      renderInactive();
+    });
+    document.getElementById("inactive-campus").addEventListener("change", (e) => {
+      inactiveState.campus = e.target.value;
+      renderInactive();
+    });
+    document.getElementById("inactive-kind").addEventListener("change", (e) => {
+      inactiveState.kind = e.target.value;
+      renderInactive();
     });
   }
 
