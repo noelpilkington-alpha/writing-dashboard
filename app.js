@@ -164,6 +164,12 @@
       if (s.accuracy && s.accuracy.activities_below_threshold.length >= 3) {
         reasons.push({ type: "low-accuracy", label: `${s.accuracy.activities_below_threshold.length} Low Accuracy` });
       }
+      if (s.inactivity && s.inactivity.days_inactive >= 5 && s.still_enrolled) {
+        const label = s.inactivity.never_active_this_session
+          ? "No activity this session"
+          : `Inactive ${s.inactivity.days_inactive}d`;
+        reasons.push({ type: "inactive", label });
+      }
       if (reasons.length > 0) {
         results.push({ student: s, reasons });
       }
@@ -196,6 +202,7 @@
     const loopCount = ddStudents.filter((d) => d.reasons.some((r) => r.type === "testing-loop")).length;
     const xpCount = ddStudents.filter((d) => d.reasons.some((r) => r.type === "xp-behind")).length;
     const accCount = ddStudents.filter((d) => d.reasons.some((r) => r.type === "low-accuracy")).length;
+    const inactiveCount = ddStudents.filter((d) => d.reasons.some((r) => r.type === "inactive")).length;
 
     let activeFilter = "all";
 
@@ -267,6 +274,7 @@
         <span class="dd-tab" data-filter="testing-loop">Testing Loops (${loopCount})</span>
         <span class="dd-tab" data-filter="xp-behind">XP Behind (${xpCount})</span>
         <span class="dd-tab" data-filter="low-accuracy">Low Accuracy (${accCount})</span>
+        <span class="dd-tab" data-filter="inactive">Inactive 5d+ (${inactiveCount})</span>
       </div>
       <div class="dd-student-list"></div>
     `;

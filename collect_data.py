@@ -1143,6 +1143,33 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
         break_xp = total_xp - school_xp
         avg_xp = round(school_xp / school_days, 1) if school_days else 0
 
+        # Compute inactivity (weekdays since last XP, within session window)
+        last_xp_date_str = xp_details.get("last_xp_date")
+        today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        session_end_dt = datetime.strptime(session_end, "%Y-%m-%d")
+        session_start_dt = datetime.strptime(session_start, "%Y-%m-%d")
+        inactivity_cutoff = min(today, session_end_dt)
+        if last_xp_date_str:
+            last_xp_dt = datetime.strptime(last_xp_date_str, "%Y-%m-%d")
+            # Count weekdays strictly after last_xp and up to cutoff
+            if inactivity_cutoff > last_xp_dt:
+                days_inactive = _count_weekdays(last_xp_dt + timedelta(days=1), inactivity_cutoff)
+            else:
+                days_inactive = 0
+            never_active_this_session = False
+        else:
+            # No activity at all this session: count weekdays from session start to cutoff
+            if inactivity_cutoff >= session_start_dt:
+                days_inactive = _count_weekdays(session_start_dt, inactivity_cutoff)
+            else:
+                days_inactive = 0
+            never_active_this_session = True
+
+        # Suppress inactivity for G8 completers and unenrolled students
+        if completed_g8 or not student_enrollments:
+            days_inactive = 0
+            never_active_this_session = False
+
         # For G8 completers, skip accuracy/deep dive/enrollment analysis
         if completed_g8:
             low_accuracy = []
@@ -1206,6 +1233,16 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
                     "severity": "medium",
                     "text": enrollment_mismatch,
                 })
+            if days_inactive >= 5 and student_enrollments:
+                if never_active_this_session:
+                    inactive_text = f"No writing activity this session ({days_inactive} school days)"
+                else:
+                    inactive_text = f"No writing activity for {days_inactive} school days (last XP {last_xp_date_str})"
+                insights.append({
+                    "type": "inactive",
+                    "severity": "high" if days_inactive >= 10 else "medium",
+                    "text": inactive_text,
+                })
 
         # Test summary stats (from all-time api_tests)
         passed_tests = [t for t in api_tests if t["passed"]]
@@ -1263,6 +1300,11 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
             },
             "insights": insights,
             "enrollment_mismatch": enrollment_mismatch,
+            "inactivity": {
+                "days_inactive": days_inactive,
+                "never_active_this_session": never_active_this_session,
+                "last_xp_date": last_xp_date_str,
+            },
         })
 
     # All session definitions for per-session metrics

@@ -262,6 +262,7 @@ body {
 .dd-reason.testing-loop { background: var(--red-bg); color: var(--red); }
 .dd-reason.xp-behind { background: var(--orange-bg); color: var(--orange); }
 .dd-reason.low-accuracy { background: var(--yellow-bg); color: #854d0e; }
+.dd-reason.inactive { background: var(--purple-light); color: var(--purple); }
 
 /* Deep Dive Analysis (Claude) */
 .dd-analysis {
