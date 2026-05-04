@@ -3034,7 +3034,35 @@
       return;
     }
 
-    const students = loopData.students;
+    // Drop students who have since passed the grade they were looping in.
+    // loop_data.json is regenerated less frequently than data.json, so we
+    // cross-check against DATA.students (current HMG) and remove any loop
+    // whose grade <= current HMG. If nothing loopy remains, drop the student.
+    const hmgByEmail = {};
+    if (DATA && DATA.students) {
+      for (const s of DATA.students) {
+        if (s.email) hmgByEmail[s.email.toLowerCase()] = s.hmg || 0;
+      }
+    }
+
+    const rawStudents = loopData.students;
+    const students = [];
+    let droppedCount = 0;
+    for (const s of rawStudents) {
+      const currentHmg = hmgByEmail[(s.email || "").toLowerCase()];
+      if (currentHmg == null) {
+        students.push(s);
+        continue;
+      }
+      const stillLooping = (s.loop_details || []).filter(d => d.grade > currentHmg);
+      if (stillLooping.length === 0) {
+        droppedCount++;
+        continue;
+      }
+      // Keep student but narrow loop_details to grades still above current HMG
+      students.push({ ...s, loop_details: stillLooping, hmg: currentHmg });
+    }
+
     const trends = loopData.trends || {};
 
     // Summary stats
@@ -3052,8 +3080,13 @@
       });
     });
 
+    const droppedNote = droppedCount > 0
+      ? `<div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:8px">${droppedCount} student${droppedCount === 1 ? "" : "s"} removed: passed the grade they were looping in.</div>`
+      : "";
+
     let html = `
       <h2 style="margin-bottom:8px">Testing Loops Analysis</h2>
+      ${droppedNote}
       <div class="tr-summary" style="margin-bottom:16px">
         <span class="tr-stat"><strong>${totalStudents}</strong> students in loops</span>
         <span class="tr-stat red"><strong>${totalRushing}</strong> with rushing</span>
