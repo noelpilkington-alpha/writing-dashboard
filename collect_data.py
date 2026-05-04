@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from writing_automation.api_client import TimebackAPI
 from writing_automation.config import (
+    CURRENT_SESSION,
     GRADE_SEQUENCES,
     MINUTES_GOAL_PER_DAY,
     PASS_THRESHOLD,
@@ -677,7 +678,13 @@ def fetch_writing_test_results(
 def fetch_activity_results(
     api: TimebackAPI, student_id: str, session_start: str, session_end: str
 ) -> list[dict]:
-    """Fetch per-activity assessment results for a student within a session."""
+    """Fetch per-activity assessment results for a student within a session.
+
+    Extends the upper bound to max(session_end, today) so that post-session
+    activity (when the session hasn't been rolled over yet) is still captured.
+    """
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    upper = max(session_end, today_str)
     try:
         data = api.get(
             f"{GRADEBOOK_BASE}/assessmentResults/",
@@ -686,7 +693,7 @@ def fetch_activity_results(
                 "filter": (
                     f"student.sourcedId='{student_id}'"
                     f" AND scoreDate>='{session_start}'"
-                    f" AND scoreDate<='{session_end}'"
+                    f" AND scoreDate<='{upper}'"
                 ),
             },
         )
@@ -1143,12 +1150,13 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
         break_xp = total_xp - school_xp
         avg_xp = round(school_xp / school_days, 1) if school_days else 0
 
-        # Compute inactivity (weekdays since last XP, within session window)
+        # Compute inactivity (weekdays since last XP, up to today).
+        # We don't clamp at session_end — if the session is over and a student
+        # genuinely hasn't done anything post-session, that's real inactivity.
         last_xp_date_str = xp_details.get("last_xp_date")
         today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-        session_end_dt = datetime.strptime(session_end, "%Y-%m-%d")
         session_start_dt = datetime.strptime(session_start, "%Y-%m-%d")
-        inactivity_cutoff = min(today, session_end_dt)
+        inactivity_cutoff = today
         if last_xp_date_str:
             last_xp_dt = datetime.strptime(last_xp_date_str, "%Y-%m-%d")
             # Count weekdays strictly after last_xp and up to cutoff
@@ -1313,6 +1321,7 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
         "S2": {"start": "2025-10-20", "end": "2026-01-02", "label": "Session 2"},
         "S3": {"start": "2026-01-05", "end": "2026-02-20", "label": "Session 3"},
         "S4": {"start": "2026-02-21", "end": "2026-04-17", "label": "Session 4"},
+        "S5": {"start": "2026-04-27", "end": "2026-06-05", "label": "Session 5"},
     }
 
     # Top-level structure
@@ -1341,7 +1350,7 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
 def main():
     parser = argparse.ArgumentParser(description="Collect Writing dashboard data")
     parser.add_argument("csv", help="Path to writing-results CSV")
-    parser.add_argument("--session", default="S4", choices=list(SESSIONS.keys()))
+    parser.add_argument("--session", default=CURRENT_SESSION, choices=list(SESSIONS.keys()))
     parser.add_argument("--output", default=str(OUTPUT_PATH), help="Output JSON path")
     parser.add_argument("--skip-analysis", action="store_true",
                         help="Skip Claude deep dive analysis (faster)")
