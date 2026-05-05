@@ -3034,14 +3034,21 @@
       return;
     }
 
-    // Drop students who have since passed the grade they were looping in.
-    // loop_data.json is regenerated less frequently than data.json, so we
-    // cross-check against DATA.students (current HMG) and remove any loop
-    // whose grade <= current HMG. If nothing loopy remains, drop the student.
-    const hmgByEmail = {};
+    // Drop students who have moved on past the grade they were looping in.
+    // loop_data.json is regenerated less frequently than data.json. A loop
+    // at grade G is considered resolved only once the student has attempted
+    // a test at grade G+1 — passing a single test within grade G (HMG
+    // advancing) is not enough on its own.
+    const attemptedByEmail = {};
     if (DATA && DATA.students) {
       for (const s of DATA.students) {
-        if (s.email) hmgByEmail[s.email.toLowerCase()] = s.hmg || 0;
+        if (!s.email) continue;
+        const grades = new Set();
+        for (const t of s.all_tests || []) {
+          const m = (t.name || "").match(/G(\d+)/);
+          if (m) grades.add(parseInt(m[1], 10));
+        }
+        attemptedByEmail[s.email.toLowerCase()] = grades;
       }
     }
 
@@ -3049,18 +3056,17 @@
     const students = [];
     let droppedCount = 0;
     for (const s of rawStudents) {
-      const currentHmg = hmgByEmail[(s.email || "").toLowerCase()];
-      if (currentHmg == null) {
+      const attempted = attemptedByEmail[(s.email || "").toLowerCase()];
+      if (!attempted) {
         students.push(s);
         continue;
       }
-      const stillLooping = (s.loop_details || []).filter(d => d.grade > currentHmg);
+      const stillLooping = (s.loop_details || []).filter(d => !attempted.has(d.grade + 1));
       if (stillLooping.length === 0) {
         droppedCount++;
         continue;
       }
-      // Keep student but narrow loop_details to grades still above current HMG
-      students.push({ ...s, loop_details: stillLooping, hmg: currentHmg });
+      students.push({ ...s, loop_details: stillLooping });
     }
 
     const trends = loopData.trends || {};
