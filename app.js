@@ -3082,6 +3082,17 @@
     const totalWithMasteredGaps = students.filter(s => s.flags && s.flags.mastered_in_alphawrite_not_tests && s.flags.mastered_in_alphawrite_not_tests.length > 0).length;
     const totalDepreciating = students.filter(s => s.flags && s.flags.depreciating_skills && s.flags.depreciating_skills.length > 0).length;
 
+    // For splitting into tiers, look at each student's max test count across
+    // their still-loopy grades (i.e., their "worst" loop).
+    function maxTestsAcrossLoops(s) {
+      return (s.loop_details || []).reduce((m, d) => Math.max(m, d.total_tests || 0), 0);
+    }
+    const studentsFiveOrMore = students.filter(s => maxTestsAcrossLoops(s) >= 5);
+    const studentsThreeToFour = students.filter(s => {
+      const m = maxTestsAcrossLoops(s);
+      return m >= 3 && m < 5;
+    });
+
     // Grade distribution
     const gradeCount = {};
     students.forEach(s => {
@@ -3152,53 +3163,79 @@
         <span class="tr-count" id="loop-count">${totalStudents} students</span>
       </div>`;
 
-    // Student cards
-    html += `<div id="loop-students">`;
-    const sorted = [...students].sort((a, b) => a.name.localeCompare(b.name));
-    for (const s of sorted) {
-      const loopGrades = (s.loop_details || []).map(d => `G${d.grade}`).join(", ");
-      const flagBadges = [];
-      if (s.flags?.rushing) flagBadges.push('<span class="loop-badge rush">Rushing</span>');
-      if (s.flags?.depreciating_skills?.length) flagBadges.push('<span class="loop-badge deprec">Depreciating</span>');
-      if (s.flags?.mastered_in_alphawrite_not_tests?.length) flagBadges.push('<span class="loop-badge aw-gap">AW/Test Gap</span>');
+    // Student cards — split into tiers by max tests at any still-loopy grade.
+    function renderLoopCards(list) {
+      let inner = "";
+      const sorted = [...list].sort((a, b) => a.name.localeCompare(b.name));
+      for (const s of sorted) {
+        const loopGrades = (s.loop_details || []).map(d => `G${d.grade} (${d.total_tests || 0} tests)`).join(", ");
+        const flagBadges = [];
+        if (s.flags?.rushing) flagBadges.push('<span class="loop-badge rush">Rushing</span>');
+        if (s.flags?.depreciating_skills?.length) flagBadges.push('<span class="loop-badge deprec">Depreciating</span>');
+        if (s.flags?.mastered_in_alphawrite_not_tests?.length) flagBadges.push('<span class="loop-badge aw-gap">AW/Test Gap</span>');
 
-      const priority = s.analysis?.priority || "";
-      const priorityCls = priority === "high" ? "priority-high" : priority === "medium" ? "priority-med" : "";
+        const priority = s.analysis?.priority || "";
+        const priorityCls = priority === "high" ? "priority-high" : priority === "medium" ? "priority-med" : "";
 
-      html += `
-        <div class="loop-card" data-name="${esc(s.name.toLowerCase())}" data-grades="${(s.loop_details||[]).map(d=>d.grade).join(",")}" data-flags="${s.flags?.rushing?'rushing ':'' }${s.flags?.depreciating_skills?.length?'depreciating ':'' }${s.flags?.mastered_in_alphawrite_not_tests?.length?'aw-gap':''}">
-          <div class="loop-card-header" onclick="this.parentElement.classList.toggle('expanded')">
-            <div class="loop-card-summary">
-              <strong>${esc(s.name)}</strong>
-              <span class="loop-meta">HMG G${s.hmg} ${s.effective_grade ? `| EG G${s.effective_grade}` : ""} | Loop at ${loopGrades} | ${s.total_failed_tests} failed tests</span>
-              ${flagBadges.join(" ")}
-              ${priorityCls ? `<span class="loop-badge ${priorityCls}">${esc(priority)}</span>` : ""}
+        inner += `
+          <div class="loop-card" data-name="${esc(s.name.toLowerCase())}" data-grades="${(s.loop_details||[]).map(d=>d.grade).join(",")}" data-flags="${s.flags?.rushing?'rushing ':'' }${s.flags?.depreciating_skills?.length?'depreciating ':'' }${s.flags?.mastered_in_alphawrite_not_tests?.length?'aw-gap':''}">
+            <div class="loop-card-header" onclick="this.parentElement.classList.toggle('expanded')">
+              <div class="loop-card-summary">
+                <strong>${esc(s.name)}</strong>
+                <span class="loop-meta">HMG G${s.hmg} ${s.effective_grade ? `| EG G${s.effective_grade}` : ""} | Loop at ${loopGrades} | ${s.total_failed_tests} failed tests</span>
+                ${flagBadges.join(" ")}
+                ${priorityCls ? `<span class="loop-badge ${priorityCls}">${esc(priority)}</span>` : ""}
+              </div>
+              <span class="loop-expand-icon">&#9660;</span>
             </div>
-            <span class="loop-expand-icon">&#9660;</span>
-          </div>
-          <div class="loop-card-detail">
-            ${buildLoopStudentDetail(s)}
-          </div>
-        </div>`;
+            <div class="loop-card-detail">
+              ${buildLoopStudentDetail(s)}
+            </div>
+          </div>`;
+      }
+      return inner;
     }
-    html += `</div>`;
+
+    html += `<div id="loop-students">
+      <h3 class="loop-tier-header" style="margin-top:8px;margin-bottom:12px">
+        5 or more tests at loop grade
+        <span class="tr-count-inline" data-tier="five">(${studentsFiveOrMore.length})</span>
+      </h3>
+      <div class="loop-tier" data-tier="five">
+        ${studentsFiveOrMore.length ? renderLoopCards(studentsFiveOrMore) : '<div class="no-data" style="padding:14px;color:var(--text-muted);font-size:0.85rem">No students in this tier.</div>'}
+      </div>
+      <h3 class="loop-tier-header" style="margin-top:28px;margin-bottom:12px">
+        3–4 tests at loop grade
+        <span class="tr-count-inline" data-tier="three">(${studentsThreeToFour.length})</span>
+      </h3>
+      <div class="loop-tier" data-tier="three">
+        ${studentsThreeToFour.length ? renderLoopCards(studentsThreeToFour) : '<div class="no-data" style="padding:14px;color:var(--text-muted);font-size:0.85rem">No students in this tier.</div>'}
+      </div>
+    </div>`;
 
     container.innerHTML = html;
 
     // Wire filters
     const loopFilters = { search: "", grade: "all", flag: "all" };
     function applyLoopFilters() {
-      const cards = container.querySelectorAll(".loop-card");
-      let visible = 0;
-      cards.forEach(card => {
-        const nameMatch = !loopFilters.search || card.dataset.name.includes(loopFilters.search);
-        const gradeMatch = loopFilters.grade === "all" || card.dataset.grades.split(",").includes(loopFilters.grade);
-        const flagMatch = loopFilters.flag === "all" || card.dataset.flags.includes(loopFilters.flag);
-        const show = nameMatch && gradeMatch && flagMatch;
-        card.classList.toggle("hidden", !show);
-        if (show) visible++;
+      const tierCounts = { five: 0, three: 0 };
+      container.querySelectorAll(".loop-tier").forEach(tierEl => {
+        const tier = tierEl.dataset.tier;
+        tierEl.querySelectorAll(".loop-card").forEach(card => {
+          const nameMatch = !loopFilters.search || card.dataset.name.includes(loopFilters.search);
+          const gradeMatch = loopFilters.grade === "all" || card.dataset.grades.split(",").includes(loopFilters.grade);
+          const flagMatch = loopFilters.flag === "all" || card.dataset.flags.includes(loopFilters.flag);
+          const show = nameMatch && gradeMatch && flagMatch;
+          card.classList.toggle("hidden", !show);
+          if (show) tierCounts[tier]++;
+        });
       });
+      const visible = tierCounts.five + tierCounts.three;
       document.getElementById("loop-count").textContent = `${visible} of ${totalStudents} students`;
+      const fiveCount = container.querySelector('.tr-count-inline[data-tier="five"]');
+      const threeCount = container.querySelector('.tr-count-inline[data-tier="three"]');
+      if (fiveCount) fiveCount.textContent = `(${tierCounts.five})`;
+      if (threeCount) threeCount.textContent = `(${tierCounts.three})`;
     }
 
     document.getElementById("loop-grade-filter").addEventListener("change", e => {

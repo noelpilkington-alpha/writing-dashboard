@@ -818,6 +818,20 @@ body {
 .tr-date-group.hidden { display: none !important; }
 
 /* ── Testing Loops ────────────────────────────────────────────────── */
+.loop-tier-header {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+}
+.loop-tier-header .tr-count-inline {
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-left: 6px;
+}
+.loop-tier { display: flex; flex-direction: column; gap: 10px; }
 .loop-card {
     background: var(--card-bg);
     border: 2px solid var(--border);
