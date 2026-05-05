@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-05T11:34:31",
+  "generated_at": "2026-05-05T12:44:11",
   "session": {
     "name": "S5",
     "start": "2026-04-27",
@@ -7,7 +7,7 @@
     "school_start": "2026-04-27",
     "school_days_elapsed": 6
   },
-  "total_loop_students": 27,
+  "total_loop_students": 28,
   "students": [
     {
       "id": "663a5401-ec40-4b32-ab98-b4f32df70829",
@@ -40486,6 +40486,1356 @@
         ],
         "rushing": true,
         "rushed_count": 6
+      },
+      "analysis": {}
+    },
+    {
+      "id": "9d4b8232-d001-4e88-a813-3f072d849cd4",
+      "name": "Valentina Litchfield",
+      "email": "valentina.litchfield@gt.school",
+      "campus": "GT Anywhere",
+      "level": "Middle School",
+      "hmg": 2,
+      "effective_grade": null,
+      "loop_details": [
+        {
+          "grade": 3,
+          "total_tests": 4,
+          "failed_count": 4,
+          "rushed_count": 3,
+          "avg_time_minutes": 24.0,
+          "tests": [
+            {
+              "name": "Alpha Standardized Writing G3.7",
+              "score": 88.0,
+              "date": "2026-04-28",
+              "rushed": true
+            },
+            {
+              "name": "Alpha Standardized Writing G3.8",
+              "score": 86.0,
+              "date": "2026-04-29",
+              "rushed": true
+            },
+            {
+              "name": "Alpha Standardized Writing G3.9",
+              "score": 88.0,
+              "date": "2026-04-30",
+              "rushed": true
+            },
+            {
+              "name": "Alpha Standardized Writing G3.10",
+              "score": 81.0,
+              "date": "2026-05-01",
+              "rushed": false
+            }
+          ],
+          "analysis": null
+        }
+      ],
+      "total_failed_tests": 4,
+      "total_rushed": 3,
+      "tests": [
+        {
+          "test_name": "Alpha Standardized Writing G3.7",
+          "grade": 3,
+          "score": 88.0,
+          "date": "2026-04-28",
+          "time_taken": "22m",
+          "rushed": true,
+          "questions": [
+            {
+              "number": 1,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Sentence 19 is a fragment. Rewrite it as a complete sentence: 19. Resting on the ground as they get heavier.",
+              "student_answer": "<p>The pumpkins rest on the ground as they get heavier.</p>",
+              "correct_fraction": 1,
+              "max_score": 2.0,
+              "actual_score": 2.0,
+              "standards": []
+            },
+            {
+              "number": 2,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Combine sentences 2 and 3 into one clear sentence.  2. People decorate their homes with them. 3. Stores fill big boxes with bright orange pumpkins.",
+              "student_answer": "<p>Stoes fill big boxes with bright orange pumpkins so people can decorate their homes with them.</p>",
+              "correct_fraction": 0.75,
+              "max_score": 2.0,
+              "actual_score": 1.5,
+              "standards": []
+            },
+            {
+              "number": 3,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Sentence 5 tells us what a pumpkin seed looks like on the outside. Add another detail from the passage to expand sentence 5 into a complete sentence with more information. 5. A pumpkin seed is flat and white.",
+              "student_answer": "<p>A pumpkin seed is small, white, and flat.</p>",
+              "correct_fraction": 0.5,
+              "max_score": 2.0,
+              "actual_score": 1.0,
+              "standards": []
+            },
+            {
+              "number": 4,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Rewrite sentence 16 to include an appositive giving more information about the bees.  16. Bees buzz from flower to flower.",
+              "student_answer": "<p>Bees, small flying polinater bugs, buzz from flower to flower.</p>",
+              "correct_fraction": 1,
+              "max_score": 2.0,
+              "actual_score": 2.0,
+              "standards": []
+            },
+            {
+              "number": 5,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Combine sentences 22 and 23 using because, but or so.  22. Inside a pumpkin is stringy pulp and many seeds. 23. The seeds can be cleaned and baked for a snack.",
+              "student_answer": "<p>Inside the pumpkins is stringey pulp and many seeds, but the seeds can be cleaned and baked for a yummy snack.</p>",
+              "correct_fraction": 1,
+              "max_score": 2.0,
+              "actual_score": 2.0,
+              "standards": []
+            },
+            {
+              "number": 6,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Write one sentence explaining why pumpkin seeds need warm soil to sprout.",
+              "student_answer": "<p>Pumpkins need warm soil to sprout because they are tropical origian plants, and the tropics are warm, therefore pumpkins need warm soil to grow.</p>",
+              "correct_fraction": 1,
+              "max_score": 3.0,
+              "actual_score": 3.0,
+              "standards": []
+            },
+            {
+              "number": 7,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Write one sentence explaining why bees help pumpkins grow.",
+              "student_answer": "<p>Bees help pumpkins grow because bees polinate the flowers and help them grow.</p><p><br></p>",
+              "correct_fraction": 1,
+              "max_score": 3.0,
+              "actual_score": 3.0,
+              "standards": []
+            },
+            {
+              "number": 8,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Write one sentence about something that changes as the pumpkin grows and explain why it changes.",
+              "student_answer": "<p>Somthig that changes as a pumpkin grows are the flowers, the floers start out as little buds and eventually turn into large, plump pumpkins.</p>",
+              "correct_fraction": 0.67,
+              "max_score": 3.0,
+              "actual_score": 2.0100000000000002,
+              "standards": []
+            },
+            {
+              "number": 9,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Write one sentence describing what people can use pumpkins for after they are picked. Include an example.",
+              "student_answer": "<p>One thing that people can use pumpkins for are pumpkin pies at Thankgiving dinner.</p>",
+              "correct_fraction": 0.67,
+              "max_score": 3.0,
+              "actual_score": 2.0100000000000002,
+              "standards": []
+            },
+            {
+              "number": 10,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Write one sentence explaining why someone might save pumpkin seeds to plant in spring.",
+              "student_answer": "<p>Someone might save pumpkin seeds to plant in the spring so that in the fall they can sell them or eat them.</p>",
+              "correct_fraction": 1,
+              "max_score": 3.0,
+              "actual_score": 3.0,
+              "standards": []
+            },
+            {
+              "number": 11,
+              "title": "Essay with Plain Text",
+              "type": "extended-text",
+              "prompt": "Prompt Read the passage . Write  on the following: Learning to Cook one well-organized paragraph Use facts from the passage in your paragraph. Explain why learning to cook can help children. Your paragraph should: 1. Clearly state your central idea 2. Organize your writing 3. Develop your ideas in detail 4. Use evidence from the selection in your response 5. Use correct spelling, capitalization, punctuation, and grammar Make sure to: 1. Review the selection 2. Plan your response 3. Write your re",
+              "student_answer": "Learning to cook is a very usefull skill for children.\nOne reason to learn to cook is that you can lern what differnt ingrediants can do to food.\nAnother reason is that is can use thing you learn from school. One example of this is that you use math, or fractions, for mesuring.\nCooking can also boost a child's creativity. For example children can make cakes that look like lions, or cookies that look like hearts.\nIn the end, cooking is a very usefull skill to learn for a child's development.",
+              "correct_fraction": 0.9,
+              "max_score": 20.0,
+              "actual_score": 18.0,
+              "standards": []
+            }
+          ],
+          "total_questions": 11,
+          "incorrect_questions": [
+            {
+              "number": 2,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Combine sentences 2 and 3 into one clear sentence.  2. People decorate their homes with them. 3. Stores fill big boxes with bright orange pumpkins.",
+              "student_answer": "<p>Stoes fill big boxes with bright orange pumpkins so people can decorate their homes with them.</p>",
+              "correct_fraction": 0.75,
+              "max_score": 2.0,
+              "actual_score": 1.5,
+              "standards": []
+            },
+            {
+              "number": 3,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Sentence 5 tells us what a pumpkin seed looks like on the outside. Add another detail from the passage to expand sentence 5 into a complete sentence with more information. 5. A pumpkin seed is flat and white.",
+              "student_answer": "<p>A pumpkin seed is small, white, and flat.</p>",
+              "correct_fraction": 0.5,
+              "max_score": 2.0,
+              "actual_score": 1.0,
+              "standards": []
+            },
+            {
+              "number": 8,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Write one sentence about something that changes as the pumpkin grows and explain why it changes.",
+              "student_answer": "<p>Somthig that changes as a pumpkin grows are the flowers, the floers start out as little buds and eventually turn into large, plump pumpkins.</p>",
+              "correct_fraction": 0.67,
+              "max_score": 3.0,
+              "actual_score": 2.0100000000000002,
+              "standards": []
+            },
+            {
+              "number": 9,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Write one sentence describing what people can use pumpkins for after they are picked. Include an example.",
+              "student_answer": "<p>One thing that people can use pumpkins for are pumpkin pies at Thankgiving dinner.</p>",
+              "correct_fraction": 0.67,
+              "max_score": 3.0,
+              "actual_score": 2.0100000000000002,
+              "standards": []
+            },
+            {
+              "number": 11,
+              "title": "Essay with Plain Text",
+              "type": "extended-text",
+              "prompt": "Prompt Read the passage . Write  on the following: Learning to Cook one well-organized paragraph Use facts from the passage in your paragraph. Explain why learning to cook can help children. Your paragraph should: 1. Clearly state your central idea 2. Organize your writing 3. Develop your ideas in detail 4. Use evidence from the selection in your response 5. Use correct spelling, capitalization, punctuation, and grammar Make sure to: 1. Review the selection 2. Plan your response 3. Write your re",
+              "student_answer": "Learning to cook is a very usefull skill for children.\nOne reason to learn to cook is that you can lern what differnt ingrediants can do to food.\nAnother reason is that is can use thing you learn from school. One example of this is that you use math, or fractions, for mesuring.\nCooking can also boost a child's creativity. For example children can make cakes that look like lions, or cookies that look like hearts.\nIn the end, cooking is a very usefull skill to learn for a child's development.",
+              "correct_fraction": 0.9,
+              "max_score": 20.0,
+              "actual_score": 18.0,
+              "standards": []
+            }
+          ]
+        },
+        {
+          "test_name": "Alpha Standardized Writing G3.8",
+          "grade": 3,
+          "score": 86.0,
+          "date": "2026-04-29",
+          "time_taken": "24m",
+          "rushed": true,
+          "questions": [
+            {
+              "number": 1,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Rewrite the following sentence to include an appositive to give more information about Ms. Bright:  Ms. Bright thanked Jordan for his help.",
+              "student_answer": "<p>Ms.bright, the librarian, thanked Jordan for his help.</p>",
+              "correct_fraction": 0.75,
+              "max_score": 2.0,
+              "actual_score": 1.5,
+              "standards": []
+            },
+            {
+              "number": 2,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Combine sentences 5 and 6 using because, but, or so:  : 5 The bin slipped from her hands. : 6 She was carrying too many books.",
+              "student_answer": "<p>The bin slipped from her hands because she was carrying to many books.</p><p><br></p>",
+              "correct_fraction": 1,
+              "max_score": 2.0,
+              "actual_score": 2.0,
+              "standards": []
+            },
+            {
+              "number": 3,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Sentence 7 is a fragment. Rewrite it as a complete sentence:  7: A stack of chapter books on the floor.",
+              "student_answer": "<p>A stack of chapter books fell to the floor when she tried to carry to many of them at once.</p>",
+              "correct_fraction": 1,
+              "max_score": 2.0,
+              "actual_score": 2.0,
+              "standards": []
+            },
+            {
+              "number": 4,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Change sentence 17 into a question:  17: Jordan asked his classmates to help organize the shelves.",
+              "student_answer": "<p>Why did Jordan ask his classmates for help.</p>",
+              "correct_fraction": 0.5,
+              "max_score": 2.0,
+              "actual_score": 1.0,
+              "standards": []
+            },
+            {
+              "number": 5,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Combine sentences 13 and 14 into one complete sentence:  13: Jordan picked up the books. 14: Jordan placed the bin on the table.",
+              "student_answer": "<p>Jordan picked up the books and placed them on the table.</p>",
+              "correct_fraction": 1,
+              "max_score": 2.0,
+              "actual_score": 2.0,
+              "standards": []
+            },
+            {
+              "number": 6,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Write one sentence that explains why Jordan wanted to help Ms. Bright.",
+              "student_answer": "<p>Jordan helped Ms.Bright it was the right thing to do.</p><p><br></p>",
+              "correct_fraction": 0.67,
+              "max_score": 3.0,
+              "actual_score": 2.0100000000000002,
+              "standards": []
+            },
+            {
+              "number": 7,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Write one sentence that describes how Ms. Bright felt when the students helped, and explain why.",
+              "student_answer": "<p>Ms.Bright felt happey when all the studnts helped her because it gave her faith in the new generation.</p>",
+              "correct_fraction": 1,
+              "max_score": 3.0,
+              "actual_score": 3.0,
+              "standards": []
+            },
+            {
+              "number": 8,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Write one sentence that explains the lesson the story teaches about kindness.",
+              "student_answer": "<p>This story teaches that kindness can be fun and rewarding.</p>",
+              "correct_fraction": 1,
+              "max_score": 3.0,
+              "actual_score": 3.0,
+              "standards": []
+            },
+            {
+              "number": 9,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Imagine you were new to a school. Write one sentence that explains what someone could do to make you feel welcome, and give a reason.",
+              "student_answer": "<p>If I were at a new school I would feel welcome by somone wanting to be friends with me.</p><p><br></p>",
+              "correct_fraction": 0.67,
+              "max_score": 3.0,
+              "actual_score": 2.0100000000000002,
+              "standards": []
+            },
+            {
+              "number": 10,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Write one sentence that explains why the library is an important place in a school.",
+              "student_answer": "<p>The Library is important to a school because it gives students a place to read and study.</p><p><br></p>",
+              "correct_fraction": 1,
+              "max_score": 3.0,
+              "actual_score": 3.0,
+              "standards": []
+            },
+            {
+              "number": 11,
+              "title": "Essay with Plain Text",
+              "type": "extended-text",
+              "prompt": "Prompt Read the passage . Write  on the following: Why People Build Gardens Together one well-organized paragraph Use facts from the passage in your paragraph. Explain why shared gardens are helpful to towns. Your paragraph should: Make sure to: Write your paragraph in the box provided. Clearly state your central idea Organize your writing Develop your ideas in detail Use evidence from the selection in your response Use correct spelling, capitalization, punctuation, and grammar Review the select",
+              "student_answer": "Comunity gardens are very helpfull for many reasons. \nFor one, it allowes people with limited space to garden and grow their own food.\nSecondely, it allows children to learn about the earth, soil, and the things that live in the earth.\nThird, a garden can help people meet other people ang give a sence of community.\nLast, it can make the area look nice with flowers and greenary.\nOverall, community gardens are very usefull.\n\n",
+              "correct_fraction": 0.85,
+              "max_score": 20.0,
+              "actual_score": 17.0,
+              "standards": []
+            }
+          ],
+          "total_questions": 11,
+          "incorrect_questions": [
+            {
+              "number": 1,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Rewrite the following sentence to include an appositive to give more information about Ms. Bright:  Ms. Bright thanked Jordan for his help.",
+              "student_answer": "<p>Ms.bright, the librarian, thanked Jordan for his help.</p>",
+              "correct_fraction": 0.75,
+              "max_score": 2.0,
+              "actual_score": 1.5,
+              "standards": []
+            },
+            {
+              "number": 4,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Change sentence 17 into a question:  17: Jordan asked his classmates to help organize the shelves.",
+              "student_answer": "<p>Why did Jordan ask his classmates for help.</p>",
+              "correct_fraction": 0.5,
+              "max_score": 2.0,
+              "actual_score": 1.0,
+              "standards": []
+            },
+            {
+              "number": 6,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Write one sentence that explains why Jordan wanted to help Ms. Bright.",
+              "student_answer": "<p>Jordan helped Ms.Bright it was the right thing to do.</p><p><br></p>",
+              "correct_fraction": 0.67,
+              "max_score": 3.0,
+              "actual_score": 2.0100000000000002,
+              "standards": []
+            },
+            {
+              "number": 9,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Imagine you were new to a school. Write one sentence that explains what someone could do to make you feel welcome, and give a reason.",
+              "student_answer": "<p>If I were at a new school I would feel welcome by somone wanting to be friends with me.</p><p><br></p>",
+              "correct_fraction": 0.67,
+              "max_score": 3.0,
+              "actual_score": 2.0100000000000002,
+              "standards": []
+            },
+            {
+              "number": 11,
+              "title": "Essay with Plain Text",
+              "type": "extended-text",
+              "prompt": "Prompt Read the passage . Write  on the following: Why People Build Gardens Together one well-organized paragraph Use facts from the passage in your paragraph. Explain why shared gardens are helpful to towns. Your paragraph should: Make sure to: Write your paragraph in the box provided. Clearly state your central idea Organize your writing Develop your ideas in detail Use evidence from the selection in your response Use correct spelling, capitalization, punctuation, and grammar Review the select",
+              "student_answer": "Comunity gardens are very helpfull for many reasons. \nFor one, it allowes people with limited space to garden and grow their own food.\nSecondely, it allows children to learn about the earth, soil, and the things that live in the earth.\nThird, a garden can help people meet other people ang give a sence of community.\nLast, it can make the area look nice with flowers and greenary.\nOverall, community gardens are very usefull.\n\n",
+              "correct_fraction": 0.85,
+              "max_score": 20.0,
+              "actual_score": 17.0,
+              "standards": []
+            }
+          ]
+        },
+        {
+          "test_name": "Alpha Standardized Writing G3.9",
+          "grade": 3,
+          "score": 88.0,
+          "date": "2026-04-30",
+          "time_taken": "15m",
+          "rushed": true,
+          "questions": [
+            {
+              "number": 1,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Combine Sentence 3 and Sentence 4 into one sentence using an appositive.  Sentence 3: . A colony has one leader Sentence 4: She is the queen bee.",
+              "student_answer": "<p>The colony has one leader, the queen bee. </p>",
+              "correct_fraction": 1,
+              "max_score": 2.0,
+              "actual_score": 2.0,
+              "standards": []
+            },
+            {
+              "number": 2,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Sentence 7 is a fragment. Rewrite it as a complete sentence.  Sentence 7: To collect sweet nectar from the flowers.",
+              "student_answer": "<p>The bees jobs are to collect sweet nectar from flowers.</p>",
+              "correct_fraction": 0.75,
+              "max_score": 2.0,
+              "actual_score": 1.5,
+              "standards": []
+            },
+            {
+              "number": 3,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Combine Sentence 8 and Sentence 9 using the word or . and then  Sentence 8: The bees bring the nectar back to the hive. Sentence 9: They turn the nectar into honey.",
+              "student_answer": "<p>The bees bring the nectar back to the hive and they turn the nectar into honey.</p>",
+              "correct_fraction": 1,
+              "max_score": 2.0,
+              "actual_score": 2.0,
+              "standards": []
+            },
+            {
+              "number": 4,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Change sentence 10 into a question:  Sentence 10: The honey is food for the bees during the winter.",
+              "student_answer": "<p>When is the honey food for the bees?</p>",
+              "correct_fraction": 0.5,
+              "max_score": 2.0,
+              "actual_score": 1.0,
+              "standards": []
+            },
+            {
+              "number": 5,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Combine sentences 11 and 12 into one complete sentence using or : because, but, so  Sentence 11: Bees are also important for nature. Sentence 12: They carry pollen from flower to flower.",
+              "student_answer": "<p>Bees are also important for nature because they carry pollen from flower to flower.</p>",
+              "correct_fraction": 1,
+              "max_score": 2.0,
+              "actual_score": 2.0,
+              "standards": []
+            },
+            {
+              "number": 6,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Why do worker bees fly out of the hive? Write one complete sentence.",
+              "student_answer": "<p>Worker bees fly out of the hive to collect pollen for honey making.</p>",
+              "correct_fraction": 1,
+              "max_score": 3.0,
+              "actual_score": 3.0,
+              "standards": []
+            },
+            {
+              "number": 7,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Why is honey important to the bees?  Write one complete sentence.",
+              "student_answer": "<p>Honey is inportany to the bees because it provides a food sorce for them.</p>",
+              "correct_fraction": 1,
+              "max_score": 3.0,
+              "actual_score": 3.0,
+              "standards": []
+            },
+            {
+              "number": 8,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "How do bees help plants grow? Write one complete sentence.",
+              "student_answer": "<p>Bees help plants grow by flying from flower to flower and germinating each plant.</p>",
+              "correct_fraction": 1,
+              "max_score": 3.0,
+              "actual_score": 3.0,
+              "standards": []
+            },
+            {
+              "number": 9,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Why should people protect bees? Write one complete sentence.",
+              "student_answer": "<p>People should protect bees because bees are crucial to the enviornment and plant survival.</p>",
+              "correct_fraction": 1,
+              "max_score": 3.0,
+              "actual_score": 3.0,
+              "standards": []
+            },
+            {
+              "number": 10,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "How would you feel if there were no bees to help plants grow? Write one complete sentence.",
+              "student_answer": "<p>If there were no bees to help the plants grow I would feel nothing because I would be dead.</p>",
+              "correct_fraction": 1,
+              "max_score": 3.0,
+              "actual_score": 3.0,
+              "standards": []
+            },
+            {
+              "number": 11,
+              "title": "Essay with Plain Text",
+              "type": "extended-text",
+              "prompt": "Prompt Read the passage '.' Write  on the following: The Mighty Oak Tree one well-organized paragraph Use facts from the passage in your paragraph. Why is the oak tree important to animals and nature? Your paragraph should: 1. Clearly state your central idea 2. Organize your writing 3. Develop your ideas in detail 4. Use evidence from the selection in your response 5. Use correct spelling, capitalization, punctuation, and grammar Make sure to: 1. Review the selection 2. Plan your response 3. Wri",
+              "student_answer": "Oak trees are very important to animals and nature, heres why.\nFirstly, the oak tree's branches are very wide and provide a good home for birds and other animals.\nAlso, oak trees provide shade and cleaner air for humans and other birds.\nThats why oak trees are bery important.",
+              "correct_fraction": 0.8,
+              "max_score": 20.0,
+              "actual_score": 16.0,
+              "standards": []
+            }
+          ],
+          "total_questions": 11,
+          "incorrect_questions": [
+            {
+              "number": 2,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Sentence 7 is a fragment. Rewrite it as a complete sentence.  Sentence 7: To collect sweet nectar from the flowers.",
+              "student_answer": "<p>The bees jobs are to collect sweet nectar from flowers.</p>",
+              "correct_fraction": 0.75,
+              "max_score": 2.0,
+              "actual_score": 1.5,
+              "standards": []
+            },
+            {
+              "number": 4,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Change sentence 10 into a question:  Sentence 10: The honey is food for the bees during the winter.",
+              "student_answer": "<p>When is the honey food for the bees?</p>",
+              "correct_fraction": 0.5,
+              "max_score": 2.0,
+              "actual_score": 1.0,
+              "standards": []
+            },
+            {
+              "number": 11,
+              "title": "Essay with Plain Text",
+              "type": "extended-text",
+              "prompt": "Prompt Read the passage '.' Write  on the following: The Mighty Oak Tree one well-organized paragraph Use facts from the passage in your paragraph. Why is the oak tree important to animals and nature? Your paragraph should: 1. Clearly state your central idea 2. Organize your writing 3. Develop your ideas in detail 4. Use evidence from the selection in your response 5. Use correct spelling, capitalization, punctuation, and grammar Make sure to: 1. Review the selection 2. Plan your response 3. Wri",
+              "student_answer": "Oak trees are very important to animals and nature, heres why.\nFirstly, the oak tree's branches are very wide and provide a good home for birds and other animals.\nAlso, oak trees provide shade and cleaner air for humans and other birds.\nThats why oak trees are bery important.",
+              "correct_fraction": 0.8,
+              "max_score": 20.0,
+              "actual_score": 16.0,
+              "standards": []
+            }
+          ]
+        },
+        {
+          "test_name": "Alpha Standardized Writing G3.10",
+          "grade": 3,
+          "score": 81.0,
+          "date": "2026-05-01",
+          "time_taken": "34m",
+          "rushed": false,
+          "questions": [
+            {
+              "number": 1,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Combine Sentence 2 and Sentence 3 into one sentence using an appositive.  Sentence 2: . The first bikes looked very different from bikes today Sentence 3: . Long ago, the first bicycle was made of wood",
+              "student_answer": "<p>The first bikes, which where made of wood, lookedvery diffrent from the bikes today.</p><p><br></p>",
+              "correct_fraction": 0.5,
+              "max_score": 2.0,
+              "actual_score": 1.0,
+              "standards": []
+            },
+            {
+              "number": 2,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Sentence 6 is a fragment. Rewrite it as a complete sentence.  Sentence 6: To make the bike move.",
+              "student_answer": "<p>Riders pushed the ground with their feet o make the bike move</p>",
+              "correct_fraction": 0.5,
+              "max_score": 2.0,
+              "actual_score": 1.0,
+              "standards": []
+            },
+            {
+              "number": 3,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Combine Sentence 8 and Sentence 9 using the word . and  Sentence 8: It had a giant front wheel and a tiny back wheel. Sentence 9: . The rider sat very high up in the air",
+              "student_answer": "<p>It had a giant front wheel, a tiny back wheel, and the rider sat very high up in the air</p>",
+              "correct_fraction": 0.75,
+              "max_score": 2.0,
+              "actual_score": 1.5,
+              "standards": []
+            },
+            {
+              "number": 4,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Combine Sentence 10 and Sentence 11 using or . because, but, so  Sentence 10: . It was hard to balance on this bike Sentence 11: . Many people fell off and got hurt",
+              "student_answer": "<p>It was hard to balance on this wheel so many people fell off and got hurt.</p><p><br></p>",
+              "correct_fraction": 0.5,
+              "max_score": 2.0,
+              "actual_score": 1.0,
+              "standards": []
+            },
+            {
+              "number": 5,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Rewrite Sentence 14 as a question.  Sentence 14: It had air-filled rubber tires for a smooth ride.",
+              "student_answer": "<p>Why did bikes have air-filled rubber tires?</p>",
+              "correct_fraction": 1,
+              "max_score": 2.0,
+              "actual_score": 2.0,
+              "standards": []
+            },
+            {
+              "number": 6,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "How did riders make the very first wooden bicycles move? Write one complete sentence.",
+              "student_answer": "<p>The riders made the first bicycles move by pushing the ground with their feet.</p>",
+              "correct_fraction": 1,
+              "max_score": 3.0,
+              "actual_score": 3.0,
+              "standards": []
+            },
+            {
+              "number": 7,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Why did adding pedals change how the bicycle worked? Write one complete sentence.",
+              "student_answer": "<p>Adding pedals changed how the bike worked because it added a sence of safety and ease to riding a bike.</p>",
+              "correct_fraction": 1,
+              "max_score": 3.0,
+              "actual_score": 3.0,
+              "standards": []
+            },
+            {
+              "number": 8,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "How would you feel riding a bicycle with a giant front wheel?  Write one complete sentence.",
+              "student_answer": "<p>I would not like to ride a bike with a giant front wheel because it would scare me to be that high up with a low sense of security.</p>",
+              "correct_fraction": 1,
+              "max_score": 3.0,
+              "actual_score": 3.0,
+              "standards": []
+            },
+            {
+              "number": 9,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Why is the \"safety bicycle\" better than earlier bikes? Write one complete sentence.",
+              "student_answer": "<p>The \"safety bicycle\" is better then earlier bicycles because they are safer and a smoother ride.</p>",
+              "correct_fraction": 0.67,
+              "max_score": 3.0,
+              "actual_score": 2.0100000000000002,
+              "standards": []
+            },
+            {
+              "number": 10,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "How would riding the \"safety bicycle\" feel different from riding the earlier bikes? Write one complete sentence.",
+              "student_answer": "<p>Riding the safety bicycle is diffrent then riding the earlier bikes because, for one the first bikes are made of wood and the safety bikes are made of metal.</p>",
+              "correct_fraction": 1,
+              "max_score": 3.0,
+              "actual_score": 3.0,
+              "standards": []
+            },
+            {
+              "number": 11,
+              "title": "Essay with Plain Text",
+              "type": "extended-text",
+              "prompt": "Prompt Read the passage '.' Write  on the following: Dogs with Jobs one well-organized paragraph What are the different ways working dogs help humans Use facts from the passage in your paragraph. ? Your paragraph should: 1. Clearly state your central idea 2. Organize your writing 3. Develop your ideas in detail 4. Use evidence from the selection in your response 5. Use correct spelling, capitalization, punctuation, and grammar Make sure to: 1. Review the selection 2. Plan your response 3. Write ",
+              "student_answer": "Dogs are fun pets, but some dogs have important jobs.\nOne of these dog jobs are police, this job has dogs use their noses to find missing people or items.\nAnother type is a guide dog or a dog who guides people who can't see well and keeps them out of danger.\nAlso there are dogs called hearding dogs, thease dogs heard animals like sheep and ducks to help keep the animals safe.\nDogs are very crucial to humans, weather they are working or just pets.",
+              "correct_fraction": 0.8,
+              "max_score": 20.0,
+              "actual_score": 16.0,
+              "standards": []
+            }
+          ],
+          "total_questions": 11,
+          "incorrect_questions": [
+            {
+              "number": 1,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Combine Sentence 2 and Sentence 3 into one sentence using an appositive.  Sentence 2: . The first bikes looked very different from bikes today Sentence 3: . Long ago, the first bicycle was made of wood",
+              "student_answer": "<p>The first bikes, which where made of wood, lookedvery diffrent from the bikes today.</p><p><br></p>",
+              "correct_fraction": 0.5,
+              "max_score": 2.0,
+              "actual_score": 1.0,
+              "standards": []
+            },
+            {
+              "number": 2,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Sentence 6 is a fragment. Rewrite it as a complete sentence.  Sentence 6: To make the bike move.",
+              "student_answer": "<p>Riders pushed the ground with their feet o make the bike move</p>",
+              "correct_fraction": 0.5,
+              "max_score": 2.0,
+              "actual_score": 1.0,
+              "standards": []
+            },
+            {
+              "number": 3,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Combine Sentence 8 and Sentence 9 using the word . and  Sentence 8: It had a giant front wheel and a tiny back wheel. Sentence 9: . The rider sat very high up in the air",
+              "student_answer": "<p>It had a giant front wheel, a tiny back wheel, and the rider sat very high up in the air</p>",
+              "correct_fraction": 0.75,
+              "max_score": 2.0,
+              "actual_score": 1.5,
+              "standards": []
+            },
+            {
+              "number": 4,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Combine Sentence 10 and Sentence 11 using or . because, but, so  Sentence 10: . It was hard to balance on this bike Sentence 11: . Many people fell off and got hurt",
+              "student_answer": "<p>It was hard to balance on this wheel so many people fell off and got hurt.</p><p><br></p>",
+              "correct_fraction": 0.5,
+              "max_score": 2.0,
+              "actual_score": 1.0,
+              "standards": []
+            },
+            {
+              "number": 9,
+              "title": "Essay with Rich Text",
+              "type": "extended-text",
+              "prompt": "Why is the \"safety bicycle\" better than earlier bikes? Write one complete sentence.",
+              "student_answer": "<p>The \"safety bicycle\" is better then earlier bicycles because they are safer and a smoother ride.</p>",
+              "correct_fraction": 0.67,
+              "max_score": 3.0,
+              "actual_score": 2.0100000000000002,
+              "standards": []
+            },
+            {
+              "number": 11,
+              "title": "Essay with Plain Text",
+              "type": "extended-text",
+              "prompt": "Prompt Read the passage '.' Write  on the following: Dogs with Jobs one well-organized paragraph What are the different ways working dogs help humans Use facts from the passage in your paragraph. ? Your paragraph should: 1. Clearly state your central idea 2. Organize your writing 3. Develop your ideas in detail 4. Use evidence from the selection in your response 5. Use correct spelling, capitalization, punctuation, and grammar Make sure to: 1. Review the selection 2. Plan your response 3. Write ",
+              "student_answer": "Dogs are fun pets, but some dogs have important jobs.\nOne of these dog jobs are police, this job has dogs use their noses to find missing people or items.\nAnother type is a guide dog or a dog who guides people who can't see well and keeps them out of danger.\nAlso there are dogs called hearding dogs, thease dogs heard animals like sheep and ducks to help keep the animals safe.\nDogs are very crucial to humans, weather they are working or just pets.",
+              "correct_fraction": 0.8,
+              "max_score": 20.0,
+              "actual_score": 16.0,
+              "standards": []
+            }
+          ]
+        }
+      ],
+      "skills": [
+        {
+          "course": "Paragraphs G3",
+          "skill": "Elaborate Paragraphs",
+          "grade": 3,
+          "attempts": 2,
+          "best_accuracy": 100,
+          "latest_accuracy": 100,
+          "avg_accuracy": 100.0,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 0.0,
+          "dates": [
+            "2026-05-01",
+            "2026-05-01"
+          ]
+        },
+        {
+          "course": "Paragraphs G3",
+          "skill": "Eliminate Irrelevant Sentences",
+          "grade": 3,
+          "attempts": 2,
+          "best_accuracy": 100,
+          "latest_accuracy": 100,
+          "avg_accuracy": 100.0,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 0.0,
+          "dates": [
+            "2026-03-27",
+            "2026-03-27"
+          ]
+        },
+        {
+          "course": "Paragraphs G3",
+          "skill": "Identify Topic Sentence",
+          "grade": 3,
+          "attempts": 6,
+          "best_accuracy": 100,
+          "latest_accuracy": 94,
+          "avg_accuracy": 98.0,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 0.0,
+          "dates": [
+            "2026-03-27",
+            "2026-03-27",
+            "2026-04-01",
+            "2026-04-01",
+            "2026-04-09",
+            "2026-04-09"
+          ]
+        },
+        {
+          "course": "Paragraphs G3",
+          "skill": "Identify Topic Sentence And Sequence Details",
+          "grade": 3,
+          "attempts": 2,
+          "best_accuracy": 92,
+          "latest_accuracy": 92,
+          "avg_accuracy": 92.0,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 0,
+          "dates": [
+            "2026-04-02",
+            "2026-04-02"
+          ]
+        },
+        {
+          "course": "Paragraphs G3",
+          "skill": "Make Topic Sentences",
+          "grade": 3,
+          "attempts": 4,
+          "best_accuracy": 93,
+          "latest_accuracy": 93,
+          "avg_accuracy": 92.5,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 0.0,
+          "dates": [
+            "2026-04-01",
+            "2026-04-01",
+            "2026-04-10",
+            "2026-04-10"
+          ]
+        },
+        {
+          "course": "Paragraphs G3",
+          "skill": "Turn Paragraph Into Spo",
+          "grade": 3,
+          "attempts": 5,
+          "best_accuracy": 100,
+          "latest_accuracy": 100,
+          "avg_accuracy": 91.7,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 0.0,
+          "dates": [
+            "2026-03-27",
+            "2026-03-27",
+            "2026-03-31",
+            "2026-04-03",
+            "2026-04-03"
+          ]
+        },
+        {
+          "course": "Paragraphs G3",
+          "skill": "Using Transition Words",
+          "grade": 3,
+          "attempts": 2,
+          "best_accuracy": 92,
+          "latest_accuracy": 92,
+          "avg_accuracy": 92.0,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 0,
+          "dates": [
+            "2026-03-31",
+            "2026-03-31"
+          ]
+        },
+        {
+          "course": "Paragraphs G3",
+          "skill": "Write Cs From Details",
+          "grade": 3,
+          "attempts": 1,
+          "best_accuracy": 79,
+          "latest_accuracy": 79,
+          "avg_accuracy": 79.0,
+          "mastered": false,
+          "depreciating": false,
+          "total_xp": 0,
+          "dates": [
+            "2026-04-09"
+          ]
+        },
+        {
+          "course": "Paragraphs G3",
+          "skill": "Write Paragraph From Prompt",
+          "grade": 3,
+          "attempts": 2,
+          "best_accuracy": 100,
+          "latest_accuracy": 100,
+          "avg_accuracy": 100.0,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 0.0,
+          "dates": [
+            "2026-03-27",
+            "2026-03-27"
+          ]
+        },
+        {
+          "course": "Paragraphs G3",
+          "skill": "Write Ts From Details",
+          "grade": 3,
+          "attempts": 2,
+          "best_accuracy": 92,
+          "latest_accuracy": 92,
+          "avg_accuracy": 92.0,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 0,
+          "dates": [
+            "2026-04-02",
+            "2026-04-02"
+          ]
+        },
+        {
+          "course": "Paragraphs G3",
+          "skill": "Writing Spos",
+          "grade": 3,
+          "attempts": 1,
+          "best_accuracy": 50,
+          "latest_accuracy": 50,
+          "avg_accuracy": 50.0,
+          "mastered": false,
+          "depreciating": false,
+          "total_xp": 0,
+          "dates": [
+            "2026-04-14"
+          ]
+        },
+        {
+          "course": "Sentences G3",
+          "skill": "Basic Conjunctions",
+          "grade": 3,
+          "attempts": 6,
+          "best_accuracy": 100,
+          "latest_accuracy": 94,
+          "avg_accuracy": 93.3,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 0.0,
+          "dates": [
+            "2026-03-25",
+            "2026-03-25",
+            "2026-03-30",
+            "2026-03-30",
+            "2026-04-29",
+            "2026-04-29"
+          ]
+        },
+        {
+          "course": "Sentences G3",
+          "skill": "Change Sentence To Question",
+          "grade": 3,
+          "attempts": 6,
+          "best_accuracy": 100,
+          "latest_accuracy": 100,
+          "avg_accuracy": 96.0,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 15.0,
+          "dates": [
+            "2026-03-25",
+            "2026-04-07",
+            "2026-04-07",
+            "2026-04-30",
+            "2026-04-30",
+            "2026-05-01"
+          ]
+        },
+        {
+          "course": "Sentences G3",
+          "skill": "Change Sentence Type",
+          "grade": 3,
+          "attempts": 1,
+          "best_accuracy": 75,
+          "latest_accuracy": 75,
+          "avg_accuracy": 75.0,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 0,
+          "dates": [
+            "2026-03-24"
+          ]
+        },
+        {
+          "course": "Sentences G3",
+          "skill": "Combine Sentences",
+          "grade": 3,
+          "attempts": 7,
+          "best_accuracy": 100,
+          "latest_accuracy": 86,
+          "avg_accuracy": 96.5,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 0.0,
+          "dates": [
+            "2026-03-26",
+            "2026-03-26",
+            "2026-03-30",
+            "2026-03-30",
+            "2026-04-29",
+            "2026-04-29",
+            "2026-05-04"
+          ]
+        },
+        {
+          "course": "Sentences G3",
+          "skill": "Combine Sentences With Appositives",
+          "grade": 3,
+          "attempts": 2,
+          "best_accuracy": 86,
+          "latest_accuracy": 86,
+          "avg_accuracy": 86.0,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 0,
+          "dates": [
+            "2026-04-08",
+            "2026-04-08"
+          ]
+        },
+        {
+          "course": "Sentences G3",
+          "skill": "Fragment Or Sentence",
+          "grade": 3,
+          "attempts": 3,
+          "best_accuracy": 94,
+          "latest_accuracy": 94,
+          "avg_accuracy": 84.5,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 0.0,
+          "dates": [
+            "2026-03-24",
+            "2026-04-08",
+            "2026-04-08"
+          ]
+        },
+        {
+          "course": "Sentences G3",
+          "skill": "Identify Appositives",
+          "grade": 3,
+          "attempts": 3,
+          "best_accuracy": 100,
+          "latest_accuracy": 100,
+          "avg_accuracy": 100.0,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 18.75,
+          "dates": [
+            "2026-03-26",
+            "2026-05-04",
+            "2026-05-04"
+          ]
+        },
+        {
+          "course": "Sentences G3",
+          "skill": "Identify Sentence Type",
+          "grade": 3,
+          "attempts": 2,
+          "best_accuracy": 100,
+          "latest_accuracy": 100,
+          "avg_accuracy": 100.0,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 0.0,
+          "dates": [
+            "2026-03-24",
+            "2026-03-24"
+          ]
+        },
+        {
+          "course": "Sentences G3",
+          "skill": "Kernel Expansion",
+          "grade": 3,
+          "attempts": 1,
+          "best_accuracy": 80,
+          "latest_accuracy": 80,
+          "avg_accuracy": 80.0,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 15,
+          "dates": [
+            "2026-04-09"
+          ]
+        },
+        {
+          "course": "Sentences G3",
+          "skill": "Subordinating Conjunctions",
+          "grade": 3,
+          "attempts": 2,
+          "best_accuracy": 100,
+          "latest_accuracy": 100,
+          "avg_accuracy": 100.0,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 0.0,
+          "dates": [
+            "2026-03-30",
+            "2026-03-30"
+          ]
+        },
+        {
+          "course": "Sentences G3",
+          "skill": "Unscramble Sentences",
+          "grade": 3,
+          "attempts": 3,
+          "best_accuracy": 100,
+          "latest_accuracy": 100,
+          "avg_accuracy": 96.0,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 15.0,
+          "dates": [
+            "2026-03-24",
+            "2026-05-04",
+            "2026-05-04"
+          ]
+        },
+        {
+          "course": "Sentences G3",
+          "skill": "Use Sentence Types",
+          "grade": 3,
+          "attempts": 2,
+          "best_accuracy": 100,
+          "latest_accuracy": 100,
+          "avg_accuracy": 100.0,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 0.0,
+          "dates": [
+            "2026-03-26",
+            "2026-03-26"
+          ]
+        },
+        {
+          "course": "Sentences G3",
+          "skill": "Write Appositives",
+          "grade": 3,
+          "attempts": 2,
+          "best_accuracy": 83,
+          "latest_accuracy": 25,
+          "avg_accuracy": 54.0,
+          "mastered": true,
+          "depreciating": false,
+          "total_xp": 15,
+          "dates": [
+            "2026-03-26",
+            "2026-04-28"
+          ]
+        },
+        {
+          "course": "Sentences G3",
+          "skill": "Write Sentence From Prompt",
+          "grade": 3,
+          "attempts": 5,
+          "best_accuracy": 86,
+          "latest_accuracy": 75,
+          "avg_accuracy": 82.3,
+          "mastered": true,
+          "depreciating": true,
+          "total_xp": 0.0,
+          "dates": [
+            "2026-03-26",
+            "2026-03-26",
+            "2026-03-31",
+            "2026-03-31",
+            "2026-04-30"
+          ]
+        }
+      ],
+      "flags": {
+        "mastered_in_alphawrite_not_tests": [
+          {
+            "course": "Paragraphs G3",
+            "skill": "Elaborate Paragraphs",
+            "best_accuracy": 100
+          },
+          {
+            "course": "Paragraphs G3",
+            "skill": "Eliminate Irrelevant Sentences",
+            "best_accuracy": 100
+          },
+          {
+            "course": "Paragraphs G3",
+            "skill": "Identify Topic Sentence",
+            "best_accuracy": 100
+          },
+          {
+            "course": "Paragraphs G3",
+            "skill": "Identify Topic Sentence And Sequence Details",
+            "best_accuracy": 92
+          },
+          {
+            "course": "Paragraphs G3",
+            "skill": "Make Topic Sentences",
+            "best_accuracy": 93
+          },
+          {
+            "course": "Paragraphs G3",
+            "skill": "Turn Paragraph Into Spo",
+            "best_accuracy": 100
+          },
+          {
+            "course": "Paragraphs G3",
+            "skill": "Using Transition Words",
+            "best_accuracy": 92
+          },
+          {
+            "course": "Paragraphs G3",
+            "skill": "Write Paragraph From Prompt",
+            "best_accuracy": 100
+          },
+          {
+            "course": "Paragraphs G3",
+            "skill": "Write Ts From Details",
+            "best_accuracy": 92
+          },
+          {
+            "course": "Sentences G3",
+            "skill": "Basic Conjunctions",
+            "best_accuracy": 100
+          },
+          {
+            "course": "Sentences G3",
+            "skill": "Change Sentence To Question",
+            "best_accuracy": 100
+          },
+          {
+            "course": "Sentences G3",
+            "skill": "Change Sentence Type",
+            "best_accuracy": 75
+          },
+          {
+            "course": "Sentences G3",
+            "skill": "Combine Sentences",
+            "best_accuracy": 100
+          },
+          {
+            "course": "Sentences G3",
+            "skill": "Combine Sentences With Appositives",
+            "best_accuracy": 86
+          },
+          {
+            "course": "Sentences G3",
+            "skill": "Fragment Or Sentence",
+            "best_accuracy": 94
+          },
+          {
+            "course": "Sentences G3",
+            "skill": "Identify Appositives",
+            "best_accuracy": 100
+          },
+          {
+            "course": "Sentences G3",
+            "skill": "Identify Sentence Type",
+            "best_accuracy": 100
+          },
+          {
+            "course": "Sentences G3",
+            "skill": "Kernel Expansion",
+            "best_accuracy": 80
+          },
+          {
+            "course": "Sentences G3",
+            "skill": "Subordinating Conjunctions",
+            "best_accuracy": 100
+          },
+          {
+            "course": "Sentences G3",
+            "skill": "Unscramble Sentences",
+            "best_accuracy": 100
+          },
+          {
+            "course": "Sentences G3",
+            "skill": "Use Sentence Types",
+            "best_accuracy": 100
+          },
+          {
+            "course": "Sentences G3",
+            "skill": "Write Appositives",
+            "best_accuracy": 83
+          },
+          {
+            "course": "Sentences G3",
+            "skill": "Write Sentence From Prompt",
+            "best_accuracy": 86
+          }
+        ],
+        "depreciating_skills": [
+          {
+            "course": "Sentences G3",
+            "skill": "Write Sentence From Prompt",
+            "best_accuracy": 86,
+            "latest_accuracy": 75
+          }
+        ],
+        "rushing": true,
+        "rushed_count": 3
       },
       "analysis": {}
     }

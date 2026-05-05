@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-05T11:34:31",
+  "generated_at": "2026-05-05T12:44:11",
   "session": {
     "name": "S5",
     "start": "2026-04-27",
@@ -68954,6 +68954,563 @@
       }
     },
     {
+      "id": "9d4b8232-d001-4e88-a813-3f072d849cd4",
+      "name": "Valentina Litchfield",
+      "email": "valentina.litchfield@gt.school",
+      "campus": "GT Anywhere",
+      "dashboard": "timeback",
+      "level": "Middle School",
+      "age_grade": 8,
+      "hmg": 2,
+      "starting_hmg": 2,
+      "grades_advanced": 0,
+      "effective_grade": null,
+      "effective_grades_mastered": null,
+      "language_eg": null,
+      "s1_cohort": false,
+      "completed_g8": false,
+      "enrollments": [
+        "[Alphawrite] Writing G3 hole-filling Class",
+        "Valentina Litchfield - G3 Writing Remediation Class"
+      ],
+      "still_enrolled": true,
+      "last_test": {
+        "name": "Alpha Standardized Writing G3.11",
+        "type": "end of course",
+        "score": 87,
+        "date": "2026-05-04",
+        "passed": false
+      },
+      "next_expected_test": {
+        "name": "G3.1",
+        "reason": "HMG is G2, next grade level is G3",
+        "status": "retaking"
+      },
+      "all_tests": [
+        {
+          "name": "Alpha Standardized Writing G3.1",
+          "test_type": "placement",
+          "score": 80,
+          "date": "2026-03-23",
+          "assigned_at": "2026-03-23",
+          "assignment_id": 41702,
+          "test_link": "https://alphatest.alpha.school/assignment/41702",
+          "total_questions": 45,
+          "correct_questions": 36,
+          "passed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G3.2",
+          "test_type": "test out",
+          "score": 71,
+          "date": "2026-03-23",
+          "assigned_at": "2026-03-23",
+          "assignment_id": 41727,
+          "test_link": "https://alphatest.alpha.school/assignment/41727",
+          "total_questions": 45,
+          "correct_questions": 32,
+          "passed": false
+        },
+        {
+          "name": "Alpha Standardized Writing - G3.3",
+          "test_type": "test out",
+          "score": 88,
+          "date": "2026-03-27",
+          "assigned_at": "2026-03-27",
+          "assignment_id": 42926,
+          "test_link": "https://alphatest.alpha.school/assignment/42926",
+          "total_questions": 45,
+          "correct_questions": 39.5,
+          "passed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G3.4",
+          "test_type": "test out",
+          "score": 89,
+          "date": "2026-03-31",
+          "assigned_at": "2026-03-31",
+          "assignment_id": 43666,
+          "test_link": "https://alphatest.alpha.school/assignment/43666",
+          "total_questions": 45,
+          "correct_questions": 40,
+          "passed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G3.5",
+          "test_type": "test out",
+          "score": 84,
+          "date": "2026-04-06",
+          "assigned_at": "2026-04-03",
+          "assignment_id": 44718,
+          "test_link": "https://alphatest.alpha.school/assignment/44718",
+          "total_questions": 45,
+          "correct_questions": 38,
+          "passed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G3.6",
+          "test_type": "placement",
+          "score": 89,
+          "date": "2026-04-24",
+          "assigned_at": "2026-04-24",
+          "assignment_id": 47997,
+          "test_link": "https://alphatest.alpha.school/assignment/47997",
+          "total_questions": 45,
+          "correct_questions": 40,
+          "passed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G3.7",
+          "test_type": "end of course",
+          "score": 88,
+          "date": "2026-04-28",
+          "assigned_at": "2026-04-28",
+          "assignment_id": 48655,
+          "test_link": "https://alphatest.alpha.school/assignment/48655",
+          "total_questions": 45,
+          "correct_questions": 40,
+          "passed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G3.8",
+          "test_type": "end of course",
+          "score": 86,
+          "date": "2026-04-29",
+          "assigned_at": "2026-04-29",
+          "assignment_id": 49224,
+          "test_link": "https://alphatest.alpha.school/assignment/49224",
+          "total_questions": 45,
+          "correct_questions": 39,
+          "passed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G3.9",
+          "test_type": "end of course",
+          "score": 88,
+          "date": "2026-04-30",
+          "assigned_at": "2026-04-30",
+          "assignment_id": 49393,
+          "test_link": "https://alphatest.alpha.school/assignment/49393",
+          "total_questions": 45,
+          "correct_questions": 40,
+          "passed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G3.10",
+          "test_type": "end of course",
+          "score": 81,
+          "date": "2026-05-01",
+          "assigned_at": "2026-05-01",
+          "assignment_id": 49787,
+          "test_link": "https://alphatest.alpha.school/assignment/49787",
+          "total_questions": 45,
+          "correct_questions": 37,
+          "passed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G3.11",
+          "test_type": "end of course",
+          "score": 87,
+          "date": "2026-05-04",
+          "assigned_at": "2026-05-04",
+          "assignment_id": 50076,
+          "test_link": "https://alphatest.alpha.school/assignment/50076",
+          "total_questions": 45,
+          "correct_questions": 39,
+          "passed": false
+        }
+      ],
+      "test_summary": {
+        "total_taken": 11,
+        "total_passed": 0,
+        "end_of_course_passed": 0,
+        "test_outs_passed": 0,
+        "placement_passed": 0
+      },
+      "xp": {
+        "alphawrite": 38.8,
+        "mastery_track": 674.0,
+        "test": 450.0,
+        "total": 1162.8,
+        "school": 1162.8,
+        "break": 0.0,
+        "goal_to_date": 75.0,
+        "avg_per_day": 193.8,
+        "meets_goal": true,
+        "last_xp_date": "2026-05-04"
+      },
+      "xp_details": {
+        "activity_xp": [
+          {
+            "name": "Writing Activity",
+            "course": "",
+            "xp": 20,
+            "date": "2026-04-27",
+            "type": "mastery_track"
+          },
+          {
+            "name": "Writing Activity",
+            "course": "",
+            "xp": 18,
+            "date": "2026-04-28",
+            "type": "mastery_track"
+          },
+          {
+            "name": "Alpha Test",
+            "course": "",
+            "xp": 90,
+            "date": "2026-04-28",
+            "type": "external"
+          },
+          {
+            "name": "Writing Activity",
+            "course": "",
+            "xp": 28,
+            "date": "2026-04-28",
+            "type": "mastery_track"
+          },
+          {
+            "name": "Because, But, So",
+            "course": "Sentences G3",
+            "xp": 3.5,
+            "date": "2026-04-29",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 14,
+            "date": "2026-04-29",
+            "type": "external"
+          },
+          {
+            "name": "Combine Sentences",
+            "course": "Sentences G3",
+            "xp": 6.875,
+            "date": "2026-04-29",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 22,
+            "date": "2026-04-29",
+            "type": "external"
+          },
+          {
+            "name": "Alpha Test",
+            "course": "",
+            "xp": 90,
+            "date": "2026-04-29",
+            "type": "external"
+          },
+          {
+            "name": "Change Sentences into Questions",
+            "course": "Sentences G3",
+            "xp": 5.25,
+            "date": "2026-04-30",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 21,
+            "date": "2026-04-30",
+            "type": "external"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 31,
+            "date": "2026-04-30",
+            "type": "external"
+          },
+          {
+            "name": "Alpha Test",
+            "course": "",
+            "xp": 90,
+            "date": "2026-04-30",
+            "type": "external"
+          },
+          {
+            "name": "Elaborate on Paragraphs",
+            "course": "Paragraphs G4",
+            "xp": 12.5,
+            "date": "2026-05-01",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 10,
+            "date": "2026-05-01",
+            "type": "external"
+          },
+          {
+            "name": "Alpha Test",
+            "course": "",
+            "xp": 90,
+            "date": "2026-05-01",
+            "type": "external"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 21,
+            "date": "2026-05-01",
+            "type": "external"
+          },
+          {
+            "name": "Identify Appositives",
+            "course": "Sentences G3",
+            "xp": 3.125,
+            "date": "2026-05-04",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 5,
+            "date": "2026-05-04",
+            "type": "external"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 22,
+            "date": "2026-05-04",
+            "type": "external"
+          },
+          {
+            "name": "Unscramble Sentences",
+            "course": "Sentences G3",
+            "xp": 7.5,
+            "date": "2026-05-04",
+            "type": "alphawrite"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 12,
+            "date": "2026-05-04",
+            "type": "external"
+          },
+          {
+            "name": "Alpha Test",
+            "course": "",
+            "xp": 90,
+            "date": "2026-05-04",
+            "type": "external"
+          }
+        ],
+        "test_xp": [
+          {
+            "name": "Alpha Standardized Writing G3.7",
+            "xp": 90,
+            "score": 88,
+            "date": "2026-04-28"
+          },
+          {
+            "name": "Alpha Standardized Writing G3.8",
+            "xp": 90,
+            "score": 86,
+            "date": "2026-04-29"
+          },
+          {
+            "name": "Alpha Standardized Writing G3.9",
+            "xp": 90,
+            "score": 88,
+            "date": "2026-04-30"
+          },
+          {
+            "name": "Alpha Standardized Writing G3.10",
+            "xp": 90,
+            "score": 81,
+            "date": "2026-05-01"
+          },
+          {
+            "name": "Alpha Standardized Writing G3.11",
+            "xp": 90,
+            "score": 87,
+            "date": "2026-05-04"
+          }
+        ],
+        "alphawrite_xp": 38.75,
+        "mastery_track_xp": 674.0,
+        "test_xp_total": 450.0,
+        "last_xp_date": "2026-05-04"
+      },
+      "session_tests": [
+        {
+          "name": "Alpha Standardized Writing G3.7",
+          "type": "Mastery Test",
+          "score": 88.0,
+          "date": "2026-04-28",
+          "passed": false,
+          "time_seconds": 1331.0,
+          "rushed": true
+        },
+        {
+          "name": "Alpha Standardized Writing G3.8",
+          "type": "Retake",
+          "score": 86.0,
+          "date": "2026-04-29",
+          "passed": false,
+          "time_seconds": 1435.0,
+          "rushed": true
+        },
+        {
+          "name": "Alpha Standardized Writing G3.9",
+          "type": "Retake",
+          "score": 88.0,
+          "date": "2026-04-30",
+          "passed": false,
+          "time_seconds": 926.0,
+          "rushed": true
+        },
+        {
+          "name": "Alpha Standardized Writing G3.10",
+          "type": "Retake",
+          "score": 81.0,
+          "date": "2026-05-01",
+          "passed": false,
+          "time_seconds": 2063.0,
+          "rushed": false
+        }
+      ],
+      "accuracy": {
+        "activities_below_threshold": [
+          {
+            "name": "Write Appositives",
+            "course": "Sentences G3",
+            "accuracy": 25,
+            "questions": "1/4",
+            "xp": 0,
+            "attempt": 2,
+            "date": "2026-04-28"
+          },
+          {
+            "name": "Write Sentence from a Prompt",
+            "course": "Sentences G3",
+            "accuracy": 75,
+            "questions": "6/8",
+            "xp": 0,
+            "attempt": 3,
+            "date": "2026-04-30"
+          }
+        ],
+        "repeated_activities": [
+          {
+            "name": "Because, But, So",
+            "course": "Sentences G3",
+            "attempts": 3,
+            "best_accuracy": 94,
+            "latest_accuracy": 94
+          },
+          {
+            "name": "Combine Sentences",
+            "course": "Sentences G3",
+            "attempts": 4,
+            "best_accuracy": 100,
+            "latest_accuracy": 86
+          },
+          {
+            "name": "Change Sentences into Questions",
+            "course": "Sentences G3",
+            "attempts": 4,
+            "best_accuracy": 100,
+            "latest_accuracy": 100
+          },
+          {
+            "name": "Identify Appositives",
+            "course": "Sentences G3",
+            "attempts": 2,
+            "best_accuracy": 100,
+            "latest_accuracy": 100
+          },
+          {
+            "name": "Unscramble Sentences",
+            "course": "Sentences G3",
+            "attempts": 2,
+            "best_accuracy": 100,
+            "latest_accuracy": 100
+          }
+        ]
+      },
+      "deep_dive": {
+        "needed": true,
+        "details": [
+          {
+            "grade": 3,
+            "total_tests": 4,
+            "failed_count": 4,
+            "rushed_count": 3,
+            "avg_time_minutes": 24.0,
+            "tests": [
+              {
+                "name": "Alpha Standardized Writing G3.7",
+                "score": 88.0,
+                "date": "2026-04-28",
+                "rushed": true
+              },
+              {
+                "name": "Alpha Standardized Writing G3.8",
+                "score": 86.0,
+                "date": "2026-04-29",
+                "rushed": true
+              },
+              {
+                "name": "Alpha Standardized Writing G3.9",
+                "score": 88.0,
+                "date": "2026-04-30",
+                "rushed": true
+              },
+              {
+                "name": "Alpha Standardized Writing G3.10",
+                "score": 81.0,
+                "date": "2026-05-01",
+                "rushed": false
+              }
+            ],
+            "analysis": null
+          }
+        ]
+      },
+      "insights": [
+        {
+          "type": "deep_dive",
+          "severity": "high",
+          "text": "Deep Dive at G3: 4 failed tests (3 rushed)"
+        },
+        {
+          "type": "low_accuracy",
+          "severity": "medium",
+          "text": "2 activities below 80% accuracy"
+        },
+        {
+          "type": "repeated",
+          "severity": "low",
+          "text": "Repeating 'Because, But, So' in Sentences G3 (3 attempts)"
+        },
+        {
+          "type": "repeated",
+          "severity": "low",
+          "text": "Repeating 'Combine Sentences' in Sentences G3 (4 attempts)"
+        },
+        {
+          "type": "repeated",
+          "severity": "low",
+          "text": "Repeating 'Change Sentences into Questions' in Sentences G3 (4 attempts)"
+        }
+      ],
+      "enrollment_mismatch": null,
+      "inactivity": {
+        "days_inactive": 1,
+        "never_active_this_session": false,
+        "last_xp_date": "2026-05-04"
+      }
+    },
+    {
       "id": "9ed6f676-f695-40b2-af49-c28c0a47ce91",
       "name": "Nova Victore",
       "email": "nova.victore@2hourlearning.com",
@@ -72919,6 +73476,7 @@
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class",
+        "Paragraphs G3 2025-26",
         "[AlphaWrite] Writing G3 hole-filling Class"
       ],
       "still_enrolled": true,
@@ -82556,7 +83114,8 @@
       "s1_cohort": false,
       "completed_g8": false,
       "enrollments": [
-        "Sentences G3 Class"
+        "Sentences G3 Class",
+        "Paragraphs G3 2025-26"
       ],
       "still_enrolled": true,
       "last_test": {
