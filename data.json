@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-05T12:44:11",
+  "generated_at": "2026-05-05T13:39:51",
   "session": {
     "name": "S5",
     "start": "2026-04-27",
@@ -4796,7 +4796,17 @@
         "test_xp_total": 120.0,
         "last_xp_date": "2026-05-04"
       },
-      "session_tests": [],
+      "session_tests": [
+        {
+          "name": "Alpha Standardized Writing G7.2",
+          "type": "Test-Out",
+          "score": 80.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 2962.0,
+          "rushed": true
+        }
+      ],
       "accuracy": {
         "activities_below_threshold": [],
         "repeated_activities": []
@@ -5959,6 +5969,15 @@
           "passed": false,
           "time_seconds": 2956.0,
           "rushed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G5.3",
+          "type": "Retake",
+          "score": 92.0,
+          "date": "2026-05-04",
+          "passed": true,
+          "time_seconds": 5423.0,
+          "rushed": false
         }
       ],
       "accuracy": {
@@ -6684,6 +6703,15 @@
           "passed": false,
           "time_seconds": 13560.0,
           "rushed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G7.2",
+          "type": "Test-Out",
+          "score": 90.0,
+          "date": "2026-05-04",
+          "passed": true,
+          "time_seconds": 3372.0,
+          "rushed": true
         }
       ],
       "accuracy": {
@@ -8367,7 +8395,17 @@
         "test_xp_total": 90.0,
         "last_xp_date": "2026-05-04"
       },
-      "session_tests": [],
+      "session_tests": [
+        {
+          "name": "Alpha Standardized Writing G3.1",
+          "type": "Placement Test",
+          "score": 77.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 2236.0,
+          "rushed": false
+        }
+      ],
       "accuracy": {
         "activities_below_threshold": [],
         "repeated_activities": []
@@ -9955,6 +9993,15 @@
           "passed": false,
           "time_seconds": 5001.0,
           "rushed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G5.2",
+          "type": "Test-Out",
+          "score": 69.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 3315.0,
+          "rushed": false
         }
       ],
       "accuracy": {
@@ -11086,6 +11133,15 @@
           "date": "2026-04-30",
           "passed": false,
           "time_seconds": 2347.0,
+          "rushed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G3.6",
+          "type": "Test-Out",
+          "score": 93.0,
+          "date": "2026-05-04",
+          "passed": true,
+          "time_seconds": 5479.0,
           "rushed": false
         }
       ],
@@ -14893,6 +14949,15 @@
           "passed": false,
           "time_seconds": 996.0,
           "rushed": true
+        },
+        {
+          "name": "Alpha Standardized Writing G3.4",
+          "type": "Test-Out",
+          "score": 93.0,
+          "date": "2026-05-04",
+          "passed": true,
+          "time_seconds": 1874.0,
+          "rushed": false
         }
       ],
       "accuracy": {
@@ -17609,7 +17674,17 @@
         "test_xp_total": 90.0,
         "last_xp_date": "2026-05-04"
       },
-      "session_tests": [],
+      "session_tests": [
+        {
+          "name": "Alpha Standardized Writing - G3.3",
+          "type": "Test-Out",
+          "score": 92.0,
+          "date": "2026-05-04",
+          "passed": true,
+          "time_seconds": 1025.0,
+          "rushed": true
+        }
+      ],
       "accuracy": {
         "activities_below_threshold": [],
         "repeated_activities": []
@@ -18486,6 +18561,15 @@
           "passed": false,
           "time_seconds": 1108.0,
           "rushed": true
+        },
+        {
+          "name": "Alpha Standardized Writing G3.4",
+          "type": "Test-Out",
+          "score": 78.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 1017.0,
+          "rushed": true
         }
       ],
       "accuracy": {
@@ -19086,7 +19170,17 @@
         "test_xp_total": 90.0,
         "last_xp_date": "2026-05-04"
       },
-      "session_tests": [],
+      "session_tests": [
+        {
+          "name": "Alpha Standardized Writing - G3.3",
+          "type": "Retake",
+          "score": 78.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 2142.0,
+          "rushed": false
+        }
+      ],
       "accuracy": {
         "activities_below_threshold": [
           {
@@ -19950,6 +20044,15 @@
           "date": "2026-05-01",
           "passed": true,
           "time_seconds": 1910.0,
+          "rushed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G5.1",
+          "type": "Test-Out",
+          "score": 89.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 2385.0,
           "rushed": false
         }
       ],
@@ -21561,7 +21664,17 @@
         "test_xp_total": 90.0,
         "last_xp_date": "2026-05-04"
       },
-      "session_tests": [],
+      "session_tests": [
+        {
+          "name": "Alpha Standardized Writing G3.2",
+          "type": "Mastery Test",
+          "score": 92.0,
+          "date": "2026-05-04",
+          "passed": true,
+          "time_seconds": 7374.0,
+          "rushed": false
+        }
+      ],
       "accuracy": {
         "activities_below_threshold": [],
         "repeated_activities": []
@@ -24492,7 +24605,17 @@
         "test_xp_total": 120.0,
         "last_xp_date": "2026-05-04"
       },
-      "session_tests": [],
+      "session_tests": [
+        {
+          "name": "Alpha Standardized Writing G7.2",
+          "type": "Mastery Test",
+          "score": 97.0,
+          "date": "2026-05-04",
+          "passed": true,
+          "time_seconds": 7906.0,
+          "rushed": false
+        }
+      ],
       "accuracy": {
         "activities_below_threshold": [],
         "repeated_activities": []
@@ -25184,6 +25307,15 @@
           "date": "2026-05-01",
           "passed": false,
           "time_seconds": 1553.0,
+          "rushed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G3.11",
+          "type": "Test-Out",
+          "score": 79.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 2601.0,
           "rushed": false
         }
       ],
@@ -26141,16 +26273,16 @@
         "placement_passed": 0
       },
       "xp": {
-        "alphawrite": 513.1,
+        "alphawrite": 530.6,
         "mastery_track": 348.0,
         "test": 180.0,
-        "total": 1041.1,
-        "school": 1041.1,
+        "total": 1058.6,
+        "school": 1058.6,
         "break": 0.0,
         "goal_to_date": 75.0,
-        "avg_per_day": 173.5,
+        "avg_per_day": 176.4,
         "meets_goal": true,
-        "last_xp_date": "2026-05-04"
+        "last_xp_date": "2026-05-05"
       },
       "xp_details": {
         "activity_xp": [
@@ -26412,6 +26544,13 @@
             "xp": 31.25,
             "date": "2026-05-04",
             "type": "alphawrite"
+          },
+          {
+            "name": "Write a Free-Form Paragraph",
+            "course": "Paragraphs G7",
+            "xp": 17.5,
+            "date": "2026-05-05",
+            "type": "alphawrite"
           }
         ],
         "test_xp": [
@@ -26428,10 +26567,10 @@
             "date": "2026-05-01"
           }
         ],
-        "alphawrite_xp": 513.125,
+        "alphawrite_xp": 530.625,
         "mastery_track_xp": 348.0,
         "test_xp_total": 180.0,
-        "last_xp_date": "2026-05-04"
+        "last_xp_date": "2026-05-05"
       },
       "session_tests": [
         {
@@ -26533,9 +26672,9 @@
       ],
       "enrollment_mismatch": null,
       "inactivity": {
-        "days_inactive": 1,
+        "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": "2026-05-04"
+        "last_xp_date": "2026-05-05"
       }
     },
     {
@@ -28052,6 +28191,15 @@
           "date": "2026-04-30",
           "passed": false,
           "time_seconds": 51587.0,
+          "rushed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G5.2",
+          "type": "Retake",
+          "score": 80.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 14746.0,
           "rushed": false
         }
       ],
@@ -30401,6 +30549,15 @@
           "passed": true,
           "time_seconds": 2508.0,
           "rushed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G6.1",
+          "type": "Test-Out",
+          "score": 67.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 1536.0,
+          "rushed": true
         }
       ],
       "accuracy": {
@@ -35145,6 +35302,15 @@
           "passed": true,
           "time_seconds": 3562.0,
           "rushed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G5.1",
+          "type": "Test-Out",
+          "score": 91.0,
+          "date": "2026-05-04",
+          "passed": true,
+          "time_seconds": 5657.0,
+          "rushed": false
         }
       ],
       "accuracy": {
@@ -38122,7 +38288,17 @@
         "test_xp_total": 90.0,
         "last_xp_date": "2026-05-04"
       },
-      "session_tests": [],
+      "session_tests": [
+        {
+          "name": "Alpha Standardized Writing G3.1",
+          "type": "Placement Test",
+          "score": 0.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 2181.0,
+          "rushed": false
+        }
+      ],
       "accuracy": {
         "activities_below_threshold": [],
         "repeated_activities": []
@@ -38406,7 +38582,17 @@
         "test_xp_total": 120.0,
         "last_xp_date": "2026-05-04"
       },
-      "session_tests": [],
+      "session_tests": [
+        {
+          "name": "Alpha Standardized Writing G7.1",
+          "type": "Test-Out",
+          "score": 83.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 2138.0,
+          "rushed": true
+        }
+      ],
       "accuracy": {
         "activities_below_threshold": [
           {
@@ -39427,7 +39613,17 @@
         "test_xp_total": 90.0,
         "last_xp_date": "2026-05-04"
       },
-      "session_tests": [],
+      "session_tests": [
+        {
+          "name": "Alpha Standardized Writing - G3.3",
+          "type": "Placement Test",
+          "score": 76.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 1752.0,
+          "rushed": false
+        }
+      ],
       "accuracy": {
         "activities_below_threshold": [
           {
@@ -47867,7 +48063,17 @@
         "test_xp_total": 120.0,
         "last_xp_date": "2026-05-04"
       },
-      "session_tests": [],
+      "session_tests": [
+        {
+          "name": "Alpha Standardized Writing G7.5",
+          "type": "Retake",
+          "score": 60.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 349.0,
+          "rushed": true
+        }
+      ],
       "accuracy": {
         "activities_below_threshold": [],
         "repeated_activities": [
@@ -47927,10 +48133,10 @@
         "details": [
           {
             "grade": 7,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 3,
-            "avg_time_minutes": 27.0,
+            "total_tests": 4,
+            "failed_count": 4,
+            "rushed_count": 4,
+            "avg_time_minutes": 21.7,
             "tests": [
               {
                 "name": "Alpha Standardized Writing G7.2",
@@ -47949,6 +48155,12 @@
                 "score": 77.0,
                 "date": "2026-04-13",
                 "rushed": true
+              },
+              {
+                "name": "Alpha Standardized Writing G7.5",
+                "score": 60.0,
+                "date": "2026-05-04",
+                "rushed": true
               }
             ],
             "analysis": null
@@ -47959,7 +48171,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G7: 3 failed tests (3 rushed)"
+          "text": "Deep Dive at G7: 4 failed tests (4 rushed)"
         },
         {
           "type": "repeated",
@@ -49295,7 +49507,17 @@
         "test_xp_total": 120.0,
         "last_xp_date": "2026-05-05"
       },
-      "session_tests": [],
+      "session_tests": [
+        {
+          "name": "Alpha Standardized Writing G6.4",
+          "type": "Retake",
+          "score": 77.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 4579.0,
+          "rushed": false
+        }
+      ],
       "accuracy": {
         "activities_below_threshold": [],
         "repeated_activities": [
@@ -49358,10 +49580,44 @@
         ]
       },
       "deep_dive": {
-        "needed": false,
-        "details": []
+        "needed": true,
+        "details": [
+          {
+            "grade": 6,
+            "total_tests": 3,
+            "failed_count": 3,
+            "rushed_count": 1,
+            "avg_time_minutes": 65.5,
+            "tests": [
+              {
+                "name": "Alpha Standardized Writing G6.2",
+                "score": 77.0,
+                "date": "2026-04-08",
+                "rushed": false
+              },
+              {
+                "name": "Alpha Standardized Writing G6.3",
+                "score": 77.0,
+                "date": "2026-04-13",
+                "rushed": true
+              },
+              {
+                "name": "Alpha Standardized Writing G6.4",
+                "score": 77.0,
+                "date": "2026-05-04",
+                "rushed": false
+              }
+            ],
+            "analysis": null
+          }
+        ]
       },
       "insights": [
+        {
+          "type": "deep_dive",
+          "severity": "high",
+          "text": "Deep Dive at G6: 3 failed tests (1 rushed)"
+        },
         {
           "type": "repeated",
           "severity": "low",
@@ -49601,6 +49857,15 @@
           "date": "2026-05-01",
           "passed": false,
           "time_seconds": 1895.0,
+          "rushed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G4.2",
+          "type": "Test-Out",
+          "score": 87.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 2429.0,
           "rushed": false
         }
       ],
@@ -56135,7 +56400,17 @@
         "test_xp_total": 90.0,
         "last_xp_date": "2026-05-04"
       },
-      "session_tests": [],
+      "session_tests": [
+        {
+          "name": "Alpha Standardized Writing - G3.3",
+          "type": "Mastery Test",
+          "score": 40.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 1028.0,
+          "rushed": true
+        }
+      ],
       "accuracy": {
         "activities_below_threshold": [],
         "repeated_activities": []
@@ -62567,7 +62842,17 @@
         "test_xp_total": 90.0,
         "last_xp_date": "2026-05-04"
       },
-      "session_tests": [],
+      "session_tests": [
+        {
+          "name": "Alpha Standardized Writing G3.5",
+          "type": "Retake",
+          "score": 92.0,
+          "date": "2026-05-04",
+          "passed": true,
+          "time_seconds": 1539.0,
+          "rushed": false
+        }
+      ],
       "accuracy": {
         "activities_below_threshold": [],
         "repeated_activities": [
@@ -66665,15 +66950,15 @@
       },
       "xp": {
         "alphawrite": 8.0,
-        "mastery_track": 30.0,
+        "mastery_track": 45.0,
         "test": 0.0,
-        "total": 38.0,
-        "school": 38.0,
+        "total": 53.0,
+        "school": 53.0,
         "break": 0.0,
         "goal_to_date": 75.0,
-        "avg_per_day": 6.3,
+        "avg_per_day": 8.8,
         "meets_goal": false,
-        "last_xp_date": "2026-05-04"
+        "last_xp_date": "2026-05-05"
       },
       "xp_details": {
         "activity_xp": [
@@ -66704,17 +66989,34 @@
             "xp": 15,
             "date": "2026-05-04",
             "type": "external"
+          },
+          {
+            "name": "Alphawrite",
+            "course": "",
+            "xp": 15,
+            "date": "2026-05-05",
+            "type": "external"
           }
         ],
         "test_xp": [],
         "alphawrite_xp": 8.0,
-        "mastery_track_xp": 30.0,
+        "mastery_track_xp": 45.0,
         "test_xp_total": 0.0,
-        "last_xp_date": "2026-05-04"
+        "last_xp_date": "2026-05-05"
       },
       "session_tests": [],
       "accuracy": {
-        "activities_below_threshold": [],
+        "activities_below_threshold": [
+          {
+            "name": "Combine Sentences with Appositives",
+            "course": "Sentences G3",
+            "accuracy": 65,
+            "questions": "17.5/27",
+            "xp": 0,
+            "attempt": 3,
+            "date": "2026-05-05"
+          }
+        ],
         "repeated_activities": [
           {
             "name": "Unscramble Sentences",
@@ -66784,6 +67086,11 @@
           "text": "Deep Dive at G3: 5 failed tests (1 rushed)"
         },
         {
+          "type": "low_accuracy",
+          "severity": "medium",
+          "text": "1 activity below 80% accuracy"
+        },
+        {
           "type": "repeated",
           "severity": "low",
           "text": "Repeating 'Unscramble Sentences' in Sentences G3 (3 attempts)"
@@ -66796,14 +67103,14 @@
         {
           "type": "goal_xp",
           "severity": "medium",
-          "text": "XP behind target: 38/75 (51%) — last XP earned 2026-05-04"
+          "text": "XP behind target: 53/75 (71%) — last XP earned 2026-05-05"
         }
       ],
       "enrollment_mismatch": null,
       "inactivity": {
-        "days_inactive": 1,
+        "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": "2026-05-04"
+        "last_xp_date": "2026-05-05"
       }
     },
     {
@@ -67225,6 +67532,15 @@
           "date": "2026-04-29",
           "passed": false,
           "time_seconds": 2197.0,
+          "rushed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G5.4",
+          "type": "Test-Out",
+          "score": 82.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 5294.0,
           "rushed": false
         }
       ],
@@ -69376,6 +69692,15 @@
           "passed": false,
           "time_seconds": 2063.0,
           "rushed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G3.11",
+          "type": "Retake",
+          "score": 82.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 3128.0,
+          "rushed": false
         }
       ],
       "accuracy": {
@@ -69442,10 +69767,10 @@
         "details": [
           {
             "grade": 3,
-            "total_tests": 4,
-            "failed_count": 4,
+            "total_tests": 5,
+            "failed_count": 5,
             "rushed_count": 3,
-            "avg_time_minutes": 24.0,
+            "avg_time_minutes": 29.6,
             "tests": [
               {
                 "name": "Alpha Standardized Writing G3.7",
@@ -69470,6 +69795,12 @@
                 "score": 81.0,
                 "date": "2026-05-01",
                 "rushed": false
+              },
+              {
+                "name": "Alpha Standardized Writing G3.11",
+                "score": 82.0,
+                "date": "2026-05-04",
+                "rushed": false
               }
             ],
             "analysis": null
@@ -69480,7 +69811,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G3: 4 failed tests (3 rushed)"
+          "text": "Deep Dive at G3: 5 failed tests (3 rushed)"
         },
         {
           "type": "low_accuracy",
@@ -72415,6 +72746,15 @@
           "passed": false,
           "time_seconds": 6925.0,
           "rushed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G4.7",
+          "type": "Test-Out",
+          "score": 82.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 8739.0,
+          "rushed": false
         }
       ],
       "accuracy": {
@@ -73708,6 +74048,15 @@
           "passed": false,
           "time_seconds": 1123.0,
           "rushed": true
+        },
+        {
+          "name": "Alpha Standardized Writing G3.6",
+          "type": "Test-Out",
+          "score": 0.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 1730.0,
+          "rushed": false
         }
       ],
       "accuracy": {
@@ -75701,6 +76050,15 @@
           "passed": true,
           "time_seconds": 327.0,
           "rushed": true
+        },
+        {
+          "name": "Alpha Standardized Writing G4.1",
+          "type": "Test-Out",
+          "score": 90.0,
+          "date": "2026-05-04",
+          "passed": true,
+          "time_seconds": 7170.0,
+          "rushed": false
         }
       ],
       "accuracy": {
@@ -76228,6 +76586,15 @@
           "date": "2026-05-01",
           "passed": false,
           "time_seconds": 1166.0,
+          "rushed": true
+        },
+        {
+          "name": "Alpha Standardized Writing G3.4",
+          "type": "Test-Out",
+          "score": 69.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 1095.0,
           "rushed": true
         }
       ],
@@ -83378,6 +83745,15 @@
           "passed": false,
           "time_seconds": 1565.0,
           "rushed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G3.4",
+          "type": "Test-Out",
+          "score": 0.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 3346.0,
+          "rushed": false
         }
       ],
       "accuracy": {
@@ -89289,6 +89665,15 @@
           "passed": true,
           "time_seconds": 4552.0,
           "rushed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G7.1",
+          "type": "Test-Out",
+          "score": 87.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 3195.0,
+          "rushed": true
         }
       ],
       "accuracy": {
@@ -89935,6 +90320,15 @@
           "date": "2026-04-29",
           "passed": true,
           "time_seconds": 1666.0,
+          "rushed": false
+        },
+        {
+          "name": "Alpha Standardized Writing G5.1",
+          "type": "Test-Out",
+          "score": 87.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 2075.0,
           "rushed": false
         }
       ],
@@ -96004,8 +96398,8 @@
           {
             "name": "Write Concluding Sentences from Details",
             "course": "Paragraphs G3",
-            "accuracy": 55,
-            "questions": "6/11",
+            "accuracy": 63,
+            "questions": "12.5/20",
             "xp": 0,
             "attempt": 1,
             "date": "2026-04-30"
@@ -100030,7 +100424,17 @@
         "test_xp_total": 90.0,
         "last_xp_date": "2026-05-04"
       },
-      "session_tests": [],
+      "session_tests": [
+        {
+          "name": "Alpha Standardized Writing - G3.3",
+          "type": "Placement Test",
+          "score": 58.0,
+          "date": "2026-05-04",
+          "passed": false,
+          "time_seconds": 761.0,
+          "rushed": true
+        }
+      ],
       "accuracy": {
         "activities_below_threshold": [],
         "repeated_activities": []
