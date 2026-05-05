@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-05T08:46:01",
+  "generated_at": "2026-05-05T11:34:31",
   "session": {
     "name": "S5",
     "start": "2026-04-27",
@@ -172,17 +172,11 @@
         "details": [
           {
             "grade": 4,
-            "total_tests": 4,
-            "failed_count": 4,
+            "total_tests": 3,
+            "failed_count": 3,
             "rushed_count": 0,
-            "avg_time_minutes": 39.1,
+            "avg_time_minutes": 38.4,
             "tests": [
-              {
-                "name": "Alpha Standardized Writing G4.1",
-                "score": 73.0,
-                "date": "2026-01-14",
-                "rushed": false
-              },
               {
                 "name": "Alpha Standardized Writing G4.2",
                 "score": 82.0,
@@ -210,7 +204,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G4: 4 failed tests"
+          "text": "Deep Dive at G4: 3 failed tests"
         },
         {
           "type": "goal_xp",
@@ -4032,44 +4026,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 1,
-            "avg_time_minutes": 33.2,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 89.0,
-                "date": "2026-04-21",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 80.0,
-                "date": "2026-04-29",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 80.0,
-                "date": "2026-05-01",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests (1 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -5672,44 +5632,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 5,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 1,
-            "avg_time_minutes": 32.8,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G5.1",
-                "score": 87.0,
-                "date": "2025-12-02",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G5.2",
-                "score": 87.0,
-                "date": "2026-02-04",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G5.3",
-                "score": 89.0,
-                "date": "2026-04-06",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G5: 3 failed tests (1 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -6360,44 +6286,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 0,
-            "avg_time_minutes": 67.5,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 64.0,
-                "date": "2025-09-02",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 56.0,
-                "date": "2025-11-01",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 73.0,
-                "date": "2026-02-17",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests"
-        },
         {
           "type": "enrollment_mismatch",
           "severity": "medium",
@@ -7732,68 +7624,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 7,
-            "failed_count": 7,
-            "rushed_count": 4,
-            "avg_time_minutes": 25.5,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 53.0,
-                "date": "2025-09-11",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 60.0,
-                "date": "2026-03-30",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 87.0,
-                "date": "2026-04-01",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 82.0,
-                "date": "2026-04-02",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.5",
-                "score": 76.0,
-                "date": "2026-04-15",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.6",
-                "score": 82.0,
-                "date": "2026-04-27",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.7",
-                "score": 81.0,
-                "date": "2026-04-30",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 7 failed tests (4 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -8017,56 +7851,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 4,
-            "total_tests": 5,
-            "failed_count": 5,
-            "rushed_count": 1,
-            "avg_time_minutes": 42.0,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G4.1",
-                "score": 83.0,
-                "date": "2026-01-20",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.2",
-                "score": 84.0,
-                "date": "2026-03-04",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.3",
-                "score": 87.0,
-                "date": "2026-03-06",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.4",
-                "score": 89.0,
-                "date": "2026-03-13",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G4.5",
-                "score": 87.0,
-                "date": "2026-03-20",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G4: 5 failed tests (1 rushed)"
-        },
         {
           "type": "goal_xp",
           "severity": "medium",
@@ -9593,44 +9381,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 0,
-            "avg_time_minutes": 473.8,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 77.0,
-                "date": "2026-01-14",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 87.0,
-                "date": "2026-04-29",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 77.0,
-                "date": "2026-05-01",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -10910,56 +10664,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 4,
-            "total_tests": 5,
-            "failed_count": 5,
-            "rushed_count": 1,
-            "avg_time_minutes": 45.9,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G4.1",
-                "score": 83.0,
-                "date": "2026-03-17",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G4.2",
-                "score": 77.0,
-                "date": "2026-03-26",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.3",
-                "score": 89.0,
-                "date": "2026-04-01",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.4",
-                "score": 84.0,
-                "date": "2026-04-09",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.5",
-                "score": 78.0,
-                "date": "2026-04-15",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G4: 5 failed tests (1 rushed)"
-        },
         {
           "type": "repeated",
           "severity": "low",
@@ -11422,56 +11130,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 5,
-            "failed_count": 5,
-            "rushed_count": 1,
-            "avg_time_minutes": 34.2,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 42.0,
-                "date": "2025-11-04",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 73.0,
-                "date": "2026-03-27",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 79.0,
-                "date": "2026-04-07",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 78.0,
-                "date": "2026-04-21",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.5",
-                "score": 87.0,
-                "date": "2026-04-30",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 5 failed tests (1 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -12259,44 +11921,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 6,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 3,
-            "avg_time_minutes": 16.8,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G6.1",
-                "score": 67.0,
-                "date": "2026-02-06",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.2",
-                "score": 70.0,
-                "date": "2026-04-07",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.3",
-                "score": 70.0,
-                "date": "2026-04-29",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G6: 3 failed tests (3 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -13149,44 +12777,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 1,
-            "avg_time_minutes": 25.9,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 38.0,
-                "date": "2025-09-22",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 49.0,
-                "date": "2025-10-14",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 56.0,
-                "date": "2026-04-29",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests (1 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -14671,17 +14265,11 @@
         "details": [
           {
             "grade": 6,
-            "total_tests": 6,
-            "failed_count": 6,
-            "rushed_count": 3,
-            "avg_time_minutes": 73.8,
+            "total_tests": 5,
+            "failed_count": 5,
+            "rushed_count": 2,
+            "avg_time_minutes": 84.6,
             "tests": [
-              {
-                "name": "Alpha Standardized Writing G6.1",
-                "score": 80.0,
-                "date": "2026-02-16",
-                "rushed": true
-              },
               {
                 "name": "Alpha Standardized Writing G6.2",
                 "score": 77.0,
@@ -14721,7 +14309,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G6: 6 failed tests (3 rushed)"
+          "text": "Deep Dive at G6: 5 failed tests (2 rushed)"
         },
         {
           "type": "goal_xp",
@@ -15312,45 +14900,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 3,
-            "avg_time_minutes": 17.5,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 68.0,
-                "date": "2026-03-02",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 62.0,
-                "date": "2026-03-09",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 71.0,
-                "date": "2026-04-28",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
-      "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests (3 rushed)"
-        }
-      ],
+      "insights": [],
       "enrollment_mismatch": null,
       "inactivity": {
         "days_inactive": 1,
@@ -16095,56 +15648,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 5,
-            "total_tests": 5,
-            "failed_count": 5,
-            "rushed_count": 0,
-            "avg_time_minutes": 114.5,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G5.1",
-                "score": 89.0,
-                "date": "2026-03-24",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G5.2",
-                "score": 89.0,
-                "date": "2026-03-27",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G5.3",
-                "score": 87.0,
-                "date": "2026-04-02",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G5.4",
-                "score": 82.0,
-                "date": "2026-04-10",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G5.5",
-                "score": 82.0,
-                "date": "2026-04-14",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G5: 5 failed tests"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -17292,17 +16799,11 @@
         "details": [
           {
             "grade": 8,
-            "total_tests": 7,
-            "failed_count": 7,
-            "rushed_count": 6,
-            "avg_time_minutes": 45.8,
+            "total_tests": 6,
+            "failed_count": 6,
+            "rushed_count": 5,
+            "avg_time_minutes": 49.3,
             "tests": [
-              {
-                "name": "Alpha Standardized Writing G8.1",
-                "score": 77.0,
-                "date": "2026-01-22",
-                "rushed": true
-              },
               {
                 "name": "Alpha Standardized Writing G8.2",
                 "score": 77.0,
@@ -17348,7 +16849,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G8: 7 failed tests (6 rushed)"
+          "text": "Deep Dive at G8: 6 failed tests (5 rushed)"
         },
         {
           "type": "repeated",
@@ -19000,44 +18501,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 3,
-            "avg_time_minutes": 17.5,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 87.0,
-                "date": "2026-04-15",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 82.0,
-                "date": "2026-04-15",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 87.0,
-                "date": "2026-04-27",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests (3 rushed)"
-        },
         {
           "type": "repeated",
           "severity": "low",
@@ -22784,44 +22251,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 4,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 1,
-            "avg_time_minutes": 36.3,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G4.1",
-                "score": 78.0,
-                "date": "2026-01-06",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.2",
-                "score": 88.0,
-                "date": "2026-03-16",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.3",
-                "score": 78.0,
-                "date": "2026-03-19",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G4: 3 failed tests (1 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -23589,86 +23022,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 10,
-            "failed_count": 10,
-            "rushed_count": 4,
-            "avg_time_minutes": 344.2,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 48.0,
-                "date": "2025-11-04",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 7.0,
-                "date": "2025-11-18",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 54.0,
-                "date": "2025-12-02",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 40.0,
-                "date": "2026-01-12",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.5",
-                "score": 48.0,
-                "date": "2026-03-03",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.6",
-                "score": 73.0,
-                "date": "2026-03-12",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.7",
-                "score": 79.0,
-                "date": "2026-03-18",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.8",
-                "score": 89.0,
-                "date": "2026-03-24",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.9",
-                "score": 87.0,
-                "date": "2026-04-02",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.10",
-                "score": 82.0,
-                "date": "2026-04-07",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 10 failed tests (4 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -24752,23 +24109,11 @@
         "details": [
           {
             "grade": 3,
-            "total_tests": 10,
-            "failed_count": 10,
+            "total_tests": 8,
+            "failed_count": 8,
             "rushed_count": 0,
-            "avg_time_minutes": 48.3,
+            "avg_time_minutes": 50.4,
             "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 71.0,
-                "date": "2025-09-11",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 73.0,
-                "date": "2025-10-02",
-                "rushed": false
-              },
               {
                 "name": "Alpha Standardized Writing - G3.3",
                 "score": 69.0,
@@ -24826,7 +24171,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G3: 10 failed tests"
+          "text": "Deep Dive at G3: 8 failed tests"
         },
         {
           "type": "low_accuracy",
@@ -25980,86 +25325,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 10,
-            "failed_count": 10,
-            "rushed_count": 2,
-            "avg_time_minutes": 38.0,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 80.0,
-                "date": "2026-03-30",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 80.0,
-                "date": "2026-03-31",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 73.0,
-                "date": "2026-04-10",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 83.0,
-                "date": "2026-04-16",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.5",
-                "score": 80.0,
-                "date": "2026-04-27",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.6",
-                "score": 71.0,
-                "date": "2026-04-28",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.7",
-                "score": 73.0,
-                "date": "2026-04-29",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.8",
-                "score": 76.0,
-                "date": "2026-04-30",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.9",
-                "score": 72.0,
-                "date": "2026-04-30",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.10",
-                "score": 86.0,
-                "date": "2026-05-01",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 10 failed tests (2 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -26374,10 +25643,50 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": false,
-        "details": []
+        "needed": true,
+        "details": [
+          {
+            "grade": 3,
+            "total_tests": 4,
+            "failed_count": 4,
+            "rushed_count": 4,
+            "avg_time_minutes": 17.6,
+            "tests": [
+              {
+                "name": "Alpha Standardized Writing G3.5",
+                "score": 82.0,
+                "date": "2025-12-12",
+                "rushed": true
+              },
+              {
+                "name": "Alpha Standardized Writing G3.6",
+                "score": 67.0,
+                "date": "2026-01-29",
+                "rushed": true
+              },
+              {
+                "name": "Alpha Standardized Writing G3.2",
+                "score": 78.0,
+                "date": "2026-03-05",
+                "rushed": true
+              },
+              {
+                "name": "Alpha Standardized Writing G3.7",
+                "score": 73.0,
+                "date": "2026-05-01",
+                "rushed": true
+              }
+            ],
+            "analysis": null
+          }
+        ]
       },
       "insights": [
+        {
+          "type": "deep_dive",
+          "severity": "high",
+          "text": "Deep Dive at G3: 4 failed tests (4 rushed)"
+        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -27197,44 +26506,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 5,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 3,
-            "avg_time_minutes": 17.6,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G5.1",
-                "score": 80.0,
-                "date": "2026-02-23",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G5.2",
-                "score": 83.0,
-                "date": "2026-04-10",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G5.3",
-                "score": 88.0,
-                "date": "2026-04-29",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G5: 3 failed tests (3 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -27628,50 +26903,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 1,
-            "avg_time_minutes": 54.0,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 73.0,
-                "date": "2025-09-24",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 71.0,
-                "date": "2025-12-12",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 82.0,
-                "date": "2026-02-19",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 78.0,
-                "date": "2026-04-27",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 4 failed tests (1 rushed)"
-        },
         {
           "type": "repeated",
           "severity": "low",
@@ -28514,50 +27749,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 0,
-            "avg_time_minutes": 141.5,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 42.0,
-                "date": "2026-03-17",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 44.0,
-                "date": "2026-03-20",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 84.0,
-                "date": "2026-04-02",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 78.0,
-                "date": "2026-04-14",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 4 failed tests"
-        },
         {
           "type": "enrollment_mismatch",
           "severity": "medium",
@@ -31582,62 +30777,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 6,
-            "failed_count": 6,
-            "rushed_count": 4,
-            "avg_time_minutes": 20.3,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 83.0,
-                "date": "2026-01-06",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 76.0,
-                "date": "2026-01-28",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 63.0,
-                "date": "2026-02-09",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 79.0,
-                "date": "2026-02-12",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.5",
-                "score": 82.0,
-                "date": "2026-03-04",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.6",
-                "score": 84.0,
-                "date": "2026-03-31",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 6 failed tests (4 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -31916,80 +31059,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 9,
-            "failed_count": 9,
-            "rushed_count": 5,
-            "avg_time_minutes": 24.6,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 84.0,
-                "date": "2026-02-16",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 87.0,
-                "date": "2026-02-23",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 66.0,
-                "date": "2026-02-27",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 63.0,
-                "date": "2026-03-10",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.5",
-                "score": 53.0,
-                "date": "2026-03-24",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.6",
-                "score": 87.0,
-                "date": "2026-03-28",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.7",
-                "score": 84.0,
-                "date": "2026-04-02",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.8",
-                "score": 84.0,
-                "date": "2026-04-08",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.9",
-                "score": 86.0,
-                "date": "2026-04-15",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 9 failed tests (5 rushed)"
-        },
         {
           "type": "enrollment_mismatch",
           "severity": "medium",
@@ -32301,44 +31374,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 6,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 3,
-            "avg_time_minutes": 28.2,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G6.1",
-                "score": 83.0,
-                "date": "2026-02-03",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.2",
-                "score": 83.0,
-                "date": "2026-03-16",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.3",
-                "score": 77.0,
-                "date": "2026-04-28",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G6: 3 failed tests (3 rushed)"
-        },
         {
           "type": "repeated",
           "severity": "low",
@@ -33786,44 +32825,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 0,
-            "avg_time_minutes": 68.0,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 73.0,
-                "date": "2026-01-12",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 71.0,
-                "date": "2026-03-24",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 64.0,
-                "date": "2026-04-10",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -35080,44 +34085,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 3,
-            "avg_time_minutes": 19.5,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 88.0,
-                "date": "2026-01-13",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 87.0,
-                "date": "2026-03-27",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 86.0,
-                "date": "2026-04-02",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests (3 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -36632,17 +35603,11 @@
         "details": [
           {
             "grade": 3,
-            "total_tests": 7,
-            "failed_count": 7,
-            "rushed_count": 7,
-            "avg_time_minutes": 17.9,
+            "total_tests": 6,
+            "failed_count": 6,
+            "rushed_count": 6,
+            "avg_time_minutes": 18.4,
             "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 69.0,
-                "date": "2026-03-03",
-                "rushed": true
-              },
               {
                 "name": "Alpha Standardized Writing G3.2",
                 "score": 78.0,
@@ -36688,7 +35653,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G3: 7 failed tests (7 rushed)"
+          "text": "Deep Dive at G3: 6 failed tests (6 rushed)"
         },
         {
           "type": "low_accuracy",
@@ -37645,45 +36610,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 5,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 2,
-            "avg_time_minutes": 24.6,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G5.1",
-                "score": 86.0,
-                "date": "2026-03-18",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G5.2",
-                "score": 82.0,
-                "date": "2026-03-26",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G5.3",
-                "score": 81.0,
-                "date": "2026-04-02",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
-      "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G5: 3 failed tests (2 rushed)"
-        }
-      ],
+      "insights": [],
       "enrollment_mismatch": null,
       "inactivity": {
         "days_inactive": 1,
@@ -38343,17 +37273,11 @@
         "details": [
           {
             "grade": 6,
-            "total_tests": 5,
-            "failed_count": 5,
-            "rushed_count": 4,
-            "avg_time_minutes": 42.7,
+            "total_tests": 4,
+            "failed_count": 4,
+            "rushed_count": 3,
+            "avg_time_minutes": 48.1,
             "tests": [
-              {
-                "name": "Alpha Standardized Writing G6.1",
-                "score": 80.0,
-                "date": "2026-01-12",
-                "rushed": true
-              },
               {
                 "name": "Alpha Standardized Writing G6.2",
                 "score": 80.0,
@@ -38387,7 +37311,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G6: 5 failed tests (4 rushed)"
+          "text": "Deep Dive at G6: 4 failed tests (3 rushed)"
         },
         {
           "type": "low_accuracy",
@@ -42177,50 +41101,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 5,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 2,
-            "avg_time_minutes": 33.2,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G5.1",
-                "score": 89.0,
-                "date": "2026-01-20",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G5.2",
-                "score": 86.0,
-                "date": "2026-03-16",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G5.3",
-                "score": 87.0,
-                "date": "2026-03-19",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G5.4",
-                "score": 80.0,
-                "date": "2026-04-01",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G5: 4 failed tests (2 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -42705,50 +41589,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 6,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 4,
-            "avg_time_minutes": 33.5,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G6.1",
-                "score": 87.0,
-                "date": "2026-03-19",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.2",
-                "score": 80.0,
-                "date": "2026-04-06",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.3",
-                "score": 80.0,
-                "date": "2026-04-15",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.4",
-                "score": 80.0,
-                "date": "2026-04-27",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G6: 4 failed tests (4 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -44041,62 +42885,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 5,
-            "total_tests": 6,
-            "failed_count": 6,
-            "rushed_count": 4,
-            "avg_time_minutes": 70.7,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G5.1",
-                "score": 82.0,
-                "date": "2026-04-01",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G5.2",
-                "score": 78.0,
-                "date": "2026-04-03",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G5.3",
-                "score": 87.0,
-                "date": "2026-04-06",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G5.4",
-                "score": 69.0,
-                "date": "2026-04-07",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G5.5",
-                "score": 87.0,
-                "date": "2026-04-14",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G5.6",
-                "score": 80.0,
-                "date": "2026-04-28",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G5: 6 failed tests (4 rushed)"
-        },
         {
           "type": "repeated",
           "severity": "low",
@@ -44391,57 +43183,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 6,
-            "total_tests": 5,
-            "failed_count": 5,
-            "rushed_count": 5,
-            "avg_time_minutes": 20.6,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G6.1",
-                "score": 73.0,
-                "date": "2025-11-17",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.2",
-                "score": 80.0,
-                "date": "2026-01-12",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.3",
-                "score": 83.0,
-                "date": "2026-01-24",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.4",
-                "score": 83.0,
-                "date": "2026-02-20",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.5",
-                "score": 83.0,
-                "date": "2026-03-11",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
-      "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G6: 5 failed tests (5 rushed)"
-        }
-      ],
+      "insights": [],
       "enrollment_mismatch": null,
       "inactivity": {
         "days_inactive": 1,
@@ -44965,17 +43710,11 @@
         "details": [
           {
             "grade": 3,
-            "total_tests": 5,
-            "failed_count": 5,
+            "total_tests": 4,
+            "failed_count": 4,
             "rushed_count": 3,
-            "avg_time_minutes": 24.9,
+            "avg_time_minutes": 23.9,
             "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 84.0,
-                "date": "2025-11-01",
-                "rushed": false
-              },
               {
                 "name": "Alpha Standardized Writing G3.2",
                 "score": 82.0,
@@ -45009,7 +43748,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G3: 5 failed tests (3 rushed)"
+          "text": "Deep Dive at G3: 4 failed tests (3 rushed)"
         },
         {
           "type": "low_accuracy",
@@ -46608,50 +45347,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 1,
-            "avg_time_minutes": 29.3,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 60.0,
-                "date": "2025-11-12",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 78.0,
-                "date": "2026-01-21",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 78.0,
-                "date": "2026-02-17",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 60.0,
-                "date": "2026-04-15",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 4 failed tests (1 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -47021,50 +45720,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 0,
-            "avg_time_minutes": 86.1,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 60.0,
-                "date": "2026-03-02",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 69.0,
-                "date": "2026-03-10",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 72.0,
-                "date": "2026-04-01",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 82.0,
-                "date": "2026-04-30",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 4 failed tests"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -47314,17 +45973,11 @@
         "details": [
           {
             "grade": 3,
-            "total_tests": 4,
-            "failed_count": 4,
+            "total_tests": 3,
+            "failed_count": 3,
             "rushed_count": 1,
             "avg_time_minutes": 22.9,
             "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 62.0,
-                "date": "2025-09-11",
-                "rushed": false
-              },
               {
                 "name": "Alpha Standardized Writing G3.2",
                 "score": 82.0,
@@ -47352,7 +46005,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G3: 4 failed tests (1 rushed)"
+          "text": "Deep Dive at G3: 3 failed tests (1 rushed)"
         },
         {
           "type": "low_accuracy",
@@ -47985,17 +46638,11 @@
         "details": [
           {
             "grade": 3,
-            "total_tests": 4,
-            "failed_count": 4,
+            "total_tests": 3,
+            "failed_count": 3,
             "rushed_count": 2,
-            "avg_time_minutes": 34.0,
+            "avg_time_minutes": 21.8,
             "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 84.0,
-                "date": "2026-01-07",
-                "rushed": false
-              },
               {
                 "name": "Alpha Standardized Writing G3.2",
                 "score": 72.0,
@@ -48023,7 +46670,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G3: 4 failed tests (2 rushed)"
+          "text": "Deep Dive at G3: 3 failed tests (2 rushed)"
         },
         {
           "type": "repeated",
@@ -49280,17 +47927,11 @@
         "details": [
           {
             "grade": 7,
-            "total_tests": 4,
-            "failed_count": 4,
+            "total_tests": 3,
+            "failed_count": 3,
             "rushed_count": 3,
-            "avg_time_minutes": 369.3,
+            "avg_time_minutes": 27.0,
             "tests": [
-              {
-                "name": "Alpha Standardized Writing G7.1",
-                "score": 80.0,
-                "date": "2025-12-02",
-                "rushed": false
-              },
               {
                 "name": "Alpha Standardized Writing G7.2",
                 "score": 83.0,
@@ -49318,7 +47959,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G7: 4 failed tests (3 rushed)"
+          "text": "Deep Dive at G7: 3 failed tests (3 rushed)"
         },
         {
           "type": "repeated",
@@ -50717,44 +49358,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 6,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 2,
-            "avg_time_minutes": 47.2,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G6.1",
-                "score": 63.0,
-                "date": "2026-02-11",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.2",
-                "score": 77.0,
-                "date": "2026-04-08",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G6.3",
-                "score": 77.0,
-                "date": "2026-04-13",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G6: 3 failed tests (2 rushed)"
-        },
         {
           "type": "repeated",
           "severity": "low",
@@ -54364,50 +52971,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 0,
-            "avg_time_minutes": 58.8,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 34.0,
-                "date": "2026-02-06",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 56.0,
-                "date": "2026-03-25",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 79.0,
-                "date": "2026-04-07",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 89.0,
-                "date": "2026-04-27",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 4 failed tests"
-        },
         {
           "type": "repeated",
           "severity": "low",
@@ -55888,50 +54455,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 6,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 1,
-            "avg_time_minutes": 436.1,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G6.1",
-                "score": 87.0,
-                "date": "2025-12-04",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G6.2",
-                "score": 80.0,
-                "date": "2026-02-16",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G6.3",
-                "score": 83.0,
-                "date": "2026-03-05",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.4",
-                "score": 87.0,
-                "date": "2026-03-17",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G6: 4 failed tests (1 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -57450,68 +55977,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 4,
-            "total_tests": 7,
-            "failed_count": 7,
-            "rushed_count": 5,
-            "avg_time_minutes": 22.9,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G4.1",
-                "score": 72.0,
-                "date": "2025-12-02",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G4.2",
-                "score": 64.0,
-                "date": "2026-01-05",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G4.3",
-                "score": 64.0,
-                "date": "2026-01-20",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G4.4",
-                "score": 58.0,
-                "date": "2026-01-27",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G4.5",
-                "score": 70.0,
-                "date": "2026-03-04",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.6",
-                "score": 79.0,
-                "date": "2026-04-01",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G4.7",
-                "score": 76.0,
-                "date": "2026-04-29",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G4: 7 failed tests (5 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -58122,44 +56591,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 5,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 0,
-            "avg_time_minutes": 42.6,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G5.1",
-                "score": 82.0,
-                "date": "2026-04-06",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G5.2",
-                "score": 79.0,
-                "date": "2026-04-14",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G5.3",
-                "score": 82.0,
-                "date": "2026-04-30",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G5: 3 failed tests"
-        },
         {
           "type": "repeated",
           "severity": "low",
@@ -58481,45 +56916,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 7,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 3,
-            "avg_time_minutes": 28.6,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G7.1",
-                "score": 83.0,
-                "date": "2026-03-02",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G7.2",
-                "score": 83.0,
-                "date": "2026-03-12",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G7.3",
-                "score": 87.0,
-                "date": "2026-04-07",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
-      "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G7: 3 failed tests (3 rushed)"
-        }
-      ],
+      "insights": [],
       "enrollment_mismatch": null,
       "inactivity": {
         "days_inactive": 2,
@@ -59139,68 +57539,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 7,
-            "failed_count": 7,
-            "rushed_count": 3,
-            "avg_time_minutes": 58.2,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 44.0,
-                "date": "2026-03-31",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 76.0,
-                "date": "2026-03-31",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 73.0,
-                "date": "2026-04-07",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 73.0,
-                "date": "2026-04-15",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.5",
-                "score": 88.0,
-                "date": "2026-04-24",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.6",
-                "score": 89.0,
-                "date": "2026-04-27",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.7",
-                "score": 76.0,
-                "date": "2026-04-28",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 7 failed tests (3 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -60298,51 +58640,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 6,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 4,
-            "avg_time_minutes": 34.9,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G6.1",
-                "score": 80.0,
-                "date": "2026-01-28",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.2",
-                "score": 87.0,
-                "date": "2026-03-25",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.3",
-                "score": 83.0,
-                "date": "2026-04-06",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.4",
-                "score": 87.0,
-                "date": "2026-04-13",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
-      "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G6: 4 failed tests (4 rushed)"
-        }
-      ],
+      "insights": [],
       "enrollment_mismatch": null,
       "inactivity": {
         "days_inactive": 1,
@@ -62054,62 +60355,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 4,
-            "total_tests": 6,
-            "failed_count": 6,
-            "rushed_count": 0,
-            "avg_time_minutes": 95.4,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G4.1",
-                "score": 87.0,
-                "date": "2026-03-20",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.2",
-                "score": 82.0,
-                "date": "2026-03-27",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.3",
-                "score": 89.0,
-                "date": "2026-04-09",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.4",
-                "score": 76.0,
-                "date": "2026-04-17",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.5",
-                "score": 87.0,
-                "date": "2026-04-30",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.6",
-                "score": 86.0,
-                "date": "2026-05-01",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G4: 6 failed tests"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -62489,17 +60738,11 @@
         "details": [
           {
             "grade": 4,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 4,
-            "avg_time_minutes": 20.5,
+            "total_tests": 3,
+            "failed_count": 3,
+            "rushed_count": 3,
+            "avg_time_minutes": 20.7,
             "tests": [
-              {
-                "name": "Alpha Standardized Writing G4.1",
-                "score": 69.0,
-                "date": "2025-12-01",
-                "rushed": true
-              },
               {
                 "name": "Alpha Standardized Writing G4.2",
                 "score": 81.0,
@@ -62527,7 +60770,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G4: 4 failed tests (4 rushed)"
+          "text": "Deep Dive at G4: 3 failed tests (3 rushed)"
         },
         {
           "type": "repeated",
@@ -63504,74 +61747,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 8,
-            "failed_count": 8,
-            "rushed_count": 6,
-            "avg_time_minutes": 22.6,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 79.0,
-                "date": "2025-11-06",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 71.0,
-                "date": "2026-01-09",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 68.0,
-                "date": "2026-01-30",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 80.0,
-                "date": "2026-02-13",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.5",
-                "score": 80.0,
-                "date": "2026-03-06",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.6",
-                "score": 76.0,
-                "date": "2026-03-17",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.7",
-                "score": 83.0,
-                "date": "2026-03-20",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.8",
-                "score": 80.0,
-                "date": "2026-03-26",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 8 failed tests (6 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -64164,44 +62343,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 1,
-            "avg_time_minutes": 29.8,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 66.0,
-                "date": "2026-03-13",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 78.0,
-                "date": "2026-04-15",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 62.0,
-                "date": "2026-04-30",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests (1 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -64443,50 +62588,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 3,
-            "avg_time_minutes": 21.9,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 62.0,
-                "date": "2025-10-30",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 76.0,
-                "date": "2026-03-20",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 77.0,
-                "date": "2026-03-30",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 76.0,
-                "date": "2026-04-14",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 4 failed tests (3 rushed)"
-        },
         {
           "type": "repeated",
           "severity": "low",
@@ -65714,44 +63819,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 6,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 3,
-            "avg_time_minutes": 17.4,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G6.1",
-                "score": 77.0,
-                "date": "2025-12-09",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.2",
-                "score": 80.0,
-                "date": "2026-03-17",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.3",
-                "score": 83.0,
-                "date": "2026-03-30",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G6: 3 failed tests (3 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -66225,45 +64296,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 0,
-            "avg_time_minutes": 81.6,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 62.0,
-                "date": "2026-01-14",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 73.0,
-                "date": "2026-03-27",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 82.0,
-                "date": "2026-04-29",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
-      "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests"
-        }
-      ],
+      "insights": [],
       "enrollment_mismatch": null,
       "inactivity": {
         "days_inactive": 4,
@@ -67600,44 +65636,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 2,
-            "avg_time_minutes": 24.8,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 20.0,
-                "date": "2025-11-04",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 78.0,
-                "date": "2026-03-03",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 66.0,
-                "date": "2026-03-04",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests (2 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -67876,45 +65878,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 2,
-            "avg_time_minutes": 26.1,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 53.0,
-                "date": "2026-03-27",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 33.0,
-                "date": "2026-03-30",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 62.0,
-                "date": "2026-04-30",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
-      "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests (2 rushed)"
-        }
-      ],
+      "insights": [],
       "enrollment_mismatch": null,
       "inactivity": {
         "days_inactive": 3,
@@ -69305,44 +67272,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 5,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 0,
-            "avg_time_minutes": 58.5,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G5.1",
-                "score": 84.0,
-                "date": "2026-04-01",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G5.2",
-                "score": 80.0,
-                "date": "2026-04-28",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G5.3",
-                "score": 88.0,
-                "date": "2026-04-29",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G5: 3 failed tests"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -70080,17 +68013,11 @@
         "details": [
           {
             "grade": 4,
-            "total_tests": 4,
-            "failed_count": 4,
+            "total_tests": 3,
+            "failed_count": 3,
             "rushed_count": 0,
-            "avg_time_minutes": 39.8,
+            "avg_time_minutes": 37.9,
             "tests": [
-              {
-                "name": "Alpha Standardized Writing G4.1",
-                "score": 82.0,
-                "date": "2025-12-15",
-                "rushed": false
-              },
               {
                 "name": "Alpha Standardized Writing G4.2",
                 "score": 84.0,
@@ -70118,7 +68045,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G4: 4 failed tests"
+          "text": "Deep Dive at G4: 3 failed tests"
         },
         {
           "type": "repeated",
@@ -70515,50 +68442,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 8,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 3,
-            "avg_time_minutes": 60.6,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G8.1",
-                "score": 83.0,
-                "date": "2026-03-23",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G8.2",
-                "score": 83.0,
-                "date": "2026-03-24",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G8.3",
-                "score": 87.0,
-                "date": "2026-03-27",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G8.4",
-                "score": 87.0,
-                "date": "2026-04-02",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G8: 4 failed tests (3 rushed)"
-        },
         {
           "type": "goal_xp",
           "severity": "medium",
@@ -71260,44 +69147,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 0,
-            "avg_time_minutes": 50.3,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 52.0,
-                "date": "2026-01-20",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 71.0,
-                "date": "2026-03-09",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 53.0,
-                "date": "2026-03-25",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -72664,17 +70517,11 @@
         "details": [
           {
             "grade": 3,
-            "total_tests": 6,
-            "failed_count": 6,
+            "total_tests": 5,
+            "failed_count": 5,
             "rushed_count": 3,
-            "avg_time_minutes": 34.8,
+            "avg_time_minutes": 35.6,
             "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 80.0,
-                "date": "2025-11-10",
-                "rushed": false
-              },
               {
                 "name": "Alpha Standardized Writing G3.2",
                 "score": 76.0,
@@ -72714,7 +70561,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G3: 6 failed tests (3 rushed)"
+          "text": "Deep Dive at G3: 5 failed tests (3 rushed)"
         },
         {
           "type": "repeated",
@@ -74047,62 +71894,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 4,
-            "total_tests": 6,
-            "failed_count": 6,
-            "rushed_count": 0,
-            "avg_time_minutes": 94.0,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G4.1",
-                "score": 76.0,
-                "date": "2026-04-01",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.2",
-                "score": 87.0,
-                "date": "2026-04-08",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.3",
-                "score": 89.0,
-                "date": "2026-04-13",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.4",
-                "score": 89.0,
-                "date": "2026-04-16",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.5",
-                "score": 82.0,
-                "date": "2026-04-27",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.6",
-                "score": 82.0,
-                "date": "2026-04-30",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G4: 6 failed tests"
-        },
         {
           "type": "repeated",
           "severity": "low",
@@ -74278,44 +72073,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 1,
-            "avg_time_minutes": 72.0,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 76.0,
-                "date": "2026-01-09",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 87.0,
-                "date": "2026-02-09",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 80.0,
-                "date": "2026-03-03",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests (1 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -75430,56 +73191,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 5,
-            "failed_count": 5,
-            "rushed_count": 2,
-            "avg_time_minutes": 28.9,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 76.0,
-                "date": "2026-03-24",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 81.0,
-                "date": "2026-04-07",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 83.0,
-                "date": "2026-04-13",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 82.0,
-                "date": "2026-04-28",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.5",
-                "score": 89.0,
-                "date": "2026-04-30",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 5 failed tests (2 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -75780,17 +73495,11 @@
         "details": [
           {
             "grade": 3,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 3,
-            "avg_time_minutes": 21.6,
+            "total_tests": 3,
+            "failed_count": 3,
+            "rushed_count": 2,
+            "avg_time_minutes": 23.4,
             "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 31.0,
-                "date": "2026-03-09",
-                "rushed": true
-              },
               {
                 "name": "Alpha Standardized Writing G3.2",
                 "score": 36.0,
@@ -75818,7 +73527,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G3: 4 failed tests (3 rushed)"
+          "text": "Deep Dive at G3: 3 failed tests (2 rushed)"
         },
         {
           "type": "low_accuracy",
@@ -76631,44 +74340,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 0,
-            "avg_time_minutes": 31.1,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 44.0,
-                "date": "2025-09-09",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 64.0,
-                "date": "2025-11-13",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 80.0,
-                "date": "2026-02-28",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -77153,17 +74828,11 @@
         "details": [
           {
             "grade": 3,
-            "total_tests": 8,
-            "failed_count": 8,
-            "rushed_count": 2,
-            "avg_time_minutes": 33.4,
+            "total_tests": 7,
+            "failed_count": 7,
+            "rushed_count": 1,
+            "avg_time_minutes": 35.6,
             "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 56.0,
-                "date": "2025-11-01",
-                "rushed": true
-              },
               {
                 "name": "Alpha Standardized Writing G3.2",
                 "score": 51.0,
@@ -77215,7 +74884,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G3: 8 failed tests (2 rushed)"
+          "text": "Deep Dive at G3: 7 failed tests (1 rushed)"
         },
         {
           "type": "low_accuracy",
@@ -78031,44 +75700,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 3,
-            "avg_time_minutes": 16.0,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 77.0,
-                "date": "2026-01-07",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 78.0,
-                "date": "2026-03-27",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 56.0,
-                "date": "2026-05-01",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests (3 rushed)"
-        },
         {
           "type": "repeated",
           "severity": "low",
@@ -79824,56 +77459,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 5,
-            "failed_count": 5,
-            "rushed_count": 0,
-            "avg_time_minutes": 49.0,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 73.0,
-                "date": "2026-03-02",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 76.0,
-                "date": "2026-03-27",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 73.0,
-                "date": "2026-04-02",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 78.0,
-                "date": "2026-04-08",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.5",
-                "score": 78.0,
-                "date": "2026-04-27",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 5 failed tests"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -80558,44 +78147,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 1,
-            "avg_time_minutes": 26.5,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 76.0,
-                "date": "2025-12-17",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 73.0,
-                "date": "2026-04-13",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 62.0,
-                "date": "2026-04-29",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests (1 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -83724,56 +81279,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 6,
-            "total_tests": 5,
-            "failed_count": 5,
-            "rushed_count": 5,
-            "avg_time_minutes": 21.0,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G6.1",
-                "score": 83.0,
-                "date": "2025-12-18",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.2",
-                "score": 77.0,
-                "date": "2026-02-13",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.3",
-                "score": 83.0,
-                "date": "2026-02-19",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.4",
-                "score": 83.0,
-                "date": "2026-03-17",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.5",
-                "score": 83.0,
-                "date": "2026-03-31",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G6: 5 failed tests (5 rushed)"
-        },
         {
           "type": "goal_xp",
           "severity": "medium",
@@ -83982,50 +81491,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 0,
-            "avg_time_minutes": 143.5,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 44.0,
-                "date": "2025-09-04",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 76.0,
-                "date": "2025-11-10",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 89.0,
-                "date": "2025-12-01",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 80.0,
-                "date": "2026-02-18",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 4 failed tests"
-        },
         {
           "type": "repeated",
           "severity": "low",
@@ -85448,44 +82917,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 0,
-            "avg_time_minutes": 28.0,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 71.0,
-                "date": "2026-01-08",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 69.0,
-                "date": "2026-04-28",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 68.0,
-                "date": "2026-04-29",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -86764,44 +84199,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 4,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 1,
-            "avg_time_minutes": 47.5,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G4.1",
-                "score": 76.0,
-                "date": "2025-11-20",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G4.2",
-                "score": 89.0,
-                "date": "2026-03-28",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.3",
-                "score": 87.0,
-                "date": "2026-04-13",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G4: 3 failed tests (1 rushed)"
-        },
         {
           "type": "repeated",
           "severity": "low",
@@ -88187,50 +85588,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 3,
-            "avg_time_minutes": 24.4,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 74.0,
-                "date": "2026-03-23",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 82.0,
-                "date": "2026-04-21",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 87.0,
-                "date": "2026-04-29",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 76.0,
-                "date": "2026-05-01",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 4 failed tests (3 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -88370,45 +85731,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 1,
-            "avg_time_minutes": 49.0,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 80.0,
-                "date": "2026-01-07",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 69.0,
-                "date": "2026-04-07",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 51.0,
-                "date": "2026-04-22",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
-      "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests (1 rushed)"
-        }
-      ],
+      "insights": [],
       "enrollment_mismatch": null,
       "inactivity": {
         "days_inactive": 0,
@@ -88860,23 +86186,11 @@
         "details": [
           {
             "grade": 6,
-            "total_tests": 7,
-            "failed_count": 7,
-            "rushed_count": 7,
-            "avg_time_minutes": 28.6,
+            "total_tests": 5,
+            "failed_count": 5,
+            "rushed_count": 5,
+            "avg_time_minutes": 29.6,
             "tests": [
-              {
-                "name": "Alpha Standardized Writing G6.1",
-                "score": 83.0,
-                "date": "2026-03-09",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.2",
-                "score": 80.0,
-                "date": "2026-03-16",
-                "rushed": true
-              },
               {
                 "name": "Alpha Standardized Writing G6.3",
                 "score": 70.0,
@@ -88916,7 +86230,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G6: 7 failed tests (7 rushed)"
+          "text": "Deep Dive at G6: 5 failed tests (5 rushed)"
         },
         {
           "type": "repeated",
@@ -89850,68 +87164,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 7,
-            "failed_count": 7,
-            "rushed_count": 2,
-            "avg_time_minutes": 30.2,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 82.0,
-                "date": "2025-11-01",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 80.0,
-                "date": "2025-12-04",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 84.0,
-                "date": "2026-01-07",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 84.0,
-                "date": "2026-01-22",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.5",
-                "score": 87.0,
-                "date": "2026-03-09",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.6",
-                "score": 80.0,
-                "date": "2026-03-16",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.7",
-                "score": 72.0,
-                "date": "2026-04-07",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 7 failed tests (2 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -90925,44 +88181,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 4,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 0,
-            "avg_time_minutes": 33.0,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G4.1",
-                "score": 87.0,
-                "date": "2026-04-13",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.2",
-                "score": 84.0,
-                "date": "2026-04-16",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.3",
-                "score": 89.0,
-                "date": "2026-04-29",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G4: 3 failed tests"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -91906,50 +89128,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 3,
-            "avg_time_minutes": 18.1,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 78.0,
-                "date": "2026-04-01",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 84.0,
-                "date": "2026-04-01",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 74.0,
-                "date": "2026-04-15",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 82.0,
-                "date": "2026-05-01",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 4 failed tests (3 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -93692,50 +90874,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 5,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 3,
-            "avg_time_minutes": 21.9,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G5.1",
-                "score": 84.0,
-                "date": "2026-01-29",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G5.2",
-                "score": 60.0,
-                "date": "2026-03-09",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G5.3",
-                "score": 89.0,
-                "date": "2026-03-19",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G5.4",
-                "score": 89.0,
-                "date": "2026-03-30",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G5: 4 failed tests (3 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -93894,44 +91036,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 4,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 2,
-            "avg_time_minutes": 30.0,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G4.1",
-                "score": 67.0,
-                "date": "2026-03-16",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G4.2",
-                "score": 53.0,
-                "date": "2026-04-01",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G4.4",
-                "score": 76.0,
-                "date": "2026-04-07",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G4: 3 failed tests (2 rushed)"
-        },
         {
           "type": "enrollment_mismatch",
           "severity": "medium",
@@ -94727,50 +91835,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 6,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 4,
-            "avg_time_minutes": 18.0,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G6.1",
-                "score": 87.0,
-                "date": "2026-01-21",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.2",
-                "score": 80.0,
-                "date": "2026-03-19",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.3",
-                "score": 87.0,
-                "date": "2026-04-02",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.4",
-                "score": 80.0,
-                "date": "2026-04-14",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G6: 4 failed tests (4 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -96904,50 +93972,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 6,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 4,
-            "avg_time_minutes": 26.1,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G6.1",
-                "score": 83.0,
-                "date": "2026-02-13",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.2",
-                "score": 83.0,
-                "date": "2026-02-16",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.3",
-                "score": 73.0,
-                "date": "2026-04-30",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G6.4",
-                "score": 80.0,
-                "date": "2026-05-01",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G6: 4 failed tests (4 rushed)"
-        },
         {
           "type": "repeated",
           "severity": "low",
@@ -97964,45 +94992,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 7,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 2,
-            "avg_time_minutes": 87.9,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G7.1",
-                "score": 87.0,
-                "date": "2025-11-10",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G7.2",
-                "score": 87.0,
-                "date": "2026-02-05",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G7.3",
-                "score": 80.0,
-                "date": "2026-03-25",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
-      "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G7: 3 failed tests (2 rushed)"
-        }
-      ],
+      "insights": [],
       "enrollment_mismatch": null,
       "inactivity": {
         "days_inactive": 3,
@@ -98470,50 +95463,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 5,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 0,
-            "avg_time_minutes": 78.8,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G5.1",
-                "score": 87.0,
-                "date": "2026-03-26",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G5.2",
-                "score": 87.0,
-                "date": "2026-03-31",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G5.3",
-                "score": 82.0,
-                "date": "2026-04-14",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G5.4",
-                "score": 84.0,
-                "date": "2026-04-28",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G5: 4 failed tests"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -100449,50 +97402,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 0,
-            "avg_time_minutes": 54.2,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 69.0,
-                "date": "2025-10-07",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 80.0,
-                "date": "2026-03-24",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 89.0,
-                "date": "2026-04-13",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 89.0,
-                "date": "2026-04-24",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 4 failed tests"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -105555,44 +102468,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 0,
-            "avg_time_minutes": 130.4,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 78.0,
-                "date": "2026-04-16",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 69.0,
-                "date": "2026-04-20",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 77.0,
-                "date": "2026-04-30",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -105788,17 +102667,11 @@
         "details": [
           {
             "grade": 3,
-            "total_tests": 6,
-            "failed_count": 6,
-            "rushed_count": 3,
-            "avg_time_minutes": 31.9,
+            "total_tests": 5,
+            "failed_count": 5,
+            "rushed_count": 2,
+            "avg_time_minutes": 35.9,
             "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 51.0,
-                "date": "2025-11-04",
-                "rushed": true
-              },
               {
                 "name": "Alpha Standardized Writing G3.2",
                 "score": 80.0,
@@ -105838,7 +102711,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G3: 6 failed tests (3 rushed)"
+          "text": "Deep Dive at G3: 5 failed tests (2 rushed)"
         }
       ],
       "enrollment_mismatch": null,
@@ -106247,56 +103120,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 5,
-            "total_tests": 5,
-            "failed_count": 5,
-            "rushed_count": 1,
-            "avg_time_minutes": 30.9,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G5.1",
-                "score": 78.0,
-                "date": "2026-02-10",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G5.2",
-                "score": 76.0,
-                "date": "2026-03-23",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G5.3",
-                "score": 84.0,
-                "date": "2026-04-06",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G5.4",
-                "score": 89.0,
-                "date": "2026-04-10",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G5.5",
-                "score": 89.0,
-                "date": "2026-04-29",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G5: 5 failed tests (1 rushed)"
-        },
         {
           "type": "repeated",
           "severity": "low",
@@ -106991,17 +103818,11 @@
         "details": [
           {
             "grade": 4,
-            "total_tests": 5,
-            "failed_count": 5,
+            "total_tests": 4,
+            "failed_count": 4,
             "rushed_count": 1,
-            "avg_time_minutes": 73.1,
+            "avg_time_minutes": 42.6,
             "tests": [
-              {
-                "name": "Alpha Standardized Writing G4.1",
-                "score": 84.0,
-                "date": "2025-12-16",
-                "rushed": false
-              },
               {
                 "name": "Alpha Standardized Writing G4.2",
                 "score": 50.0,
@@ -107035,7 +103856,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G4: 5 failed tests (1 rushed)"
+          "text": "Deep Dive at G4: 4 failed tests (1 rushed)"
         }
       ],
       "enrollment_mismatch": null,
@@ -108100,45 +104921,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 1,
-            "avg_time_minutes": 26.4,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 47.0,
-                "date": "2026-01-08",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 68.0,
-                "date": "2026-04-28",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 62.0,
-                "date": "2026-04-29",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
-      "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests (1 rushed)"
-        }
-      ],
+      "insights": [],
       "enrollment_mismatch": null,
       "inactivity": {
         "days_inactive": 4,
@@ -108320,44 +105106,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 3,
-            "failed_count": 3,
-            "rushed_count": 0,
-            "avg_time_minutes": 41.6,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 39.0,
-                "date": "2026-01-30",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 69.0,
-                "date": "2026-04-01",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 78.0,
-                "date": "2026-04-30",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 3 failed tests"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",
@@ -108676,17 +105428,11 @@
         "details": [
           {
             "grade": 3,
-            "total_tests": 5,
-            "failed_count": 5,
+            "total_tests": 4,
+            "failed_count": 4,
             "rushed_count": 0,
-            "avg_time_minutes": 78.1,
+            "avg_time_minutes": 90.4,
             "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 33.0,
-                "date": "2025-10-01",
-                "rushed": false
-              },
               {
                 "name": "Alpha Standardized Writing G3.2",
                 "score": 81.0,
@@ -108720,7 +105466,7 @@
         {
           "type": "deep_dive",
           "severity": "high",
-          "text": "Deep Dive at G3: 5 failed tests"
+          "text": "Deep Dive at G3: 4 failed tests"
         },
         {
           "type": "repeated",
@@ -109425,57 +106171,10 @@
         "repeated_activities": []
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 4,
-            "total_tests": 5,
-            "failed_count": 5,
-            "rushed_count": 0,
-            "avg_time_minutes": 51.6,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G4.1",
-                "score": 89.0,
-                "date": "2026-02-16",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.2",
-                "score": 87.0,
-                "date": "2026-03-03",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.3",
-                "score": 89.0,
-                "date": "2026-03-04",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.4",
-                "score": 84.0,
-                "date": "2026-03-05",
-                "rushed": false
-              },
-              {
-                "name": "Alpha Standardized Writing G4.5",
-                "score": 82.0,
-                "date": "2026-04-03",
-                "rushed": false
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
-      "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G4: 5 failed tests"
-        }
-      ],
+      "insights": [],
       "enrollment_mismatch": null,
       "inactivity": {
         "days_inactive": 4,
@@ -110447,50 +107146,10 @@
         ]
       },
       "deep_dive": {
-        "needed": true,
-        "details": [
-          {
-            "grade": 3,
-            "total_tests": 4,
-            "failed_count": 4,
-            "rushed_count": 4,
-            "avg_time_minutes": 17.9,
-            "tests": [
-              {
-                "name": "Alpha Standardized Writing G3.1",
-                "score": 74.0,
-                "date": "2026-03-30",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.2",
-                "score": 71.0,
-                "date": "2026-03-30",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing - G3.3",
-                "score": 71.0,
-                "date": "2026-04-15",
-                "rushed": true
-              },
-              {
-                "name": "Alpha Standardized Writing G3.4",
-                "score": 60.0,
-                "date": "2026-04-27",
-                "rushed": true
-              }
-            ],
-            "analysis": null
-          }
-        ]
+        "needed": false,
+        "details": []
       },
       "insights": [
-        {
-          "type": "deep_dive",
-          "severity": "high",
-          "text": "Deep Dive at G3: 4 failed tests (4 rushed)"
-        },
         {
           "type": "low_accuracy",
           "severity": "medium",

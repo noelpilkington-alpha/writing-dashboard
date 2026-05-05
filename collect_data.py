@@ -1102,22 +1102,28 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
         # Next expected test (passing a test advances to next grade level)
         next_test = infer_next_test(hmg, api_tests)
 
-        # Grades the student has attempted a test at (any test type). Used to
-        # decide whether a loop is "still current" — a student who's been
-        # failing at G3 but has since attempted a G4 test has moved on, so
-        # the G3 loop is resolved.
-        attempted_grades: set[int] = set()
+        # Group the student's tests by grade so we can check the MOST RECENT
+        # test at each grade. A loop at grade G is resolved once the student's
+        # most recent test at grade G is a pass — per the product rule
+        # "if a student passes the grade they were looping in, remove them."
+        tests_by_grade: dict[int, list[dict]] = {}
         for t in api_tests:
             m = _re.search(r"G(\d+)", t.get("name", ""))
             if m:
-                attempted_grades.add(int(m.group(1)))
+                g = int(m.group(1))
+                tests_by_grade.setdefault(g, []).append(t)
 
         def _loop_still_current(loop_grade: int) -> bool:
-            """Keep a loop flagged unless the student has moved on to G+1."""
-            return (loop_grade + 1) not in attempted_grades
+            """A loop at loop_grade is resolved when the most recent test at
+            that grade (by date) is a pass (score >= PASS_THRESHOLD)."""
+            tests = tests_by_grade.get(loop_grade, [])
+            if not tests:
+                return True  # detection said 3+ fails but no tests visible — keep flagged
+            latest = max(tests, key=lambda t: t.get("date", ""))
+            return latest.get("score", 0) < PASS_THRESHOLD
 
-        # Deep dive — flag every grade where the student has 3+ failures and
-        # hasn't yet moved on to the next grade.
+        # Deep dive — flag every grade where the student has 3+ EOC failures
+        # whose most recent test at that grade hasn't passed.
         dd_needed = any(
             (email, g) in deep_dives and _loop_still_current(g)
             for g in range(3, 9)
@@ -1126,7 +1132,7 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
         for (dd_email, dd_grade), dd_tests in deep_dive_tests.items():
             if dd_email != email:
                 continue
-            # Skip if the student has moved on to the next grade
+            # Skip if the student's most recent test at this grade was a pass
             if not _loop_still_current(dd_grade):
                 continue
             failed = [t for t in dd_tests if t.score < PASS_THRESHOLD]

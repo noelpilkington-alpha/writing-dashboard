@@ -3034,21 +3034,23 @@
       return;
     }
 
-    // Drop students who have moved on past the grade they were looping in.
+    // Drop students who have since passed the grade they were looping in.
     // loop_data.json is regenerated less frequently than data.json. A loop
-    // at grade G is considered resolved only once the student has attempted
-    // a test at grade G+1 — passing a single test within grade G (HMG
-    // advancing) is not enough on its own.
-    const attemptedByEmail = {};
+    // at grade G is considered resolved when the student's most recent test
+    // at grade G is a pass (>= 90).
+    const mostRecentByGradeByEmail = {};
     if (DATA && DATA.students) {
       for (const s of DATA.students) {
         if (!s.email) continue;
-        const grades = new Set();
+        const byGrade = {};
         for (const t of s.all_tests || []) {
           const m = (t.name || "").match(/G(\d+)/);
-          if (m) grades.add(parseInt(m[1], 10));
+          if (!m) continue;
+          const g = parseInt(m[1], 10);
+          const prev = byGrade[g];
+          if (!prev || (t.date || "") > (prev.date || "")) byGrade[g] = t;
         }
-        attemptedByEmail[s.email.toLowerCase()] = grades;
+        mostRecentByGradeByEmail[s.email.toLowerCase()] = byGrade;
       }
     }
 
@@ -3056,12 +3058,15 @@
     const students = [];
     let droppedCount = 0;
     for (const s of rawStudents) {
-      const attempted = attemptedByEmail[(s.email || "").toLowerCase()];
-      if (!attempted) {
+      const byGrade = mostRecentByGradeByEmail[(s.email || "").toLowerCase()];
+      if (!byGrade) {
         students.push(s);
         continue;
       }
-      const stillLooping = (s.loop_details || []).filter(d => !attempted.has(d.grade + 1));
+      const stillLooping = (s.loop_details || []).filter(d => {
+        const mr = byGrade[d.grade];
+        return !mr || (mr.score || 0) < 90;
+      });
       if (stillLooping.length === 0) {
         droppedCount++;
         continue;
