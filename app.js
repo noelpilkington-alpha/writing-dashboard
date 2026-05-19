@@ -1827,6 +1827,45 @@
       }).join("")}
     </tr></table>`;
 
+    // EOC pass rate per session
+    const eocBySession = {};
+    for (const sk of sessionKeys) {
+      eocBySession[sk] = { taken: 0, passed: 0 };
+    }
+    for (const t of allTests) {
+      if (t.test_type !== "end of course") continue;
+      for (const sk of sessionKeys) {
+        const s = sessions[sk];
+        if (t.date >= s.start && t.date <= s.end) {
+          eocBySession[sk].taken++;
+          if (t.passed) eocBySession[sk].passed++;
+          break;
+        }
+      }
+    }
+    let eocPassRateHtml = `
+      <h3 style="margin-top:16px;margin-bottom:8px">End-of-Course Pass Rate by Session</h3>
+      <table class="metrics-table" style="margin-bottom:20px">
+        <tr><th>Session</th><th>Tests</th><th>Passed</th><th>Pass Rate</th></tr>`;
+    for (const sk of sessionKeys) {
+      const d = eocBySession[sk];
+      if (d.taken === 0) continue;
+      const rate = Math.round((d.passed / d.taken) * 100);
+      const cls = rate >= 50 ? "score-pass" : rate >= 35 ? "" : "score-fail";
+      eocPassRateHtml += `<tr>
+        <td>${esc(sessions[sk].label || sk)}</td>
+        <td>${d.taken}</td>
+        <td>${d.passed}</td>
+        <td class="${cls}"><strong>${rate}%</strong></td>
+      </tr>`;
+    }
+    const allEocTaken = sessionKeys.reduce((s, sk) => s + eocBySession[sk].taken, 0);
+    const allEocPassed = sessionKeys.reduce((s, sk) => s + eocBySession[sk].passed, 0);
+    const allEocRate = allEocTaken > 0 ? Math.round((allEocPassed / allEocTaken) * 100) : 0;
+    eocPassRateHtml += `<tr style="font-weight:700;border-top:2px solid var(--border)">
+      <td>All Sessions</td><td>${allEocTaken}</td><td>${allEocPassed}</td><td><strong>${allEocRate}%</strong></td>
+    </tr></table>`;
+
     let html = `
       <h2 style="margin-bottom:8px">${esc(sess.label || currentSession)} Test Results</h2>
       <div class="tr-summary">
@@ -1835,6 +1874,7 @@
         <span class="tr-stat red"><strong>${totalFailed}</strong> failed</span>
         <span class="tr-stat"><strong>${uniqueStudents}</strong> students tested</span>
       </div>
+      ${eocPassRateHtml}
       ${weekCompareHtml}
       <div class="tr-filters">
         <input type="text" id="tr-search" class="search-input" placeholder="Search by student name or test..." autocomplete="off" style="max-width:320px">
