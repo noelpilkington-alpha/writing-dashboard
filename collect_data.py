@@ -420,6 +420,22 @@ def _classify_dashboard(campus: str) -> str:
     return "timeback"
 
 
+_EXCLUDED_ENROLLMENT_PATTERNS = [
+    "manual xp",
+    "scribble",
+    "writing placement tests",
+    "remediation",
+    "frq mastery",
+    "ap english language",
+]
+
+
+def _is_excluded_enrollment(title: str) -> bool:
+    """Return True if an enrollment title is a non-core Writing course."""
+    t = title.lower()
+    return any(p in t for p in _EXCLUDED_ENROLLMENT_PATTERNS)
+
+
 # ---------------------------------------------------------------------------
 # AlphaWrite skill plan name mapping
 # ---------------------------------------------------------------------------
@@ -1045,11 +1061,19 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
         # Enrollments
         student_enrollments = enrollments.get(sid, [])
 
-        # Level
-        level = _get_level(profile.age_grade)
-
         # Fetch test history from API
         api_tests = fetch_writing_test_results(api, sid)
+
+        # Skip students whose only enrollments are non-core courses
+        # (unless they have test history, indicating they completed core courses)
+        if student_enrollments and not any(
+            not _is_excluded_enrollment(e) for e in student_enrollments
+        ):
+            if not api_tests:
+                continue
+
+        # Level
+        level = _get_level(profile.age_grade)
 
         # HMG — computed from API test results (highest grade with a passed test)
         hmg = compute_hmg_from_api_tests(api_tests)
