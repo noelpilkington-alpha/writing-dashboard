@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T09:22:30",
+  "generated_at": "2026-05-22T10:18:13",
   "session": {
     "name": "S5",
     "start": "2026-04-27",
@@ -56,6 +56,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G4 hole-filling Class"
@@ -234,14 +235,14 @@
         {
           "type": "inactive",
           "severity": "high",
-          "text": "No writing activity this session (20 school days)"
+          "text": "No writing activity for 36 school days (last XP 2026-04-02)"
         }
       ],
       "enrollment_mismatch": null,
       "inactivity": {
-        "days_inactive": 20,
-        "never_active_this_session": true,
-        "last_xp_date": null
+        "days_inactive": 36,
+        "never_active_this_session": false,
+        "last_xp_date": "2026-04-02"
       }
     },
     {
@@ -259,6 +260,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -769,6 +771,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Sentences G4 Class",
@@ -1230,6 +1233,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -1436,6 +1440,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Sentences G5 2025-26",
@@ -1714,6 +1719,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -2108,6 +2114,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Alphawrite Paragraphs II Class",
@@ -2410,6 +2417,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 2025-26"
@@ -2734,6 +2742,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G4 hole-filling Class"
@@ -3464,6 +3473,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 2025-26"
@@ -3822,6 +3832,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -4034,6 +4045,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences II Class",
@@ -4567,6 +4579,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -4738,6 +4751,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs I Class"
@@ -5571,6 +5585,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G5 2025-26",
@@ -5974,6 +5989,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Scribble Class",
@@ -6203,6 +6219,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class",
@@ -6820,6 +6837,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 2025-26"
@@ -7088,6 +7106,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -7264,6 +7283,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -7505,6 +7525,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -7664,6 +7685,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -8310,6 +8332,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -8744,6 +8767,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -9102,6 +9126,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -9718,6 +9743,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class",
@@ -10284,6 +10310,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Sentences G7 Class",
@@ -10454,7 +10481,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-01-07"
       }
     },
     {
@@ -10472,6 +10499,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -10730,6 +10758,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs I Class"
@@ -11483,6 +11512,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -11899,6 +11929,7 @@
       "effective_grades_mastered": 4,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -12324,6 +12355,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -12803,6 +12835,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -12935,6 +12968,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -13168,6 +13202,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -13360,6 +13395,7 @@
       "effective_grades_mastered": 5,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -13789,6 +13825,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G7 hole-filling Class"
@@ -14442,6 +14479,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": true,
       "enrollments": [
         "[AlphaWrite] Writing G8 hole-filling Class",
@@ -14836,6 +14874,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -15005,6 +15044,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G4 hole-filling Class",
@@ -15984,6 +16024,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -16221,14 +16262,14 @@
         {
           "type": "inactive",
           "severity": "high",
-          "text": "No writing activity this session (20 school days)"
+          "text": "No writing activity for 45 school days (last XP 2026-03-20)"
         }
       ],
       "enrollment_mismatch": null,
       "inactivity": {
-        "days_inactive": 20,
-        "never_active_this_session": true,
-        "last_xp_date": null
+        "days_inactive": 45,
+        "never_active_this_session": false,
+        "last_xp_date": "2026-03-20"
       }
     },
     {
@@ -16246,6 +16287,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G4 hole-filling Class",
@@ -16780,6 +16822,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -17148,6 +17191,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Essays G6 Class",
@@ -17395,6 +17439,7 @@
       "effective_grades_mastered": 3,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G4 hole-filling Class",
@@ -17787,6 +17832,7 @@
       "effective_grades_mastered": 5,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": true,
       "enrollments": [
         "Sentences G4 2025-26",
@@ -18197,6 +18243,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -18617,6 +18664,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences I Class"
@@ -18793,6 +18841,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -19461,6 +19510,7 @@
       "effective_grades_mastered": 4,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Paragraphs G3 Class",
@@ -19692,6 +19742,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class",
@@ -20374,6 +20425,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G5 hole-filling Class"
@@ -20748,6 +20800,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -20830,6 +20883,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -21050,6 +21104,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G3 hole-filling Class",
@@ -21750,6 +21805,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Paragraphs G7 Class",
@@ -21892,7 +21948,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-10-17"
       }
     },
     {
@@ -21910,6 +21966,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -22633,6 +22690,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -23001,6 +23059,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -23739,6 +23798,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences II Class"
@@ -24222,6 +24282,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -24660,6 +24721,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": true,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -24815,7 +24877,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-02-11"
       }
     },
     {
@@ -24833,6 +24895,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 2025-26"
@@ -25395,6 +25458,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs III Class"
@@ -25673,6 +25737,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -26079,6 +26144,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Sentences G8 Class",
@@ -26981,6 +27047,7 @@
       "effective_grades_mastered": 3,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": true,
       "enrollments": [
         "[Alphawrite] Writing G5 hole-filling Class"
@@ -27224,6 +27291,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Sentences G7 Class",
@@ -27383,7 +27451,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-10-17"
       }
     },
     {
@@ -27401,6 +27469,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Sentences G6 Class",
@@ -27563,7 +27632,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-12-08"
       }
     },
     {
@@ -27581,6 +27650,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -28092,6 +28162,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -28588,6 +28659,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -28941,14 +29013,14 @@
         {
           "type": "inactive",
           "severity": "high",
-          "text": "No writing activity this session (20 school days)"
+          "text": "No writing activity for 30 school days (last XP 2026-04-10)"
         }
       ],
       "enrollment_mismatch": null,
       "inactivity": {
-        "days_inactive": 20,
-        "never_active_this_session": true,
-        "last_xp_date": null
+        "days_inactive": 30,
+        "never_active_this_session": false,
+        "last_xp_date": "2026-04-10"
       }
     },
     {
@@ -28966,6 +29038,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -29337,6 +29410,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 2025-26",
@@ -29753,6 +29827,7 @@
       "effective_grades_mastered": 4,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": true,
       "enrollments": [
         "Sentences G7 2025-26",
@@ -29978,6 +30053,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs I Class"
@@ -30831,6 +30907,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class",
@@ -31106,6 +31183,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -31420,6 +31498,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": true,
       "enrollments": [
         "[Alphawrite] Writing G8 hole-filling Class",
@@ -31931,6 +32010,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -32474,6 +32554,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 2025-26",
@@ -32857,6 +32938,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 2025-26",
@@ -33450,6 +33532,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -33715,6 +33798,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Paragraphs G4 2025-26",
@@ -34323,6 +34407,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -34663,6 +34748,7 @@
       "effective_grades_mastered": 4,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": true,
       "enrollments": [
         "Paragraphs G3 2025-26",
@@ -35231,6 +35317,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -35591,6 +35678,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -35871,6 +35959,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -36040,6 +36129,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -36264,7 +36354,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-01-05"
       }
     },
     {
@@ -36282,6 +36372,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs II Class",
@@ -37753,6 +37844,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences I 2024-25"
@@ -37850,6 +37942,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Scribble Class",
@@ -38005,6 +38098,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -38138,6 +38232,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -38682,6 +38777,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -38918,6 +39014,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -39183,6 +39280,7 @@
       "effective_grades_mastered": 4,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G7 hole-filling Class",
@@ -39647,6 +39745,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -40188,6 +40287,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -40504,6 +40604,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences III Class"
@@ -40917,6 +41018,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences III Class"
@@ -41604,6 +41706,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences II Class",
@@ -41969,6 +42072,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -42630,6 +42734,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "[Alphawrite] Writing G8 hole-filling Class",
@@ -43196,6 +43301,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences III Class",
@@ -43540,6 +43646,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -44240,6 +44347,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs III Class",
@@ -44900,6 +45008,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences II Class"
@@ -45062,6 +45171,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -45214,6 +45324,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G7 Class",
@@ -45396,7 +45507,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-01-05"
       }
     },
     {
@@ -45414,6 +45525,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -45563,6 +45675,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G3 hole-filling Class",
@@ -45981,6 +46094,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -46340,6 +46454,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class",
@@ -46727,6 +46842,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -47807,6 +47923,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -47925,6 +48042,7 @@
       "effective_grades_mastered": 4,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -48186,7 +48304,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-01-09"
       }
     },
     {
@@ -48204,6 +48322,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Sentences G7 Class"
@@ -48966,6 +49085,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -50079,6 +50199,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G4 hole-filling Class",
@@ -50769,6 +50890,7 @@
       "effective_grades_mastered": 4,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class",
@@ -51337,6 +51459,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -52389,6 +52512,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class",
@@ -53082,6 +53206,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences II Class"
@@ -53688,6 +53813,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Essays G7 Class",
@@ -54182,6 +54308,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class",
@@ -54854,6 +54981,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class",
@@ -55599,6 +55727,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -55950,6 +56079,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -56444,6 +56574,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences I Class",
@@ -56808,6 +56939,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 2025-26"
@@ -57019,6 +57151,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -57783,6 +57916,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs III Class"
@@ -58677,6 +58811,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G5 hole-filling Class"
@@ -58964,6 +59099,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G5 hole-filling Class"
@@ -59218,6 +59354,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs III Class"
@@ -59652,6 +59789,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -59785,6 +59923,7 @@
       "effective_grades_mastered": 3,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Sentences G8 Class",
@@ -59976,7 +60115,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-10-25"
       }
     },
     {
@@ -59994,6 +60133,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Sentences G5 2025-26",
@@ -60224,7 +60364,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-01-22"
       }
     },
     {
@@ -60242,6 +60382,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -60566,6 +60707,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -60728,6 +60870,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -61083,6 +61226,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -62256,6 +62400,7 @@
       "effective_grades_mastered": 3,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class",
@@ -62699,6 +62844,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -63121,6 +63267,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Sentences G6 Class",
@@ -64081,6 +64228,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Paragraphs G6 2025-26",
@@ -64239,7 +64387,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-01-21"
       }
     },
     {
@@ -64257,6 +64405,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G7 Class",
@@ -64477,7 +64626,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-12-01"
       }
     },
     {
@@ -64495,6 +64644,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G6 hole-filling Class"
@@ -64808,6 +64958,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G8 hole-filling Class",
@@ -65452,6 +65603,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "[AlphaWrite] Writing G7 hole-filling Class",
@@ -65832,6 +65984,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 2025-26"
@@ -66105,6 +66258,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -66603,6 +66757,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -67141,6 +67296,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences II Class"
@@ -67375,6 +67531,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences I Class"
@@ -67777,6 +67934,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G3 hole-filling Class"
@@ -68255,6 +68413,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class",
@@ -68736,6 +68895,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G4 hole-filling Class",
@@ -69657,6 +69817,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -70482,6 +70643,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -70655,6 +70817,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G4 hole-filling Class",
@@ -71022,6 +71185,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -71293,6 +71457,7 @@
       "effective_grades_mastered": 3,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -72024,6 +72189,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -72436,6 +72602,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -73209,6 +73376,7 @@
       "effective_grades_mastered": 3,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G4 hole-filling Class",
@@ -73818,6 +73986,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -74191,6 +74360,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G7 Class",
@@ -74916,6 +75086,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G5 hole-filling Class"
@@ -75124,6 +75295,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class",
@@ -75273,6 +75445,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -76090,6 +76263,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class",
@@ -76893,6 +77067,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs III Class",
@@ -77723,6 +77898,7 @@
       "effective_grades_mastered": 3,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": true,
       "enrollments": [
         "Paragraphs G8 Class"
@@ -77967,6 +78143,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -78604,6 +78781,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -79172,6 +79350,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -79283,6 +79462,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class",
@@ -80111,6 +80291,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -80312,6 +80493,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -81109,6 +81291,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -81510,6 +81693,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Sentences G4 2025-26",
@@ -82222,6 +82406,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -82790,6 +82975,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -83204,6 +83390,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -83998,6 +84185,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -84623,6 +84811,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs I Class"
@@ -84791,6 +84980,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Essays G7 Class",
@@ -85062,6 +85252,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class",
@@ -85969,6 +86160,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -86362,6 +86554,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -86775,6 +86968,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G6 hole-filling Class",
@@ -87437,6 +87631,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -87858,6 +88053,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -88242,6 +88438,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Sentences G6 Class",
@@ -88733,6 +88930,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -89281,6 +89479,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G3 hole-filling Class",
@@ -90155,6 +90354,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Essays G7 Class",
@@ -90759,6 +90959,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G7 hole-filling Class",
@@ -91587,6 +91788,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -91914,6 +92116,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -92419,6 +92622,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -92545,6 +92749,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -93049,6 +93254,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -93550,6 +93756,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -94182,6 +94389,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -94747,6 +94955,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -95266,6 +95475,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -95612,6 +95822,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -96250,6 +96461,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Alphawrite Sentences II Class",
@@ -96486,7 +96698,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-01-13"
       }
     },
     {
@@ -96504,6 +96716,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -96869,6 +97082,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G8 Class",
@@ -96988,7 +97202,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-01-08"
       }
     },
     {
@@ -97006,6 +97220,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -97487,6 +97702,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -97888,6 +98104,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -98286,6 +98503,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -98496,6 +98714,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences II Class"
@@ -99285,6 +99504,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G3 hole-filling Class",
@@ -99921,6 +100141,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Paragraphs G8 Class",
@@ -100028,7 +100249,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-10-17"
       }
     },
     {
@@ -100046,6 +100267,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G4 hole-filling Class"
@@ -100616,6 +100838,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G5 hole-filling Class"
@@ -100778,6 +101001,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Sentences G7 2025-26",
@@ -101456,6 +101680,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Sentences G5 2025-26",
@@ -101857,6 +102082,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -102114,6 +102340,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -102292,6 +102519,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences II Class"
@@ -102901,6 +103129,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -103083,7 +103312,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-02-16"
       }
     },
     {
@@ -103101,6 +103330,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -103873,6 +104103,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G4 hole-filling Class"
@@ -104328,6 +104559,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class",
@@ -105010,6 +105242,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class",
@@ -105792,6 +106025,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G4 hole-filling Class",
@@ -106057,6 +106291,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G4 2025-26",
@@ -106695,6 +106930,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -106885,6 +107121,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -107015,14 +107252,14 @@
         {
           "type": "inactive",
           "severity": "high",
-          "text": "No writing activity this session (20 school days)"
+          "text": "No writing activity for 82 school days (last XP 2026-01-28)"
         }
       ],
       "enrollment_mismatch": "Expected G5, enrolled in G3",
       "inactivity": {
-        "days_inactive": 20,
-        "never_active_this_session": true,
-        "last_xp_date": null
+        "days_inactive": 82,
+        "never_active_this_session": false,
+        "last_xp_date": "2026-01-28"
       }
     },
     {
@@ -107040,6 +107277,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -107416,6 +107654,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -107955,6 +108194,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G3 hole-filling Class",
@@ -108276,6 +108516,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -108666,6 +108907,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G8 Class",
@@ -108784,7 +109026,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-10-25"
       }
     },
     {
@@ -108802,6 +109044,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class",
@@ -109444,6 +109687,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -110236,6 +110480,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G6 hole-filling Class",
@@ -110871,6 +111116,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -111337,6 +111583,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences I Class"
@@ -111519,6 +111766,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs I Class",
@@ -112044,6 +112292,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -112559,6 +112808,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Alphawrite Sentences III Class",
@@ -112728,7 +112978,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-11-04"
       }
     },
     {
@@ -112746,6 +112996,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 2025-26"
@@ -113297,6 +113548,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs I Class"
@@ -113451,6 +113703,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -113973,6 +114226,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -114542,6 +114796,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Sentences G5 2025-26",
@@ -115063,6 +115318,7 @@
       "effective_grades_mastered": 3,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Sentences G7 Class",
@@ -115535,6 +115791,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 2025-26"
@@ -115797,6 +116054,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Sentences G5 2025-26",
@@ -115946,7 +116204,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-10-17"
       }
     },
     {
@@ -115964,6 +116222,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Scribble Class",
@@ -116113,6 +116372,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class",
@@ -116537,6 +116797,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Essays G6 Class",
@@ -116816,6 +117077,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -117487,6 +117749,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -118005,6 +118268,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -118771,6 +119035,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -119241,6 +119506,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 2025-26",
@@ -119529,6 +119795,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class",
@@ -120040,6 +120307,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G4 hole-filling Class"
@@ -121175,6 +121443,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G7 Class",
@@ -121361,7 +121630,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-11-12"
       }
     },
     {
@@ -121379,6 +121648,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -121542,6 +121812,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -122018,6 +122289,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G7 Class",
@@ -122138,7 +122410,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-10-17"
       }
     },
     {
@@ -122156,6 +122428,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -122238,6 +122511,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class",
@@ -122712,6 +122986,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -123365,6 +123640,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G7 Class",
@@ -123671,6 +123947,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -124219,6 +124496,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Scribble Class",
@@ -124751,6 +125029,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs I Class"
@@ -125240,6 +125519,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G3 hole-filling Class",
@@ -125987,6 +126267,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -126356,6 +126637,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -126715,6 +126997,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -127327,6 +127610,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -127483,14 +127767,14 @@
         {
           "type": "inactive",
           "severity": "high",
-          "text": "No writing activity this session (20 school days)"
+          "text": "No writing activity for 52 school days (last XP 2026-03-11)"
         }
       ],
       "enrollment_mismatch": "Expected G5, enrolled in G3, G3",
       "inactivity": {
-        "days_inactive": 20,
-        "never_active_this_session": true,
-        "last_xp_date": null
+        "days_inactive": 52,
+        "never_active_this_session": false,
+        "last_xp_date": "2026-03-11"
       }
     },
     {
@@ -127508,6 +127792,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G4 hole-filling Class"
@@ -127927,6 +128212,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G3 hole-filling Class",
@@ -128209,6 +128495,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 2025-26"
@@ -128561,6 +128848,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences II Class",
@@ -129166,6 +129454,7 @@
       "effective_grades_mastered": 4,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Sentences G8 Class"
@@ -129435,6 +129724,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs I Class"
@@ -130250,6 +130540,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences II Class"
@@ -130796,6 +131087,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G8 Class",
@@ -131215,6 +131507,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G8 Class",
@@ -131518,6 +131811,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -131770,7 +132064,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-02-14"
       }
     },
     {
@@ -131788,6 +132082,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G4 Class",
@@ -132928,6 +133223,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G5 hole-filling Class",
@@ -133074,6 +133370,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 2025-26"
@@ -133325,6 +133622,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -134319,6 +134617,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 2025-26"
@@ -134541,6 +134840,7 @@
       "effective_grades_mastered": 3,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Sentences G7 Class",
@@ -135143,6 +135443,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G3 hole-filling Class",
@@ -135605,6 +135906,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -135917,6 +136219,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -136459,6 +136762,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G3 hole-filling Class",
@@ -136797,6 +137101,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 2025-26"
@@ -136879,6 +137184,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Scribble Class",
@@ -137271,6 +137577,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -137501,6 +137808,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G6 Class",
@@ -137659,7 +137967,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-12-02"
       }
     },
     {
@@ -137677,6 +137985,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G6 hole-filling Class",
@@ -138405,6 +138714,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -138724,6 +139034,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class",
@@ -139479,6 +139790,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G3 hole-filling Class",
@@ -139848,6 +140160,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -140325,6 +140638,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences II Class"
@@ -140618,6 +140932,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -141371,6 +141686,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -141719,6 +142035,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G6 Class",
@@ -142010,6 +142327,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -142476,6 +142794,7 @@
       "effective_grades_mastered": 3,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -142808,14 +143127,14 @@
         {
           "type": "inactive",
           "severity": "high",
-          "text": "No writing activity this session (20 school days)"
+          "text": "No writing activity for 36 school days (last XP 2026-04-02)"
         }
       ],
       "enrollment_mismatch": null,
       "inactivity": {
-        "days_inactive": 20,
-        "never_active_this_session": true,
-        "last_xp_date": null
+        "days_inactive": 36,
+        "never_active_this_session": false,
+        "last_xp_date": "2026-04-02"
       }
     },
     {
@@ -142833,6 +143152,7 @@
       "effective_grades_mastered": 5,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -143140,6 +143460,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Essays G6 Class",
@@ -143737,6 +144058,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class",
@@ -144468,6 +144790,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G3 hole-filling Class"
@@ -144827,6 +145150,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 2025-26"
@@ -145158,6 +145482,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G4 hole-filling Class"
@@ -145454,6 +145779,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs I Class"
@@ -145873,6 +146199,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G8 Class",
@@ -146014,7 +146341,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-09-29"
       }
     },
     {
@@ -146032,6 +146359,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -146303,6 +146631,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -146933,6 +147262,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -147282,6 +147612,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class",
@@ -147594,6 +147925,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Paragraphs G5 2025-26",
@@ -147771,7 +148103,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-11-18"
       }
     },
     {
@@ -147789,6 +148121,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs II Class"
@@ -148487,6 +148820,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G4 hole-filling Class"
@@ -148740,6 +149074,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Sentences G6 2025-26",
@@ -149746,6 +150081,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs I Class"
@@ -149909,14 +150245,14 @@
         {
           "type": "inactive",
           "severity": "high",
-          "text": "No writing activity this session (20 school days)"
+          "text": "No writing activity for 53 school days (last XP 2026-03-10)"
         }
       ],
       "enrollment_mismatch": null,
       "inactivity": {
-        "days_inactive": 20,
-        "never_active_this_session": true,
-        "last_xp_date": null
+        "days_inactive": 53,
+        "never_active_this_session": false,
+        "last_xp_date": "2026-03-10"
       }
     },
     {
@@ -149934,6 +150270,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -150022,14 +150359,14 @@
         {
           "type": "inactive",
           "severity": "high",
-          "text": "No writing activity this session (20 school days)"
+          "text": "No writing activity for 39 school days (last XP 2026-03-30)"
         }
       ],
       "enrollment_mismatch": null,
       "inactivity": {
-        "days_inactive": 20,
-        "never_active_this_session": true,
-        "last_xp_date": null
+        "days_inactive": 39,
+        "never_active_this_session": false,
+        "last_xp_date": "2026-03-30"
       }
     },
     {
@@ -150047,6 +150384,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -150476,6 +150814,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": true,
       "enrollments": [
         "[Alphawrite] Writing G8 hole-filling Class"
@@ -150828,6 +151167,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Sentences G5 2025-26",
@@ -151405,6 +151745,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -151668,6 +152009,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Scribble Class",
@@ -152127,6 +152469,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class"
@@ -152463,6 +152806,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class",
@@ -153223,6 +153567,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -153992,6 +154337,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class",
@@ -154545,6 +154891,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Sentences G6 2025-26",
@@ -154813,7 +155160,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-01-26"
       }
     },
     {
@@ -154831,6 +155178,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G4 hole-filling Class"
@@ -155233,6 +155581,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -155567,6 +155916,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Scribble Class",
@@ -155952,6 +156302,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -156538,6 +156889,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G5 hole-filling Class",
@@ -156977,6 +157329,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -157275,6 +157628,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class",
@@ -157816,6 +158170,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Scribble Class",
@@ -157998,6 +158353,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences III Class"
@@ -159132,6 +159488,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Paragraphs G7 Class",
@@ -159641,6 +159998,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": true,
       "enrollments": [
         "Essays G7 Class"
@@ -159769,7 +160127,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-01-20"
       }
     },
     {
@@ -159787,6 +160145,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G5 hole-filling Class",
@@ -160452,6 +160811,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G3 hole-filling Class"
@@ -160733,6 +161093,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -160926,6 +161287,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -161262,6 +161624,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G7 Class",
@@ -161383,7 +161746,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-10-21"
       }
     },
     {
@@ -161401,6 +161764,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs I Class",
@@ -162053,6 +162417,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -162374,6 +162739,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 2025-26"
@@ -162571,6 +162937,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -163252,6 +163619,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Sentences G8 Class",
@@ -163446,6 +163814,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Sentences G8 Class",
@@ -163529,7 +163898,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-09-17"
       }
     },
     {
@@ -163547,6 +163916,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class",
@@ -164177,6 +164547,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G6 hole-filling Class",
@@ -164760,6 +165131,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G4 hole-filling Class"
@@ -165121,6 +165493,7 @@
       "effective_grades_mastered": 4,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Paragraphs G3 Class",
@@ -165381,7 +165754,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-02-06"
       }
     },
     {
@@ -165399,6 +165772,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class",
@@ -166066,6 +166440,7 @@
       "effective_grades_mastered": 3,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Writing Placement Tests Class",
@@ -166272,7 +166647,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-01-08"
       }
     },
     {
@@ -166290,6 +166665,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class",
@@ -166608,6 +166984,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences III Class",
@@ -167135,6 +167512,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 2025-26"
@@ -167583,6 +167961,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -167784,6 +168163,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class",
@@ -168085,6 +168465,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G4 hole-filling Class",
@@ -168334,6 +168715,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Paragraphs G5 2025-26",
@@ -168516,7 +168898,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-12-11"
       }
     },
     {
@@ -168534,6 +168916,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -168871,6 +169254,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 2025-26"
@@ -168985,6 +169369,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -169486,6 +169871,7 @@
       "effective_grades_mastered": 4,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -170060,6 +170446,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G4 hole-filling Class"
@@ -170631,6 +171018,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G7 Class"
@@ -171343,6 +171731,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 2025-26",
@@ -171803,6 +172192,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -171944,6 +172334,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -172596,6 +172987,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -172722,6 +173114,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -173326,6 +173719,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G7 Class"
@@ -173818,6 +174212,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -174148,6 +174543,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -174417,6 +174813,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "AP English Language and Composition — Hole-Filler (c60d83ac)"
@@ -174533,7 +174930,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-09-17"
       }
     },
     {
@@ -174551,6 +174948,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G3 hole-filling Class",
@@ -174889,6 +175287,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences I Class"
@@ -175026,6 +175425,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -175770,6 +176170,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": true,
       "enrollments": [
         "Essays G8 Class",
@@ -175936,7 +176337,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-02-04"
       }
     },
     {
@@ -175954,6 +176355,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G3 hole-filling Class",
@@ -176180,6 +176582,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -176682,6 +177085,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G4 hole-filling Class"
@@ -176907,6 +177311,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G6 hole-filling Class",
@@ -177867,6 +178272,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Scribble Class",
@@ -178189,6 +178595,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G4 hole-filling Class"
@@ -178858,6 +179265,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G4 hole-filling Class",
@@ -179210,6 +179618,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -179698,6 +180107,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -180418,6 +180828,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": true,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -180974,6 +181385,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -181571,6 +181983,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -182396,6 +182809,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -182865,6 +183279,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G5 hole-filling Class"
@@ -183173,6 +183588,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -183598,6 +184014,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "[Alphawrite] Writing G8 hole-filling Class",
@@ -184093,6 +184510,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -184449,6 +184867,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Paragraphs G5 2025-26",
@@ -184636,7 +185055,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-01-09"
       }
     },
     {
@@ -184654,6 +185073,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -185842,6 +186262,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -186288,6 +186709,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G4 hole-filling Class",
@@ -186535,6 +186957,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -187052,6 +187475,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Paragraphs G7 2025-26",
@@ -187249,7 +187673,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-12-12"
       }
     },
     {
@@ -187267,6 +187691,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -188036,6 +188461,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -188274,6 +188700,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Sentences G5 2025-26",
@@ -188407,7 +188834,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-10-24"
       }
     },
     {
@@ -188425,6 +188852,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class"
@@ -188586,6 +189014,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences II Class"
@@ -188781,6 +189210,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": true,
       "enrollments": [
         "Sentences G7 Class",
@@ -188987,6 +189417,7 @@
       "effective_grades_mastered": 5,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G7 Class",
@@ -189387,6 +189818,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G7 Class",
@@ -189533,7 +189965,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-10-16"
       }
     },
     {
@@ -189551,6 +189983,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Sentences G6 Class",
@@ -189683,7 +190116,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-09-23"
       }
     },
     {
@@ -189701,6 +190134,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G3 hole-filling Class",
@@ -190195,6 +190629,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -190499,6 +190934,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G7 hole-filling Class"
@@ -190818,6 +191254,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -191425,6 +191862,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -191684,6 +192122,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -191956,6 +192395,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -192301,6 +192741,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Scribble Class",
@@ -192902,6 +193343,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Asher Hackworth - G3 Writing Remediation Class",
@@ -193467,6 +193909,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G4 2025-26",
@@ -193755,6 +194198,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -194154,6 +194598,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G5 hole-filling Class",
@@ -194702,6 +195147,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -194948,6 +195394,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences I 2024-25"
@@ -195030,6 +195477,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -195390,6 +195838,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Scribble Class",
@@ -195773,6 +196222,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G7 Class",
@@ -196230,6 +196680,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G8 Class",
@@ -196347,7 +196798,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-09-17"
       }
     },
     {
@@ -196365,6 +196816,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences I 2024-25",
@@ -196499,6 +196951,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -196780,6 +197233,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "[AlphaWrite] Writing G3 hole-filling Class"
@@ -197559,6 +198013,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -197963,6 +198418,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G4 hole-filling Class",
@@ -198356,6 +198812,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G6 Class",
@@ -198562,7 +199019,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-12-01"
       }
     },
     {
@@ -198580,6 +199037,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G4 hole-filling Class"
@@ -198804,6 +199262,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 2025-26",
@@ -199155,6 +199614,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -200441,6 +200901,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G8 Class",
@@ -200719,6 +201180,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G7 Class"
@@ -200859,7 +201321,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2025-10-10"
       }
     },
     {
@@ -200877,6 +201339,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class",
@@ -201093,6 +201556,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G4 hole-filling Class",
@@ -201450,6 +201914,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G6 Class",
@@ -201709,7 +202174,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-01-26"
       }
     },
     {
@@ -201727,6 +202192,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -202060,6 +202526,7 @@
       "effective_grades_mastered": 3,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Sentences G6 Class",
@@ -202345,7 +202812,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-01-28"
       }
     },
     {
@@ -202363,6 +202830,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -202866,6 +203334,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -203014,6 +203483,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Scribble Class",
@@ -203373,6 +203843,7 @@
       "effective_grades_mastered": 4,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "Essays G8 Class",
@@ -203813,6 +204284,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs II Class",
@@ -204099,6 +204571,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 2025-26",
@@ -204484,6 +204957,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class"
@@ -204998,6 +205472,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences II Class",
@@ -205359,6 +205834,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs II Class",
@@ -205578,6 +206054,7 @@
       "effective_grades_mastered": 3,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": true,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -206278,6 +206755,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -206510,6 +206988,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -206878,6 +207357,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -207234,6 +207714,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class",
@@ -207874,6 +208355,7 @@
       "effective_grades_mastered": 1,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Sentences G4 2025-26",
@@ -208832,6 +209314,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Sentences G6 2025-26",
@@ -209546,6 +210029,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": true,
       "enrollments": [
         "[AlphaWrite] Writing G8 hole-filling Class",
@@ -209763,7 +210247,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-03-25"
       }
     },
     {
@@ -209781,6 +210265,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class",
@@ -210151,6 +210636,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -210685,6 +211171,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": null,
       "completed_g8": false,
       "enrollments": [
         "Sentences G3 Class"
@@ -210829,6 +211316,7 @@
       "effective_grades_mastered": 4,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Standardized Writing Fundamentals G3 Class",
@@ -211303,6 +211791,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Paragraphs II Class",
@@ -211811,6 +212300,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": true,
       "enrollments": [
         "Sentences G7 2025-26",
@@ -211965,7 +212455,7 @@
       "inactivity": {
         "days_inactive": 0,
         "never_active_this_session": false,
-        "last_xp_date": null
+        "last_xp_date": "2026-01-14"
       }
     },
     {
@@ -211983,6 +212473,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -212150,6 +212641,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S3",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class",
@@ -212822,6 +213314,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -213049,6 +213542,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -213684,6 +214178,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S1",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class",
@@ -214282,6 +214777,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -214941,6 +215437,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": true,
       "enrollments": [
         "[Alphawrite] Writing G8 hole-filling Class"
@@ -215179,6 +215676,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -215357,6 +215855,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "Manual XP - Writing Class",
@@ -215863,6 +216362,7 @@
       "effective_grades_mastered": 2,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "Paragraphs G3 Class"
@@ -216083,6 +216583,7 @@
       "effective_grades_mastered": null,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "Alphawrite Sentences I 2024-25",
@@ -216580,6 +217081,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": true,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G6 hole-filling Class",
@@ -217298,6 +217800,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S5",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -217653,6 +218156,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S4",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
@@ -217908,6 +218412,7 @@
       "effective_grades_mastered": 0,
       "language_eg": null,
       "s1_cohort": false,
+      "start_session": "S2",
       "completed_g8": false,
       "enrollments": [
         "[Alphawrite] Writing G3 hole-filling Class"
