@@ -248,6 +248,12 @@
             </table>
         </div>
 
+        <h2>Progress by Cohort (Start Session)</h2>
+        <div class="section-card">
+            <p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">Students grouped by when they started AlphaWrite. Earlier cohorts have had more time to reach the 2-grade target.</p>
+            <div id="cohort-section"></div>
+        </div>
+
         <h2>Progress by Campus</h2>
         <div class="section-card">
             <div class="campus-bars" id="campus-bars"></div>
@@ -479,6 +485,70 @@
                     <td>${meta.action || ''}</td>
                 </tr>`;
             }).join('');
+
+            // Cohort section
+            const cohortOrder = ['S1', 'S2', 'S3', 'S4', 'S5'];
+            const cohortLabels = {S1: 'Session 1 (Aug-Oct 2025)', S2: 'Session 2 (Oct-Jan)', S3: 'Session 3 (Jan-Feb)', S4: 'Session 4 (Mar-Apr)', S5: 'Session 5 (Apr-Jun)'};
+            const cohortData = {};
+            students.forEach(s => {
+                const cohort = s.start_session || 'Unknown';
+                if (!cohortData[cohort]) cohortData[cohort] = {total: 0, atTarget: 0, advanced: [], reasons: {}};
+                cohortData[cohort].total++;
+                const adv = s.grades_advanced || 0;
+                cohortData[cohort].advanced.push(adv);
+                if (adv >= 2) cohortData[cohort].atTarget++;
+                if (adv < 2 && s._reason) {
+                    cohortData[cohort].reasons[s._reason] = (cohortData[cohort].reasons[s._reason] || 0) + 1;
+                }
+            });
+
+            let cohortHTML = '<table class="summary-table"><thead><tr><th>Cohort</th><th>Students</th><th>At Target (2+)</th><th>Avg Grades</th><th>Top Barrier</th></tr></thead><tbody>';
+            cohortOrder.forEach(sn => {
+                const d = cohortData[sn];
+                if (!d) return;
+                const pct = Math.round(100 * d.atTarget / d.total);
+                const avg = (d.advanced.reduce((a,b) => a+b, 0) / d.total).toFixed(1);
+                const topReason = Object.entries(d.reasons).sort((a,b) => b[1]-a[1])[0];
+                const barrier = topReason ? `${topReason[0]} (${topReason[1]})` : '-';
+                const barColor = pct >= 60 ? '#16a34a' : pct >= 40 ? '#f59e0b' : '#ef4444';
+                cohortHTML += `<tr>
+                    <td><strong>${sn}</strong> <span style="font-size:0.75rem;color:#666">${cohortLabels[sn] || ''}</span></td>
+                    <td>${d.total}</td>
+                    <td><div style="display:flex;align-items:center;gap:0.5rem;"><div style="width:80px;height:14px;background:#f1f3f5;border-radius:3px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:${barColor};border-radius:3px;"></div></div><strong>${pct}%</strong> (${d.atTarget})</div></td>
+                    <td>${avg}</td>
+                    <td style="font-size:0.8rem;">${barrier}</td>
+                </tr>`;
+            });
+            if (cohortData['Unknown']) {
+                const d = cohortData['Unknown'];
+                cohortHTML += `<tr><td><strong>No tests yet</strong></td><td>${d.total}</td><td>-</td><td>-</td><td>-</td></tr>`;
+            }
+            cohortHTML += '</tbody></table>';
+
+            // Cohort stacked bars
+            cohortHTML += '<div style="margin-top:1.5rem;"><h3 style="margin-bottom:0.75rem;">Grades Advanced Distribution by Cohort</h3>';
+            cohortOrder.forEach(sn => {
+                const d = cohortData[sn];
+                if (!d) return;
+                const n = d.total;
+                const g0 = d.advanced.filter(x => x === 0).length;
+                const g1 = d.advanced.filter(x => x === 1).length;
+                const g2 = d.advanced.filter(x => x === 2).length;
+                const g3 = d.advanced.filter(x => x >= 3).length;
+                cohortHTML += `<div style="display:flex;align-items:center;margin-bottom:0.4rem;font-size:0.8rem;">
+                    <span style="width:30px;font-weight:600;">${sn}</span>
+                    <div class="stacked-bar" style="flex:1;height:22px;margin:0;">
+                        ${g3 ? `<div class="bar-segment" style="width:${100*g3/n}%;background:#166534;">${g3}</div>` : ''}
+                        ${g2 ? `<div class="bar-segment" style="width:${100*g2/n}%;background:#16a34a;">${g2}</div>` : ''}
+                        ${g1 ? `<div class="bar-segment" style="width:${100*g1/n}%;background:#f59e0b;">${g1}</div>` : ''}
+                        ${g0 ? `<div class="bar-segment" style="width:${100*g0/n}%;background:#ef4444;">${g0}</div>` : ''}
+                    </div>
+                    <span style="width:40px;text-align:right;font-size:0.75rem;color:#666;">${n}</span>
+                </div>`;
+            });
+            cohortHTML += '</div>';
+
+            document.getElementById('cohort-section').innerHTML = cohortHTML;
 
             // Campus bars
             const campusData = {};
