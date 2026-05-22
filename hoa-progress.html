@@ -264,7 +264,7 @@
         <!-- Section 5: Skill Gaps Drill-Down -->
         <h2>Persistent Skill Gaps: Detail</h2>
         <div class="section-card">
-            <p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">S1/S2 students who are active but consistently scoring below 80% accuracy. Grouped by primary skill area.</p>
+            <p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">Based on analysis of <strong>test responses</strong> (not just AlphaWrite practice). Shows what students cannot do in unscaffolded test conditions, and whether AlphaWrite can address each gap.</p>
             <div id="skill-gaps-section"></div>
         </div>
 
@@ -661,28 +661,43 @@
                 studentSkillDetails.push({name: s.name, campus: s.campus, hmg: s.hmg, adv: s.grades_advanced, primary: primary ? primary[0] : 'Unknown', activities: low});
             });
 
-            let sgHTML = '<h3 style="margin-top:0;">Biggest Overall Skill Gaps</h3>';
-            sgHTML += '<table class="summary-table" style="margin-bottom:1.5rem;"><thead><tr><th>Skill Area</th><th>Students Affected</th><th>Low-Accuracy Activities</th><th>Can AlphaWrite Fix?</th></tr></thead><tbody>';
+            // Count fixable vs non-fixable from v2 analysis text
+            let awCanFix = 0, awCannotFix = 0, testContext = 0;
+            persistentStudents.forEach(s => {
+                const a = s.skill_gap_analysis || {};
+                const cf = (a.can_alphawrite_fix || '').toLowerCase();
+                if (cf.includes('cannot') || cf.includes('spelling') || cf.includes('punctuation')) awCannotFix++;
+                if (cf.includes('can fix') || cf.includes('sentence construction') || cf.includes('paragraph')) awCanFix++;
+                if (cf.includes('test context') || cf.includes('scaffolding') || cf.includes('assigned content')) testContext++;
+            });
+
+            let sgHTML = '<h3 style="margin-top:0;">Key Finding: Types of Gaps</h3>';
+            sgHTML += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem;">';
+            sgHTML += `<div style="background:#dcfce7;border-radius:8px;padding:1rem;text-align:center;"><div style="font-weight:700;font-size:1.5rem;color:#166534;">${awCanFix}</div><div style="font-size:0.8rem;font-weight:600;">AlphaWrite CAN fix</div><div style="font-size:0.7rem;color:#555;">Sentence/paragraph construction, topic sentences, elaboration</div></div>`;
+            sgHTML += `<div style="background:#fee2e2;border-radius:8px;padding:1rem;text-align:center;"><div style="font-weight:700;font-size:1.5rem;color:#991b1b;">${awCannotFix}</div><div style="font-size:0.8rem;font-weight:600;">AlphaWrite CANNOT fix</div><div style="font-size:0.7rem;color:#555;">Spelling, punctuation, grammar mechanics, comma splices</div></div>`;
+            sgHTML += `<div style="background:#e0f2fe;border-radius:8px;padding:1rem;text-align:center;"><div style="font-weight:700;font-size:1.5rem;color:#075985;">${testContext}</div><div style="font-size:0.8rem;font-weight:600;">Test-context gap</div><div style="font-size:0.7rem;color:#555;">Performs in AlphaWrite but fails in unscaffolded test conditions</div></div>`;
+            sgHTML += '</div>';
+
+            sgHTML += '<h3>AlphaWrite Practice Skill Areas (from activity data)</h3>';
+            sgHTML += '<table class="summary-table" style="margin-bottom:1.5rem;"><thead><tr><th>Skill Area</th><th>Students</th><th>Low-Accuracy Activities</th><th>AlphaWrite Addresses?</th></tr></thead><tbody>';
             const fixAnswers = {
-                'Sentence Construction': 'Yes — KG activities for kernel expansion, appositives, and sentence combining directly target these skills.',
-                'Paragraph Organization': 'Yes — topic sentence identification, SPO structure, and irrelevant sentence elimination are directly trainable.',
-                'Paragraph Development': 'Yes — scaffolded paragraph writing activities build from details to full paragraphs.',
-                'Transitions & Structure': 'Yes — targeted transition word practice and paragraph flow activities.',
+                'Sentence Construction': 'Yes — directly practiced',
+                'Paragraph Organization': 'Yes — directly practiced',
+                'Paragraph Development': 'Yes — directly practiced',
+                'Transitions & Structure': 'Yes — directly practiced',
             };
             Object.entries(skillCounts).sort((a,b) => b[1]-a[1]).forEach(([cat, count]) => {
                 const stuCount = studentSkillDetails.filter(s => s.primary === cat).length;
-                sgHTML += `<tr><td><strong>${cat}</strong></td><td>${stuCount} students</td><td>${count} activities</td><td><span class="badge badge-green">Yes</span> <span style="font-size:0.75rem;">${fixAnswers[cat] || ''}</span></td></tr>`;
+                sgHTML += `<tr><td><strong>${cat}</strong></td><td>${stuCount}</td><td>${count}</td><td><span class="badge badge-green">Yes</span> ${fixAnswers[cat] || ''}</td></tr>`;
             });
             sgHTML += '</tbody></table>';
 
-            sgHTML += '<h3>Per-Student Diagnosis and Prescription</h3><table class="summary-table"><thead><tr><th>Student</th><th>HMG</th><th title="Average AlphaWrite practice minutes per weekday since first active">Min/day</th><th>Skill Gap</th><th>Prescribed Action</th></tr></thead><tbody>';
+            sgHTML += '<h3>Per-Student Test Analysis</h3><p style="font-size:0.75rem;color:#666;margin-bottom:0.5rem;">Based on actual test responses. Click any student in the Student List below for full detail.</p>';
+            sgHTML += '<table class="summary-table"><thead><tr><th>Student</th><th>Grade</th><th>HMG</th><th>Test Skill Gaps (summary)</th></tr></thead><tbody>';
             persistentStudents.sort((a,b) => a.name.localeCompare(b.name)).forEach(s => {
                 const analysis = s.skill_gap_analysis || {};
-                const gap = analysis.skill_gap_summary || 'Analysis pending';
-                const action = analysis.prescribed_action || 'Pending';
-                const mpd = (s.mins_per_day === null || s.mins_per_day === undefined) ? '—' : s.mins_per_day.toFixed(1);
-                const mpdColor = (s.mins_per_day === null || s.mins_per_day === undefined) ? '#999' : s.mins_per_day >= 12.5 ? '#16a34a' : s.mins_per_day >= 6 ? '#d97706' : '#dc2626';
-                sgHTML += `<tr><td><strong>${s.name}</strong><br><span style="font-size:0.7rem;color:#666;">${s.campus || ''}</span></td><td>G${s.hmg || '?'}</td><td style="color:${mpdColor};font-weight:600;text-align:right;">${mpd}</td><td style="font-size:0.8rem;">${gap}</td><td style="font-size:0.8rem;">${action}</td></tr>`;
+                const gaps = (analysis.test_skill_gaps || 'Pending').split('\n')[0].substring(0, 150);
+                sgHTML += `<tr><td><strong>${s.name}</strong></td><td>G${s.age_grade || '?'}</td><td>G${s.hmg || '?'}</td><td style="font-size:0.78rem;">${gaps}${gaps.length >= 150 ? '...' : ''}</td></tr>`;
             });
             sgHTML += '</tbody></table>';
             document.getElementById('skill-gaps-section').innerHTML = sgHTML;
