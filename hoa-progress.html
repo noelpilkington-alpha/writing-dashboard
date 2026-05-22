@@ -696,9 +696,8 @@
             sgHTML += '<h4 style="color:#166534;margin-bottom:0.5rem;font-size:0.9rem;">Skills AlphaWrite Teaches</h4>';
             sgHTML += '<p style="font-size:0.75rem;color:#555;margin-bottom:0.75rem;">These are writing skills directly practiced in AlphaWrite lessons. Students are struggling despite having access to instruction. This may indicate they need more repetition, a different entry point, or prerequisite skills.</p>';
             Object.entries(gapCounts.fixable).sort((a,b)=>b[1]-a[1]).forEach(([gap,count]) => {
-                const pct = Math.round(100*count/persistentStudents.length);
-                const barW = Math.round(pct * 0.8);
-                sgHTML += `<div style="margin-bottom:0.5rem;"><div style="font-size:0.8rem;margin-bottom:2px;"><strong>${count}</strong> students (${pct}%) — ${gap}</div><div style="height:6px;background:#f1f3f5;border-radius:3px;"><div style="height:100%;width:${barW}%;background:#16a34a;border-radius:3px;"></div></div></div>`;
+                const barW = Math.round(100*count/persistentStudents.length * 0.8);
+                sgHTML += `<div style="margin-bottom:0.5rem;"><div style="font-size:0.8rem;margin-bottom:2px;"><strong>${count}</strong> of ${persistentStudents.length} students — ${gap}</div><div style="height:6px;background:#f1f3f5;border-radius:3px;"><div style="height:100%;width:${barW}%;background:#16a34a;border-radius:3px;"></div></div></div>`;
             });
             sgHTML += '</div>';
 
@@ -707,9 +706,8 @@
             sgHTML += '<h4 style="color:#991b1b;margin-bottom:0.5rem;font-size:0.9rem;">Gaps Beyond AlphaWrite Scope</h4>';
             sgHTML += '<p style="font-size:0.75rem;color:#555;margin-bottom:0.75rem;">AlphaWrite teaches grammar implicitly through sentence-level skills (e.g., question grammar, appositives). However, these students show <strong>persistent errors in mechanics</strong> that go beyond what implicit instruction resolves. They likely need explicit, isolated instruction in these areas or focused proofreading practice.</p>';
             Object.entries(gapCounts.nonFixable).sort((a,b)=>b[1]-a[1]).forEach(([gap,count]) => {
-                const pct = Math.round(100*count/persistentStudents.length);
-                const barW = Math.round(pct * 0.8);
-                sgHTML += `<div style="margin-bottom:0.5rem;"><div style="font-size:0.8rem;margin-bottom:2px;"><strong>${count}</strong> students (${pct}%) — ${gap}</div><div style="height:6px;background:#f1f3f5;border-radius:3px;"><div style="height:100%;width:${barW}%;background:#dc2626;border-radius:3px;"></div></div></div>`;
+                const barW = Math.round(100*count/persistentStudents.length * 0.8);
+                sgHTML += `<div style="margin-bottom:0.5rem;"><div style="font-size:0.8rem;margin-bottom:2px;"><strong>${count}</strong> of ${persistentStudents.length} students — ${gap}</div><div style="height:6px;background:#f1f3f5;border-radius:3px;"><div style="height:100%;width:${barW}%;background:#dc2626;border-radius:3px;"></div></div></div>`;
             });
             sgHTML += '</div></div>';
 
