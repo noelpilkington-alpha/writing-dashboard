@@ -297,6 +297,7 @@
                         <th>Start</th>
                         <th>Current</th>
                         <th>Advanced</th>
+                        <th title="Average Writing activities per available school day (excl. MAP weeks)">Act/day</th>
                         <th>Primary Reason</th>
                     </tr>
                 </thead>
@@ -318,11 +319,11 @@
             action: 'Engagement/ops intervention needed. AlphaWrite cannot teach students who are not logging in.',
             color: '#dc2626',
         },
-        'Recently Inactive': {
-            desc: 'Was practicing but stopped in the last 5–13 school days.',
+        'Not Enough Time': {
+            desc: 'Averaging fewer than 1 Writing activity per available school day (excluding MAP testing weeks).',
             fixable: 'partial',
-            fixLabel: 'Partially — if they return',
-            action: 'Nudge/outreach to re-engage. If they return, AlphaWrite resumes instruction.',
+            fixLabel: 'Partially — needs more daily practice',
+            action: 'Student needs to complete at least 1 Writing activity per day. AlphaWrite works when used consistently.',
             color: '#f97316',
         },
         'Stuck in Testing Loop': {
@@ -333,10 +334,10 @@
             color: '#8b5cf6',
         },
         'Insufficient Time in Program': {
-            desc: 'S4/S5 student progressing on pace but has not had enough calendar time to reach 2 grades.',
+            desc: 'S4/S5 student who has not had enough calendar time to reach 2 grades.',
             fixable: 'yes',
             fixLabel: 'Yes — on pace',
-            action: 'On pace — needs more calendar time.',
+            action: 'Needs more calendar time in the program.',
             color: '#06b6d4',
         },
         'Persistent Skill Gaps': {
@@ -346,19 +347,12 @@
             action: 'Deep skill analysis needed — may need targeted intervention beyond standard adaptive pathing.',
             color: '#1d4ed8',
         },
-        'Low Accuracy (needs skill work)': {
+        'Low Accuracy': {
             desc: 'Practicing but accuracy below 80% — struggling with current material.',
             fixable: 'yes',
             fixLabel: 'Yes — adaptive pathing',
             action: 'AlphaWrite adjusts difficulty and assigns prerequisite skills automatically.',
             color: '#0ea5e9',
-        },
-        'Very Low Practice Volume': {
-            desc: 'Logging in but spending less than 50% of expected daily time on writing, or averaging under 5 XP/day.',
-            fixable: 'partial',
-            fixLabel: 'Partially — needs more time',
-            action: 'Student needs to spend more minutes practicing. AlphaWrite works when used.',
-            color: '#eab308',
         },
         'On Track (1 grade, may reach 2)': {
             desc: 'Already mastered 1 grade and progressing — may still hit 2 by year end.',
@@ -368,42 +362,75 @@
             color: '#22c55e',
         },
         'Slow Progress (other)': {
-            desc: 'Active and practicing but advancing more slowly than expected.',
+            desc: 'Active and practicing at adequate volume but advancing more slowly than expected.',
             fixable: 'partial',
             fixLabel: 'Partially — may need support',
-            action: 'May benefit from increased daily time or advisor check-in on approach.',
+            action: 'May benefit from advisor check-in on approach.',
             color: '#6b7280',
         },
     };
 
-    function classifyStudent(s) {
+    function tagStudent(s) {
+        const tags = [];
         const insights = s.insights || [];
         const insightTypes = new Set(insights.map(i => i.type));
         const inactivity = s.inactivity || {};
         const dd = s.deep_dive || {};
         const xp = s.xp || {};
+        const startSession = s.start_session || '';
         const daysInactive = inactivity.days_inactive || 0;
         const neverStarted = inactivity.never_started || false;
-        const startSession = s.start_session || '';
 
-        if (neverStarted || daysInactive >= 14) return 'Chronically Inactive';
-        if (daysInactive >= 5) return 'Recently Inactive';
-        if (dd.needed) return 'Stuck in Testing Loop';
-        if ((startSession === 'S4' || startSession === 'S5')) return 'Insufficient Time in Program';
-        if (xp.pct_of_goal !== undefined && xp.pct_of_goal < 50) return 'Very Low Practice Volume';
-        if (xp.avg_per_day !== undefined && xp.avg_per_day < 5) return 'Very Low Practice Volume';
-        if (insightTypes.has('low_accuracy') && !dd.needed) {
-            if (startSession === 'S1' || startSession === 'S2') return 'Persistent Skill Gaps';
-            return 'Low Accuracy (needs skill work)';
+        // Time in program
+        if (startSession === 'S4' || startSession === 'S5') {
+            tags.push('Insufficient Time in Program');
         }
-        if (s.grades_advanced === 1) return 'On Track (1 grade, may reach 2)';
-        return 'Slow Progress (other)';
+
+        // Not enough time (activities/day below threshold)
+        const avgAct = xp.avg_activities_per_day;
+        if (avgAct !== undefined && avgAct < 1) {
+            tags.push('Not Enough Time');
+        }
+
+        // Skill gaps
+        if (dd.needed) {
+            tags.push('Stuck in Testing Loop');
+        }
+        if (insightTypes.has('low_accuracy')) {
+            if (startSession === 'S1' || startSession === 'S2') {
+                tags.push('Persistent Skill Gaps');
+            } else {
+                tags.push('Low Accuracy');
+            }
+        }
+
+        // Chronic inactivity (no activity at all)
+        if (neverStarted || daysInactive >= 14) {
+            tags.push('Chronically Inactive');
+        }
+
+        if (tags.length === 0) {
+            if (s.grades_advanced === 1) tags.push('On Track (1 grade, may reach 2)');
+            else tags.push('Slow Progress (other)');
+        }
+
+        return tags;
     }
 
-    fetch('data.json')
-        .then(r => r.json())
-        .then(data => {
+    // Keep single-reason classifier for backward compat (primary tag)
+    function classifyStudent(s) {
+        const tags = tagStudent(s);
+        return tags[0];
+    }
+
+    Promise.all([
+        fetch('data.json').then(r => r.json()),
+        fetch('student_min_per_day.json').then(r => r.ok ? r.json() : {}).catch(() => ({}))
+    ])
+        .then(([data, minsBySid]) => {
             const students = data.students || [];
+            // Attach mins_per_day from sidecar
+            students.forEach(s => { s.mins_per_day = minsBySid[s.id]; });
             const total = students.length;
 
             document.getElementById('generated-date').textContent = data.generated_at ? data.generated_at.split('T')[0] : '';
@@ -499,22 +526,25 @@
             const s12 = students.filter(s => s.start_session === 'S1' || s.start_session === 'S2');
             const s12Below = s12.filter(s => (s.grades_advanced || 0) < 2);
 
-            // Classify all below-target students (for student table) but focus donut on S1/S2
+            // Multi-tag classification for all below-target students
             const allBelow = students.filter(s => (s.grades_advanced || 0) < 2);
-            allBelow.forEach(s => { s._reason = classifyStudent(s); });
-
-            const reasonCounts = {};
-            const studentsByReason = {};
-            s12Below.forEach(s => {
-                const reason = classifyStudent(s);
-                s._reason = reason;
-                reasonCounts[reason] = (reasonCounts[reason] || 0) + 1;
-                if (!studentsByReason[reason]) studentsByReason[reason] = [];
-                studentsByReason[reason].push(s);
+            allBelow.forEach(s => {
+                s._tags = tagStudent(s);
+                s._reason = s._tags[0];
             });
 
-            // Donut chart
-            const sortedReasons = Object.entries(reasonCounts).sort((a,b) => b[1]-a[1]);
+            // Count tags for S1/S2 below-target (non-exclusive — a student can appear in multiple)
+            const tagCounts = {};
+            s12Below.forEach(s => {
+                s._tags = tagStudent(s);
+                s._reason = s._tags[0];
+                s._tags.forEach(tag => {
+                    tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+                });
+            });
+
+            // Donut chart (uses tag counts — non-exclusive)
+            const sortedReasons = Object.entries(tagCounts).sort((a,b) => b[1]-a[1]);
             const donutContainer = document.getElementById('donut-container');
             const donutLegend = document.getElementById('donut-legend');
             const radius = 60, cx = 80, cy = 80;
@@ -599,7 +629,7 @@
                 }
                 return 'Other';
             }
-            const persistentStudents = s12Below.filter(s => s._reason === 'Persistent Skill Gaps');
+            const persistentStudents = s12Below.filter(s => (s._tags || []).includes('Persistent Skill Gaps'));
             const skillCounts = {};
             const studentSkillDetails = [];
             persistentStudents.forEach(s => {
@@ -622,12 +652,14 @@
             });
             sgHTML += '</div>';
 
-            sgHTML += '<h3>Per-Student Diagnosis and Prescription</h3><table class="summary-table"><thead><tr><th>Student</th><th>HMG</th><th>Skill Gap</th><th>Prescribed Action</th></tr></thead><tbody>';
+            sgHTML += '<h3>Per-Student Diagnosis and Prescription</h3><table class="summary-table"><thead><tr><th>Student</th><th>HMG</th><th title="Average AlphaWrite practice minutes per weekday since first active">Min/day</th><th>Skill Gap</th><th>Prescribed Action</th></tr></thead><tbody>';
             persistentStudents.sort((a,b) => a.name.localeCompare(b.name)).forEach(s => {
                 const analysis = s.skill_gap_analysis || {};
                 const gap = analysis.skill_gap_summary || 'Analysis pending';
                 const action = analysis.prescribed_action || 'Pending';
-                sgHTML += `<tr><td><strong>${s.name}</strong><br><span style="font-size:0.7rem;color:#666;">${s.campus || ''}</span></td><td>G${s.hmg || '?'}</td><td style="font-size:0.8rem;">${gap}</td><td style="font-size:0.8rem;">${action}</td></tr>`;
+                const mpd = (s.mins_per_day === null || s.mins_per_day === undefined) ? '—' : s.mins_per_day.toFixed(1);
+                const mpdColor = (s.mins_per_day === null || s.mins_per_day === undefined) ? '#999' : s.mins_per_day >= 12.5 ? '#16a34a' : s.mins_per_day >= 6 ? '#d97706' : '#dc2626';
+                sgHTML += `<tr><td><strong>${s.name}</strong><br><span style="font-size:0.7rem;color:#666;">${s.campus || ''}</span></td><td>G${s.hmg || '?'}</td><td style="color:${mpdColor};font-weight:600;text-align:right;">${mpd}</td><td style="font-size:0.8rem;">${gap}</td><td style="font-size:0.8rem;">${action}</td></tr>`;
             });
             sgHTML += '</tbody></table>';
             document.getElementById('skill-gaps-section').innerHTML = sgHTML;
@@ -730,22 +762,30 @@
                 const search = document.getElementById('student-search').value.toLowerCase();
                 const filter = reasonFilter.value;
                 let filtered = s12Below;
-                if (filter !== 'all') filtered = filtered.filter(s => s._reason === filter);
+                if (filter !== 'all') filtered = filtered.filter(s => (s._tags || []).includes(filter));
                 if (search) filtered = filtered.filter(s => s.name.toLowerCase().includes(search) || (s.email||'').toLowerCase().includes(search));
                 filtered.sort((a,b) => (a.grades_advanced||0) - (b.grades_advanced||0) || a.name.localeCompare(b.name));
 
                 document.getElementById('student-table-body').innerHTML = filtered.slice(0, 100).map(s => {
-                    const meta = REASON_META[s._reason] || {};
-                    const badgeClass = meta.fixable === 'yes' ? 'badge-green' : meta.fixable === 'no' ? 'badge-red' : 'badge-amber';
+                    const tags = s._tags || [s._reason];
+                    const actDay = (s.xp || {}).avg_activities_per_day;
+                    const actText = actDay !== undefined ? actDay.toFixed(1) : '-';
+                    const actColor = actDay === undefined ? '#999' : actDay >= 1 ? '#16a34a' : actDay >= 0.5 ? '#d97706' : '#dc2626';
+                    const badgesHTML = tags.map(tag => {
+                        const meta = REASON_META[tag] || {};
+                        const bc = meta.fixable === 'yes' ? 'badge-green' : meta.fixable === 'no' ? 'badge-red' : 'badge-amber';
+                        return '<span class="badge ' + bc + '" style="margin:1px 2px;">' + tag + '</span>';
+                    }).join('');
                     return `<tr>
                         <td>${s.name}</td>
                         <td>${s.campus || ''}</td>
                         <td>G${s.starting_hmg || '?'}</td>
                         <td>G${s.hmg || '?'}</td>
                         <td>${s.grades_advanced || 0}</td>
-                        <td><span class="badge ${badgeClass}">${s._reason}</span></td>
+                        <td style="color:${actColor};font-weight:600;text-align:right;">${actText}</td>
+                        <td>${badgesHTML}</td>
                     </tr>`;
-                }).join('') + (filtered.length > 100 ? `<tr><td colspan="6" style="text-align:center;color:#999;">Showing 100 of ${filtered.length}…</td></tr>` : '');
+                }).join('') + (filtered.length > 100 ? `<tr><td colspan="7" style="text-align:center;color:#999;">Showing 100 of ${filtered.length}…</td></tr>` : '');
             }
 
             document.getElementById('student-search').addEventListener('input', renderStudentTable);
