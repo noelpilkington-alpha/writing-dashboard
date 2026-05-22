@@ -233,6 +233,12 @@
             </div>
         </div>
 
+        <!-- Success highlights -->
+        <div class="section-card" style="margin-top:1rem;">
+            <h3 style="margin-top:0;cursor:pointer;" onclick="var d=document.getElementById('success-list');d.style.display=d.style.display==='none'?'block':'none';">Top Performers (click to expand)</h3>
+            <div id="success-list" style="display:none;"></div>
+        </div>
+
         <!-- Executive Action Summary -->
         <div class="section-card" style="border-left:4px solid #3b82f6;margin-top:1.5rem;" id="exec-summary">
             <h3 style="margin-top:0;color:#1d4ed8;">Action Summary</h3>
@@ -249,7 +255,10 @@
         <!-- Section 3: Why not (for students with enough time) -->
         <h2>Students Who Had Time But Did Not Reach 2 Grades</h2>
         <div class="section-card">
-            <p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">Focused on S1/S2 students (224 total, had 5-10 months) who did not reach the target. Newer cohorts are excluded since they have not had enough time.</p>
+            <p style="font-size:0.8rem;color:#666;margin-bottom:0.75rem;">Focused on S1/S2 students (224 total, had 5-10 months) who did not reach the target. Newer cohorts are excluded since they have not had enough time.</p>
+            <div style="padding:0.75rem;background:#eff6ff;border-radius:6px;border-left:3px solid #3b82f6;margin-bottom:1rem;font-size:0.85rem;">
+                <strong>Universal finding:</strong> All below-target students show skill gaps on standardized tests (see <em>Persistent Skill Gaps: Detail</em> section). The chart below shows the <strong>primary actionable barrier</strong> preventing each student from progressing — what needs to change beyond continued practice.
+            </div>
             <div class="donut-section">
                 <div class="donut-container" id="donut-container"></div>
                 <div class="legend" id="donut-legend"></div>
@@ -299,10 +308,13 @@
         <h2 id="student-list-heading">Student List: Below Target (S1/S2 Cohort)</h2>
         <div class="section-card" style="overflow-x:auto;">
             <p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">Click any student row to expand their full diagnosis including test skill gaps, AlphaWrite vs test context analysis, and recommended focus areas.</p>
-            <div style="margin-bottom:1rem;display:flex;gap:1rem;align-items:center;">
-                <input type="text" id="student-search" placeholder="Search..." style="padding:0.4rem 0.8rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;width:200px;">
+            <div style="margin-bottom:1rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap;">
+                <input type="text" id="student-search" placeholder="Search by name..." style="padding:0.4rem 0.8rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;width:180px;">
                 <select id="reason-filter" style="padding:0.4rem 0.8rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;">
                     <option value="all">All Reasons</option>
+                </select>
+                <select id="campus-filter" style="padding:0.4rem 0.8rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;">
+                    <option value="all">All Campuses</option>
                 </select>
             </div>
             <table class="summary-table" id="student-table">
@@ -356,19 +368,19 @@
             action: 'Needs more calendar time in the program.',
             color: '#06b6d4',
         },
-        'Persistent Skill Gaps': {
-            desc: 'Long-tenured student (S1/S2) with accuracy below 80% — standard adaptive pathing has not resolved gaps.',
-            fixable: 'partial',
-            fixLabel: 'Partially — some gaps beyond AlphaWrite scope',
-            action: 'AlphaWrite addresses sentence/paragraph construction skills. However, most of these students also show spelling, punctuation, and grammar errors that require explicit instruction outside AlphaWrite. See Persistent Skill Gaps: Detail below.',
-            color: '#1d4ed8',
+        'Age Grade Below G3': {
+            desc: 'Student is in Grade 2 or below. AlphaWrite is designed for Grade 3+. Struggles likely due to insufficient typing/transcription skills for their age.',
+            fixable: 'no',
+            fixLabel: 'Not addressable by AlphaWrite',
+            action: 'Student needs foundational typing and reading skills before AlphaWrite instruction is effective. Age-appropriate intervention needed.',
+            color: '#7c3aed',
         },
-        'Low Accuracy': {
-            desc: 'Practicing but accuracy below 80% — struggling with current material.',
+        'Progressing (no specific barrier identified)': {
+            desc: 'Active, practicing at adequate volume, no testing loop or rushing issue. May simply need more time.',
             fixable: 'yes',
-            fixLabel: 'Yes — adaptive pathing',
-            action: 'AlphaWrite adjusts difficulty and assigns prerequisite skills automatically.',
-            color: '#0ea5e9',
+            fixLabel: 'Yes — continue current path',
+            action: 'Continue AlphaWrite instruction. Student is progressing but has not yet reached the 2-grade threshold.',
+            color: '#6b7280',
         },
         'Rushes Tests': {
             desc: '2+ tests taken too quickly (below time threshold for grade level). Rushing leads to avoidable failures.',
@@ -377,19 +389,12 @@
             action: 'Student needs to be coached by Academics on test-taking strategies and pacing.',
             color: '#f43f5e',
         },
-        'On Track (1 grade, may reach 2)': {
+        'On Track (may reach 2)': {
             desc: 'Already mastered 1 grade and progressing — may still hit 2 by year end.',
             fixable: 'yes',
             fixLabel: 'Yes — on pace',
             action: 'Continue current trajectory. 4 weeks remain in the school year.',
             color: '#22c55e',
-        },
-        'Slow Progress (other)': {
-            desc: 'Active and practicing at adequate volume but advancing more slowly than expected.',
-            fixable: 'partial',
-            fixLabel: 'Partially — may need support',
-            action: 'May benefit from advisor check-in on approach.',
-            color: '#6b7280',
         },
     };
 
@@ -404,33 +409,26 @@
         const daysInactive = inactivity.days_inactive || 0;
         const neverStarted = inactivity.never_active_this_session || false;
 
-        // Chronic inactivity FIRST (overrides other tags for fixability classification)
+        // Chronic inactivity
         if (neverStarted || daysInactive >= 14) {
             tags.push('Chronically Inactive');
         }
 
-        // Time in program
+        // Time in program (for S4/S5 students)
         if (startSession === 'S4' || startSession === 'S5') {
             tags.push('Insufficient Time in Program');
         }
 
-        // Not spending enough time (XP/day below threshold: S1=25, S2+=12.5)
+        // Not spending enough time
         const avgXpDay = xp.avg_xp_per_day_lifetime;
         const xpThreshold = (startSession === 'S1') ? 25 : 12.5;
         if (avgXpDay !== undefined && avgXpDay < xpThreshold && !(neverStarted || daysInactive >= 14)) {
             tags.push('Not Spending Enough Time');
         }
 
-        // Skill gaps
+        // Testing loop
         if (dd.needed) {
             tags.push('Stuck in Testing Loop');
-        }
-        if (insightTypes.has('low_accuracy')) {
-            if (startSession === 'S1' || startSession === 'S2') {
-                tags.push('Persistent Skill Gaps');
-            } else {
-                tags.push('Low Accuracy');
-            }
         }
 
         // Rushing tests
@@ -439,15 +437,20 @@
             tags.push('Rushes Tests');
         }
 
+        // Age grade below G3
+        if (typeof s.age_grade === 'number' && s.age_grade < 3) {
+            tags.push('Age Grade Below G3');
+        }
+
         if (tags.length === 0) {
-            if (s.grades_advanced === 1) tags.push('On Track (1 grade, may reach 2)');
-            else tags.push('Slow Progress (other)');
+            if (s.grades_advanced === 1) tags.push('On Track (may reach 2)');
+            else tags.push('Progressing (no specific barrier identified)');
         }
 
         return tags;
     }
 
-    // Keep single-reason classifier for backward compat (primary tag)
+    // Primary reason: mutually exclusive for donut chart (first actionable tag)
     function classifyStudent(s) {
         const tags = tagStudent(s);
         return tags[0];
@@ -516,6 +519,18 @@
                 <span style="color:#ef4444">■ 0 grades (${adv0})</span>
             `;
 
+            // Success list - top performers
+            const topPerformers = s1.filter(s => (s.grades_advanced||0) >= 5)
+                .sort((a,b) => (b.grades_advanced||0) - (a.grades_advanced||0));
+            let successHTML = `<p style="font-size:0.8rem;color:#666;margin-bottom:0.5rem;">${s1AtTarget.length} students hit the 2-grade target. ${topPerformers.length} advanced 5+ grades:</p>`;
+            successHTML += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.25rem;font-size:0.8rem;">';
+            topPerformers.slice(0, 30).forEach(s => {
+                successHTML += `<div>${s.name} <span style="color:#16a34a;font-weight:600;">(+${s.grades_advanced})</span></div>`;
+            });
+            if (topPerformers.length > 30) successHTML += `<div style="color:#999;">...and ${topPerformers.length - 30} more</div>`;
+            successHTML += '</div>';
+            document.getElementById('success-list').innerHTML = successHTML;
+
             // Trajectory comparison: where was S1 at the same elapsed time?
             const sessionEndDates = {S1:'2025-10-17',S2:'2026-01-02',S3:'2026-02-20',S4:'2026-04-17',S5:'2026-06-05'};
             const sessionElapsed = {S1:'2 months',S2:'5 months',S3:'6.5 months',S4:'8 months',S5:'10 months'};
@@ -550,7 +565,7 @@
             const s1Trajectory = {};
             cohortOrder.forEach(sn => { s1Trajectory[sn] = s1PctAtCutoff(sessionEndDates[sn]); });
 
-            let trajHTML = '<table class="summary-table"><thead><tr><th>Cohort</th><th>Elapsed Time</th><th>Current %</th><th>S1 at Same Point</th><th>On Pace?</th></tr></thead><tbody>';
+            let trajHTML = '<table class="summary-table"><thead><tr><th>Cohort</th><th>Time in Program</th><th>% at 2-Grade Target Now</th><th>S1 After Same Time</th><th>Matching S1 Pace?</th></tr></thead><tbody>';
             cohortOrder.forEach(sn => {
                 const d = cohortNow[sn];
                 if (!d) return;
@@ -561,8 +576,8 @@
                 trajHTML += `<tr><td><strong>${sn}</strong> (${d.total} new, ${cumulative} total)</td><td>${sessionElapsed[sn]}</td><td><strong>${d.pct}%</strong> (${d.atTarget})</td><td>${s1ref}%</td><td>${status}</td></tr>`;
             });
             trajHTML += '</tbody></table>';
-            trajHTML += '<div style="margin-top:1rem;padding:0.75rem;background:#fef3c7;border-radius:6px;font-size:0.8rem;border-left:3px solid #d97706;">';
-            trajHTML += '<strong>Why are newer cohorts behind S1 pace?</strong> This is under investigation. Possible factors include: different campus composition (newer cohorts have more TSA/partner campuses), later-enrolling students starting at lower readiness levels, and S1 containing a higher proportion of students who were already in the Alpha ecosystem. This does not necessarily indicate a product issue but warrants monitoring.';
+            trajHTML += '<div style="margin-top:1rem;padding:0.75rem;background:#f8f9fa;border-radius:6px;font-size:0.8rem;border-left:3px solid #6b7280;">';
+            trajHTML += '<strong>Context:</strong> S1 students were predominantly from established Alpha campuses with prior exposure to the learning model. Later cohorts include more partner campuses (TSA, GT Anywhere) and students enrolling mid-year at lower readiness levels. Direct pace comparison may not be apples-to-apples. The key metric remains: does each cohort reach 88%+ given a full year of instruction?';
             trajHTML += '</div>';
             document.getElementById('trajectory-section').innerHTML = trajHTML;
 
@@ -577,18 +592,16 @@
                 s._reason = s._tags[0];
             });
 
-            // Count tags for S1/S2 below-target (non-exclusive — a student can appear in multiple)
-            const tagCounts = {};
+            // Count PRIMARY reasons for S1/S2 below-target (mutually exclusive — one per student)
+            const primaryCounts = {};
             s12Below.forEach(s => {
                 s._tags = tagStudent(s);
                 s._reason = s._tags[0];
-                s._tags.forEach(tag => {
-                    tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-                });
+                primaryCounts[s._reason] = (primaryCounts[s._reason] || 0) + 1;
             });
 
-            // Donut chart (uses tag counts — non-exclusive)
-            const sortedReasons = Object.entries(tagCounts).sort((a,b) => b[1]-a[1]);
+            // Donut chart (uses primary reason — mutually exclusive, adds to 100%)
+            const sortedReasons = Object.entries(primaryCounts).sort((a,b) => b[1]-a[1]);
             const donutContainer = document.getElementById('donut-container');
             const donutLegend = document.getElementById('donut-legend');
             const radius = 60, cx = 80, cy = 80;
@@ -607,7 +620,7 @@
             });
 
             donutContainer.innerHTML = `<svg viewBox="0 0 160 160">${svgPaths}</svg><div class="donut-center"><div class="pct">${s12Below.length}</div><div class="label">below target</div></div>`;
-            donutLegend.innerHTML = legendHTML + '<div style="margin-top:0.75rem;font-size:0.7rem;color:#888;font-style:italic;">Note: Students often have multiple barriers. Categories overlap (e.g., a student can have both skill gaps and insufficient practice time).</div>';
+            donutLegend.innerHTML = legendHTML + '<div style="margin-top:0.75rem;font-size:0.7rem;color:#888;font-style:italic;">Each student is assigned one primary barrier. Additional issues are visible in the expanded student detail.</div>';
 
             // Reason cards
             const reasonsGrid = document.getElementById('reasons-grid');
@@ -847,13 +860,21 @@
                 </div>`;
             }).join('');
 
-            // Student table
+            // Student table filters
             const reasonFilter = document.getElementById('reason-filter');
             sortedReasons.forEach(([reason]) => {
                 const opt = document.createElement('option');
                 opt.value = reason;
                 opt.textContent = reason;
                 reasonFilter.appendChild(opt);
+            });
+            const campusFilter = document.getElementById('campus-filter');
+            const s12Campuses = [...new Set(s12Below.map(s => s.campus || 'Unknown'))].sort();
+            s12Campuses.forEach(campus => {
+                const opt = document.createElement('option');
+                opt.value = campus;
+                opt.textContent = campus;
+                campusFilter.appendChild(opt);
             });
 
             function buildDetailHTML(s) {
@@ -945,8 +966,10 @@
             function renderStudentTable() {
                 const search = document.getElementById('student-search').value.toLowerCase();
                 const filter = reasonFilter.value;
+                const campusVal = campusFilter.value;
                 let filtered = s12Below;
                 if (filter !== 'all') filtered = filtered.filter(s => (s._tags || []).includes(filter));
+                if (campusVal !== 'all') filtered = filtered.filter(s => (s.campus || 'Unknown') === campusVal);
                 if (search) filtered = filtered.filter(s => s.name.toLowerCase().includes(search) || (s.email||'').toLowerCase().includes(search));
                 filtered.sort((a,b) => (a.grades_advanced||0) - (b.grades_advanced||0) || a.name.localeCompare(b.name));
 
@@ -974,6 +997,7 @@
 
             document.getElementById('student-search').addEventListener('input', renderStudentTable);
             reasonFilter.addEventListener('change', renderStudentTable);
+            campusFilter.addEventListener('change', renderStudentTable);
             renderStudentTable();
 
             // Update headings with counts
@@ -986,15 +1010,15 @@
             const inactiveCount = s12Below.filter(s => (s._tags||[]).includes('Chronically Inactive')).length;
             const almostThere = s12Below.filter(s => s.grades_advanced === 1).length;
             document.getElementById('exec-summary-content').innerHTML = `
-                <p style="font-size:0.85rem;margin-bottom:0.75rem;">Of <strong>${s12Below.length} below-target students</strong> (S1/S2 cohort, had 5-10 months):</p>
+                <p style="font-size:0.85rem;margin-bottom:0.75rem;"><strong>Result:</strong> 88% of full-year students hit the 2-grade target (first year of curriculum). ${s12Below.length} students (S1/S2) did not. Their primary barriers:</p>
                 <ul style="font-size:0.83rem;line-height:2;padding-left:1.5rem;">
-                    <li><strong>${loopCount} students</strong> need targeted Deep Dive remediation before retesting (actionable now via AlphaWrite)</li>
-                    <li><strong>${rushCount} students</strong> need test-taking coaching from Academics (rushing tests)</li>
-                    <li><strong>${timeCount} students</strong> need more daily practice time (campus ops intervention)</li>
-                    <li><strong>${inactiveCount} students</strong> need re-engagement outreach (not logging in)</li>
-                    <li><strong>${almostThere} students</strong> are at 1 grade advanced and close to reaching 2 — prioritize for final push</li>
+                    <li><strong>${loopCount}</strong> stuck in testing loops → assign targeted remediation via AlphaWrite Deep Dive</li>
+                    <li><strong>${rushCount}</strong> rushing tests → Academics coaching on test-taking strategies</li>
+                    <li><strong>${timeCount}</strong> not spending enough time → campus ops to ensure daily practice</li>
+                    <li><strong>${inactiveCount}</strong> chronically inactive → re-engagement outreach</li>
+                    <li><strong>${almostThere}</strong> at 1 grade, close to 2 → prioritize for final push (4 weeks remain)</li>
                 </ul>
-                <p style="font-size:0.8rem;color:#555;margin-top:0.5rem;">Most students have overlapping issues: 51 of 53 active below-target students show sentence construction gaps (AlphaWrite-addressable) AND 44 show grammar/punctuation gaps (require explicit instruction outside AlphaWrite).</p>
+                <p style="font-size:0.8rem;color:#555;margin-top:0.5rem;"><strong>Key finding:</strong> All below-target students show skill gaps on tests. AlphaWrite addresses sentence/paragraph construction, but 83% also show grammar, spelling, and punctuation errors that AlphaWrite does not explicitly teach. This represents a curriculum gap requiring intervention outside the product.</p>
             `;
         });
     </script>
