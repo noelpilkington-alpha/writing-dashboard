@@ -777,6 +777,67 @@
                 reasonFilter.appendChild(opt);
             });
 
+            function buildDetailHTML(s) {
+                const tags = s._tags || [];
+                const analysis = s.skill_gap_analysis || {};
+                const dd = s.deep_dive || {};
+                const inact = s.inactivity || {};
+                const rushing = s.rushing || {};
+                const xp = s.xp || {};
+                let html = '<div style="padding:0.75rem 1rem;background:#f8f9fa;border-top:1px solid #e5e7eb;font-size:0.8rem;">';
+
+                // Tag explanations
+                html += '<div style="margin-bottom:0.75rem;"><strong>Why below target:</strong></div>';
+                tags.forEach(tag => {
+                    const meta = REASON_META[tag] || {};
+                    let explanation = meta.desc || '';
+                    if (tag === 'Chronically Inactive') {
+                        explanation += ` Last activity: ${inact.last_xp_date || 'never'}. Inactive for ${inact.days_inactive || '?'} school days.`;
+                    } else if (tag === 'Not Enough Time') {
+                        explanation += ` Averaging ${(xp.avg_activities_per_day||0).toFixed(1)} activities/day (need 1.0+). Active on ${xp.active_days||0} of ${xp.available_days||'?'} days.`;
+                    } else if (tag === 'Stuck in Testing Loop') {
+                        const details = (dd.details || []);
+                        details.forEach(d => {
+                            explanation += ` G${d.grade}: ${d.failed_count} failed, ${d.rushed_count} rushed (avg ${(d.avg_time_minutes||0).toFixed(0)} min).`;
+                        });
+                    } else if (tag === 'Rushes Tests') {
+                        explanation += ` ${rushing.rushed_count} of ${rushing.total_tests_this_session} tests this session were rushed.`;
+                    } else if (tag === 'Persistent Skill Gaps' || tag === 'Low Accuracy') {
+                        const acc = s.accuracy || {};
+                        const low = acc.activities_below_threshold || [];
+                        if (low.length) {
+                            explanation += ' Struggling with: ' + low.slice(0, 4).map(a => a.name + ' (' + Math.round(a.accuracy) + '%)').join(', ');
+                            if (low.length > 4) explanation += '...';
+                        }
+                    }
+                    const bc = meta.fixable === 'yes' ? 'badge-green' : meta.fixable === 'no' ? 'badge-red' : 'badge-amber';
+                    html += `<div style="margin-bottom:0.5rem;padding:0.4rem 0.6rem;background:white;border-radius:6px;border-left:3px solid ${meta.color || '#999'};">
+                        <span class="badge ${bc}" style="margin-right:0.5rem;">${tag}</span>
+                        <span style="color:#555;">${explanation}</span>
+                    </div>`;
+                });
+
+                // Skill gap analysis (if available)
+                if (analysis.skill_gap_summary) {
+                    html += '<div style="margin-top:0.75rem;padding:0.6rem;background:white;border-radius:6px;border-left:3px solid #1d4ed8;">';
+                    html += '<strong style="color:#1d4ed8;">Diagnosis:</strong> ' + analysis.skill_gap_summary + '<br>';
+                    html += '<strong style="color:#1d4ed8;">Prescribed Action:</strong> ' + analysis.prescribed_action;
+                    html += '</div>';
+                }
+
+                // Test history summary
+                const tests = s.all_tests || [];
+                if (tests.length) {
+                    const recent = tests.slice(-5);
+                    html += '<div style="margin-top:0.75rem;"><strong>Recent tests:</strong> ';
+                    html += recent.map(t => `${t.name.replace('Alpha Standardized Writing ','')} ${t.passed ? '<span style="color:#16a34a;">P</span>' : '<span style="color:#dc2626;">' + t.score + '%</span>'}`).join(' | ');
+                    html += '</div>';
+                }
+
+                html += '</div>';
+                return html;
+            }
+
             function renderStudentTable() {
                 const search = document.getElementById('student-search').value.toLowerCase();
                 const filter = reasonFilter.value;
@@ -785,26 +846,26 @@
                 if (search) filtered = filtered.filter(s => s.name.toLowerCase().includes(search) || (s.email||'').toLowerCase().includes(search));
                 filtered.sort((a,b) => (a.grades_advanced||0) - (b.grades_advanced||0) || a.name.localeCompare(b.name));
 
-                document.getElementById('student-table-body').innerHTML = filtered.slice(0, 100).map(s => {
+                document.getElementById('student-table-body').innerHTML = filtered.slice(0, 100).map((s, idx) => {
                     const tags = s._tags || [s._reason];
                     const actDay = (s.xp || {}).avg_activities_per_day;
-                    const lastXp = (s.inactivity || {}).last_xp_date || '';
-                    const actText = (actDay === 0 && lastXp) ? 'last: ' + lastXp.slice(5) : actDay !== undefined ? actDay.toFixed(1) : '-';
+                    const actText = actDay !== undefined ? actDay.toFixed(1) : '-';
                     const actColor = actDay === undefined ? '#999' : actDay >= 1 ? '#16a34a' : actDay >= 0.5 ? '#d97706' : '#dc2626';
                     const badgesHTML = tags.map(tag => {
                         const meta = REASON_META[tag] || {};
                         const bc = meta.fixable === 'yes' ? 'badge-green' : meta.fixable === 'no' ? 'badge-red' : 'badge-amber';
                         return '<span class="badge ' + bc + '" style="margin:1px 2px;">' + tag + '</span>';
                     }).join('');
-                    return `<tr>
-                        <td>${s.name}</td>
+                    const rowId = 'detail-' + idx;
+                    return `<tr style="cursor:pointer;" onclick="var d=document.getElementById('${rowId}');d.style.display=d.style.display==='none'?'table-row':'none';">
+                        <td><strong>${s.name}</strong></td>
                         <td>${s.campus || ''}</td>
                         <td>G${s.starting_hmg || '?'}</td>
                         <td>G${s.hmg || '?'}</td>
                         <td>${s.grades_advanced || 0}</td>
                         <td style="color:${actColor};font-weight:600;text-align:right;">${actText}</td>
                         <td>${badgesHTML}</td>
-                    </tr>`;
+                    </tr><tr id="${rowId}" style="display:none;"><td colspan="7" style="padding:0;">${buildDetailHTML(s)}</td></tr>`;
                 }).join('') + (filtered.length > 100 ? `<tr><td colspan="7" style="text-align:center;color:#999;">Showing 100 of ${filtered.length}…</td></tr>` : '');
             }
 
