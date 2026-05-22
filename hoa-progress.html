@@ -622,10 +622,12 @@
             });
             sgHTML += '</div>';
 
-            sgHTML += '<h3>Per-Student Detail</h3><table class="summary-table"><thead><tr><th>Student</th><th>Campus</th><th>HMG</th><th>Primary Gap</th><th>Struggling With</th></tr></thead><tbody>';
-            studentSkillDetails.sort((a,b) => a.primary.localeCompare(b.primary) || a.name.localeCompare(b.name)).forEach(s => {
-                const topActivities = s.activities.slice(0, 3).map(a => `${a.name} (${Math.round(a.accuracy)}%)`).join(', ');
-                sgHTML += `<tr><td>${s.name}</td><td>${s.campus || ''}</td><td>G${s.hmg || '?'}</td><td><strong>${s.primary}</strong></td><td style="font-size:0.75rem;">${topActivities}</td></tr>`;
+            sgHTML += '<h3>Per-Student Diagnosis and Prescription</h3><table class="summary-table"><thead><tr><th>Student</th><th>HMG</th><th>Skill Gap</th><th>Prescribed Action</th></tr></thead><tbody>';
+            persistentStudents.sort((a,b) => a.name.localeCompare(b.name)).forEach(s => {
+                const analysis = s.skill_gap_analysis || {};
+                const gap = analysis.skill_gap_summary || 'Analysis pending';
+                const action = analysis.prescribed_action || 'Pending';
+                sgHTML += `<tr><td><strong>${s.name}</strong><br><span style="font-size:0.7rem;color:#666;">${s.campus || ''}</span></td><td>G${s.hmg || '?'}</td><td style="font-size:0.8rem;">${gap}</td><td style="font-size:0.8rem;">${action}</td></tr>`;
             });
             sgHTML += '</tbody></table>';
             document.getElementById('skill-gaps-section').innerHTML = sgHTML;
