@@ -310,6 +310,20 @@
             action: 'Deep Dive analysis identifies skill gaps; assign targeted KG activities before retesting.',
             color: '#8b5cf6',
         },
+        'Insufficient Time in Program': {
+            desc: 'S4/S5 student progressing on pace but has not had enough calendar time to reach 2 grades.',
+            fixable: 'yes',
+            fixLabel: 'Yes — on pace',
+            action: 'On pace — needs more calendar time.',
+            color: '#06b6d4',
+        },
+        'Persistent Skill Gaps': {
+            desc: 'Long-tenured student (S1/S2) with accuracy below 80% — standard adaptive pathing has not resolved gaps.',
+            fixable: 'yes',
+            fixLabel: 'Yes — targeted intervention',
+            action: 'Deep skill analysis needed — may need targeted intervention beyond standard adaptive pathing.',
+            color: '#1d4ed8',
+        },
         'Low Accuracy (needs skill work)': {
             desc: 'Practicing but accuracy below 80% — struggling with current material.',
             fixable: 'yes',
@@ -318,7 +332,7 @@
             color: '#0ea5e9',
         },
         'Very Low Practice Volume': {
-            desc: 'Logging in but spending less than 30% of expected daily time on writing.',
+            desc: 'Logging in but spending less than 50% of expected daily time on writing, or averaging under 5 XP/day.',
             fixable: 'partial',
             fixLabel: 'Partially — needs more time',
             action: 'Student needs to spend more minutes practicing. AlphaWrite works when used.',
@@ -348,12 +362,18 @@
         const xp = s.xp || {};
         const daysInactive = inactivity.days_inactive || 0;
         const neverStarted = inactivity.never_started || false;
+        const startSession = s.start_session || '';
 
         if (neverStarted || daysInactive >= 14) return 'Chronically Inactive';
         if (daysInactive >= 5) return 'Recently Inactive';
         if (dd.needed) return 'Stuck in Testing Loop';
-        if (xp.pct_of_goal !== undefined && xp.pct_of_goal < 30) return 'Very Low Practice Volume';
-        if (insightTypes.has('low_accuracy') && !dd.needed) return 'Low Accuracy (needs skill work)';
+        if ((startSession === 'S4' || startSession === 'S5')) return 'Insufficient Time in Program';
+        if (xp.pct_of_goal !== undefined && xp.pct_of_goal < 50) return 'Very Low Practice Volume';
+        if (xp.avg_per_day !== undefined && xp.avg_per_day < 5) return 'Very Low Practice Volume';
+        if (insightTypes.has('low_accuracy') && !dd.needed) {
+            if (startSession === 'S1' || startSession === 'S2') return 'Persistent Skill Gaps';
+            return 'Low Accuracy (needs skill work)';
+        }
         if (s.grades_advanced === 1) return 'On Track (1 grade, may reach 2)';
         return 'Slow Progress (other)';
     }
