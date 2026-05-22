@@ -273,7 +273,7 @@
         <!-- Section 5: Skill Gaps Drill-Down -->
         <h2>Persistent Skill Gaps: Detail</h2>
         <div class="section-card">
-            <p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">Based on analysis of <strong>test responses</strong> (not just AlphaWrite practice). Shows what students cannot do in unscaffolded test conditions, and whether AlphaWrite can address each gap.</p>
+            <p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">Analysis of <strong>standardized test responses</strong> for students who have been in the program long enough (S1/S2) but are not reaching the 2-grade target. Shows what these students cannot do when writing without AlphaWrite scaffolding, and distinguishes between gaps that AlphaWrite instruction addresses and gaps that require additional intervention.</p>
             <div id="skill-gaps-section"></div>
         </div>
 
@@ -290,9 +290,9 @@
         </div>
 
         <!-- Section 8: Student List -->
-        <h2>Student List: Below Target (S1/S2 Cohort)</h2>
+        <h2 id="student-list-heading">Student List: Below Target (S1/S2 Cohort)</h2>
         <div class="section-card" style="overflow-x:auto;">
-            <p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">Click any student row to expand detailed diagnosis, skill gaps, and prescribed actions.</p>
+            <p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">Click any student row to expand their full diagnosis including test skill gaps, AlphaWrite vs test context analysis, and recommended focus areas.</p>
             <div style="margin-bottom:1rem;display:flex;gap:1rem;align-items:center;">
                 <input type="text" id="student-search" placeholder="Search..." style="padding:0.4rem 0.8rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;width:200px;">
                 <select id="reason-filter" style="padding:0.4rem 0.8rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;">
@@ -687,51 +687,59 @@
                 if (cf.includes('capitaliz')) gapCounts.nonFixable['Capitalization'] = (gapCounts.nonFixable['Capitalization']||0)+1;
             });
 
-            let sgHTML = '<h3 style="margin-top:0;">Key Finding: Specific Gap Prevalence</h3>';
-            sgHTML += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">';
-            sgHTML += '<div><h4 style="color:#166534;margin-bottom:0.5rem;font-size:0.85rem;">AlphaWrite CAN address:</h4>';
+            let sgHTML = `<p style="font-size:0.85rem;margin-bottom:1.5rem;"><strong>${persistentStudents.length} students</strong> have been in the program 5-10 months but have not reached the 2-grade target despite being active. Their test responses reveal two types of skill gaps:</p>`;
+
+            sgHTML += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem;">';
+
+            // Left: What AlphaWrite teaches and these students still struggle with
+            sgHTML += '<div style="background:white;border:1px solid #dcfce7;border-radius:10px;padding:1.25rem;">';
+            sgHTML += '<h4 style="color:#166534;margin-bottom:0.5rem;font-size:0.9rem;">Skills AlphaWrite Teaches</h4>';
+            sgHTML += '<p style="font-size:0.75rem;color:#555;margin-bottom:0.75rem;">These are writing skills directly practiced in AlphaWrite lessons. Students are struggling despite having access to instruction. This may indicate they need more repetition, a different entry point, or prerequisite skills.</p>';
             Object.entries(gapCounts.fixable).sort((a,b)=>b[1]-a[1]).forEach(([gap,count]) => {
                 const pct = Math.round(100*count/persistentStudents.length);
-                sgHTML += `<div style="margin-bottom:0.4rem;font-size:0.8rem;"><span style="display:inline-block;width:30px;font-weight:700;color:#166534;">${count}</span> ${gap} <span style="color:#999;">(${pct}%)</span></div>`;
+                const barW = Math.round(pct * 0.8);
+                sgHTML += `<div style="margin-bottom:0.5rem;"><div style="font-size:0.8rem;margin-bottom:2px;"><strong>${count}</strong> students (${pct}%) — ${gap}</div><div style="height:6px;background:#f1f3f5;border-radius:3px;"><div style="height:100%;width:${barW}%;background:#16a34a;border-radius:3px;"></div></div></div>`;
             });
-            sgHTML += '</div><div><h4 style="color:#991b1b;margin-bottom:0.5rem;font-size:0.85rem;">AlphaWrite CANNOT directly fix:</h4>';
-            sgHTML += '<p style="font-size:0.7rem;color:#666;margin-bottom:0.5rem;">AlphaWrite provides feedback on these errors but does not explicitly teach them. Students must correct independently.</p>';
+            sgHTML += '</div>';
+
+            // Right: What goes beyond AlphaWrite's scope
+            sgHTML += '<div style="background:white;border:1px solid #fee2e2;border-radius:10px;padding:1.25rem;">';
+            sgHTML += '<h4 style="color:#991b1b;margin-bottom:0.5rem;font-size:0.9rem;">Gaps Beyond AlphaWrite Scope</h4>';
+            sgHTML += '<p style="font-size:0.75rem;color:#555;margin-bottom:0.75rem;">AlphaWrite teaches grammar implicitly through sentence-level skills (e.g., question grammar, appositives). However, these students show <strong>persistent errors in mechanics</strong> that go beyond what implicit instruction resolves. They likely need explicit, isolated instruction in these areas or focused proofreading practice.</p>';
             Object.entries(gapCounts.nonFixable).sort((a,b)=>b[1]-a[1]).forEach(([gap,count]) => {
                 const pct = Math.round(100*count/persistentStudents.length);
-                sgHTML += `<div style="margin-bottom:0.4rem;font-size:0.8rem;"><span style="display:inline-block;width:30px;font-weight:700;color:#991b1b;">${count}</span> ${gap} <span style="color:#999;">(${pct}%)</span></div>`;
+                const barW = Math.round(pct * 0.8);
+                sgHTML += `<div style="margin-bottom:0.5rem;"><div style="font-size:0.8rem;margin-bottom:2px;"><strong>${count}</strong> students (${pct}%) — ${gap}</div><div style="height:6px;background:#f1f3f5;border-radius:3px;"><div style="height:100%;width:${barW}%;background:#dc2626;border-radius:3px;"></div></div></div>`;
             });
             sgHTML += '</div></div>';
 
-            sgHTML += '<h3>AlphaWrite Practice Skill Areas (from activity data)</h3>';
-            sgHTML += '<table class="summary-table" style="margin-bottom:1.5rem;"><thead><tr><th>Skill Area</th><th>Students</th><th>Low-Accuracy Activities</th><th>AlphaWrite Addresses?</th></tr></thead><tbody>';
-            const fixAnswers = {
-                'Sentence Construction': 'Yes — directly practiced',
-                'Paragraph Organization': 'Yes — directly practiced',
-                'Paragraph Development': 'Yes — directly practiced',
-                'Transitions & Structure': 'Yes — directly practiced',
-            };
-            Object.entries(skillCounts).sort((a,b) => b[1]-a[1]).forEach(([cat, count]) => {
-                const stuCount = studentSkillDetails.filter(s => s.primary === cat).length;
-                sgHTML += `<tr><td><strong>${cat}</strong></td><td>${stuCount}</td><td>${count}</td><td><span class="badge badge-green">Yes</span> ${fixAnswers[cat] || ''}</td></tr>`;
-            });
-            sgHTML += '</tbody></table>';
+            // Additional context note
+            sgHTML += '<div style="background:#eff6ff;border-radius:8px;padding:1rem;margin-bottom:1.5rem;font-size:0.8rem;border-left:3px solid #3b82f6;">';
+            sgHTML += '<strong>Note on AlphaWrite vs Test context:</strong> In AlphaWrite, students choose their own topics with scaffolding and AI feedback after each response. In tests, they write about assigned content without scaffolding. Some students perform adequately in AlphaWrite but cannot transfer skills to the test environment. This signals a need for explicit proofreading instruction and practice writing on assigned topics without support.';
+            sgHTML += '</div>';
 
-            sgHTML += '<h3>Per-Student Test Analysis</h3><p style="font-size:0.75rem;color:#666;margin-bottom:0.5rem;">Based on actual test responses. Click any row to expand full analysis.</p>';
-            sgHTML += '<table class="summary-table"><thead><tr><th>Student</th><th>Grade</th><th>HMG</th><th>Test Skill Gaps (click to expand)</th></tr></thead><tbody>';
+            sgHTML += `<h3>Per-Student Test Analysis (${persistentStudents.length} students)</h3><p style="font-size:0.75rem;color:#666;margin-bottom:0.75rem;">Each student below has been analyzed based on their actual test responses. Click any row to expand the full diagnosis.</p>`;
+            sgHTML += '<div style="border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">';
             persistentStudents.sort((a,b) => a.name.localeCompare(b.name)).forEach((s, idx) => {
                 const analysis = s.skill_gap_analysis || {};
                 const gapsFull = (analysis.test_skill_gaps || 'Pending').replace(/\n/g, '<br>');
-                const gapsPreview = (analysis.test_skill_gaps || 'Pending').split('\n')[0].substring(0, 120);
+                const gapsPreview = (analysis.test_skill_gaps || 'Pending').split('\n')[0].substring(0, 100);
                 const detailId = 'sg-detail-' + idx;
-                sgHTML += `<tr style="cursor:pointer;" onclick="var d=document.getElementById('${detailId}');d.style.display=d.style.display==='none'?'table-row':'none';"><td><strong>${s.name}</strong></td><td>G${s.age_grade || '?'}</td><td>G${s.hmg || '?'}</td><td style="font-size:0.78rem;">${gapsPreview}${gapsPreview.length >= 120 ? '...' : ''}</td></tr>`;
-                sgHTML += `<tr id="${detailId}" style="display:none;"><td colspan="4" style="padding:0.75rem;background:#f8f9fa;font-size:0.8rem;">`;
-                sgHTML += '<div style="margin-bottom:0.5rem;"><strong>Test Skill Gaps:</strong><br>' + gapsFull + '</div>';
-                if (analysis.alphawrite_vs_test) sgHTML += '<div style="margin-bottom:0.5rem;"><strong>AlphaWrite vs Test:</strong> ' + analysis.alphawrite_vs_test + '</div>';
-                if (analysis.can_alphawrite_fix) sgHTML += '<div style="margin-bottom:0.5rem;"><strong>Can AlphaWrite Fix:</strong><br>' + analysis.can_alphawrite_fix.replace(/\n/g, '<br>') + '</div>';
-                if (analysis.recommended_focus) sgHTML += '<div><strong>Recommended Focus:</strong> ' + analysis.recommended_focus.replace(/\n/g, '<br>') + '</div>';
-                sgHTML += '</td></tr>';
+                const bgColor = idx % 2 === 0 ? '#fff' : '#fafafa';
+                sgHTML += `<div style="border-bottom:1px solid #e5e7eb;background:${bgColor};">`;
+                sgHTML += `<div style="padding:0.6rem 1rem;cursor:pointer;display:flex;align-items:center;gap:1rem;" onclick="var d=document.getElementById('${detailId}');d.style.display=d.style.display==='none'?'block':'none';">`;
+                sgHTML += `<div style="min-width:140px;"><strong style="font-size:0.85rem;">${s.name}</strong><br><span style="font-size:0.7rem;color:#666;">G${s.age_grade||'?'} | HMG G${s.hmg||'?'}</span></div>`;
+                sgHTML += `<div style="flex:1;font-size:0.78rem;color:#444;">${gapsPreview}${gapsPreview.length >= 100 ? '...' : ''}</div>`;
+                sgHTML += '<div style="color:#999;font-size:0.7rem;">expand</div>';
+                sgHTML += '</div>';
+                sgHTML += `<div id="${detailId}" style="display:none;padding:1rem 1rem 1rem 1.5rem;background:#f8f9fa;border-top:1px solid #e5e7eb;font-size:0.8rem;line-height:1.7;">`;
+                sgHTML += '<div style="margin-bottom:0.75rem;padding:0.6rem;background:white;border-radius:6px;border-left:3px solid #1d4ed8;"><strong style="color:#1d4ed8;">Test Skill Gaps:</strong><br>' + gapsFull + '</div>';
+                if (analysis.alphawrite_vs_test) sgHTML += '<div style="margin-bottom:0.75rem;padding:0.6rem;background:white;border-radius:6px;border-left:3px solid #06b6d4;"><strong style="color:#06b6d4;">AlphaWrite vs Test:</strong> ' + analysis.alphawrite_vs_test + '</div>';
+                if (analysis.can_alphawrite_fix) sgHTML += '<div style="margin-bottom:0.75rem;padding:0.6rem;background:white;border-radius:6px;border-left:3px solid #16a34a;"><strong style="color:#16a34a;">Can AlphaWrite Fix:</strong><br>' + analysis.can_alphawrite_fix.replace(/\n/g, '<br>') + '</div>';
+                if (analysis.recommended_focus) sgHTML += '<div style="padding:0.6rem;background:white;border-radius:6px;border-left:3px solid #8b5cf6;"><strong style="color:#8b5cf6;">Recommended Focus:</strong><br>' + analysis.recommended_focus.replace(/\n/g, '<br>') + '</div>';
+                sgHTML += '</div></div>';
             });
-            sgHTML += '</tbody></table>';
+            sgHTML += '</div>';
             document.getElementById('skill-gaps-section').innerHTML = sgHTML;
 
             // Cohort section (all students)
@@ -947,6 +955,9 @@
             document.getElementById('student-search').addEventListener('input', renderStudentTable);
             reasonFilter.addEventListener('change', renderStudentTable);
             renderStudentTable();
+
+            // Update headings with counts
+            document.getElementById('student-list-heading').textContent = `Student List: Below Target (S1/S2 Cohort) — ${s12Below.length} students`;
         });
     </script>
 </body>
