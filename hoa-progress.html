@@ -313,7 +313,7 @@
     <script>
     const REASON_META = {
         'Chronically Inactive': {
-            desc: 'No writing activity for 14+ school days, or never started this session.',
+            desc: 'No writing activity for 14+ school days since their last active date.',
             fixable: 'no',
             fixLabel: 'Not fixable by AlphaWrite',
             action: 'Engagement/ops intervention needed. AlphaWrite cannot teach students who are not logging in.',
@@ -386,7 +386,7 @@
         const xp = s.xp || {};
         const startSession = s.start_session || '';
         const daysInactive = inactivity.days_inactive || 0;
-        const neverStarted = inactivity.never_started || false;
+        const neverStarted = inactivity.never_active_this_session || false;
 
         // Time in program
         if (startSession === 'S4' || startSession === 'S5') {
@@ -632,9 +632,10 @@
 
             // Skill Gaps drill-down for Persistent Skill Gaps students
             const skillCategories = {
-                'Sentence Construction': ['kernel expansion','combine sentences','write sentence from prompt','fragment or sentence','sentence type','change sentence','appositives','conjunctions','subordinating'],
-                'Paragraph Development': ['write paragraph','elaborate paragraph','freeform paragraph','write cs from details','write ts from details','topic brainstorm','use three strategies'],
-                'Transitions & Structure': ['transition words','finishing transition','writing spos'],
+                'Sentence Construction': ['kernel expansion','combine sentences','write sentence from prompt','fragment or sentence','sentence type','change sentence','appositives','conjunctions','subordinating','write sentence about picture','unscramble sentences'],
+                'Paragraph Organization': ['identify topic sentence','make topic sentences','turn paragraph into spo','eliminate irrelevant sentences','sequence details'],
+                'Paragraph Development': ['write paragraph','elaborate paragraph','freeform paragraph','write cs from details','write ts from details','topic brainstorm','use three strategies','writing spos'],
+                'Transitions & Structure': ['transition words','finishing transition'],
             };
             function categorizeSkill(name) {
                 const n = name.toLowerCase();
@@ -662,9 +663,9 @@
             sgHTML += '<table class="summary-table" style="margin-bottom:1.5rem;"><thead><tr><th>Skill Area</th><th>Students Affected</th><th>Low-Accuracy Activities</th><th>Can AlphaWrite Fix?</th></tr></thead><tbody>';
             const fixAnswers = {
                 'Sentence Construction': 'Yes — KG activities for kernel expansion, appositives, and sentence combining directly target these skills.',
+                'Paragraph Organization': 'Yes — topic sentence identification, SPO structure, and irrelevant sentence elimination are directly trainable.',
                 'Paragraph Development': 'Yes — scaffolded paragraph writing activities build from details to full paragraphs.',
-                'Transitions & Structure': 'Yes — targeted transition word practice and paragraph organization activities.',
-                'Other': 'Depends on specific gap.',
+                'Transitions & Structure': 'Yes — targeted transition word practice and paragraph flow activities.',
             };
             Object.entries(skillCounts).sort((a,b) => b[1]-a[1]).forEach(([cat, count]) => {
                 const stuCount = studentSkillDetails.filter(s => s.primary === cat).length;
