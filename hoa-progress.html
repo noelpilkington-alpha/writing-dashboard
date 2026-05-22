@@ -297,7 +297,7 @@
                         <th>Start</th>
                         <th>Current</th>
                         <th>Advanced</th>
-                        <th title="Average Writing activities per available school day (excl. MAP weeks)">Act/day</th>
+                        <th title="Average Writing XP per school day since first enrollment (excl. MAP weeks)">XP/day</th>
                         <th>Primary Reason</th>
                     </tr>
                 </thead>
@@ -320,10 +320,10 @@
             color: '#dc2626',
         },
         'Not Enough Time': {
-            desc: 'Averaging fewer than 1 Writing activity per available school day (excluding MAP testing weeks).',
+            desc: 'Lifetime XP/day is below target (S1: 25 XP/day, S2+: 12.5 XP/day) since initial Writing enrollment.',
             fixable: 'partial',
             fixLabel: 'Partially — needs more daily practice',
-            action: 'Student needs to complete at least 1 Writing activity per day. AlphaWrite works when used consistently.',
+            action: 'Student needs more consistent daily Writing practice. AlphaWrite works when used at the expected pace.',
             color: '#f97316',
         },
         'Stuck in Testing Loop': {
@@ -393,9 +393,10 @@
             tags.push('Insufficient Time in Program');
         }
 
-        // Not enough time (activities/day below threshold)
-        const avgAct = xp.avg_activities_per_day;
-        if (avgAct !== undefined && avgAct < 1) {
+        // Not enough time (XP/day below threshold: S1=25, S2+=12.5)
+        const avgXpDay = xp.avg_xp_per_day_lifetime;
+        const xpThreshold = (startSession === 'S1') ? 25 : 12.5;
+        if (avgXpDay !== undefined && avgXpDay < xpThreshold) {
             tags.push('Not Enough Time');
         }
 
@@ -794,7 +795,8 @@
                     if (tag === 'Chronically Inactive') {
                         explanation += ` Last activity: ${inact.last_xp_date || 'never'}. Inactive for ${inact.days_inactive || '?'} school days.`;
                     } else if (tag === 'Not Enough Time') {
-                        explanation += ` Averaging ${(xp.avg_activities_per_day||0).toFixed(1)} activities/day (need 1.0+). Active on ${xp.active_days||0} of ${xp.available_days||'?'} days.`;
+                        const threshold = (s.start_session === 'S1') ? 25 : 12.5;
+                        explanation += ` Averaging ${(xp.avg_xp_per_day_lifetime||0).toFixed(1)} XP/day (need ${threshold}+). Active on ${xp.active_days||0} of ${xp.available_days||'?'} available days.`;
                     } else if (tag === 'Stuck in Testing Loop') {
                         const details = (dd.details || []);
                         details.forEach(d => {
@@ -848,9 +850,9 @@
 
                 document.getElementById('student-table-body').innerHTML = filtered.slice(0, 100).map((s, idx) => {
                     const tags = s._tags || [s._reason];
-                    const actDay = (s.xp || {}).avg_activities_per_day;
+                    const actDay = (s.xp || {}).avg_xp_per_day_lifetime;
                     const actText = actDay !== undefined ? actDay.toFixed(1) : '-';
-                    const actColor = actDay === undefined ? '#999' : actDay >= 1 ? '#16a34a' : actDay >= 0.5 ? '#d97706' : '#dc2626';
+                    const actColor = actDay === undefined ? '#999' : actDay >= 12.5 ? '#16a34a' : actDay >= 6 ? '#d97706' : '#dc2626';
                     const badgesHTML = tags.map(tag => {
                         const meta = REASON_META[tag] || {};
                         const bc = meta.fixable === 'yes' ? 'badge-green' : meta.fixable === 'no' ? 'badge-red' : 'badge-amber';
