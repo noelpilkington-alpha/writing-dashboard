@@ -670,22 +670,37 @@
                 studentSkillDetails.push({name: s.name, campus: s.campus, hmg: s.hmg, adv: s.grades_advanced, primary: primary ? primary[0] : 'Unknown', activities: low});
             });
 
-            // Count fixable vs non-fixable from v2 analysis text
-            let awCanFix = 0, awCannotFix = 0, testContext = 0;
+            // Count specific gap types from v2 analysis
+            const gapCounts = {fixable: {}, nonFixable: {}};
             persistentStudents.forEach(s => {
                 const a = s.skill_gap_analysis || {};
                 const cf = (a.can_alphawrite_fix || '').toLowerCase();
-                if (cf.includes('cannot') || cf.includes('spelling') || cf.includes('punctuation')) awCannotFix++;
-                if (cf.includes('can fix') || cf.includes('sentence construction') || cf.includes('paragraph')) awCanFix++;
-                if (cf.includes('test context') || cf.includes('scaffolding') || cf.includes('assigned content')) testContext++;
+                if (cf.includes('sentence') && cf.includes('construct')) gapCounts.fixable['Sentence construction'] = (gapCounts.fixable['Sentence construction']||0)+1;
+                if (cf.includes('paragraph') && (cf.includes('organ') || cf.includes('develop'))) gapCounts.fixable['Paragraph development'] = (gapCounts.fixable['Paragraph development']||0)+1;
+                if (cf.includes('appositive')) gapCounts.fixable['Appositives'] = (gapCounts.fixable['Appositives']||0)+1;
+                if (cf.includes('topic sentence')) gapCounts.fixable['Topic sentences'] = (gapCounts.fixable['Topic sentences']||0)+1;
+                if (cf.includes('elaborat')) gapCounts.fixable['Elaboration'] = (gapCounts.fixable['Elaboration']||0)+1;
+                if (cf.includes('spelling')) gapCounts.nonFixable['Spelling'] = (gapCounts.nonFixable['Spelling']||0)+1;
+                if (cf.includes('punctuation')) gapCounts.nonFixable['Punctuation'] = (gapCounts.nonFixable['Punctuation']||0)+1;
+                if (cf.includes('comma splice') || cf.includes('run-on')) gapCounts.nonFixable['Comma splices / run-ons'] = (gapCounts.nonFixable['Comma splices / run-ons']||0)+1;
+                if (cf.includes('grammar')) gapCounts.nonFixable['Grammar mechanics'] = (gapCounts.nonFixable['Grammar mechanics']||0)+1;
+                if (cf.includes('capitaliz')) gapCounts.nonFixable['Capitalization'] = (gapCounts.nonFixable['Capitalization']||0)+1;
             });
 
-            let sgHTML = '<h3 style="margin-top:0;">Key Finding: Types of Gaps</h3>';
-            sgHTML += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem;">';
-            sgHTML += `<div style="background:#dcfce7;border-radius:8px;padding:1rem;text-align:center;"><div style="font-weight:700;font-size:1.5rem;color:#166534;">${awCanFix}</div><div style="font-size:0.8rem;font-weight:600;">AlphaWrite CAN fix</div><div style="font-size:0.7rem;color:#555;">Sentence/paragraph construction, topic sentences, elaboration</div></div>`;
-            sgHTML += `<div style="background:#fee2e2;border-radius:8px;padding:1rem;text-align:center;"><div style="font-weight:700;font-size:1.5rem;color:#991b1b;">${awCannotFix}</div><div style="font-size:0.8rem;font-weight:600;">AlphaWrite CANNOT fix</div><div style="font-size:0.7rem;color:#555;">Spelling, punctuation, grammar mechanics, comma splices</div></div>`;
-            sgHTML += `<div style="background:#e0f2fe;border-radius:8px;padding:1rem;text-align:center;"><div style="font-weight:700;font-size:1.5rem;color:#075985;">${testContext}</div><div style="font-size:0.8rem;font-weight:600;">Test-context gap</div><div style="font-size:0.7rem;color:#555;">Performs in AlphaWrite but fails in unscaffolded test conditions</div></div>`;
-            sgHTML += '</div>';
+            let sgHTML = '<h3 style="margin-top:0;">Key Finding: Specific Gap Prevalence</h3>';
+            sgHTML += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">';
+            sgHTML += '<div><h4 style="color:#166534;margin-bottom:0.5rem;font-size:0.85rem;">AlphaWrite CAN address:</h4>';
+            Object.entries(gapCounts.fixable).sort((a,b)=>b[1]-a[1]).forEach(([gap,count]) => {
+                const pct = Math.round(100*count/persistentStudents.length);
+                sgHTML += `<div style="margin-bottom:0.4rem;font-size:0.8rem;"><span style="display:inline-block;width:30px;font-weight:700;color:#166534;">${count}</span> ${gap} <span style="color:#999;">(${pct}%)</span></div>`;
+            });
+            sgHTML += '</div><div><h4 style="color:#991b1b;margin-bottom:0.5rem;font-size:0.85rem;">AlphaWrite CANNOT directly fix:</h4>';
+            sgHTML += '<p style="font-size:0.7rem;color:#666;margin-bottom:0.5rem;">AlphaWrite provides feedback on these errors but does not explicitly teach them. Students must correct independently.</p>';
+            Object.entries(gapCounts.nonFixable).sort((a,b)=>b[1]-a[1]).forEach(([gap,count]) => {
+                const pct = Math.round(100*count/persistentStudents.length);
+                sgHTML += `<div style="margin-bottom:0.4rem;font-size:0.8rem;"><span style="display:inline-block;width:30px;font-weight:700;color:#991b1b;">${count}</span> ${gap} <span style="color:#999;">(${pct}%)</span></div>`;
+            });
+            sgHTML += '</div></div>';
 
             sgHTML += '<h3>AlphaWrite Practice Skill Areas (from activity data)</h3>';
             sgHTML += '<table class="summary-table" style="margin-bottom:1.5rem;"><thead><tr><th>Skill Area</th><th>Students</th><th>Low-Accuracy Activities</th><th>AlphaWrite Addresses?</th></tr></thead><tbody>';
@@ -701,12 +716,20 @@
             });
             sgHTML += '</tbody></table>';
 
-            sgHTML += '<h3>Per-Student Test Analysis</h3><p style="font-size:0.75rem;color:#666;margin-bottom:0.5rem;">Based on actual test responses. Click any student in the Student List below for full detail.</p>';
-            sgHTML += '<table class="summary-table"><thead><tr><th>Student</th><th>Grade</th><th>HMG</th><th>Test Skill Gaps (summary)</th></tr></thead><tbody>';
-            persistentStudents.sort((a,b) => a.name.localeCompare(b.name)).forEach(s => {
+            sgHTML += '<h3>Per-Student Test Analysis</h3><p style="font-size:0.75rem;color:#666;margin-bottom:0.5rem;">Based on actual test responses. Click any row to expand full analysis.</p>';
+            sgHTML += '<table class="summary-table"><thead><tr><th>Student</th><th>Grade</th><th>HMG</th><th>Test Skill Gaps (click to expand)</th></tr></thead><tbody>';
+            persistentStudents.sort((a,b) => a.name.localeCompare(b.name)).forEach((s, idx) => {
                 const analysis = s.skill_gap_analysis || {};
-                const gaps = (analysis.test_skill_gaps || 'Pending').split('\n')[0].substring(0, 150);
-                sgHTML += `<tr><td><strong>${s.name}</strong></td><td>G${s.age_grade || '?'}</td><td>G${s.hmg || '?'}</td><td style="font-size:0.78rem;">${gaps}${gaps.length >= 150 ? '...' : ''}</td></tr>`;
+                const gapsFull = (analysis.test_skill_gaps || 'Pending').replace(/\n/g, '<br>');
+                const gapsPreview = (analysis.test_skill_gaps || 'Pending').split('\n')[0].substring(0, 120);
+                const detailId = 'sg-detail-' + idx;
+                sgHTML += `<tr style="cursor:pointer;" onclick="var d=document.getElementById('${detailId}');d.style.display=d.style.display==='none'?'table-row':'none';"><td><strong>${s.name}</strong></td><td>G${s.age_grade || '?'}</td><td>G${s.hmg || '?'}</td><td style="font-size:0.78rem;">${gapsPreview}${gapsPreview.length >= 120 ? '...' : ''}</td></tr>`;
+                sgHTML += `<tr id="${detailId}" style="display:none;"><td colspan="4" style="padding:0.75rem;background:#f8f9fa;font-size:0.8rem;">`;
+                sgHTML += '<div style="margin-bottom:0.5rem;"><strong>Test Skill Gaps:</strong><br>' + gapsFull + '</div>';
+                if (analysis.alphawrite_vs_test) sgHTML += '<div style="margin-bottom:0.5rem;"><strong>AlphaWrite vs Test:</strong> ' + analysis.alphawrite_vs_test + '</div>';
+                if (analysis.can_alphawrite_fix) sgHTML += '<div style="margin-bottom:0.5rem;"><strong>Can AlphaWrite Fix:</strong><br>' + analysis.can_alphawrite_fix.replace(/\n/g, '<br>') + '</div>';
+                if (analysis.recommended_focus) sgHTML += '<div><strong>Recommended Focus:</strong> ' + analysis.recommended_focus.replace(/\n/g, '<br>') + '</div>';
+                sgHTML += '</td></tr>';
             });
             sgHTML += '</tbody></table>';
             document.getElementById('skill-gaps-section').innerHTML = sgHTML;
