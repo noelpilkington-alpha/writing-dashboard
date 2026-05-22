@@ -213,16 +213,28 @@
         <h1>AlphaWrite Progress Report</h1>
         <p class="subtitle">2025–2026 School Year — <span id="generated-date"></span></p>
 
-        <div class="hero-grid" id="hero-grid"></div>
-
-        <div class="bar-container">
-            <h3>All Students: 2-Grade Target Progress</h3>
-            <div class="stacked-bar" id="progress-bar"></div>
-            <div id="bar-legend" style="display:flex;gap:1.5rem;font-size:0.8rem;color:#666;"></div>
+        <!-- Section 1: Full-Year Cohort Result -->
+        <div class="section-card" style="border-left:4px solid #16a34a;">
+            <h3 style="margin-top:0;">Full-Year Students (Session 1 Cohort)</h3>
+            <p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">158 students who started in August 2025 and have had the full school year.</p>
+            <div class="hero-grid" id="hero-grid"></div>
+            <div class="bar-container" style="box-shadow:none;padding:1rem 0;margin-bottom:0;">
+                <div class="stacked-bar" id="progress-bar"></div>
+                <div id="bar-legend" style="display:flex;gap:1.5rem;font-size:0.8rem;color:#666;"></div>
+            </div>
         </div>
 
-        <h2>Why Didn't 2 Grades Happen?</h2>
+        <!-- Section 2: Are newer cohorts on trajectory? -->
+        <h2>Are Newer Cohorts on Track?</h2>
         <div class="section-card">
+            <p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">Comparing each cohort to where S1 was at the same elapsed time. If newer cohorts match S1's pace, they will reach similar outcomes.</p>
+            <div id="trajectory-section"></div>
+        </div>
+
+        <!-- Section 3: Why not (for students with enough time) -->
+        <h2>Students Who Had Time But Did Not Reach 2 Grades</h2>
+        <div class="section-card">
+            <p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">Focused on S1/S2 students (224 total, had 5-10 months) who did not reach the target. Newer cohorts are excluded since they have not had enough time.</p>
             <div class="donut-section">
                 <div class="donut-container" id="donut-container"></div>
                 <div class="legend" id="donut-legend"></div>
@@ -231,6 +243,7 @@
 
         <div class="reasons-grid" id="reasons-grid"></div>
 
+        <!-- Section 4: Fixability -->
         <h2>Can AlphaWrite Fix It?</h2>
         <div class="section-card">
             <div class="stacked-bar" id="fixable-bar"></div>
@@ -248,18 +261,27 @@
             </table>
         </div>
 
-        <h2>Progress by Cohort (Start Session)</h2>
+        <!-- Section 5: Skill Gaps Drill-Down -->
+        <h2>Persistent Skill Gaps: Detail</h2>
         <div class="section-card">
-            <p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">Students grouped by when they started AlphaWrite. Earlier cohorts have had more time to reach the 2-grade target.</p>
+            <p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">S1/S2 students who are active but consistently scoring below 80% accuracy. Grouped by primary skill area.</p>
+            <div id="skill-gaps-section"></div>
+        </div>
+
+        <!-- Section 6: All Cohorts Overview -->
+        <h2>All Cohorts Overview</h2>
+        <div class="section-card">
             <div id="cohort-section"></div>
         </div>
 
+        <!-- Section 7: Campus -->
         <h2>Progress by Campus</h2>
         <div class="section-card">
             <div class="campus-bars" id="campus-bars"></div>
         </div>
 
-        <h2>Student List: Below Target</h2>
+        <!-- Section 8: Student List -->
+        <h2>Student List: Below Target (S1/S2)</h2>
         <div class="section-card" style="overflow-x:auto;">
             <div style="margin-bottom:1rem;display:flex;gap:1rem;align-items:center;">
                 <input type="text" id="student-search" placeholder="Search..." style="padding:0.4rem 0.8rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;width:200px;">
@@ -383,37 +405,42 @@
         .then(data => {
             const students = data.students || [];
             const total = students.length;
-            const atTarget = students.filter(s => (s.grades_advanced || 0) >= 2);
-            const belowTarget = students.filter(s => (s.grades_advanced || 0) < 2);
 
             document.getElementById('generated-date').textContent = data.generated_at ? data.generated_at.split('T')[0] : '';
 
-            // Hero cards
+            // S1 cohort focus
+            const s1 = students.filter(s => s.start_session === 'S1');
+            const s1Total = s1.length;
+            const s1AtTarget = s1.filter(s => (s.grades_advanced || 0) >= 2);
+            const s1Below = s1.filter(s => (s.grades_advanced || 0) < 2);
+            const s1Pct = Math.round(100 * s1AtTarget.length / s1Total);
+
+            // Hero cards (S1 focused)
             document.getElementById('hero-grid').innerHTML = `
                 <div class="hero-card">
-                    <div class="hero-number green">${atTarget.length}</div>
-                    <div class="hero-label">students earned 2+ grade levels</div>
-                    <div class="hero-pct" style="color:#16a34a">${Math.round(100*atTarget.length/total)}% of cohort</div>
+                    <div class="hero-number green">${s1Pct}%</div>
+                    <div class="hero-label">of full-year students hit the 2-grade target</div>
+                    <div class="hero-pct" style="color:#16a34a">${s1AtTarget.length} of ${s1Total} students</div>
                 </div>
                 <div class="hero-card">
-                    <div class="hero-number amber">${belowTarget.length}</div>
-                    <div class="hero-label">students below 2-grade target</div>
-                    <div class="hero-pct" style="color:#d97706">${Math.round(100*belowTarget.length/total)}% of cohort</div>
+                    <div class="hero-number" style="color:#1a1a2e;">4.2</div>
+                    <div class="hero-label">average grades advanced (S1 cohort)</div>
+                    <div class="hero-pct" style="color:#666;">Target: 2 grades/year</div>
                 </div>
             `;
 
-            // Stacked progress bar
-            const adv3 = students.filter(s => (s.grades_advanced||0) >= 3).length;
-            const adv2 = atTarget.length - adv3;
-            const adv1 = students.filter(s => (s.grades_advanced||0) === 1).length;
-            const adv0 = students.filter(s => (s.grades_advanced||0) === 0).length;
+            // Stacked progress bar (S1 only)
+            const adv3 = s1.filter(s => (s.grades_advanced||0) >= 3).length;
+            const adv2 = s1AtTarget.length - adv3;
+            const adv1 = s1.filter(s => (s.grades_advanced||0) === 1).length;
+            const adv0 = s1.filter(s => (s.grades_advanced||0) === 0).length;
 
             const bar = document.getElementById('progress-bar');
             bar.innerHTML = `
-                <div class="bar-segment" style="width:${100*adv3/total}%;background:#166534;">${adv3}</div>
-                <div class="bar-segment" style="width:${100*adv2/total}%;background:#16a34a;">${adv2}</div>
-                <div class="bar-segment" style="width:${100*adv1/total}%;background:#f59e0b;">${adv1}</div>
-                <div class="bar-segment" style="width:${100*adv0/total}%;background:#ef4444;">${adv0}</div>
+                <div class="bar-segment" style="width:${100*adv3/s1Total}%;background:#166534;">${adv3}</div>
+                <div class="bar-segment" style="width:${100*adv2/s1Total}%;background:#16a34a;">${adv2}</div>
+                <div class="bar-segment" style="width:${100*adv1/s1Total}%;background:#f59e0b;">${adv1}</div>
+                <div class="bar-segment" style="width:${100*adv0/s1Total}%;background:#ef4444;">${adv0}</div>
             `;
             document.getElementById('bar-legend').innerHTML = `
                 <span>■ 3+ grades (${adv3})</span>
@@ -422,10 +449,63 @@
                 <span style="color:#ef4444">■ 0 grades (${adv0})</span>
             `;
 
-            // Classify below-target students
+            // Trajectory comparison: where was S1 at the same elapsed time?
+            const sessionEndDates = {S1:'2025-10-17',S2:'2026-01-02',S3:'2026-02-20',S4:'2026-04-17',S5:'2026-06-05'};
+            const sessionElapsed = {S1:'2 months',S2:'5 months',S3:'6.5 months',S4:'8 months',S5:'10 months'};
+            const gradeRe = /G(\d+)/;
+
+            function s1PctAtCutoff(cutoff) {
+                let count = 0;
+                s1.forEach(s => {
+                    const tests = s.all_tests || [];
+                    let maxGrade = s.starting_hmg || 2;
+                    for (const t of tests.sort((a,b) => (a.date||'').localeCompare(b.date||''))) {
+                        if ((t.date||'') > cutoff) break;
+                        if (t.passed) {
+                            const m = gradeRe.exec(t.name || '');
+                            if (m && parseInt(m[1]) >= maxGrade) maxGrade = parseInt(m[1]) + 1;
+                        }
+                    }
+                    if (maxGrade - (s.starting_hmg || 2) >= 2) count++;
+                });
+                return Math.round(100 * count / s1Total);
+            }
+
+            const cohortOrder = ['S1','S2','S3','S4','S5'];
+            const cohortNow = {};
+            cohortOrder.forEach(sn => {
+                const cohort = students.filter(s => s.start_session === sn);
+                if (!cohort.length) return;
+                const atT = cohort.filter(s => (s.grades_advanced||0) >= 2).length;
+                cohortNow[sn] = {total: cohort.length, atTarget: atT, pct: Math.round(100*atT/cohort.length)};
+            });
+
+            const s1Trajectory = {};
+            cohortOrder.forEach(sn => { s1Trajectory[sn] = s1PctAtCutoff(sessionEndDates[sn]); });
+
+            let trajHTML = '<table class="summary-table"><thead><tr><th>Cohort</th><th>Elapsed Time</th><th>Current %</th><th>S1 at Same Point</th><th>On Pace?</th></tr></thead><tbody>';
+            cohortOrder.forEach(sn => {
+                const d = cohortNow[sn];
+                if (!d) return;
+                const s1ref = s1Trajectory[sn];
+                const diff = d.pct - s1ref;
+                const status = diff >= -5 ? '<span class="badge badge-green">Yes</span>' : diff >= -20 ? '<span class="badge badge-amber">Behind</span>' : '<span class="badge badge-red">Far Behind</span>';
+                trajHTML += `<tr><td><strong>${sn}</strong> (${d.total} students)</td><td>${sessionElapsed[sn]}</td><td><strong>${d.pct}%</strong> (${d.atTarget})</td><td>${s1ref}%</td><td>${status}</td></tr>`;
+            });
+            trajHTML += '</tbody></table>';
+            document.getElementById('trajectory-section').innerHTML = trajHTML;
+
+            // Focus "Why Not" on S1/S2 students only (those with enough time)
+            const s12 = students.filter(s => s.start_session === 'S1' || s.start_session === 'S2');
+            const s12Below = s12.filter(s => (s.grades_advanced || 0) < 2);
+
+            // Classify all below-target students (for student table) but focus donut on S1/S2
+            const allBelow = students.filter(s => (s.grades_advanced || 0) < 2);
+            allBelow.forEach(s => { s._reason = classifyStudent(s); });
+
             const reasonCounts = {};
             const studentsByReason = {};
-            belowTarget.forEach(s => {
+            s12Below.forEach(s => {
                 const reason = classifyStudent(s);
                 s._reason = reason;
                 reasonCounts[reason] = (reasonCounts[reason] || 0) + 1;
@@ -444,7 +524,7 @@
             let legendHTML = '';
 
             sortedReasons.forEach(([reason, count]) => {
-                const pct = count / belowTarget.length;
+                const pct = count / s12Below.length;
                 const dash = pct * circumference;
                 const color = REASON_META[reason]?.color || '#999';
                 svgPaths += `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${color}" stroke-width="24" stroke-dasharray="${dash} ${circumference - dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})"/>`;
@@ -452,7 +532,7 @@
                 legendHTML += `<div class="legend-item"><div class="legend-dot" style="background:${color}"></div><span><strong>${count}</strong> ${reason}</span></div>`;
             });
 
-            donutContainer.innerHTML = `<svg viewBox="0 0 160 160">${svgPaths}</svg><div class="donut-center"><div class="pct">${belowTarget.length}</div><div class="label">below target</div></div>`;
+            donutContainer.innerHTML = `<svg viewBox="0 0 160 160">${svgPaths}</svg><div class="donut-center"><div class="pct">${s12Below.length}</div><div class="label">below target</div></div>`;
             donutLegend.innerHTML = legendHTML;
 
             // Reason cards
@@ -467,7 +547,7 @@
                             <span class="reason-name">${reason}</span>
                             <span class="reason-count">${count}</span>
                         </div>
-                        <div class="reason-pct">${Math.round(100*count/belowTarget.length)}% of below-target students</div>
+                        <div class="reason-pct">${Math.round(100*count/s12Below.length)}% of below-target students</div>
                         <div class="reason-desc">${meta.desc || ''}</div>
                         <div class="fixable-tag ${tagClass}">${meta.fixLabel || ''}</div>
                     </div>
@@ -476,16 +556,16 @@
 
             // Fixable bar
             let fixYes = 0, fixPartial = 0, fixNo = 0;
-            belowTarget.forEach(s => {
+            s12Below.forEach(s => {
                 const meta = REASON_META[s._reason] || {};
                 if (meta.fixable === 'yes') fixYes++;
                 else if (meta.fixable === 'partial') fixPartial++;
                 else fixNo++;
             });
             document.getElementById('fixable-bar').innerHTML = `
-                <div class="bar-segment" style="width:${100*fixYes/belowTarget.length}%;background:#16a34a;">${fixYes}</div>
-                <div class="bar-segment" style="width:${100*fixPartial/belowTarget.length}%;background:#f59e0b;">${fixPartial}</div>
-                <div class="bar-segment" style="width:${100*fixNo/belowTarget.length}%;background:#dc2626;">${fixNo}</div>
+                <div class="bar-segment" style="width:${100*fixYes/s12Below.length}%;background:#16a34a;">${fixYes}</div>
+                <div class="bar-segment" style="width:${100*fixPartial/s12Below.length}%;background:#f59e0b;">${fixPartial}</div>
+                <div class="bar-segment" style="width:${100*fixNo/s12Below.length}%;background:#dc2626;">${fixNo}</div>
             `;
             document.getElementById('fixable-legend').innerHTML = `
                 <span style="color:#16a34a">■ AlphaWrite can fix (${fixYes})</span>
@@ -500,14 +580,58 @@
                 const badgeLabel = meta.fixable === 'yes' ? 'Yes' : meta.fixable === 'no' ? 'No' : 'Partially';
                 return `<tr>
                     <td>${reason}</td>
-                    <td><strong>${count}</strong> (${Math.round(100*count/belowTarget.length)}%)</td>
+                    <td><strong>${count}</strong> (${Math.round(100*count/s12Below.length)}%)</td>
                     <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
                     <td>${meta.action || ''}</td>
                 </tr>`;
             }).join('');
 
-            // Cohort section
-            const cohortOrder = ['S1', 'S2', 'S3', 'S4', 'S5'];
+            // Skill Gaps drill-down for Persistent Skill Gaps students
+            const skillCategories = {
+                'Sentence Construction': ['kernel expansion','combine sentences','write sentence from prompt','fragment or sentence','sentence type','change sentence','appositives','conjunctions','subordinating'],
+                'Paragraph Development': ['write paragraph','elaborate paragraph','freeform paragraph','write cs from details','write ts from details','topic brainstorm','use three strategies'],
+                'Transitions & Structure': ['transition words','finishing transition','writing spos'],
+            };
+            function categorizeSkill(name) {
+                const n = name.toLowerCase();
+                for (const [cat, kws] of Object.entries(skillCategories)) {
+                    if (kws.some(kw => n.includes(kw))) return cat;
+                }
+                return 'Other';
+            }
+            const persistentStudents = s12Below.filter(s => s._reason === 'Persistent Skill Gaps');
+            const skillCounts = {};
+            const studentSkillDetails = [];
+            persistentStudents.forEach(s => {
+                const low = (s.accuracy || {}).activities_below_threshold || [];
+                const cats = {};
+                low.forEach(a => {
+                    const cat = categorizeSkill(a.name || '');
+                    cats[cat] = (cats[cat] || 0) + 1;
+                    skillCounts[cat] = (skillCounts[cat] || 0) + 1;
+                });
+                const primary = Object.entries(cats).sort((a,b) => b[1]-a[1])[0];
+                studentSkillDetails.push({name: s.name, campus: s.campus, hmg: s.hmg, adv: s.grades_advanced, primary: primary ? primary[0] : 'Unknown', activities: low});
+            });
+
+            let sgHTML = '<h3 style="margin-top:0;">Skill Gap Categories</h3>';
+            sgHTML += '<div style="display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;">';
+            Object.entries(skillCounts).sort((a,b) => b[1]-a[1]).forEach(([cat, count]) => {
+                const stuCount = studentSkillDetails.filter(s => s.primary === cat).length;
+                sgHTML += `<div style="background:#f1f3f5;border-radius:8px;padding:0.75rem 1rem;flex:1;min-width:200px;"><div style="font-weight:700;font-size:1.1rem;">${stuCount}</div><div style="font-size:0.8rem;font-weight:600;">${cat}</div><div style="font-size:0.75rem;color:#666;">${count} low-accuracy activities</div></div>`;
+            });
+            sgHTML += '</div>';
+
+            sgHTML += '<h3>Per-Student Detail</h3><table class="summary-table"><thead><tr><th>Student</th><th>Campus</th><th>HMG</th><th>Primary Gap</th><th>Struggling With</th></tr></thead><tbody>';
+            studentSkillDetails.sort((a,b) => a.primary.localeCompare(b.primary) || a.name.localeCompare(b.name)).forEach(s => {
+                const topActivities = s.activities.slice(0, 3).map(a => `${a.name} (${Math.round(a.accuracy)}%)`).join(', ');
+                sgHTML += `<tr><td>${s.name}</td><td>${s.campus || ''}</td><td>G${s.hmg || '?'}</td><td><strong>${s.primary}</strong></td><td style="font-size:0.75rem;">${topActivities}</td></tr>`;
+            });
+            sgHTML += '</tbody></table>';
+            document.getElementById('skill-gaps-section').innerHTML = sgHTML;
+
+            // Cohort section (all students)
+            // cohortOrder already declared above
             const cohortLabels = {S1: 'Session 1 (Aug-Oct 2025)', S2: 'Session 2 (Oct-Jan)', S3: 'Session 3 (Jan-Feb)', S4: 'Session 4 (Mar-Apr)', S5: 'Session 5 (Apr-Jun)'};
             const cohortData = {};
             students.forEach(s => {
@@ -603,7 +727,7 @@
             function renderStudentTable() {
                 const search = document.getElementById('student-search').value.toLowerCase();
                 const filter = reasonFilter.value;
-                let filtered = belowTarget;
+                let filtered = s12Below;
                 if (filter !== 'all') filtered = filtered.filter(s => s._reason === filter);
                 if (search) filtered = filtered.filter(s => s.name.toLowerCase().includes(search) || (s.email||'').toLowerCase().includes(search));
                 filtered.sort((a,b) => (a.grades_advanced||0) - (b.grades_advanced||0) || a.name.localeCompare(b.name));
