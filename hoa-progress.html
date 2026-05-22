@@ -233,6 +233,12 @@
             </div>
         </div>
 
+        <!-- Executive Action Summary -->
+        <div class="section-card" style="border-left:4px solid #3b82f6;margin-top:1.5rem;" id="exec-summary">
+            <h3 style="margin-top:0;color:#1d4ed8;">Action Summary</h3>
+            <div id="exec-summary-content"></div>
+        </div>
+
         <!-- Section 2: Are newer cohorts on trajectory? -->
         <h2>Are Newer Cohorts on Track?</h2>
         <div class="section-card">
@@ -398,15 +404,20 @@
         const daysInactive = inactivity.days_inactive || 0;
         const neverStarted = inactivity.never_active_this_session || false;
 
+        // Chronic inactivity FIRST (overrides other tags for fixability classification)
+        if (neverStarted || daysInactive >= 14) {
+            tags.push('Chronically Inactive');
+        }
+
         // Time in program
         if (startSession === 'S4' || startSession === 'S5') {
             tags.push('Insufficient Time in Program');
         }
 
-        // Not enough time (XP/day below threshold: S1=25, S2+=12.5)
+        // Not spending enough time (XP/day below threshold: S1=25, S2+=12.5)
         const avgXpDay = xp.avg_xp_per_day_lifetime;
         const xpThreshold = (startSession === 'S1') ? 25 : 12.5;
-        if (avgXpDay !== undefined && avgXpDay < xpThreshold) {
+        if (avgXpDay !== undefined && avgXpDay < xpThreshold && !(neverStarted || daysInactive >= 14)) {
             tags.push('Not Spending Enough Time');
         }
 
@@ -420,11 +431,6 @@
             } else {
                 tags.push('Low Accuracy');
             }
-        }
-
-        // Chronic inactivity (no activity at all)
-        if (neverStarted || daysInactive >= 14) {
-            tags.push('Chronically Inactive');
         }
 
         // Rushing tests
@@ -466,17 +472,27 @@
             const s1Below = s1.filter(s => (s.grades_advanced || 0) < 2);
             const s1Pct = Math.round(100 * s1AtTarget.length / s1Total);
 
-            // Hero cards (S1 focused)
+            // Hero cards (S1 focused) with median
+            const s1Adv = s1.map(s => s.grades_advanced || 0).sort((a,b) => a-b);
+            const s1Median = s1Adv[Math.floor(s1Adv.length/2)];
+            const s1Mean = (s1Adv.reduce((a,b)=>a+b,0) / s1Adv.length).toFixed(1);
+
+            // S1+S2 combined for context
+            const s12All = students.filter(s => s.start_session === 'S1' || s.start_session === 'S2');
+            const s12AtTarget = s12All.filter(s => (s.grades_advanced||0) >= 2);
+            const s12Pct = Math.round(100 * s12AtTarget.length / s12All.length);
+
             document.getElementById('hero-grid').innerHTML = `
                 <div class="hero-card">
                     <div class="hero-number green">${s1Pct}%</div>
                     <div class="hero-label">of full-year students hit the 2-grade target</div>
-                    <div class="hero-pct" style="color:#16a34a">${s1AtTarget.length} of ${s1Total} students</div>
+                    <div class="hero-pct" style="color:#16a34a">${s1AtTarget.length} of ${s1Total} students (S1 cohort)</div>
+                    <div style="font-size:0.75rem;color:#666;margin-top:0.5rem;">S1+S2 combined (5-10 months): ${s12Pct}% (${s12AtTarget.length} of ${s12All.length})</div>
                 </div>
                 <div class="hero-card">
-                    <div class="hero-number" style="color:#1a1a2e;">4.2</div>
-                    <div class="hero-label">average grades advanced (S1 cohort)</div>
-                    <div class="hero-pct" style="color:#666;">Target: 2 grades/year</div>
+                    <div class="hero-number" style="color:#1a1a2e;">${s1Median}</div>
+                    <div class="hero-label">median grades advanced (S1 cohort)</div>
+                    <div class="hero-pct" style="color:#666;">Mean: ${s1Mean} | Target: 2 grades/year</div>
                 </div>
             `;
 
@@ -545,6 +561,9 @@
                 trajHTML += `<tr><td><strong>${sn}</strong> (${d.total} new, ${cumulative} total)</td><td>${sessionElapsed[sn]}</td><td><strong>${d.pct}%</strong> (${d.atTarget})</td><td>${s1ref}%</td><td>${status}</td></tr>`;
             });
             trajHTML += '</tbody></table>';
+            trajHTML += '<div style="margin-top:1rem;padding:0.75rem;background:#fef3c7;border-radius:6px;font-size:0.8rem;border-left:3px solid #d97706;">';
+            trajHTML += '<strong>Why are newer cohorts behind S1 pace?</strong> This is under investigation. Possible factors include: different campus composition (newer cohorts have more TSA/partner campuses), later-enrolling students starting at lower readiness levels, and S1 containing a higher proportion of students who were already in the Alpha ecosystem. This does not necessarily indicate a product issue but warrants monitoring.';
+            trajHTML += '</div>';
             document.getElementById('trajectory-section').innerHTML = trajHTML;
 
             // Focus "Why Not" on S1/S2 students only (those with enough time)
@@ -588,7 +607,7 @@
             });
 
             donutContainer.innerHTML = `<svg viewBox="0 0 160 160">${svgPaths}</svg><div class="donut-center"><div class="pct">${s12Below.length}</div><div class="label">below target</div></div>`;
-            donutLegend.innerHTML = legendHTML;
+            donutLegend.innerHTML = legendHTML + '<div style="margin-top:0.75rem;font-size:0.7rem;color:#888;font-style:italic;">Note: Students often have multiple barriers. Categories overlap (e.g., a student can have both skill gaps and insufficient practice time).</div>';
 
             // Reason cards
             const reasonsGrid = document.getElementById('reasons-grid');
@@ -804,24 +823,27 @@
 
             document.getElementById('cohort-section').innerHTML = cohortHTML;
 
-            // Campus bars
+            // Campus bars with cohort composition
             const campusData = {};
             students.forEach(s => {
                 const c = s.campus || 'Unknown';
-                if (!campusData[c]) campusData[c] = { total: 0, atTarget: 0 };
+                if (!campusData[c]) campusData[c] = { total: 0, atTarget: 0, s1Count: 0 };
                 campusData[c].total++;
                 if ((s.grades_advanced || 0) >= 2) campusData[c].atTarget++;
+                if (s.start_session === 'S1') campusData[c].s1Count++;
             });
             const sortedCampuses = Object.entries(campusData)
                 .filter(([,v]) => v.total >= 5)
                 .sort((a,b) => (b[1].atTarget/b[1].total) - (a[1].atTarget/a[1].total));
 
-            document.getElementById('campus-bars').innerHTML = sortedCampuses.map(([name, v]) => {
+            document.getElementById('campus-bars').innerHTML = '<p style="font-size:0.75rem;color:#666;margin-bottom:0.75rem;">Percentages reflect all enrolled students at each campus. Campuses with more S1 (full-year) students are expected to have higher rates. S1% shown for context.</p>' + sortedCampuses.map(([name, v]) => {
                 const pct = Math.round(100 * v.atTarget / v.total);
+                const s1pct = Math.round(100 * v.s1Count / v.total);
                 return `<div class="campus-row">
                     <span class="campus-name">${name}</span>
                     <div class="campus-bar-bg"><div class="campus-bar-fill" style="width:${pct}%"></div></div>
                     <span class="campus-pct">${pct}%</span>
+                    <span style="width:60px;text-align:right;font-size:0.7rem;color:#999;">${s1pct}% S1</span>
                 </div>`;
             }).join('');
 
@@ -956,6 +978,24 @@
 
             // Update headings with counts
             document.getElementById('student-list-heading').textContent = `Student List: Below Target (S1/S2 Cohort) — ${s12Below.length} students`;
+
+            // Executive action summary
+            const loopCount = s12Below.filter(s => (s._tags||[]).includes('Stuck in Testing Loop')).length;
+            const rushCount = s12Below.filter(s => (s._tags||[]).includes('Rushes Tests')).length;
+            const timeCount = s12Below.filter(s => (s._tags||[]).includes('Not Spending Enough Time')).length;
+            const inactiveCount = s12Below.filter(s => (s._tags||[]).includes('Chronically Inactive')).length;
+            const almostThere = s12Below.filter(s => s.grades_advanced === 1).length;
+            document.getElementById('exec-summary-content').innerHTML = `
+                <p style="font-size:0.85rem;margin-bottom:0.75rem;">Of <strong>${s12Below.length} below-target students</strong> (S1/S2 cohort, had 5-10 months):</p>
+                <ul style="font-size:0.83rem;line-height:2;padding-left:1.5rem;">
+                    <li><strong>${loopCount} students</strong> need targeted Deep Dive remediation before retesting (actionable now via AlphaWrite)</li>
+                    <li><strong>${rushCount} students</strong> need test-taking coaching from Academics (rushing tests)</li>
+                    <li><strong>${timeCount} students</strong> need more daily practice time (campus ops intervention)</li>
+                    <li><strong>${inactiveCount} students</strong> need re-engagement outreach (not logging in)</li>
+                    <li><strong>${almostThere} students</strong> are at 1 grade advanced and close to reaching 2 — prioritize for final push</li>
+                </ul>
+                <p style="font-size:0.8rem;color:#555;margin-top:0.5rem;">Most students have overlapping issues: 51 of 53 active below-target students show sentence construction gaps (AlphaWrite-addressable) AND 44 show grammar/punctuation gaps (require explicit instruction outside AlphaWrite).</p>
+            `;
         });
     </script>
 </body>
