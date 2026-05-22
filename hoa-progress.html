@@ -828,11 +828,29 @@
                     </div>`;
                 });
 
-                // Skill gap analysis (if available)
-                if (analysis.skill_gap_summary) {
+                // Skill gap analysis v2 (test-focused)
+                if (analysis.test_skill_gaps) {
                     html += '<div style="margin-top:0.75rem;padding:0.6rem;background:white;border-radius:6px;border-left:3px solid #1d4ed8;">';
-                    html += '<strong style="color:#1d4ed8;">Diagnosis:</strong> ' + analysis.skill_gap_summary + '<br>';
-                    html += '<strong style="color:#1d4ed8;">Prescribed Action:</strong> ' + analysis.prescribed_action;
+                    html += '<strong style="color:#1d4ed8;">Test Skill Gaps:</strong><br><span style="white-space:pre-wrap;">' + analysis.test_skill_gaps.replace(/\n/g, '<br>') + '</span>';
+                    html += '</div>';
+                    if (analysis.alphawrite_vs_test) {
+                        html += '<div style="margin-top:0.5rem;padding:0.6rem;background:white;border-radius:6px;border-left:3px solid #06b6d4;">';
+                        html += '<strong style="color:#06b6d4;">AlphaWrite vs Test Context:</strong> ' + analysis.alphawrite_vs_test;
+                        html += '</div>';
+                    }
+                    if (analysis.can_alphawrite_fix) {
+                        html += '<div style="margin-top:0.5rem;padding:0.6rem;background:white;border-radius:6px;border-left:3px solid #16a34a;">';
+                        html += '<strong style="color:#16a34a;">Can AlphaWrite Fix?</strong><br><span style="white-space:pre-wrap;">' + analysis.can_alphawrite_fix.replace(/\n/g, '<br>') + '</span>';
+                        html += '</div>';
+                    }
+                    if (analysis.recommended_focus) {
+                        html += '<div style="margin-top:0.5rem;padding:0.6rem;background:white;border-radius:6px;border-left:3px solid #8b5cf6;">';
+                        html += '<strong style="color:#8b5cf6;">Recommended Focus:</strong> ' + analysis.recommended_focus.replace(/\n/g, '<br>');
+                        html += '</div>';
+                    }
+                } else if (analysis.skill_gap_summary) {
+                    html += '<div style="margin-top:0.75rem;padding:0.6rem;background:white;border-radius:6px;border-left:3px solid #1d4ed8;">';
+                    html += '<strong style="color:#1d4ed8;">Diagnosis:</strong> ' + analysis.skill_gap_summary;
                     html += '</div>';
                 }
 
