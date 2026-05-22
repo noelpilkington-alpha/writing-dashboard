@@ -354,6 +354,13 @@
             action: 'AlphaWrite adjusts difficulty and assigns prerequisite skills automatically.',
             color: '#0ea5e9',
         },
+        'Rushes Tests': {
+            desc: '2+ tests taken too quickly (below time threshold for grade level). Rushing leads to avoidable failures.',
+            fixable: 'yes',
+            fixLabel: 'Yes — pacing intervention',
+            action: 'Advisor should coach student on pacing. AlphaWrite flags rushed tests for review.',
+            color: '#f43f5e',
+        },
         'On Track (1 grade, may reach 2)': {
             desc: 'Already mastered 1 grade and progressing — may still hit 2 by year end.',
             fixable: 'yes',
@@ -407,6 +414,12 @@
         // Chronic inactivity (no activity at all)
         if (neverStarted || daysInactive >= 14) {
             tags.push('Chronically Inactive');
+        }
+
+        // Rushing tests
+        const rushing = s.rushing || {};
+        if (rushing.is_rusher) {
+            tags.push('Rushes Tests');
         }
 
         if (tags.length === 0) {
@@ -644,13 +657,19 @@
                 studentSkillDetails.push({name: s.name, campus: s.campus, hmg: s.hmg, adv: s.grades_advanced, primary: primary ? primary[0] : 'Unknown', activities: low});
             });
 
-            let sgHTML = '<h3 style="margin-top:0;">Skill Gap Categories</h3>';
-            sgHTML += '<div style="display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;">';
+            let sgHTML = '<h3 style="margin-top:0;">Biggest Overall Skill Gaps</h3>';
+            sgHTML += '<table class="summary-table" style="margin-bottom:1.5rem;"><thead><tr><th>Skill Area</th><th>Students Affected</th><th>Low-Accuracy Activities</th><th>Can AlphaWrite Fix?</th></tr></thead><tbody>';
+            const fixAnswers = {
+                'Sentence Construction': 'Yes — KG activities for kernel expansion, appositives, and sentence combining directly target these skills.',
+                'Paragraph Development': 'Yes — scaffolded paragraph writing activities build from details to full paragraphs.',
+                'Transitions & Structure': 'Yes — targeted transition word practice and paragraph organization activities.',
+                'Other': 'Depends on specific gap.',
+            };
             Object.entries(skillCounts).sort((a,b) => b[1]-a[1]).forEach(([cat, count]) => {
                 const stuCount = studentSkillDetails.filter(s => s.primary === cat).length;
-                sgHTML += `<div style="background:#f1f3f5;border-radius:8px;padding:0.75rem 1rem;flex:1;min-width:200px;"><div style="font-weight:700;font-size:1.1rem;">${stuCount}</div><div style="font-size:0.8rem;font-weight:600;">${cat}</div><div style="font-size:0.75rem;color:#666;">${count} low-accuracy activities</div></div>`;
+                sgHTML += `<tr><td><strong>${cat}</strong></td><td>${stuCount} students</td><td>${count} activities</td><td><span class="badge badge-green">Yes</span> <span style="font-size:0.75rem;">${fixAnswers[cat] || ''}</span></td></tr>`;
             });
-            sgHTML += '</div>';
+            sgHTML += '</tbody></table>';
 
             sgHTML += '<h3>Per-Student Diagnosis and Prescription</h3><table class="summary-table"><thead><tr><th>Student</th><th>HMG</th><th title="Average AlphaWrite practice minutes per weekday since first active">Min/day</th><th>Skill Gap</th><th>Prescribed Action</th></tr></thead><tbody>';
             persistentStudents.sort((a,b) => a.name.localeCompare(b.name)).forEach(s => {
@@ -769,7 +788,8 @@
                 document.getElementById('student-table-body').innerHTML = filtered.slice(0, 100).map(s => {
                     const tags = s._tags || [s._reason];
                     const actDay = (s.xp || {}).avg_activities_per_day;
-                    const actText = actDay !== undefined ? actDay.toFixed(1) : '-';
+                    const lastXp = (s.inactivity || {}).last_xp_date || '';
+                    const actText = (actDay === 0 && lastXp) ? 'last: ' + lastXp.slice(5) : actDay !== undefined ? actDay.toFixed(1) : '-';
                     const actColor = actDay === undefined ? '#999' : actDay >= 1 ? '#16a34a' : actDay >= 0.5 ? '#d97706' : '#dc2626';
                     const badgesHTML = tags.map(tag => {
                         const meta = REASON_META[tag] || {};
