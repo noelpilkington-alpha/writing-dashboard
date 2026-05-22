@@ -281,8 +281,9 @@
         </div>
 
         <!-- Section 8: Student List -->
-        <h2>Student List: Below Target (S1/S2)</h2>
+        <h2>Student List: Below Target (S1/S2 Cohort)</h2>
         <div class="section-card" style="overflow-x:auto;">
+            <p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">Click any student row to expand detailed diagnosis, skill gaps, and prescribed actions.</p>
             <div style="margin-bottom:1rem;display:flex;gap:1rem;align-items:center;">
                 <input type="text" id="student-search" placeholder="Search..." style="padding:0.4rem 0.8rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;width:200px;">
                 <select id="reason-filter" style="padding:0.4rem 0.8rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;">
@@ -294,11 +295,11 @@
                     <tr>
                         <th>Student</th>
                         <th>Campus</th>
+                        <th>Grade</th>
                         <th>Start</th>
                         <th>Current</th>
                         <th>Advanced</th>
-                        <th title="Average Writing XP per school day since first enrollment (excl. MAP weeks)">XP/day</th>
-                        <th>Primary Reason</th>
+                        <th>Reasons</th>
                     </tr>
                 </thead>
                 <tbody id="student-table-body"></tbody>
@@ -319,7 +320,7 @@
             action: 'Engagement/ops intervention needed. AlphaWrite cannot teach students who are not logging in.',
             color: '#dc2626',
         },
-        'Not Enough Time': {
+        'Not Spending Enough Time': {
             desc: 'Lifetime XP/day is below target (S1: 25 XP/day, S2+: 12.5 XP/day) since initial Writing enrollment.',
             fixable: 'partial',
             fixLabel: 'Partially — needs more daily practice',
@@ -356,9 +357,9 @@
         },
         'Rushes Tests': {
             desc: '2+ tests taken too quickly (below time threshold for grade level). Rushing leads to avoidable failures.',
-            fixable: 'yes',
-            fixLabel: 'Yes — pacing intervention',
-            action: 'Advisor should coach student on pacing. AlphaWrite flags rushed tests for review.',
+            fixable: 'partial',
+            fixLabel: 'Partially — needs coaching',
+            action: 'Student needs to be coached by Academics on test-taking strategies and pacing.',
             color: '#f43f5e',
         },
         'On Track (1 grade, may reach 2)': {
@@ -397,7 +398,7 @@
         const avgXpDay = xp.avg_xp_per_day_lifetime;
         const xpThreshold = (startSession === 'S1') ? 25 : 12.5;
         if (avgXpDay !== undefined && avgXpDay < xpThreshold) {
-            tags.push('Not Enough Time');
+            tags.push('Not Spending Enough Time');
         }
 
         // Skill gaps
@@ -530,8 +531,9 @@
                 if (!d) return;
                 const s1ref = s1Trajectory[sn];
                 const diff = d.pct - s1ref;
-                const status = diff >= -5 ? '<span class="badge badge-green">Yes</span>' : diff >= -20 ? '<span class="badge badge-amber">Behind</span>' : '<span class="badge badge-red">Far Behind</span>';
-                trajHTML += `<tr><td><strong>${sn}</strong> (${d.total} students)</td><td>${sessionElapsed[sn]}</td><td><strong>${d.pct}%</strong> (${d.atTarget})</td><td>${s1ref}%</td><td>${status}</td></tr>`;
+                const status = diff >= -5 ? '<span class="badge badge-green">Yes</span>' : '<span class="badge badge-red">No</span>';
+                const cumulative = cohortOrder.slice(0, cohortOrder.indexOf(sn) + 1).reduce((sum, k) => sum + (cohortNow[k]?.total || 0), 0);
+                trajHTML += `<tr><td><strong>${sn}</strong> (${d.total} new, ${cumulative} total)</td><td>${sessionElapsed[sn]}</td><td><strong>${d.pct}%</strong> (${d.atTarget})</td><td>${s1ref}%</td><td>${status}</td></tr>`;
             });
             trajHTML += '</tbody></table>';
             document.getElementById('trajectory-section').innerHTML = trajHTML;
@@ -788,6 +790,12 @@
                 const xp = s.xp || {};
                 let html = '<div style="padding:0.75rem 1rem;background:#f8f9fa;border-top:1px solid #e5e7eb;font-size:0.8rem;">';
 
+                // Age grade context
+                const ageGrade = s.age_grade;
+                if (typeof ageGrade === 'number' && ageGrade < 3) {
+                    html += '<div style="margin-bottom:0.75rem;padding:0.4rem 0.6rem;background:#fef3c7;border-radius:6px;border-left:3px solid #d97706;"><strong>Note:</strong> Student is in Grade ' + ageGrade + '. AlphaWrite is designed for Grade 3+. Struggles may be due to insufficient typing/transcription skills for their age level rather than writing skill gaps.</div>';
+                }
+
                 // Tag explanations
                 html += '<div style="margin-bottom:0.75rem;"><strong>Why below target:</strong></div>';
                 tags.forEach(tag => {
@@ -795,16 +803,16 @@
                     let explanation = meta.desc || '';
                     if (tag === 'Chronically Inactive') {
                         explanation += ` Last activity: ${inact.last_xp_date || 'never'}. Inactive for ${inact.days_inactive || '?'} school days.`;
-                    } else if (tag === 'Not Enough Time') {
+                    } else if (tag === 'Not Spending Enough Time') {
                         const threshold = (s.start_session === 'S1') ? 25 : 12.5;
-                        explanation += ` Averaging ${(xp.avg_xp_per_day_lifetime||0).toFixed(1)} XP/day (need ${threshold}+). Active on ${xp.active_days||0} of ${xp.available_days||'?'} available days.`;
+                        explanation += ` Averaging ${(xp.avg_xp_per_day_lifetime||0).toFixed(1)} XP/day since enrollment (need ${threshold}+).`;
                     } else if (tag === 'Stuck in Testing Loop') {
                         const details = (dd.details || []);
                         details.forEach(d => {
                             explanation += ` G${d.grade}: ${d.failed_count} failed, ${d.rushed_count} rushed (avg ${(d.avg_time_minutes||0).toFixed(0)} min).`;
                         });
                     } else if (tag === 'Rushes Tests') {
-                        explanation += ` ${rushing.rushed_count} of ${rushing.total_tests_this_session} tests this session were rushed.`;
+                        explanation += ` ${rushing.rushed_count} of ${rushing.total_tests || '?'} total tests were rushed.`;
                     } else if (tag === 'Persistent Skill Gaps' || tag === 'Low Accuracy') {
                         const acc = s.accuracy || {};
                         const low = acc.activities_below_threshold || [];
@@ -851,22 +859,21 @@
 
                 document.getElementById('student-table-body').innerHTML = filtered.slice(0, 100).map((s, idx) => {
                     const tags = s._tags || [s._reason];
-                    const actDay = (s.xp || {}).avg_xp_per_day_lifetime;
-                    const actText = actDay !== undefined ? actDay.toFixed(1) : '-';
-                    const actColor = actDay === undefined ? '#999' : actDay >= 12.5 ? '#16a34a' : actDay >= 6 ? '#d97706' : '#dc2626';
+                    const ageGrade = s.age_grade || '?';
+                    const belowG3 = (typeof ageGrade === 'number' && ageGrade < 3);
                     const badgesHTML = tags.map(tag => {
                         const meta = REASON_META[tag] || {};
                         const bc = meta.fixable === 'yes' ? 'badge-green' : meta.fixable === 'no' ? 'badge-red' : 'badge-amber';
                         return '<span class="badge ' + bc + '" style="margin:1px 2px;">' + tag + '</span>';
-                    }).join('');
+                    }).join('') + (belowG3 ? '<span class="badge badge-red" style="margin:1px 2px;">Below G3</span>' : '');
                     const rowId = 'detail-' + idx;
                     return `<tr style="cursor:pointer;" onclick="var d=document.getElementById('${rowId}');d.style.display=d.style.display==='none'?'table-row':'none';">
                         <td><strong>${s.name}</strong></td>
                         <td>${s.campus || ''}</td>
+                        <td>G${ageGrade}</td>
                         <td>G${s.starting_hmg || '?'}</td>
                         <td>G${s.hmg || '?'}</td>
                         <td>${s.grades_advanced || 0}</td>
-                        <td style="color:${actColor};font-weight:600;text-align:right;">${actText}</td>
                         <td>${badgesHTML}</td>
                     </tr><tr id="${rowId}" style="display:none;"><td colspan="7" style="padding:0;">${buildDetailHTML(s)}</td></tr>`;
                 }).join('') + (filtered.length > 100 ? `<tr><td colspan="7" style="text-align:center;color:#999;">Showing 100 of ${filtered.length}…</td></tr>` : '');
