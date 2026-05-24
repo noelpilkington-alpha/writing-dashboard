@@ -533,7 +533,7 @@
 
             // Trajectory comparison: where was S1 at the same elapsed time?
             const sessionEndDates = {S1:'2025-10-17',S2:'2026-01-02',S3:'2026-02-20',S4:'2026-04-17',S5:'2026-06-05'};
-            const sessionElapsed = {S1:'2 months',S2:'5 months',S3:'6.5 months',S4:'8 months',S5:'10 months'};
+            const sessionElapsed = {S2:'5 months',S3:'6.5 months',S4:'8 months',S5:'10 months'};
             const gradeRe = /G(\d+)/;
 
             function s1PctAtCutoff(cutoff) {
@@ -565,15 +565,16 @@
             const s1Trajectory = {};
             cohortOrder.forEach(sn => { s1Trajectory[sn] = s1PctAtCutoff(sessionEndDates[sn]); });
 
-            let trajHTML = '<table class="summary-table"><thead><tr><th>Cohort</th><th>Time in Program</th><th>% at 2-Grade Target Now</th><th>S1 After Same Time</th><th>Matching S1 Pace?</th></tr></thead><tbody>';
-            cohortOrder.forEach(sn => {
+            let trajHTML = '<p style="font-size:0.8rem;color:#666;margin-bottom:0.5rem;">Benchmark: S1 cohort reached 88% after a full year. How do newer cohorts compare at the same elapsed time?</p>';
+            trajHTML += '<table class="summary-table"><thead><tr><th>Cohort</th><th>Time in Program</th><th>Current %</th><th>Where S1 Was After Same Time</th><th>On Pace?</th></tr></thead><tbody>';
+            ['S2','S3','S4','S5'].forEach(sn => {
                 const d = cohortNow[sn];
                 if (!d) return;
                 const s1ref = s1Trajectory[sn];
                 const diff = d.pct - s1ref;
                 const status = diff >= -5 ? '<span class="badge badge-green">Yes</span>' : '<span class="badge badge-red">No</span>';
                 const cumulative = cohortOrder.slice(0, cohortOrder.indexOf(sn) + 1).reduce((sum, k) => sum + (cohortNow[k]?.total || 0), 0);
-                trajHTML += `<tr><td><strong>${sn}</strong> (${d.total} new, ${cumulative} total)</td><td>${sessionElapsed[sn]}</td><td><strong>${d.pct}%</strong> (${d.atTarget})</td><td>${s1ref}%</td><td>${status}</td></tr>`;
+                trajHTML += `<tr><td><strong>${sn}</strong> (${d.total} new, ${cumulative} total)</td><td>${sessionElapsed[sn]}</td><td><strong>${d.pct}%</strong> (${d.atTarget} of ${d.total})</td><td>${s1ref}%</td><td>${status}</td></tr>`;
             });
             trajHTML += '</tbody></table>';
             trajHTML += '<div style="margin-top:1rem;padding:0.75rem;background:#f8f9fa;border-radius:6px;font-size:0.8rem;border-left:3px solid #6b7280;">';
@@ -620,7 +621,7 @@
             });
 
             donutContainer.innerHTML = `<svg viewBox="0 0 160 160">${svgPaths}</svg><div class="donut-center"><div class="pct">${s12Below.length}</div><div class="label">below target</div></div>`;
-            donutLegend.innerHTML = legendHTML + '<div style="margin-top:0.75rem;font-size:0.7rem;color:#888;font-style:italic;">Each student is assigned one primary barrier. Additional issues are visible in the expanded student detail.</div>';
+            donutLegend.innerHTML = legendHTML + '<div style="margin-top:0.75rem;font-size:0.7rem;color:#888;font-style:italic;">Each student has one primary barrier (shown here). Many also have secondary issues (e.g., rushing tests) visible in the student detail below.</div>';
 
             // Reason cards
             const reasonsGrid = document.getElementById('reasons-grid');
@@ -687,7 +688,7 @@
                 }
                 return 'Other';
             }
-            const persistentStudents = s12Below.filter(s => (s._tags || []).includes('Persistent Skill Gaps'));
+            const persistentStudents = s12Below.filter(s => s.skill_gap_analysis && s.skill_gap_analysis.test_skill_gaps);
             const skillCounts = {};
             const studentSkillDetails = [];
             persistentStudents.forEach(s => {
@@ -977,11 +978,12 @@
                     const tags = s._tags || [s._reason];
                     const ageGrade = s.age_grade || '?';
                     const belowG3 = (typeof ageGrade === 'number' && ageGrade < 3);
-                    const badgesHTML = tags.map(tag => {
+                    const badgesHTML = tags.map((tag, i) => {
                         const meta = REASON_META[tag] || {};
                         const bc = meta.fixable === 'yes' ? 'badge-green' : meta.fixable === 'no' ? 'badge-red' : 'badge-amber';
-                        return '<span class="badge ' + bc + '" style="margin:1px 2px;">' + tag + '</span>';
-                    }).join('') + (belowG3 ? '<span class="badge badge-red" style="margin:1px 2px;">Below G3</span>' : '');
+                        const style = i === 0 ? 'margin:1px 2px;' : 'margin:1px 2px;opacity:0.7;font-size:0.65rem;';
+                        return '<span class="badge ' + bc + '" style="' + style + '">' + tag + '</span>';
+                    }).join('');
                     const rowId = 'detail-' + idx;
                     return `<tr style="cursor:pointer;" onclick="var d=document.getElementById('${rowId}');d.style.display=d.style.display==='none'?'table-row':'none';">
                         <td><strong>${s.name}</strong></td>
@@ -1003,22 +1005,24 @@
             // Update headings with counts
             document.getElementById('student-list-heading').textContent = `Student List: Below Target (S1/S2 Cohort) — ${s12Below.length} students`;
 
-            // Executive action summary
-            const loopCount = s12Below.filter(s => (s._tags||[]).includes('Stuck in Testing Loop')).length;
-            const rushCount = s12Below.filter(s => (s._tags||[]).includes('Rushes Tests')).length;
-            const timeCount = s12Below.filter(s => (s._tags||[]).includes('Not Spending Enough Time')).length;
-            const inactiveCount = s12Below.filter(s => (s._tags||[]).includes('Chronically Inactive')).length;
+            // Executive action summary (uses primary reason counts — mutually exclusive, sums to 53)
             const almostThere = s12Below.filter(s => s.grades_advanced === 1).length;
+            const totalRushing = s12Below.filter(s => (s.rushing||{}).is_rusher).length;
             document.getElementById('exec-summary-content').innerHTML = `
-                <p style="font-size:0.85rem;margin-bottom:0.75rem;"><strong>Result:</strong> 88% of full-year students hit the 2-grade target (first year of curriculum). ${s12Below.length} students (S1/S2) did not. Their primary barriers:</p>
+                <p style="font-size:0.85rem;margin-bottom:0.75rem;"><strong>Result:</strong> 88% of full-year students hit the 2-grade target (first year of curriculum). ${s12Below.length} students (S1/S2) did not.</p>
+                <p style="font-size:0.83rem;margin-bottom:0.5rem;"><strong>Primary barrier breakdown</strong> (each student counted once, totals to ${s12Below.length}):</p>
                 <ul style="font-size:0.83rem;line-height:2;padding-left:1.5rem;">
-                    <li><strong>${loopCount}</strong> stuck in testing loops → assign targeted remediation via AlphaWrite Deep Dive</li>
-                    <li><strong>${rushCount}</strong> rushing tests → Academics coaching on test-taking strategies</li>
-                    <li><strong>${timeCount}</strong> not spending enough time → campus ops to ensure daily practice</li>
-                    <li><strong>${inactiveCount}</strong> chronically inactive → re-engagement outreach</li>
-                    <li><strong>${almostThere}</strong> at 1 grade, close to 2 → prioritize for final push (4 weeks remain)</li>
+                    ${sortedReasons.map(([reason, count]) => {
+                        const meta = REASON_META[reason] || {};
+                        return '<li><strong>' + count + '</strong> ' + reason + ' → ' + (meta.action || '') + '</li>';
+                    }).join('')}
                 </ul>
-                <p style="font-size:0.8rem;color:#555;margin-top:0.5rem;"><strong>Key finding:</strong> All below-target students show skill gaps on tests. AlphaWrite addresses sentence/paragraph construction, but 83% also show grammar, spelling, and punctuation errors that AlphaWrite does not explicitly teach. This represents a curriculum gap requiring intervention outside the product.</p>
+                <p style="font-size:0.83rem;margin-top:0.75rem;"><strong>Additional signals</strong> (students may appear in multiple):</p>
+                <ul style="font-size:0.83rem;line-height:2;padding-left:1.5rem;">
+                    <li><strong>${totalRushing}</strong> students rush tests (need Academics coaching on test-taking strategies)</li>
+                    <li><strong>${almostThere}</strong> at 1 grade advanced, close to 2 — prioritize for final push (4 weeks remain)</li>
+                </ul>
+                <p style="font-size:0.8rem;color:#555;margin-top:0.75rem;"><strong>Key finding:</strong> All below-target students show skill gaps on tests. AlphaWrite addresses sentence/paragraph construction, but 83% also show grammar, spelling, and punctuation errors that AlphaWrite does not explicitly teach. This represents a curriculum gap requiring intervention outside the product.</p>
             `;
         });
     </script>
