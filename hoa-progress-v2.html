@@ -473,7 +473,6 @@
                     <div class="hero-number green">${s1Pct}%</div>
                     <div class="hero-label">of full-year students hit the 2-grade target</div>
                     <div class="hero-pct" style="color:#16a34a">${s1AtTarget.length} of ${s1Total} full-year students</div>
-                    <div style="font-size:0.75rem;color:#666;margin-top:0.5rem;">All cohorts: ${allAtTarget.length} of ${students.length} students (${Math.round(100*allAtTarget.length/students.length)}%) have reached 2+ grades</div>
                 </div>
                 <div class="hero-card">
                     <div class="hero-number" style="color:#1a1a2e;">${s1Median}</div>
@@ -529,7 +528,7 @@
                 const d = cohortNow[sn];
                 if (!d) return;
                 const months = monthsElapsed(sessionStarts[sn]);
-                trajHTML += `<tr><td><strong>${sn}</strong></td><td>${months} months</td><td>${d.total}</td><td><strong>${d.pct}%</strong> (${d.atTarget} of ${d.total})</td></tr>`;
+                trajHTML += `<tr><td><strong>${sn}</strong></td><td>${months} ${months === 1 ? 'month' : 'months'}</td><td>${d.total}</td><td><strong>${d.pct}%</strong> (${d.atTarget} of ${d.total})</td></tr>`;
             });
             trajHTML += '</tbody></table>';
             // Compute partner campus % per cohort
@@ -991,11 +990,11 @@
             renderStudentTable();
 
             // Update headings with counts
-            document.getElementById('student-list-heading').textContent = `Student List: Below Target — ${s12Below.length} students (S1/S2) + ${newerBelow.length} newer cohort students with warning signs`;
+            document.getElementById('student-list-heading').textContent = `Student List: Below Target — ${s12Below.length} students (S1/S2) + ${warningStudents.length} newer cohort students with warning signs`;
 
             // Executive action summary (uses primary reason counts — mutually exclusive, sums to 53)
-            const almostThere = allBelow.filter(s => s.grades_advanced === 1).length;
-            const totalRushing = allBelow.filter(s => (s.rushing||{}).is_rusher).length;
+            const almostThere = s12Below.filter(s => s.grades_advanced === 1).length;
+            const totalRushing = s12Below.filter(s => (s.rushing||{}).is_rusher).length;
             // Count S3-S5 warning signs
             const newerWithBarriers = newerBelow.filter(s => {
                 const tags = s._tags || [];
