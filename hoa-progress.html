@@ -567,20 +567,19 @@
             const s1Trajectory = {};
             cohortOrder.forEach(sn => { s1Trajectory[sn] = s1PctAtCutoff(sessionEndDates[sn]); });
 
-            let trajHTML = '<table class="summary-table"><thead><tr><th>Cohort</th><th>Time in Program</th><th>Students</th><th>At 2-Grade Target</th></tr></thead><tbody>';
+            let trajHTML = '<table class="summary-table"><thead><tr><th>Cohort</th><th>Time in Program</th><th>Students</th><th>At Target Now</th><th>S1 at Same Elapsed Time</th></tr></thead><tbody>';
             const totalEnrolled = cohortOrder.reduce((sum, k) => sum + (cohortNow[k]?.total || 0), 0);
             ['S2','S3','S4','S5'].forEach(sn => {
                 const d = cohortNow[sn];
                 if (!d) return;
-                const cumulative = cohortOrder.slice(0, cohortOrder.indexOf(sn) + 1).reduce((sum, k) => sum + (cohortNow[k]?.total || 0), 0);
-                trajHTML += `<tr><td><strong>${sn}</strong></td><td>${sessionElapsed[sn]}</td><td>${d.total} (${cumulative} cumulative)</td><td><strong>${d.pct}%</strong> (${d.atTarget} of ${d.total})</td></tr>`;
+                const s1ref = s1Trajectory[sn];
+                const diff = d.pct - s1ref;
+                const indicator = diff >= 0 ? '<span style="color:#16a34a;font-weight:600;">ahead</span>' : diff >= -15 ? '<span style="color:#d97706;font-weight:600;">slightly behind</span>' : '<span style="color:#dc2626;font-weight:600;">behind</span>';
+                trajHTML += `<tr><td><strong>${sn}</strong></td><td>${sessionElapsed[sn]}</td><td>${d.total}</td><td><strong>${d.pct}%</strong> (${d.atTarget})</td><td>${s1ref}% — ${indicator}</td></tr>`;
             });
             trajHTML += '</tbody></table>';
             trajHTML += '<div style="margin-top:1rem;padding:0.75rem;background:#eff6ff;border-radius:6px;font-size:0.8rem;border-left:3px solid #3b82f6;">';
-            trajHTML += '<strong>Bottom line:</strong> Newer cohorts have lower target rates because they have had less time. S2 (5 months in) is at 48%, while S1 was at 35% after 2 months and needed a full year to reach 88%. This is expected — the question is whether S2-S5 reach 88%+ given a full year. We will know this by mid-2027 for S2 and later for subsequent cohorts.';
-            trajHTML += '</div>';
-            trajHTML += '<div style="margin-top:0.5rem;padding:0.75rem;background:#f8f9fa;border-radius:6px;font-size:0.75rem;color:#555;">';
-            trajHTML += '<strong>Note on cohort differences:</strong> S1 students were predominantly from established Alpha campuses. Later cohorts include more partner campuses (TSA, GT Anywhere) and students enrolling at lower readiness levels. Program growth from 158 to ' + totalEnrolled + ' students across the year.';
+            trajHTML += '<strong>Bottom line:</strong> Newer cohorts are tracking behind where S1 was at the same elapsed time. This is partially expected due to different student populations (more partner campuses, mid-year enrollees at lower readiness). The definitive measure is whether each cohort reaches 88%+ after a full year of instruction. Program has grown from 158 to ' + totalEnrolled + ' students this year.';
             trajHTML += '</div>';
             document.getElementById('trajectory-section').innerHTML = trajHTML;
 
@@ -855,7 +854,11 @@
                 .filter(([,v]) => v.total >= 5)
                 .sort((a,b) => (b[1].atTarget/b[1].total) - (a[1].atTarget/a[1].total));
 
-            document.getElementById('campus-bars').innerHTML = '<p style="font-size:0.75rem;color:#666;margin-bottom:0.75rem;">Percentage of students at each campus who have reached the 2-grade target. <strong>Important:</strong> Campuses with a higher proportion of full-year (S1) students are expected to have higher rates — newer campuses enrolled students later and have not had a full year. The "S1%" column shows what percentage of each campus started in Session 1.</p>' + sortedCampuses.map(([name, v]) => {
+            const campusesWithS1 = sortedCampuses.filter(([,v]) => v.s1Count > 0);
+            const campusesNoS1 = sortedCampuses.filter(([,v]) => v.s1Count === 0);
+
+            let campusHTML = '<p style="font-size:0.8rem;font-weight:600;margin-bottom:0.5rem;">Campuses with full-year students</p>';
+            campusHTML += campusesWithS1.map(([name, v]) => {
                 const pct = Math.round(100 * v.atTarget / v.total);
                 const s1pct = Math.round(100 * v.s1Count / v.total);
                 return `<div class="campus-row">
@@ -865,6 +868,20 @@
                     <span style="width:60px;text-align:right;font-size:0.7rem;color:#999;">${s1pct}% S1</span>
                 </div>`;
             }).join('');
+
+            if (campusesNoS1.length) {
+                campusHTML += '<p style="font-size:0.8rem;font-weight:600;margin-top:1.25rem;margin-bottom:0.5rem;color:#666;">Newer campuses (no full-year students yet — lower rates expected)</p>';
+                campusHTML += campusesNoS1.map(([name, v]) => {
+                    const pct = Math.round(100 * v.atTarget / v.total);
+                    return `<div class="campus-row" style="opacity:0.7;">
+                        <span class="campus-name">${name}</span>
+                        <div class="campus-bar-bg"><div class="campus-bar-fill" style="width:${pct}%"></div></div>
+                        <span class="campus-pct">${pct}%</span>
+                        <span style="width:60px;text-align:right;font-size:0.7rem;color:#999;">0% S1</span>
+                    </div>`;
+                }).join('');
+            }
+            document.getElementById('campus-bars').innerHTML = campusHTML;
 
             // Student table filters
             const reasonFilter = document.getElementById('reason-filter');
