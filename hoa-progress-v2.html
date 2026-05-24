@@ -267,7 +267,6 @@
             </div>
         </div>
 
-        <div class="reasons-grid" id="reasons-grid"></div>
 
         <!-- Section 4: Fixability -->
         <h2>Can AlphaWrite Fix It?</h2>
@@ -324,10 +323,10 @@
                     <tr>
                         <th>Student</th>
                         <th>Campus</th>
-                        <th>Age Grade</th>
-                        <th>Started At</th>
-                        <th>Mastered To</th>
-                        <th>Grades +</th>
+                        <th>School Grade</th>
+                        <th>Entry Level</th>
+                        <th>Current Level</th>
+                        <th>Grades Advanced</th>
                         <th>Barriers</th>
                     </tr>
                 </thead>
@@ -378,10 +377,10 @@
             color: '#7c3aed',
         },
         'Progressing (no specific barrier identified)': {
-            desc: 'Active, practicing at adequate volume, no testing loop or rushing issue. May simply need more time.',
-            fixable: 'yes',
-            fixLabel: 'Yes — continue current path',
-            action: 'Continue AlphaWrite instruction. Student is progressing but has not yet reached the 2-grade threshold.',
+            desc: 'Active and practicing at adequate volume with no identifiable operational barrier. Progress slower than expected for time in program.',
+            fixable: 'ops',
+            fixLabel: 'Needs investigation',
+            action: 'Review with campus director. Student is practicing but not advancing as expected. May need course placement review or academic check-in.',
             color: '#6b7280',
         },
         'Rushes Tests': {
@@ -491,11 +490,11 @@
                 <div class="hero-card">
                     <div class="hero-number green">${s1Pct}%</div>
                     <div class="hero-label">of full-year students hit the 2-grade target</div>
-                    <div class="hero-pct" style="color:#16a34a">${s1AtTarget.length} of ${s1Total} students (S1 cohort)</div>
+                    <div class="hero-pct" style="color:#16a34a">${s1AtTarget.length} of ${s1Total} full-year students</div>
                 </div>
                 <div class="hero-card">
                     <div class="hero-number" style="color:#1a1a2e;">${s1Median}</div>
-                    <div class="hero-label">median grades advanced (S1 cohort)</div>
+                    <div class="hero-label">median grades advanced (full-year students)</div>
                     <div class="hero-pct" style="color:#666;">Mean: ${s1Mean} | Target: 2 grades/year</div>
                 </div>
             `;
@@ -557,7 +556,7 @@
                 const d = cohortNow[sn];
                 if (!d) return;
                 const months = monthsElapsed(sessionStarts[sn]);
-                trajHTML += `<tr><td><strong>${sn}</strong></td><td>${months} months</td><td>${d.total}</td><td><strong>${d.pct}%</strong> (${d.atTarget})</td><td style="font-size:0.75rem;color:#666;">S1 reached 88% after 10 months</td></tr>`;
+                trajHTML += `<tr><td><strong>${sn}</strong></td><td>${months} months</td><td>${d.total}</td><td><strong>${d.pct}%</strong> (${d.atTarget})</td><td style="font-size:0.75rem;color:#666;">S1 reached 88% after ${monthsElapsed(sessionStarts.S1)} months</td></tr>`;
             });
             trajHTML += '</tbody></table>';
             // Compute partner campus % per cohort
@@ -615,24 +614,6 @@
             donutContainer.innerHTML = `<svg viewBox="0 0 160 160">${svgPaths}</svg><div class="donut-center"><div class="pct">${s12Below.length}</div><div class="label">below target</div></div>`;
             donutLegend.innerHTML = legendHTML + '<div style="margin-top:0.75rem;font-size:0.7rem;color:#888;font-style:italic;">Each student has one primary barrier (shown here). Many also have secondary issues (e.g., rushing tests) visible in the student detail below.</div>';
 
-            // Reason cards
-            const reasonsGrid = document.getElementById('reasons-grid');
-            reasonsGrid.innerHTML = sortedReasons.map(([reason, count]) => {
-                const meta = REASON_META[reason] || {};
-                const fixClass = meta.fixable === 'yes' ? 'fixable' : meta.fixable === 'no' ? 'not-fixable' : 'partial';
-                const tagClass = meta.fixable === 'yes' ? 'yes' : meta.fixable === 'no' ? 'no' : 'partial';
-                return `
-                    <div class="reason-card ${fixClass}">
-                        <div class="reason-header">
-                            <span class="reason-name">${reason}</span>
-                            <span class="reason-count">${count}</span>
-                        </div>
-                        <div class="reason-pct">${Math.round(100*count/s12Below.length)}% of below-target students</div>
-                        <div class="reason-desc">${meta.desc || ''}</div>
-                        <div class="fixable-tag ${tagClass}">${meta.fixLabel || ''}</div>
-                    </div>
-                `;
-            }).join('');
 
             // Fixable bar (4 buckets: AlphaWrite, campus ops, academic coaching, not fixable)
             let fixAW = 0, fixOps = 0, fixCoach = 0, fixNo = 0;
@@ -644,16 +625,16 @@
                 else fixNo++;
             });
             document.getElementById('fixable-bar').innerHTML = `
-                <div class="bar-segment" style="width:${100*fixAW/s12Below.length}%;background:#16a34a;">${fixAW}</div>
-                <div class="bar-segment" style="width:${100*fixOps/s12Below.length}%;background:#f59e0b;">${fixOps}</div>
-                <div class="bar-segment" style="width:${100*fixCoach/s12Below.length}%;background:#0284c7;">${fixCoach}</div>
-                <div class="bar-segment" style="width:${100*fixNo/s12Below.length}%;background:#dc2626;">${fixNo}</div>
+                <div class="bar-segment" style="width:${100*fixAW/s12Below.length}%;background:#166534;">${fixAW}</div>
+                <div class="bar-segment" style="width:${100*fixOps/s12Below.length}%;background:#92400e;">${fixOps}</div>
+                <div class="bar-segment" style="width:${100*fixCoach/s12Below.length}%;background:#1e3a5f;">${fixCoach}</div>
+                <div class="bar-segment" style="width:${100*fixNo/s12Below.length}%;background:#991b1b;">${fixNo}</div>
             `;
             document.getElementById('fixable-legend').innerHTML = `
-                <span style="color:#16a34a">■ AlphaWrite can fix (${fixAW})</span>
-                <span style="color:#f59e0b">■ Campus ops intervention (${fixOps})</span>
-                <span style="color:#0284c7">■ Academic coaching (${fixCoach})</span>
-                <span style="color:#dc2626">■ Not fixable by AlphaWrite (${fixNo})</span>
+                <span style="color:#166534">■ AlphaWrite can fix (${fixAW})</span>
+                <span style="color:#92400e">■ Campus ops intervention (${fixOps})</span>
+                <span style="color:#1e3a5f">■ Academic coaching (${fixCoach})</span>
+                <span style="color:#991b1b">■ Not fixable (${fixNo})</span>
             `;
 
             // Fixable table
@@ -924,7 +905,7 @@
                         const threshold = (s.start_session === 'S1') ? 25 : 12.5;
                         const actual = (xp.avg_xp_per_day_lifetime||0).toFixed(1);
                         const pctOfTarget = Math.round(100 * actual / threshold);
-                        explanation += ` Averaging ${actual} XP/day (${pctOfTarget}% of the ${threshold} XP/day target). Partially engaged but below the pace needed for 2 grades/year.`;
+                        explanation += ` Averaging ${pctOfTarget}% of expected daily practice volume. Partially engaged but below the pace needed for 2 grades/year.`;
                     } else if (tag === 'Stuck in Testing Loop') {
                         const details = (dd.details || []);
                         details.forEach(d => {
