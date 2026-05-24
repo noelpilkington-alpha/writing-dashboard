@@ -350,10 +350,10 @@
             color: '#dc2626',
         },
         'Not Spending Enough Time': {
-            desc: 'Lifetime XP/day is below target (S1: 25 XP/day, S2+: 12.5 XP/day) since initial Writing enrollment.',
+            desc: 'Lifetime XP/day is below target (S1: 25 XP/day, S2+: 12.5 XP/day). These students are partially engaged (averaging 50-99% of expected pace) but not consistently hitting the volume needed for 2 grades/year.',
             fixable: 'ops',
             fixLabel: 'Requires campus ops intervention',
-            action: 'Campus team to ensure student completes daily Writing practice at expected volume.',
+            action: 'Campus team to ensure student completes daily Writing practice at expected volume. These students are partially engaged, not absent — they need consistency, not re-engagement.',
             color: '#f97316',
         },
         'Stuck in Testing Loop': {
@@ -578,8 +578,17 @@
                 trajHTML += `<tr><td><strong>${sn}</strong></td><td>${sessionElapsed[sn]}</td><td>${d.total}</td><td><strong>${d.pct}%</strong> (${d.atTarget})</td><td>${s1ref}% — ${indicator}</td></tr>`;
             });
             trajHTML += '</tbody></table>';
+            // Compute partner campus % per cohort
+            const alphaCampuses = new Set(['Alpha School Austin','Alpha School Miami','Alpha School San Francisco','Alpha School Scottsdale','Alpha School Santa Barbara','Alpha School Fort Worth','Alpha School Brownsville','Alpha School Lake Forest','Alpha School Palm Beach','Alpha Anywhere Center','Alpha High School']);
+            const cohortComposition = {};
+            ['S1','S2','S3','S4','S5'].forEach(sn => {
+                const cohort = students.filter(s => s.start_session === sn);
+                const alphaCount = cohort.filter(s => alphaCampuses.has(s.campus||'')).length;
+                cohortComposition[sn] = {alpha: Math.round(100*alphaCount/cohort.length), partner: Math.round(100*(cohort.length-alphaCount)/cohort.length)};
+            });
+
             trajHTML += '<div style="margin-top:1rem;padding:0.75rem;background:#eff6ff;border-radius:6px;font-size:0.8rem;border-left:3px solid #3b82f6;">';
-            trajHTML += '<strong>Bottom line:</strong> Newer cohorts are tracking behind where S1 was at the same elapsed time. This is partially expected due to different student populations (more partner campuses, mid-year enrollees at lower readiness). The definitive measure is whether each cohort reaches 88%+ after a full year of instruction. Program has grown from 158 to ' + totalEnrolled + ' students this year.';
+            trajHTML += '<strong>Bottom line:</strong> Newer cohorts are tracking behind where S1 was at the same elapsed time. <strong>The primary explanation is cohort composition:</strong> S1 was 85% established Alpha campus students; S3/S4 are only 43-46% Alpha students, with the majority from partner campuses (TSA, GT, Nova) that enrolled students mid-year at lower readiness levels. The definitive measure is whether each cohort reaches 88%+ after a full year of instruction.';
             trajHTML += '</div>';
             document.getElementById('trajectory-section').innerHTML = trajHTML;
 
@@ -924,7 +933,9 @@
                         explanation += ` Last activity: ${inact.last_xp_date || 'never'}. Inactive for ${inact.days_inactive || '?'} school days.`;
                     } else if (tag === 'Not Spending Enough Time') {
                         const threshold = (s.start_session === 'S1') ? 25 : 12.5;
-                        explanation += ` Averaging ${(xp.avg_xp_per_day_lifetime||0).toFixed(1)} XP/day since enrollment (need ${threshold}+).`;
+                        const actual = (xp.avg_xp_per_day_lifetime||0).toFixed(1);
+                        const pctOfTarget = Math.round(100 * actual / threshold);
+                        explanation += ` Averaging ${actual} XP/day (${pctOfTarget}% of the ${threshold} XP/day target). Partially engaged but below the pace needed for 2 grades/year.`;
                     } else if (tag === 'Stuck in Testing Loop') {
                         const details = (dd.details || []);
                         details.forEach(d => {
