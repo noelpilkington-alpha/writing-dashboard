@@ -350,10 +350,10 @@
             color: '#dc2626',
         },
         'Not Spending Enough Time': {
-            desc: 'Lifetime XP/day is below target (S1: 25 XP/day, S2+: 12.5 XP/day). These students are partially engaged (averaging 50-99% of expected pace) but not consistently hitting the volume needed for 2 grades/year.',
+            desc: 'Lifetime XP/day is below target (S1: 25 XP/day, S2+: 12.5 XP/day). These students are partially engaged but not consistently hitting the volume needed for 2 grades/year.',
             fixable: 'ops',
             fixLabel: 'Requires campus ops intervention',
-            action: 'Campus team to ensure student completes daily Writing practice at expected volume. These students are partially engaged, not absent — they need consistency, not re-engagement.',
+            action: 'Campus team to ensure student completes daily Writing practice at expected volume. These students need more consistency in daily practice.',
             color: '#f97316',
         },
         'Stuck in Testing Loop': {
@@ -492,7 +492,6 @@
                     <div class="hero-number green">${s1Pct}%</div>
                     <div class="hero-label">of full-year students hit the 2-grade target</div>
                     <div class="hero-pct" style="color:#16a34a">${s1AtTarget.length} of ${s1Total} students (S1 cohort)</div>
-                    <div style="font-size:0.75rem;color:#666;margin-top:0.5rem;">S1+S2 combined (5-10 months): ${s12Pct}% (${s12AtTarget.length} of ${s12All.length})</div>
                 </div>
                 <div class="hero-card">
                     <div class="hero-number" style="color:#1a1a2e;">${s1Median}</div>
@@ -515,7 +514,7 @@
                 <div class="bar-segment" style="width:${100*adv0/s1Total}%;background:#ef4444;">${adv0}</div>
             `;
             document.getElementById('bar-legend').innerHTML = `
-                <span>■ 3+ grades (${adv3})</span>
+                <span style="color:#166534">■ 3+ grades (${adv3})</span>
                 <span style="color:#16a34a">■ 2 grades (${adv2})</span>
                 <span style="color:#f59e0b">■ 1 grade (${adv1})</span>
                 <span style="color:#ef4444">■ 0 grades (${adv0})</span>
@@ -545,13 +544,20 @@
                 cohortNow[sn] = {total: cohort.length, atTarget: atT, pct: Math.round(100*atT/cohort.length)};
             });
 
-            let trajHTML = '<table class="summary-table"><thead><tr><th>Cohort</th><th>Started</th><th>Students</th><th>At 2-Grade Target</th><th>Context</th></tr></thead><tbody>';
+            const sessionStarts = {S1:'2025-08-11',S2:'2025-10-20',S3:'2026-01-05',S4:'2026-02-21',S5:'2026-04-27'};
+            const now = new Date();
+            function monthsElapsed(startStr) {
+                const start = new Date(startStr);
+                return Math.round((now - start) / (30.44 * 24 * 60 * 60 * 1000));
+            }
+
+            let trajHTML = '<table class="summary-table"><thead><tr><th>Cohort</th><th>Time in Program</th><th>Students</th><th>At 2-Grade Target</th><th>Context</th></tr></thead><tbody>';
             const totalEnrolled = cohortOrder.reduce((sum, k) => sum + (cohortNow[k]?.total || 0), 0);
-            const cohortContext = {S2:'5 months in program',S3:'4 months in program',S4:'2 months in program',S5:'1 month in program'};
             ['S2','S3','S4','S5'].forEach(sn => {
                 const d = cohortNow[sn];
                 if (!d) return;
-                trajHTML += `<tr><td><strong>${sn}</strong></td><td>${cohortContext[sn]}</td><td>${d.total}</td><td><strong>${d.pct}%</strong> (${d.atTarget})</td><td style="font-size:0.75rem;color:#666;">S1 reached 88% after a full year</td></tr>`;
+                const months = monthsElapsed(sessionStarts[sn]);
+                trajHTML += `<tr><td><strong>${sn}</strong></td><td>${months} months</td><td>${d.total}</td><td><strong>${d.pct}%</strong> (${d.atTarget})</td><td style="font-size:0.75rem;color:#666;">S1 reached 88% after 10 months</td></tr>`;
             });
             trajHTML += '</tbody></table>';
             // Compute partner campus % per cohort
@@ -640,13 +646,13 @@
             document.getElementById('fixable-bar').innerHTML = `
                 <div class="bar-segment" style="width:${100*fixAW/s12Below.length}%;background:#16a34a;">${fixAW}</div>
                 <div class="bar-segment" style="width:${100*fixOps/s12Below.length}%;background:#f59e0b;">${fixOps}</div>
-                <div class="bar-segment" style="width:${100*fixCoach/s12Below.length}%;background:#8b5cf6;">${fixCoach}</div>
+                <div class="bar-segment" style="width:${100*fixCoach/s12Below.length}%;background:#0284c7;">${fixCoach}</div>
                 <div class="bar-segment" style="width:${100*fixNo/s12Below.length}%;background:#dc2626;">${fixNo}</div>
             `;
             document.getElementById('fixable-legend').innerHTML = `
                 <span style="color:#16a34a">■ AlphaWrite can fix (${fixAW})</span>
                 <span style="color:#f59e0b">■ Campus ops intervention (${fixOps})</span>
-                <span style="color:#8b5cf6">■ Academic coaching (${fixCoach})</span>
+                <span style="color:#0284c7">■ Academic coaching (${fixCoach})</span>
                 <span style="color:#dc2626">■ Not fixable by AlphaWrite (${fixNo})</span>
             `;
 
@@ -711,7 +717,7 @@
                 if (cf.includes('capitaliz')) gapCounts.nonFixable['Capitalization'] = (gapCounts.nonFixable['Capitalization']||0)+1;
             });
 
-            let sgHTML = `<p style="font-size:0.85rem;margin-bottom:1.5rem;"><strong>${persistentStudents.length} students</strong> have been in the program 5-10 months but have not reached the 2-grade target despite being active. Their test responses reveal two types of skill gaps:</p>`;
+            let sgHTML = `<p style="font-size:0.85rem;margin-bottom:1.5rem;"><strong>${persistentStudents.length} students</strong> have been in the program 5-10 months and have test data available. Their test responses reveal two types of skill gaps:</p>`;
 
             sgHTML += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem;">';
 
@@ -764,13 +770,10 @@
             sgHTML += '</div></div>';
             document.getElementById('skill-gaps-section').innerHTML = sgHTML;
 
-            // Update key finding with computed numbers
+            // Compute key finding numbers (will be inserted into exec summary later)
             const grammarCount = gapCounts.nonFixable['Grammar mechanics'] || 0;
             const spellingCount = gapCounts.nonFixable['Spelling'] || 0;
             const punctCount = gapCounts.nonFixable['Punctuation'] || 0;
-            const maxGapCount = Math.max(grammarCount, spellingCount, punctCount);
-            const maxGapPct = persistentStudents.length ? Math.round(100 * maxGapCount / persistentStudents.length) : 0;
-            document.getElementById('key-finding-text').innerHTML = `<strong>Key finding:</strong> Of ${persistentStudents.length} below-target students with test data, ${grammarCount} show grammar mechanics errors, ${spellingCount} show spelling errors, and ${punctCount} show punctuation errors that AlphaWrite does not explicitly teach. This represents a curriculum gap requiring intervention outside the product.`;
 
             // Cohort section (all students)
             // cohortOrder already declared above
@@ -1041,7 +1044,7 @@
                     <li><strong>${totalRushing}</strong> students rush tests (need Academics coaching on test-taking strategies)</li>
                     <li><strong>${almostThere}</strong> at 1 grade advanced, close to 2 — prioritize for final push (4 weeks remain)</li>
                 </ul>
-                <p style="font-size:0.8rem;color:#555;margin-top:0.75rem;" id="key-finding-text"><strong>Key finding:</strong> Below-target students show skill gaps on tests that go beyond what AlphaWrite teaches. See Persistent Skill Gaps section for detail.</p>
+                <p style="font-size:0.8rem;color:#555;margin-top:0.75rem;"><strong>Key finding:</strong> Of ${persistentStudents.length} below-target students with test data, ${grammarCount} show grammar mechanics errors, ${spellingCount} show spelling errors, and ${punctCount} show punctuation errors that AlphaWrite does not explicitly teach. This represents a curriculum gap requiring intervention outside the product.</p>
             `;
         });
     </script>
