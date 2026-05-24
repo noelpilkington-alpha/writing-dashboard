@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Writing Progress Report — 2025-2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8f9fa;
+            color: #1a1a2e;
+            line-height: 1.6;
+            padding: 2rem;
+        }
+        .container { max-width: 1100px; margin: 0 auto; }
+        h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.25rem; }
+        .subtitle { color: #666; font-size: 0.9rem; margin-bottom: 2rem; }
+        h2 { font-size: 1.3rem; font-weight: 700; margin: 2rem 0 1rem; color: #1a1a2e; }
+        h3 { font-size: 1rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .hero-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        .hero-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+        .hero-number.green { color: #16a34a; }
+        .hero-number.amber { color: #d97706; }
+        .hero-label { font-size: 0.85rem; color: #666; font-weight: 500; }
+        .hero-pct { font-size: 1.1rem; font-weight: 700; margin-top: 0.25rem; }
+
+        .bar-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+        .stacked-bar {
+            height: 40px;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            margin: 1rem 0;
+        }
+        .bar-segment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+            transition: width 0.5s ease;
+        }
+
+        .reasons-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .reason-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.25rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border-left: 4px solid #e5e7eb;
+        }
+        .reason-card.fixable { border-left-color: #16a34a; }
+        .reason-card.not-fixable { border-left-color: #dc2626; }
+        .reason-card.partial { border-left-color: #d97706; }
+        .reason-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.5rem;
+        }
+        .reason-name { font-weight: 600; font-size: 0.9rem; }
+        .reason-count { font-weight: 700; font-size: 1.1rem; }
+        .reason-pct { font-size: 0.8rem; color: #666; }
+        .reason-desc { font-size: 0.8rem; color: #555; margin-top: 0.5rem; }
+        .fixable-tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+        .fixable-tag.yes { background: #dcfce7; color: #166534; }
+        .fixable-tag.no { background: #fee2e2; color: #991b1b; }
+        .fixable-tag.partial { background: #fef3c7; color: #92400e; }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+        }
+        .summary-table th {
+            text-align: left;
+            padding: 0.6rem 0.75rem;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #666;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .summary-table td {
+            padding: 0.5rem 0.75rem;
+            border-bottom: 1px solid #f1f3f5;
+        }
+        .summary-table tr:hover { background: #f8f9fa; }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-green { background: #dcfce7; color: #166534; }
+        .badge-amber { background: #fef3c7; color: #92400e; }
+        .badge-red { background: #fee2e2; color: #991b1b; }
+
+        .donut-section {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin: 1rem 0;
+        }
+        .donut-container { position: relative; width: 160px; height: 160px; flex-shrink: 0; }
+        .donut-container svg { width: 100%; height: 100%; }
+        .donut-center {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .donut-center .pct { font-size: 1.8rem; font-weight: 800; }
+        .donut-center .label { font-size: 0.7rem; color: #666; }
+        .legend { font-size: 0.85rem; }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .legend-dot {
+            width: 12px; height: 12px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+        }
+
+        .campus-bars { margin-top: 1rem; }
+        .campus-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+        }
+        .campus-name { width: 180px; flex-shrink: 0; font-weight: 500; }
+        .campus-bar-bg {
+            flex: 1;
+            height: 20px;
+            background: #fee2e2;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .campus-bar-fill {
+            height: 100%;
+            background: #16a34a;
+            border-radius: 4px 0 0 4px;
+            transition: width 0.5s ease;
+        }
+        .campus-pct { width: 50px; text-align: right; font-weight: 600; font-size: 0.8rem; }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0 1rem;
+            font-size: 0.75rem;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AlphaWrite Progress Report</h1>
+        <p class="subtitle">2025–2026 School Year — <span id="generated-date"></span></p>
+
+        <nav style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem;font-size:0.75rem;">
+            <a href="#" onclick="event.preventDefault();document.querySelector('.section-card').scrollIntoView({behavior:'smooth'})" style="padding:4px 10px;background:#e5e7eb;border-radius:4px;color:#333;text-decoration:none;">S1 Results</a>
+            <a href="#" onclick="event.preventDefault();document.querySelector('#trajectory-section').scrollIntoView({behavior:'smooth'})" style="padding:4px 10px;background:#e5e7eb;border-radius:4px;color:#333;text-decoration:none;">Cohort Tracking</a>
+            <a href="#" onclick="event.preventDefault();document.querySelector('#donut-container').scrollIntoView({behavior:'smooth'})" style="padding:4px 10px;background:#e5e7eb;border-radius:4px;color:#333;text-decoration:none;">Why Not?</a>
+            <a href="#" onclick="event.preventDefault();document.querySelector('#fixable-bar').scrollIntoView({behavior:'smooth'})" style="padding:4px 10px;background:#e5e7eb;border-radius:4px;color:#333;text-decoration:none;">Fixability</a>
+            <a href="#" onclick="event.preventDefault();document.querySelector('#skill-gaps-section').scrollIntoView({behavior:'smooth'})" style="padding:4px 10px;background:#e5e7eb;border-radius:4px;color:#333;text-decoration:none;">Skill Gaps</a>
+            <a href="#" onclick="event.preventDefault();document.querySelector('#student-table').scrollIntoView({behavior:'smooth'})" style="padding:4px 10px;background:#e5e7eb;border-radius:4px;color:#333;text-decoration:none;">Student List</a>
+        </nav>
+
+        <!-- Section 1: Full-Year Cohort Result -->
+        <div class="section-card" style="border-left:4px solid #16a34a;">
+            <h3 style="margin-top:0;">Full-Year Students (Session 1 Cohort)</h3>
+            <p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">158 students who started in August 2025 and have had the full school year.</p>
+            <div class="hero-grid" id="hero-grid"></div>
+            <div class="bar-container" style="box-shadow:none;padding:1rem 0;margin-bottom:0;">
+                <div class="stacked-bar" id="progress-bar"></div>
+                <div id="bar-legend" style="display:flex;gap:1.5rem;font-size:0.8rem;color:#666;"></div>
+            </div>
+        </div>
+
+        <!-- Success highlights -->
+        <div class="section-card" style="margin-top:1rem;">
+            <h3 style="margin-top:0;cursor:pointer;" onclick="var d=document.getElementById('success-list');d.style.display=d.style.display==='none'?'block':'none';">Top Performers (click to expand)</h3>
+            <div id="success-list" style="display:none;"></div>
+        </div>
+
+        <!-- Executive Action Summary -->
+        <div class="section-card" style="border-left:4px solid #3b82f6;margin-top:1.5rem;" id="exec-summary">
+            <h3 style="margin-top:0;color:#1d4ed8;">Action Summary</h3>
+            <div id="exec-summary-content"></div>
+        </div>
+
+        <!-- Section 2: Are newer cohorts on trajectory? -->
+        <h2>Are Newer Cohorts on Track?</h2>
+        <div class="section-card">
+            <p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">Comparing each cohort to where S1 was at the same elapsed time. If newer cohorts match S1's pace, they will reach similar outcomes.</p>
+            <div id="trajectory-section"></div>
+        </div>
+
+        <!-- Section 3: Why not (for students with enough time) -->
+        <h2>Students Who Had Time But Did Not Reach 2 Grades</h2>
+        <div class="section-card">
+            <p style="font-size:0.8rem;color:#666;margin-bottom:0.75rem;">Focused on S1/S2 students (224 total, had 5-10 months) who did not reach the target. Newer cohorts are excluded since they have not had enough time.</p>
+            <div style="padding:0.75rem;background:#eff6ff;border-radius:6px;border-left:3px solid #3b82f6;margin-bottom:1rem;font-size:0.85rem;">
+                <strong>Two layers of analysis:</strong><br>
+                <strong>1. Skill gaps (universal):</strong> All 53 below-target students show specific skill deficiencies on standardized tests. These are detailed in the <em>Persistent Skill Gaps</em> section below.<br>
+                <strong>2. Barriers to progress (shown in chart):</strong> Beyond skill gaps, each student has a <strong>primary operational barrier</strong> — the thing preventing them from building skills through practice. The chart below classifies each student by their primary barrier.
+            </div>
+            <div class="donut-section">
+                <div class="donut-container" id="donut-container"></div>
+                <div class="legend" id="donut-legend"></div>
+            </div>
+        </div>
+
+        <div class="reasons-grid" id="reasons-grid"></div>
+
+        <!-- Section 4: Fixability -->
+        <h2>Can AlphaWrite Fix It?</h2>
+        <div class="section-card">
+            <div class="stacked-bar" id="fixable-bar"></div>
+            <div id="fixable-legend" style="display:flex;gap:1.5rem;font-size:0.8rem;color:#666;margin-top:0.5rem;"></div>
+            <table class="summary-table" style="margin-top:1.5rem;">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Students</th>
+                        <th>AlphaWrite Can Fix?</th>
+                        <th>What's Needed</th>
+                    </tr>
+                </thead>
+                <tbody id="fixable-table-body"></tbody>
+            </table>
+        </div>
+
+        <!-- Section 5: Skill Gaps Drill-Down -->
+        <h2>Persistent Skill Gaps: Detail</h2>
+        <div class="section-card">
+            <p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">Analysis of <strong>standardized test responses</strong> for students who have been in the program long enough (S1/S2) but are not reaching the 2-grade target. Shows what these students cannot do when writing without AlphaWrite scaffolding, and distinguishes between gaps that AlphaWrite instruction addresses and gaps that require additional intervention.</p>
+            <div id="skill-gaps-section"></div>
+        </div>
+
+        <!-- Section 6: All Cohorts Overview -->
+        <h2>All Cohorts Overview</h2>
+        <div class="section-card">
+            <div id="cohort-section"></div>
+        </div>
+
+        <!-- Section 7: Campus -->
+        <h2>Progress by Campus</h2>
+        <div class="section-card">
+            <div class="campus-bars" id="campus-bars"></div>
+        </div>
+
+        <!-- Section 8: Student List -->
+        <h2 id="student-list-heading">Student List: Below Target (S1/S2 Cohort)</h2>
+        <div class="section-card" style="overflow-x:auto;">
+            <p style="font-size:0.8rem;color:#666;margin-bottom:1rem;">Click any student row to expand their full diagnosis including test skill gaps, AlphaWrite vs test context analysis, and recommended focus areas.</p>
+            <div style="margin-bottom:1rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap;">
+                <input type="text" id="student-search" placeholder="Search by name..." style="padding:0.4rem 0.8rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;width:180px;">
+                <select id="reason-filter" style="padding:0.4rem 0.8rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;">
+                    <option value="all">All Reasons</option>
+                </select>
+                <select id="campus-filter" style="padding:0.4rem 0.8rem;border:1px solid #e5e7eb;border-radius:6px;font-size:0.85rem;">
+                    <option value="all">All Campuses</option>
+                </select>
+            </div>
+            <table class="summary-table" id="student-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Campus</th>
+                        <th>Age Grade</th>
+                        <th>Started At</th>
+                        <th>Mastered To</th>
+                        <th>Grades +</th>
+                        <th>Barriers</th>
+                    </tr>
+                </thead>
+                <tbody id="student-table-body"></tbody>
+            </table>
+        </div>
+
+        <footer>
+            Generated from AlphaWrite dashboard data. Updates daily.
+        </footer>
+    </div>
+
+    <script>
+    const REASON_META = {
+        'Chronically Inactive': {
+            desc: 'No writing activity for 14+ school days since their last active date.',
+            fixable: 'no',
+            fixLabel: 'Not fixable by AlphaWrite',
+            action: 'Engagement/ops intervention needed. AlphaWrite cannot teach students who are not logging in.',
+            color: '#dc2626',
+        },
+        'Not Spending Enough Time': {
+            desc: 'Lifetime XP/day is below target (S1: 25 XP/day, S2+: 12.5 XP/day). These students are partially engaged (averaging 50-99% of expected pace) but not consistently hitting the volume needed for 2 grades/year.',
+            fixable: 'ops',
+            fixLabel: 'Requires campus ops intervention',
+            action: 'Campus team to ensure student completes daily Writing practice at expected volume. These students are partially engaged, not absent — they need consistency, not re-engagement.',
+            color: '#f97316',
+        },
+        'Stuck in Testing Loop': {
+            desc: '3+ failed end-of-course tests at the same grade level.',
+            fixable: 'yes',
+            fixLabel: 'Yes — targeted remediation',
+            action: 'Deep Dive analysis identifies skill gaps; assign targeted KG activities before retesting.',
+            color: '#8b5cf6',
+        },
+        'Insufficient Time in Program': {
+            desc: 'S4/S5 student who has not had enough calendar time to reach 2 grades.',
+            fixable: 'yes',
+            fixLabel: 'Yes — on pace',
+            action: 'Needs more calendar time in the program.',
+            color: '#06b6d4',
+        },
+        'Age Grade Below G3': {
+            desc: 'Student is in Grade 2 or below. AlphaWrite is designed for Grade 3+. Struggles likely due to insufficient typing/transcription skills for their age.',
+            fixable: 'no',
+            fixLabel: 'Not addressable by AlphaWrite',
+            action: 'Student needs foundational typing and reading skills before AlphaWrite instruction is effective. Age-appropriate intervention needed.',
+            color: '#7c3aed',
+        },
+        'Progressing (no specific barrier identified)': {
+            desc: 'Active, practicing at adequate volume, no testing loop or rushing issue. May simply need more time.',
+            fixable: 'yes',
+            fixLabel: 'Yes — continue current path',
+            action: 'Continue AlphaWrite instruction. Student is progressing but has not yet reached the 2-grade threshold.',
+            color: '#6b7280',
+        },
+        'Rushes Tests': {
+            desc: '2+ tests taken too quickly (below time threshold for grade level). Rushing leads to avoidable failures.',
+            fixable: 'coaching',
+            fixLabel: 'Requires academic coaching',
+            action: 'Academics team to coach student on test-taking strategies and pacing.',
+            color: '#f43f5e',
+        },
+        'On Track (may reach 2)': {
+            desc: 'Already mastered 1 grade and progressing — may still hit 2 by year end.',
+            fixable: 'yes',
+            fixLabel: 'Yes — on pace',
+            action: 'Continue current trajectory. 4 weeks remain in the school year.',
+            color: '#22c55e',
+        },
+    };
+
+    function tagStudent(s) {
+        const tags = [];
+        const insights = s.insights || [];
+        const insightTypes = new Set(insights.map(i => i.type));
+        const inactivity = s.inactivity || {};
+        const dd = s.deep_dive || {};
+        const xp = s.xp || {};
+        const startSession = s.start_session || '';
+        const daysInactive = inactivity.days_inactive || 0;
+        const neverStarted = inactivity.never_active_this_session || false;
+
+        // Chronic inactivity
+        if (neverStarted || daysInactive >= 14) {
+            tags.push('Chronically Inactive');
+        }
+
+        // Time in program (for S4/S5 students)
+        if (startSession === 'S4' || startSession === 'S5') {
+            tags.push('Insufficient Time in Program');
+        }
+
+        // Not spending enough time
+        const avgXpDay = xp.avg_xp_per_day_lifetime;
+        const xpThreshold = (startSession === 'S1') ? 25 : 12.5;
+        if (avgXpDay !== undefined && avgXpDay < xpThreshold && !(neverStarted || daysInactive >= 14)) {
+            tags.push('Not Spending Enough Time');
+        }
+
+        // Testing loop
+        if (dd.needed) {
+            tags.push('Stuck in Testing Loop');
+        }
+
+        // Rushing tests
+        const rushing = s.rushing || {};
+        if (rushing.is_rusher) {
+            tags.push('Rushes Tests');
+        }
+
+        // Age grade below G3
+        if (typeof s.age_grade === 'number' && s.age_grade < 3) {
+            tags.push('Age Grade Below G3');
+        }
+
+        if (tags.length === 0) {
+            if (s.grades_advanced === 1) tags.push('On Track (may reach 2)');
+            else tags.push('Progressing (no specific barrier identified)');
+        }
+
+        return tags;
+    }
+
+    // Primary reason: mutually exclusive for donut chart (first actionable tag)
+    function classifyStudent(s) {
+        const tags = tagStudent(s);
+        return tags[0];
+    }
+
+    Promise.all([
+        fetch('data.json').then(r => r.json()),
+        fetch('student_min_per_day.json').then(r => r.ok ? r.json() : {}).catch(() => ({}))
+    ])
+        .then(([data, minsBySid]) => {
+            const students = data.students || [];
+            // Attach mins_per_day from sidecar
+            students.forEach(s => { s.mins_per_day = minsBySid[s.id]; });
+            const total = students.length;
+
+            document.getElementById('generated-date').textContent = data.generated_at ? data.generated_at.split('T')[0] : '';
+
+            // S1 cohort focus
+            const s1 = students.filter(s => s.start_session === 'S1');
+            const s1Total = s1.length;
+            const s1AtTarget = s1.filter(s => (s.grades_advanced || 0) >= 2);
+            const s1Below = s1.filter(s => (s.grades_advanced || 0) < 2);
+            const s1Pct = Math.round(100 * s1AtTarget.length / s1Total);
+
+            // Hero cards (S1 focused) with median
+            const s1Adv = s1.map(s => s.grades_advanced || 0).sort((a,b) => a-b);
+            const s1Median = s1Adv[Math.floor(s1Adv.length/2)];
+            const s1Mean = (s1Adv.reduce((a,b)=>a+b,0) / s1Adv.length).toFixed(1);
+
+            // S1+S2 combined for context
+            const s12All = students.filter(s => s.start_session === 'S1' || s.start_session === 'S2');
+            const s12AtTarget = s12All.filter(s => (s.grades_advanced||0) >= 2);
+            const s12Pct = Math.round(100 * s12AtTarget.length / s12All.length);
+
+            document.getElementById('hero-grid').innerHTML = `
+                <div class="hero-card">
+                    <div class="hero-number green">${s1Pct}%</div>
+                    <div class="hero-label">of full-year students hit the 2-grade target</div>
+                    <div class="hero-pct" style="color:#16a34a">${s1AtTarget.length} of ${s1Total} students (S1 cohort)</div>
+                    <div style="font-size:0.75rem;color:#666;margin-top:0.5rem;">S1+S2 combined (5-10 months): ${s12Pct}% (${s12AtTarget.length} of ${s12All.length})</div>
+                </div>
+                <div class="hero-card">
+                    <div class="hero-number" style="color:#1a1a2e;">${s1Median}</div>
+                    <div class="hero-label">median grades advanced (S1 cohort)</div>
+                    <div class="hero-pct" style="color:#666;">Mean: ${s1Mean} | Target: 2 grades/year</div>
+                </div>
+            `;
+
+            // Stacked progress bar (S1 only)
+            const adv3 = s1.filter(s => (s.grades_advanced||0) >= 3).length;
+            const adv2 = s1AtTarget.length - adv3;
+            const adv1 = s1.filter(s => (s.grades_advanced||0) === 1).length;
+            const adv0 = s1.filter(s => (s.grades_advanced||0) === 0).length;
+
+            const bar = document.getElementById('progress-bar');
+            bar.innerHTML = `
+                <div class="bar-segment" style="width:${100*adv3/s1Total}%;background:#166534;">${adv3}</div>
+                <div class="bar-segment" style="width:${100*adv2/s1Total}%;background:#16a34a;">${adv2}</div>
+                <div class="bar-segment" style="width:${100*adv1/s1Total}%;background:#f59e0b;">${adv1}</div>
+                <div class="bar-segment" style="width:${100*adv0/s1Total}%;background:#ef4444;">${adv0}</div>
+            `;
+            document.getElementById('bar-legend').innerHTML = `
+                <span>■ 3+ grades (${adv3})</span>
+                <span style="color:#16a34a">■ 2 grades (${adv2})</span>
+                <span style="color:#f59e0b">■ 1 grade (${adv1})</span>
+                <span style="color:#ef4444">■ 0 grades (${adv0})</span>
+            `;
+
+            // Success list - top performers
+            const topPerformers = s1.filter(s => (s.grades_advanced||0) >= 5)
+                .sort((a,b) => (b.grades_advanced||0) - (a.grades_advanced||0));
+            let successHTML = `<p style="font-size:0.8rem;color:#666;margin-bottom:0.5rem;">${s1AtTarget.length} students hit the 2-grade target. ${topPerformers.length} advanced 5+ grades:</p>`;
+            successHTML += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.25rem;font-size:0.8rem;">';
+            topPerformers.slice(0, 30).forEach(s => {
+                successHTML += `<div>${s.name} <span style="color:#16a34a;font-weight:600;">(+${s.grades_advanced})</span></div>`;
+            });
+            if (topPerformers.length > 30) successHTML += `<div style="color:#999;">...and ${topPerformers.length - 30} more</div>`;
+            successHTML += '</div>';
+            document.getElementById('success-list').innerHTML = successHTML;
+
+            // Trajectory comparison: where was S1 at the same elapsed time?
+            // Cohort tracking
+
+            const cohortOrder = ['S1','S2','S3','S4','S5'];
+            const cohortNow = {};
+            cohortOrder.forEach(sn => {
+                const cohort = students.filter(s => s.start_session === sn);
+                if (!cohort.length) return;
+                const atT = cohort.filter(s => (s.grades_advanced||0) >= 2).length;
+                cohortNow[sn] = {total: cohort.length, atTarget: atT, pct: Math.round(100*atT/cohort.length)};
+            });
+
+            let trajHTML = '<table class="summary-table"><thead><tr><th>Cohort</th><th>Started</th><th>Students</th><th>At 2-Grade Target</th><th>Context</th></tr></thead><tbody>';
+            const totalEnrolled = cohortOrder.reduce((sum, k) => sum + (cohortNow[k]?.total || 0), 0);
+            const cohortContext = {S2:'5 months in program',S3:'4 months in program',S4:'2 months in program',S5:'1 month in program'};
+            ['S2','S3','S4','S5'].forEach(sn => {
+                const d = cohortNow[sn];
+                if (!d) return;
+                trajHTML += `<tr><td><strong>${sn}</strong></td><td>${cohortContext[sn]}</td><td>${d.total}</td><td><strong>${d.pct}%</strong> (${d.atTarget})</td><td style="font-size:0.75rem;color:#666;">S1 reached 88% after a full year</td></tr>`;
+            });
+            trajHTML += '</tbody></table>';
+            // Compute partner campus % per cohort
+            const alphaCampuses = new Set(['Alpha School Austin','Alpha School Miami','Alpha School San Francisco','Alpha School Scottsdale','Alpha School Santa Barbara','Alpha School Fort Worth','Alpha School Brownsville','Alpha School Lake Forest','Alpha School Palm Beach','Alpha Anywhere Center','Alpha High School']);
+            const cohortComposition = {};
+            ['S1','S2','S3','S4','S5'].forEach(sn => {
+                const cohort = students.filter(s => s.start_session === sn);
+                const alphaCount = cohort.filter(s => alphaCampuses.has(s.campus||'')).length;
+                cohortComposition[sn] = {alpha: Math.round(100*alphaCount/cohort.length), partner: Math.round(100*(cohort.length-alphaCount)/cohort.length)};
+            });
+
+            trajHTML += '<div style="margin-top:1rem;padding:0.75rem;background:#eff6ff;border-radius:6px;font-size:0.8rem;border-left:3px solid #3b82f6;">';
+            trajHTML += '<strong>Bottom line:</strong> Newer cohorts are tracking behind where S1 was at the same elapsed time. <strong>The primary explanation is cohort composition:</strong> S1 was 85% established Alpha campus students; S3/S4 are only 43-46% Alpha students, with the majority from partner campuses (TSA, GT, Nova) that enrolled students mid-year at lower readiness levels. The definitive measure is whether each cohort reaches 88%+ after a full year of instruction.';
+            trajHTML += '</div>';
+            document.getElementById('trajectory-section').innerHTML = trajHTML;
+
+            // Focus "Why Not" on S1/S2 students only (those with enough time)
+            const s12 = students.filter(s => s.start_session === 'S1' || s.start_session === 'S2');
+            const s12Below = s12.filter(s => (s.grades_advanced || 0) < 2);
+
+            // Multi-tag classification for all below-target students
+            const allBelow = students.filter(s => (s.grades_advanced || 0) < 2);
+            allBelow.forEach(s => {
+                s._tags = tagStudent(s);
+                s._reason = s._tags[0];
+            });
+
+            // Count PRIMARY reasons for S1/S2 below-target (mutually exclusive — one per student)
+            const primaryCounts = {};
+            s12Below.forEach(s => {
+                s._tags = tagStudent(s);
+                s._reason = s._tags[0];
+                primaryCounts[s._reason] = (primaryCounts[s._reason] || 0) + 1;
+            });
+
+            // Donut chart (uses primary reason — mutually exclusive, adds to 100%)
+            const sortedReasons = Object.entries(primaryCounts).sort((a,b) => b[1]-a[1]);
+            const donutContainer = document.getElementById('donut-container');
+            const donutLegend = document.getElementById('donut-legend');
+            const radius = 60, cx = 80, cy = 80;
+            const circumference = 2 * Math.PI * radius;
+            let offset = 0;
+            let svgPaths = '';
+            let legendHTML = '';
+
+            sortedReasons.forEach(([reason, count]) => {
+                const pct = count / s12Below.length;
+                const dash = pct * circumference;
+                const color = REASON_META[reason]?.color || '#999';
+                svgPaths += `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${color}" stroke-width="24" stroke-dasharray="${dash} ${circumference - dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})"/>`;
+                offset += dash;
+                legendHTML += `<div class="legend-item"><div class="legend-dot" style="background:${color}"></div><span><strong>${count}</strong> ${reason}</span></div>`;
+            });
+
+            donutContainer.innerHTML = `<svg viewBox="0 0 160 160">${svgPaths}</svg><div class="donut-center"><div class="pct">${s12Below.length}</div><div class="label">below target</div></div>`;
+            donutLegend.innerHTML = legendHTML + '<div style="margin-top:0.75rem;font-size:0.7rem;color:#888;font-style:italic;">Each student has one primary barrier (shown here). Many also have secondary issues (e.g., rushing tests) visible in the student detail below.</div>';
+
+            // Reason cards
+            const reasonsGrid = document.getElementById('reasons-grid');
+            reasonsGrid.innerHTML = sortedReasons.map(([reason, count]) => {
+                const meta = REASON_META[reason] || {};
+                const fixClass = meta.fixable === 'yes' ? 'fixable' : meta.fixable === 'no' ? 'not-fixable' : 'partial';
+                const tagClass = meta.fixable === 'yes' ? 'yes' : meta.fixable === 'no' ? 'no' : 'partial';
+                return `
+                    <div class="reason-card ${fixClass}">
+                        <div class="reason-header">
+                            <span class="reason-name">${reason}</span>
+                            <span class="reason-count">${count}</span>
+                        </div>
+                        <div class="reason-pct">${Math.round(100*count/s12Below.length)}% of below-target students</div>
+                        <div class="reason-desc">${meta.desc || ''}</div>
+                        <div class="fixable-tag ${tagClass}">${meta.fixLabel || ''}</div>
+                    </div>
+                `;
+            }).join('');
+
+            // Fixable bar (4 buckets: AlphaWrite, campus ops, academic coaching, not fixable)
+            let fixAW = 0, fixOps = 0, fixCoach = 0, fixNo = 0;
+            s12Below.forEach(s => {
+                const meta = REASON_META[s._reason] || {};
+                if (meta.fixable === 'yes') fixAW++;
+                else if (meta.fixable === 'ops') fixOps++;
+                else if (meta.fixable === 'coaching') fixCoach++;
+                else fixNo++;
+            });
+            document.getElementById('fixable-bar').innerHTML = `
+                <div class="bar-segment" style="width:${100*fixAW/s12Below.length}%;background:#16a34a;">${fixAW}</div>
+                <div class="bar-segment" style="width:${100*fixOps/s12Below.length}%;background:#f59e0b;">${fixOps}</div>
+                <div class="bar-segment" style="width:${100*fixCoach/s12Below.length}%;background:#8b5cf6;">${fixCoach}</div>
+                <div class="bar-segment" style="width:${100*fixNo/s12Below.length}%;background:#dc2626;">${fixNo}</div>
+            `;
+            document.getElementById('fixable-legend').innerHTML = `
+                <span style="color:#16a34a">■ AlphaWrite can fix (${fixAW})</span>
+                <span style="color:#f59e0b">■ Campus ops intervention (${fixOps})</span>
+                <span style="color:#8b5cf6">■ Academic coaching (${fixCoach})</span>
+                <span style="color:#dc2626">■ Not fixable by AlphaWrite (${fixNo})</span>
+            `;
+
+            // Fixable table
+            document.getElementById('fixable-table-body').innerHTML = sortedReasons.map(([reason, count]) => {
+                const meta = REASON_META[reason] || {};
+                const fixLabels = {yes: 'AlphaWrite', ops: 'Campus Ops', coaching: 'Academic Coaching', no: 'Not Fixable'};
+                const fixColors = {yes: 'badge-green', ops: 'badge-amber', coaching: 'badge-amber', no: 'badge-red'};
+                const badgeClass = fixColors[meta.fixable] || 'badge-amber';
+                const badgeLabel = fixLabels[meta.fixable] || meta.fixable;
+                return `<tr>
+                    <td>${reason}</td>
+                    <td><strong>${count}</strong> (${Math.round(100*count/s12Below.length)}%)</td>
+                    <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
+                    <td>${meta.action || ''}</td>
+                </tr>`;
+            }).join('');
+
+            // Skill Gaps drill-down for Persistent Skill Gaps students
+            const skillCategories = {
+                'Sentence Construction': ['kernel expansion','combine sentences','write sentence from prompt','fragment or sentence','sentence type','change sentence','appositives','conjunctions','subordinating','write sentence about picture','unscramble sentences'],
+                'Paragraph Organization': ['identify topic sentence','make topic sentences','turn paragraph into spo','eliminate irrelevant sentences','sequence details'],
+                'Paragraph Development': ['write paragraph','elaborate paragraph','freeform paragraph','write cs from details','write ts from details','topic brainstorm','use three strategies','writing spos'],
+                'Transitions & Structure': ['transition words','finishing transition'],
+            };
+            function categorizeSkill(name) {
+                const n = name.toLowerCase();
+                for (const [cat, kws] of Object.entries(skillCategories)) {
+                    if (kws.some(kw => n.includes(kw))) return cat;
+                }
+                return 'Other';
+            }
+            const persistentStudents = s12Below.filter(s => s.skill_gap_analysis && s.skill_gap_analysis.test_skill_gaps);
+            const skillCounts = {};
+            const studentSkillDetails = [];
+            persistentStudents.forEach(s => {
+                const low = (s.accuracy || {}).activities_below_threshold || [];
+                const cats = {};
+                low.forEach(a => {
+                    const cat = categorizeSkill(a.name || '');
+                    cats[cat] = (cats[cat] || 0) + 1;
+                    skillCounts[cat] = (skillCounts[cat] || 0) + 1;
+                });
+                const primary = Object.entries(cats).sort((a,b) => b[1]-a[1])[0];
+                studentSkillDetails.push({name: s.name, campus: s.campus, hmg: s.hmg, adv: s.grades_advanced, primary: primary ? primary[0] : 'Unknown', activities: low});
+            });
+
+            // Count specific gap types from v2 analysis
+            const gapCounts = {fixable: {}, nonFixable: {}};
+            persistentStudents.forEach(s => {
+                const a = s.skill_gap_analysis || {};
+                const cf = (a.can_alphawrite_fix || '').toLowerCase();
+                if (cf.includes('sentence') && cf.includes('construct')) gapCounts.fixable['Sentence construction'] = (gapCounts.fixable['Sentence construction']||0)+1;
+                if (cf.includes('paragraph') && (cf.includes('organ') || cf.includes('develop'))) gapCounts.fixable['Paragraph development'] = (gapCounts.fixable['Paragraph development']||0)+1;
+                if (cf.includes('appositive')) gapCounts.fixable['Appositives'] = (gapCounts.fixable['Appositives']||0)+1;
+                if (cf.includes('topic sentence')) gapCounts.fixable['Topic sentences'] = (gapCounts.fixable['Topic sentences']||0)+1;
+                if (cf.includes('elaborat')) gapCounts.fixable['Elaboration'] = (gapCounts.fixable['Elaboration']||0)+1;
+                if (cf.includes('spelling')) gapCounts.nonFixable['Spelling'] = (gapCounts.nonFixable['Spelling']||0)+1;
+                if (cf.includes('punctuation')) gapCounts.nonFixable['Punctuation'] = (gapCounts.nonFixable['Punctuation']||0)+1;
+                if (cf.includes('comma splice') || cf.includes('run-on')) gapCounts.nonFixable['Comma splices / run-ons'] = (gapCounts.nonFixable['Comma splices / run-ons']||0)+1;
+                if (cf.includes('grammar')) gapCounts.nonFixable['Grammar mechanics'] = (gapCounts.nonFixable['Grammar mechanics']||0)+1;
+                if (cf.includes('capitaliz')) gapCounts.nonFixable['Capitalization'] = (gapCounts.nonFixable['Capitalization']||0)+1;
+            });
+
+            let sgHTML = `<p style="font-size:0.85rem;margin-bottom:1.5rem;"><strong>${persistentStudents.length} students</strong> have been in the program 5-10 months but have not reached the 2-grade target despite being active. Their test responses reveal two types of skill gaps:</p>`;
+
+            sgHTML += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem;">';
+
+            // Left: What AlphaWrite teaches and these students still struggle with
+            sgHTML += '<div style="background:white;border:1px solid #dcfce7;border-radius:10px;padding:1.25rem;">';
+            sgHTML += '<h4 style="color:#166534;margin-bottom:0.5rem;font-size:0.9rem;">Skills AlphaWrite Teaches</h4>';
+            sgHTML += '<p style="font-size:0.75rem;color:#555;margin-bottom:0.75rem;">These are writing skills directly practiced in AlphaWrite lessons. Students are struggling despite having access to instruction. This may indicate they need more repetition, a different entry point, or prerequisite skills.</p>';
+            Object.entries(gapCounts.fixable).sort((a,b)=>b[1]-a[1]).forEach(([gap,count]) => {
+                const barW = Math.round(100*count/persistentStudents.length * 0.8);
+                sgHTML += `<div style="margin-bottom:0.5rem;"><div style="font-size:0.8rem;margin-bottom:2px;"><strong>${count}</strong> of ${persistentStudents.length} students — ${gap}</div><div style="height:6px;background:#f1f3f5;border-radius:3px;"><div style="height:100%;width:${barW}%;background:#16a34a;border-radius:3px;"></div></div></div>`;
+            });
+            sgHTML += '</div>';
+
+            // Right: What goes beyond AlphaWrite's scope
+            sgHTML += '<div style="background:white;border:1px solid #fee2e2;border-radius:10px;padding:1.25rem;">';
+            sgHTML += '<h4 style="color:#991b1b;margin-bottom:0.5rem;font-size:0.9rem;">Gaps Beyond AlphaWrite Scope</h4>';
+            sgHTML += '<p style="font-size:0.75rem;color:#555;margin-bottom:0.75rem;">AlphaWrite teaches grammar implicitly through sentence-level skills (e.g., question grammar, appositives). However, these students show <strong>persistent errors in mechanics</strong> that go beyond what implicit instruction resolves. They likely need explicit, isolated instruction in these areas or focused proofreading practice.</p>';
+            Object.entries(gapCounts.nonFixable).sort((a,b)=>b[1]-a[1]).forEach(([gap,count]) => {
+                const barW = Math.round(100*count/persistentStudents.length * 0.8);
+                sgHTML += `<div style="margin-bottom:0.5rem;"><div style="font-size:0.8rem;margin-bottom:2px;"><strong>${count}</strong> of ${persistentStudents.length} students — ${gap}</div><div style="height:6px;background:#f1f3f5;border-radius:3px;"><div style="height:100%;width:${barW}%;background:#dc2626;border-radius:3px;"></div></div></div>`;
+            });
+            sgHTML += '</div></div>';
+
+            // Additional context note
+            sgHTML += '<div style="background:#eff6ff;border-radius:8px;padding:1rem;margin-bottom:1.5rem;font-size:0.8rem;border-left:3px solid #3b82f6;">';
+            sgHTML += '<strong>Note on AlphaWrite vs Test context:</strong> In AlphaWrite, students choose their own topics with scaffolding and AI feedback after each response. In tests, they write about assigned content without scaffolding. Some students perform adequately in AlphaWrite but cannot transfer skills to the test environment. This signals a need for explicit proofreading instruction and practice writing on assigned topics without support.';
+            sgHTML += '</div>';
+
+            sgHTML += `<h3 style="cursor:pointer;" onclick="var d=document.getElementById('per-student-analysis');d.style.display=d.style.display==='none'?'block':'none';">Per-Student Test Analysis (${persistentStudents.length} students) <span style="font-size:0.75rem;color:#999;">click to expand</span></h3><p style="font-size:0.75rem;color:#666;margin-bottom:0.75rem;">Individual diagnoses based on actual test responses with specific skill gaps, AlphaWrite vs test context analysis, and recommended focus areas.</p><div id="per-student-analysis" style="display:none;">`;
+            sgHTML += '<div style="border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">';
+            persistentStudents.sort((a,b) => a.name.localeCompare(b.name)).forEach((s, idx) => {
+                const analysis = s.skill_gap_analysis || {};
+                const gapsFull = (analysis.test_skill_gaps || 'Pending').replace(/\n/g, '<br>');
+                const gapsPreview = (analysis.test_skill_gaps || 'Pending').split('\n')[0].substring(0, 100);
+                const detailId = 'sg-detail-' + idx;
+                const bgColor = idx % 2 === 0 ? '#fff' : '#fafafa';
+                sgHTML += `<div style="border-bottom:1px solid #e5e7eb;background:${bgColor};">`;
+                sgHTML += `<div style="padding:0.6rem 1rem;cursor:pointer;display:flex;align-items:center;gap:1rem;" onclick="var d=document.getElementById('${detailId}');d.style.display=d.style.display==='none'?'block':'none';">`;
+                sgHTML += `<div style="min-width:140px;"><strong style="font-size:0.85rem;">${s.name}</strong><br><span style="font-size:0.7rem;color:#666;">Age G${s.age_grade||'?'} | Mastered G${s.hmg||'?'}</span></div>`;
+                sgHTML += `<div style="flex:1;font-size:0.78rem;color:#444;">${gapsPreview}${gapsPreview.length >= 100 ? '...' : ''}</div>`;
+                sgHTML += '<div style="color:#999;font-size:0.7rem;">expand</div>';
+                sgHTML += '</div>';
+                sgHTML += `<div id="${detailId}" style="display:none;padding:1rem 1rem 1rem 1.5rem;background:#f8f9fa;border-top:1px solid #e5e7eb;font-size:0.8rem;line-height:1.7;">`;
+                sgHTML += '<div style="margin-bottom:0.75rem;padding:0.6rem;background:white;border-radius:6px;border-left:3px solid #1d4ed8;"><strong style="color:#1d4ed8;">Test Skill Gaps:</strong><br>' + gapsFull + '</div>';
+                if (analysis.alphawrite_vs_test) sgHTML += '<div style="margin-bottom:0.75rem;padding:0.6rem;background:white;border-radius:6px;border-left:3px solid #06b6d4;"><strong style="color:#06b6d4;">AlphaWrite vs Test:</strong> ' + analysis.alphawrite_vs_test + '</div>';
+                if (analysis.can_alphawrite_fix) sgHTML += '<div style="margin-bottom:0.75rem;padding:0.6rem;background:white;border-radius:6px;border-left:3px solid #16a34a;"><strong style="color:#16a34a;">Can AlphaWrite Fix:</strong><br>' + analysis.can_alphawrite_fix.replace(/\n/g, '<br>') + '</div>';
+                if (analysis.recommended_focus) sgHTML += '<div style="padding:0.6rem;background:white;border-radius:6px;border-left:3px solid #8b5cf6;"><strong style="color:#8b5cf6;">Recommended Focus:</strong><br>' + analysis.recommended_focus.replace(/\n/g, '<br>') + '</div>';
+                sgHTML += '</div></div>';
+            });
+            sgHTML += '</div></div>';
+            document.getElementById('skill-gaps-section').innerHTML = sgHTML;
+
+            // Update key finding with computed numbers
+            const grammarCount = gapCounts.nonFixable['Grammar mechanics'] || 0;
+            const spellingCount = gapCounts.nonFixable['Spelling'] || 0;
+            const punctCount = gapCounts.nonFixable['Punctuation'] || 0;
+            const maxGapCount = Math.max(grammarCount, spellingCount, punctCount);
+            const maxGapPct = persistentStudents.length ? Math.round(100 * maxGapCount / persistentStudents.length) : 0;
+            document.getElementById('key-finding-text').innerHTML = `<strong>Key finding:</strong> Of ${persistentStudents.length} below-target students with test data, ${grammarCount} show grammar mechanics errors, ${spellingCount} show spelling errors, and ${punctCount} show punctuation errors that AlphaWrite does not explicitly teach. This represents a curriculum gap requiring intervention outside the product.`;
+
+            // Cohort section (all students)
+            // cohortOrder already declared above
+            const cohortLabels = {S1: 'Session 1 (Aug-Oct 2025)', S2: 'Session 2 (Oct-Jan)', S3: 'Session 3 (Jan-Feb)', S4: 'Session 4 (Mar-Apr)', S5: 'Session 5 (Apr-Jun)'};
+            const cohortData = {};
+            students.forEach(s => {
+                const cohort = s.start_session || 'Unknown';
+                if (!cohortData[cohort]) cohortData[cohort] = {total: 0, atTarget: 0, advanced: [], reasons: {}};
+                cohortData[cohort].total++;
+                const adv = s.grades_advanced || 0;
+                cohortData[cohort].advanced.push(adv);
+                if (adv >= 2) cohortData[cohort].atTarget++;
+                if (adv < 2 && s._reason) {
+                    cohortData[cohort].reasons[s._reason] = (cohortData[cohort].reasons[s._reason] || 0) + 1;
+                }
+            });
+
+            let cohortHTML = '<table class="summary-table"><thead><tr><th>Cohort</th><th>Students</th><th>At Target (2+)</th><th>Avg Grades</th><th>Top Barrier</th></tr></thead><tbody>';
+            cohortOrder.forEach(sn => {
+                const d = cohortData[sn];
+                if (!d) return;
+                const pct = Math.round(100 * d.atTarget / d.total);
+                const avg = (d.advanced.reduce((a,b) => a+b, 0) / d.total).toFixed(1);
+                const topReason = Object.entries(d.reasons).sort((a,b) => b[1]-a[1])[0];
+                const barrier = topReason ? `${topReason[0]} (${topReason[1]})` : '-';
+                const barColor = pct >= 60 ? '#16a34a' : pct >= 40 ? '#f59e0b' : '#ef4444';
+                cohortHTML += `<tr>
+                    <td><strong>${sn}</strong> <span style="font-size:0.75rem;color:#666">${cohortLabels[sn] || ''}</span></td>
+                    <td>${d.total}</td>
+                    <td><div style="display:flex;align-items:center;gap:0.5rem;"><div style="width:80px;height:14px;background:#f1f3f5;border-radius:3px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:${barColor};border-radius:3px;"></div></div><strong>${pct}%</strong> (${d.atTarget})</div></td>
+                    <td>${avg}</td>
+                    <td style="font-size:0.8rem;">${barrier}</td>
+                </tr>`;
+            });
+            if (cohortData['Unknown']) {
+                const d = cohortData['Unknown'];
+                cohortHTML += `<tr><td><strong>No tests yet</strong></td><td>${d.total}</td><td>-</td><td>-</td><td>-</td></tr>`;
+            }
+            cohortHTML += '</tbody></table>';
+
+            // Cohort stacked bars
+            cohortHTML += '<div style="margin-top:1.5rem;"><h3 style="margin-bottom:0.75rem;">Grades Advanced Distribution by Cohort</h3>';
+            cohortOrder.forEach(sn => {
+                const d = cohortData[sn];
+                if (!d) return;
+                const n = d.total;
+                const g0 = d.advanced.filter(x => x === 0).length;
+                const g1 = d.advanced.filter(x => x === 1).length;
+                const g2 = d.advanced.filter(x => x === 2).length;
+                const g3 = d.advanced.filter(x => x >= 3).length;
+                cohortHTML += `<div style="display:flex;align-items:center;margin-bottom:0.4rem;font-size:0.8rem;">
+                    <span style="width:30px;font-weight:600;">${sn}</span>
+                    <div class="stacked-bar" style="flex:1;height:22px;margin:0;">
+                        ${g3 ? `<div class="bar-segment" style="width:${100*g3/n}%;background:#166534;">${g3}</div>` : ''}
+                        ${g2 ? `<div class="bar-segment" style="width:${100*g2/n}%;background:#16a34a;">${g2}</div>` : ''}
+                        ${g1 ? `<div class="bar-segment" style="width:${100*g1/n}%;background:#f59e0b;">${g1}</div>` : ''}
+                        ${g0 ? `<div class="bar-segment" style="width:${100*g0/n}%;background:#ef4444;">${g0}</div>` : ''}
+                    </div>
+                    <span style="width:40px;text-align:right;font-size:0.75rem;color:#666;">${n}</span>
+                </div>`;
+            });
+            cohortHTML += '</div>';
+
+            document.getElementById('cohort-section').innerHTML = cohortHTML;
+
+            // Campus bars with cohort composition
+            const campusData = {};
+            students.forEach(s => {
+                const c = s.campus || 'Unknown';
+                if (!campusData[c]) campusData[c] = { total: 0, atTarget: 0, s1Count: 0 };
+                campusData[c].total++;
+                if ((s.grades_advanced || 0) >= 2) campusData[c].atTarget++;
+                if (s.start_session === 'S1') campusData[c].s1Count++;
+            });
+            const sortedCampuses = Object.entries(campusData)
+                .filter(([,v]) => v.total >= 5)
+                .sort((a,b) => (b[1].atTarget/b[1].total) - (a[1].atTarget/a[1].total));
+
+            const campusesWithS1 = sortedCampuses.filter(([,v]) => v.s1Count > 0);
+            const campusesNoS1 = sortedCampuses.filter(([,v]) => v.s1Count === 0);
+
+            let campusHTML = '<p style="font-size:0.8rem;font-weight:600;margin-bottom:0.5rem;">Campuses with full-year students</p>';
+            campusHTML += campusesWithS1.map(([name, v]) => {
+                const pct = Math.round(100 * v.atTarget / v.total);
+                const s1pct = Math.round(100 * v.s1Count / v.total);
+                return `<div class="campus-row">
+                    <span class="campus-name">${name}</span>
+                    <div class="campus-bar-bg"><div class="campus-bar-fill" style="width:${pct}%"></div></div>
+                    <span class="campus-pct">${pct}%</span>
+                    <span style="width:60px;text-align:right;font-size:0.7rem;color:#999;">${s1pct}% S1</span>
+                </div>`;
+            }).join('');
+
+            if (campusesNoS1.length) {
+                campusHTML += '<p style="font-size:0.8rem;font-weight:600;margin-top:1.25rem;margin-bottom:0.5rem;color:#666;">Newer campuses (no full-year students yet — lower rates expected)</p>';
+                campusHTML += campusesNoS1.map(([name, v]) => {
+                    const pct = Math.round(100 * v.atTarget / v.total);
+                    return `<div class="campus-row" style="opacity:0.7;">
+                        <span class="campus-name">${name}</span>
+                        <div class="campus-bar-bg"><div class="campus-bar-fill" style="width:${pct}%"></div></div>
+                        <span class="campus-pct">${pct}%</span>
+                        <span style="width:60px;text-align:right;font-size:0.7rem;color:#999;">0% S1</span>
+                    </div>`;
+                }).join('');
+            }
+            document.getElementById('campus-bars').innerHTML = campusHTML;
+
+            // Student table filters
+            const reasonFilter = document.getElementById('reason-filter');
+            sortedReasons.forEach(([reason]) => {
+                const opt = document.createElement('option');
+                opt.value = reason;
+                opt.textContent = reason;
+                reasonFilter.appendChild(opt);
+            });
+            const campusFilter = document.getElementById('campus-filter');
+            const s12Campuses = [...new Set(s12Below.map(s => s.campus || 'Unknown'))].sort();
+            s12Campuses.forEach(campus => {
+                const opt = document.createElement('option');
+                opt.value = campus;
+                opt.textContent = campus;
+                campusFilter.appendChild(opt);
+            });
+
+            function buildDetailHTML(s) {
+                const tags = s._tags || [];
+                const analysis = s.skill_gap_analysis || {};
+                const dd = s.deep_dive || {};
+                const inact = s.inactivity || {};
+                const rushing = s.rushing || {};
+                const xp = s.xp || {};
+                let html = '<div style="padding:0.75rem 1rem;background:#f8f9fa;border-top:1px solid #e5e7eb;font-size:0.8rem;">';
+
+                // Age grade context
+                const ageGrade = s.age_grade;
+                if (typeof ageGrade === 'number' && ageGrade < 3) {
+                    html += '<div style="margin-bottom:0.75rem;padding:0.4rem 0.6rem;background:#fef3c7;border-radius:6px;border-left:3px solid #d97706;"><strong>Note:</strong> Student is in Grade ' + ageGrade + '. AlphaWrite is designed for Grade 3+. Struggles may be due to insufficient typing/transcription skills for their age level rather than writing skill gaps.</div>';
+                }
+
+                // Tag explanations
+                html += '<div style="margin-bottom:0.75rem;"><strong>Why below target:</strong></div>';
+                tags.forEach(tag => {
+                    const meta = REASON_META[tag] || {};
+                    let explanation = meta.desc || '';
+                    if (tag === 'Chronically Inactive') {
+                        explanation += ` Last activity: ${inact.last_xp_date || 'never'}. Inactive for ${inact.days_inactive || '?'} school days.`;
+                    } else if (tag === 'Not Spending Enough Time') {
+                        const threshold = (s.start_session === 'S1') ? 25 : 12.5;
+                        const actual = (xp.avg_xp_per_day_lifetime||0).toFixed(1);
+                        const pctOfTarget = Math.round(100 * actual / threshold);
+                        explanation += ` Averaging ${actual} XP/day (${pctOfTarget}% of the ${threshold} XP/day target). Partially engaged but below the pace needed for 2 grades/year.`;
+                    } else if (tag === 'Stuck in Testing Loop') {
+                        const details = (dd.details || []);
+                        details.forEach(d => {
+                            explanation += ` G${d.grade}: ${d.failed_count} failed, ${d.rushed_count} rushed (avg ${(d.avg_time_minutes||0).toFixed(0)} min).`;
+                        });
+                    } else if (tag === 'Rushes Tests') {
+                        explanation += ` ${rushing.rushed_count} of ${rushing.total_tests || '?'} total tests were rushed.`;
+                    } else if (tag === 'Persistent Skill Gaps' || tag === 'Low Accuracy') {
+                        const acc = s.accuracy || {};
+                        const low = acc.activities_below_threshold || [];
+                        if (low.length) {
+                            explanation += ' Struggling with: ' + low.slice(0, 4).map(a => a.name + ' (' + Math.round(a.accuracy) + '%)').join(', ');
+                            if (low.length > 4) explanation += '...';
+                        }
+                    }
+                    const bc = meta.fixable === 'yes' ? 'badge-green' : meta.fixable === 'no' ? 'badge-red' : 'badge-amber';
+                    html += `<div style="margin-bottom:0.5rem;padding:0.4rem 0.6rem;background:white;border-radius:6px;border-left:3px solid ${meta.color || '#999'};">
+                        <span class="badge ${bc}" style="margin-right:0.5rem;">${tag}</span>
+                        <span style="color:#555;">${explanation}</span>
+                    </div>`;
+                });
+
+                // Skill gap analysis v2 (test-focused)
+                if (analysis.test_skill_gaps) {
+                    html += '<div style="margin-top:0.75rem;padding:0.6rem;background:white;border-radius:6px;border-left:3px solid #1d4ed8;">';
+                    html += '<strong style="color:#1d4ed8;">Test Skill Gaps:</strong><br><span style="white-space:pre-wrap;">' + analysis.test_skill_gaps.replace(/\n/g, '<br>') + '</span>';
+                    html += '</div>';
+                    if (analysis.alphawrite_vs_test) {
+                        html += '<div style="margin-top:0.5rem;padding:0.6rem;background:white;border-radius:6px;border-left:3px solid #06b6d4;">';
+                        html += '<strong style="color:#06b6d4;">AlphaWrite vs Test Context:</strong> ' + analysis.alphawrite_vs_test;
+                        html += '</div>';
+                    }
+                    if (analysis.can_alphawrite_fix) {
+                        html += '<div style="margin-top:0.5rem;padding:0.6rem;background:white;border-radius:6px;border-left:3px solid #16a34a;">';
+                        html += '<strong style="color:#16a34a;">Can AlphaWrite Fix?</strong><br><span style="white-space:pre-wrap;">' + analysis.can_alphawrite_fix.replace(/\n/g, '<br>') + '</span>';
+                        html += '</div>';
+                    }
+                    if (analysis.recommended_focus) {
+                        html += '<div style="margin-top:0.5rem;padding:0.6rem;background:white;border-radius:6px;border-left:3px solid #8b5cf6;">';
+                        html += '<strong style="color:#8b5cf6;">Recommended Focus:</strong> ' + analysis.recommended_focus.replace(/\n/g, '<br>');
+                        html += '</div>';
+                    }
+                } else if (analysis.skill_gap_summary) {
+                    html += '<div style="margin-top:0.75rem;padding:0.6rem;background:white;border-radius:6px;border-left:3px solid #1d4ed8;">';
+                    html += '<strong style="color:#1d4ed8;">Diagnosis:</strong> ' + analysis.skill_gap_summary;
+                    html += '</div>';
+                }
+
+                // Test history summary
+                const tests = s.all_tests || [];
+                if (tests.length) {
+                    const recent = tests.slice(-5);
+                    html += '<div style="margin-top:0.75rem;"><strong>Recent tests:</strong> ';
+                    html += recent.map(t => `${t.name.replace('Alpha Standardized Writing ','')} ${t.passed ? '<span style="color:#16a34a;">P</span>' : '<span style="color:#dc2626;">' + t.score + '%</span>'}`).join(' | ');
+                    html += '</div>';
+                }
+
+                html += '</div>';
+                return html;
+            }
+
+            function renderStudentTable() {
+                const search = document.getElementById('student-search').value.toLowerCase();
+                const filter = reasonFilter.value;
+                const campusVal = campusFilter.value;
+                let filtered = s12Below;
+                if (filter !== 'all') filtered = filtered.filter(s => (s._tags || []).includes(filter));
+                if (campusVal !== 'all') filtered = filtered.filter(s => (s.campus || 'Unknown') === campusVal);
+                if (search) filtered = filtered.filter(s => s.name.toLowerCase().includes(search) || (s.email||'').toLowerCase().includes(search));
+                filtered.sort((a,b) => (a.grades_advanced||0) - (b.grades_advanced||0) || a.name.localeCompare(b.name));
+
+                document.getElementById('student-table-body').innerHTML = filtered.slice(0, 100).map((s, idx) => {
+                    const tags = s._tags || [s._reason];
+                    const ageGrade = s.age_grade || '?';
+                    const belowG3 = (typeof ageGrade === 'number' && ageGrade < 3);
+                    const badgesHTML = tags.map((tag, i) => {
+                        const meta = REASON_META[tag] || {};
+                        const bc = meta.fixable === 'yes' ? 'badge-green' : meta.fixable === 'no' ? 'badge-red' : 'badge-amber';
+                        const style = i === 0 ? 'margin:1px 2px;' : 'margin:1px 2px;opacity:0.7;font-size:0.65rem;';
+                        return '<span class="badge ' + bc + '" style="' + style + '">' + tag + '</span>';
+                    }).join('');
+                    const rowId = 'detail-' + idx;
+                    return `<tr style="cursor:pointer;" onclick="var d=document.getElementById('${rowId}');d.style.display=d.style.display==='none'?'table-row':'none';">
+                        <td><strong>${s.name}</strong></td>
+                        <td>${s.campus || ''}</td>
+                        <td>G${ageGrade}</td>
+                        <td>G${s.starting_hmg || '?'}</td>
+                        <td>G${s.hmg || '?'}</td>
+                        <td>${s.grades_advanced || 0}</td>
+                        <td>${badgesHTML}</td>
+                    </tr><tr id="${rowId}" style="display:none;"><td colspan="7" style="padding:0;">${buildDetailHTML(s)}</td></tr>`;
+                }).join('') + (filtered.length > 100 ? `<tr><td colspan="7" style="text-align:center;color:#999;">Showing 100 of ${filtered.length}…</td></tr>` : '');
+            }
+
+            document.getElementById('student-search').addEventListener('input', renderStudentTable);
+            reasonFilter.addEventListener('change', renderStudentTable);
+            campusFilter.addEventListener('change', renderStudentTable);
+            renderStudentTable();
+
+            // Update headings with counts
+            document.getElementById('student-list-heading').textContent = `Student List: Below Target (S1/S2 Cohort) — ${s12Below.length} students`;
+
+            // Executive action summary (uses primary reason counts — mutually exclusive, sums to 53)
+            const almostThere = s12Below.filter(s => s.grades_advanced === 1).length;
+            const totalRushing = s12Below.filter(s => (s.rushing||{}).is_rusher).length;
+            document.getElementById('exec-summary-content').innerHTML = `
+                <p style="font-size:0.85rem;margin-bottom:0.75rem;"><strong>Result:</strong> 88% of full-year students hit the 2-grade target (first year of curriculum). ${s12Below.length} students (S1/S2) did not.</p>
+                <p style="font-size:0.83rem;margin-bottom:0.5rem;"><strong>Primary barrier breakdown</strong> (each student counted once, totals to ${s12Below.length}):</p>
+                <ul style="font-size:0.83rem;line-height:2;padding-left:1.5rem;">
+                    ${sortedReasons.map(([reason, count]) => {
+                        const meta = REASON_META[reason] || {};
+                        return '<li><strong>' + count + '</strong> ' + reason + ' → ' + (meta.action || '') + '</li>';
+                    }).join('')}
+                </ul>
+                <p style="font-size:0.83rem;margin-top:0.75rem;"><strong>Additional signals</strong> (students may appear in multiple):</p>
+                <ul style="font-size:0.83rem;line-height:2;padding-left:1.5rem;">
+                    <li><strong>${totalRushing}</strong> students rush tests (need Academics coaching on test-taking strategies)</li>
+                    <li><strong>${almostThere}</strong> at 1 grade advanced, close to 2 — prioritize for final push (4 weeks remain)</li>
+                </ul>
+                <p style="font-size:0.8rem;color:#555;margin-top:0.75rem;" id="key-finding-text"><strong>Key finding:</strong> Below-target students show skill gaps on tests that go beyond what AlphaWrite teaches. See Persistent Skill Gaps section for detail.</p>
+            `;
+        });
+    </script>
+</body>
+</html>
