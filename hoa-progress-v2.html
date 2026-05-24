@@ -247,9 +247,9 @@
         </div>
 
         <!-- Section 3: Why not (for students with enough time) -->
-        <h2>Students Who Did Not Reach 2 Grades</h2>
+        <h2>Students Who Had Time But Did Not Reach 2 Grades</h2>
         <div class="section-card">
-            <p style="font-size:0.8rem;color:#666;margin-bottom:0.75rem;">All students across all cohorts who have not yet reached the 2-grade target, classified by their primary barrier to progress.</p>
+            <p style="font-size:0.8rem;color:#666;margin-bottom:0.75rem;">S1/S2 students (enrolled 5-10 months) who did not reach the 2-grade target, classified by their primary barrier.</p>
             <div style="padding:0.75rem;background:#eff6ff;border-radius:6px;border-left:3px solid #3b82f6;margin-bottom:1rem;font-size:0.85rem;">
                 <strong>Two layers of analysis:</strong><br>
                 <strong>1. Skill gaps (universal):</strong> All 53 below-target students show specific skill deficiencies on standardized tests. These are detailed in the <em>Persistent Skill Gaps</em> section below.<br>
@@ -278,6 +278,13 @@
                 </thead>
                 <tbody id="fixable-table-body"></tbody>
             </table>
+        </div>
+
+        <!-- Section 4b: Early Warning (Newer Cohorts) -->
+        <h2>Early Warning: Newer Cohorts (S3-S5)</h2>
+        <div class="section-card">
+            <p style="font-size:0.8rem;color:#666;margin-bottom:0.75rem;">Students in newer cohorts who have not had a full year but are showing active barriers that warrant early intervention. These are not failures — they are flags for proactive support.</p>
+            <div id="early-warning-section"></div>
         </div>
 
         <!-- Section 5: Skill Gaps Drill-Down -->
@@ -399,12 +406,7 @@
         const avgXpDay = xp.avg_xp_per_day_lifetime;
         const xpThreshold = (startSession === 'S1') ? 25 : 12.5;
 
-        // Insufficient time in program (S3/S4/S5 students)
-        if (startSession === 'S3' || startSession === 'S4' || startSession === 'S5' || !startSession) {
-            tags.push('Insufficient Time in Program');
-        }
-
-        // Not spending enough time (includes chronically inactive — same root cause)
+        // Not spending enough time (includes chronically inactive)
         if (neverStarted || daysInactive >= 14 || (avgXpDay !== undefined && avgXpDay < xpThreshold)) {
             tags.push('Not Spending Enough Time');
         }
@@ -544,18 +546,23 @@
             trajHTML += '</div>';
             document.getElementById('trajectory-section').innerHTML = trajHTML;
 
-            // All below-target students across all cohorts
+            // Tier 1: S1/S2 students who had time but didn't hit target (root cause analysis)
+            const s12 = students.filter(s => s.start_session === 'S1' || s.start_session === 'S2');
+            const s12Below = s12.filter(s => (s.grades_advanced || 0) < 2);
+
+            // Tier 2: S3-S5 students with active warning signs
+            const newerBelow = students.filter(s => !['S1','S2'].includes(s.start_session || '') && (s.grades_advanced || 0) < 2);
+
+            // Tag all below-target students
             const allBelow = students.filter(s => (s.grades_advanced || 0) < 2);
             allBelow.forEach(s => {
                 s._tags = tagStudent(s);
                 s._reason = s._tags[0];
             });
 
-            // Count PRIMARY reasons for S1/S2 below-target (mutually exclusive — one per student)
+            // Count PRIMARY reasons for S1/S2 below-target (Tier 1 — mutually exclusive)
             const primaryCounts = {};
-            allBelow.forEach(s => {
-                s._tags = tagStudent(s);
-                s._reason = s._tags[0];
+            s12Below.forEach(s => {
                 primaryCounts[s._reason] = (primaryCounts[s._reason] || 0) + 1;
             });
 
@@ -570,7 +577,7 @@
             let legendHTML = '';
 
             sortedReasons.forEach(([reason, count]) => {
-                const pct = count / allBelow.length;
+                const pct = count / s12Below.length;
                 const dash = pct * circumference;
                 const color = REASON_META[reason]?.color || '#999';
                 svgPaths += `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${color}" stroke-width="24" stroke-dasharray="${dash} ${circumference - dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})"/>`;
@@ -578,20 +585,20 @@
                 legendHTML += `<div class="legend-item"><div class="legend-dot" style="background:${color}"></div><span><strong>${count}</strong> ${reason}</span></div>`;
             });
 
-            donutContainer.innerHTML = `<svg viewBox="0 0 160 160">${svgPaths}</svg><div class="donut-center"><div class="pct">${allBelow.length}</div><div class="label">below target</div></div>`;
+            donutContainer.innerHTML = `<svg viewBox="0 0 160 160">${svgPaths}</svg><div class="donut-center"><div class="pct">${s12Below.length}</div><div class="label">below target<br>(S1/S2)</div></div>`;
             donutLegend.innerHTML = legendHTML + '<div style="margin-top:0.75rem;font-size:0.7rem;color:#888;font-style:italic;">Each student has one primary barrier (shown here). Many also have secondary issues (e.g., rushing tests) visible in the student detail below.</div>';
 
 
-            // Fixable bar (2 buckets: Yes / No)
+            // Fixable bar (2 buckets: Yes / No) — S1/S2 only
             let fixYes = 0, fixNo = 0;
-            allBelow.forEach(s => {
+            s12Below.forEach(s => {
                 const meta = REASON_META[s._reason] || {};
                 if (meta.fixable === 'yes') fixYes++;
                 else fixNo++;
             });
             document.getElementById('fixable-bar').innerHTML = `
-                <div class="bar-segment" style="width:${100*fixYes/allBelow.length}%;background:#166534;">${fixYes}</div>
-                <div class="bar-segment" style="width:${100*fixNo/allBelow.length}%;background:#991b1b;">${fixNo}</div>
+                <div class="bar-segment" style="width:${100*fixYes/s12Below.length}%;background:#166534;">${fixYes}</div>
+                <div class="bar-segment" style="width:${100*fixNo/s12Below.length}%;background:#991b1b;">${fixNo}</div>
             `;
             document.getElementById('fixable-legend').innerHTML = `
                 <span style="color:#166534">■ Yes — AlphaWrite can address (${fixYes})</span>
@@ -605,7 +612,7 @@
                 const badgeLabel = meta.fixable === 'yes' ? 'Yes' : 'No';
                 return `<tr>
                     <td>${reason}</td>
-                    <td><strong>${count}</strong> (${Math.round(100*count/allBelow.length)}%)</td>
+                    <td><strong>${count}</strong> (${Math.round(100*count/s12Below.length)}%)</td>
                     <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
                     <td>${meta.action || ''}</td>
                 </tr>`;
@@ -714,6 +721,23 @@
             const grammarCount = gapCounts.nonFixable['Grammar mechanics'] || 0;
             const spellingCount = gapCounts.nonFixable['Spelling'] || 0;
             const punctCount = gapCounts.nonFixable['Punctuation'] || 0;
+
+            // Early Warning section (S3-S5 students with active barriers)
+            const warningStudents = newerBelow.filter(s => {
+                const tags = s._tags || [];
+                return tags.some(t => ['Not Spending Enough Time','Stuck in Testing Loop','Rushes Tests','Age Grade Below G3'].includes(t));
+            });
+            let ewHTML = `<p style="font-size:0.85rem;margin-bottom:0.75rem;"><strong>${warningStudents.length}</strong> of ${newerBelow.length} newer cohort students are showing barriers:</p>`;
+            const ewCounts = {};
+            warningStudents.forEach(s => { const r = s._reason; ewCounts[r] = (ewCounts[r]||0)+1; });
+            ewHTML += '<table class="summary-table"><thead><tr><th>Barrier</th><th>Students</th><th>Action Needed</th></tr></thead><tbody>';
+            Object.entries(ewCounts).sort((a,b)=>b[1]-a[1]).forEach(([reason, count]) => {
+                const meta = REASON_META[reason] || {};
+                ewHTML += `<tr><td>${reason}</td><td><strong>${count}</strong></td><td>${meta.action || ''}</td></tr>`;
+            });
+            ewHTML += '</tbody></table>';
+            if (!warningStudents.length) ewHTML = '<p style="font-size:0.85rem;color:#16a34a;">No active warning signs in newer cohorts.</p>';
+            document.getElementById('early-warning-section').innerHTML = ewHTML;
 
             // Cohort section (all students)
             // cohortOrder already declared above
@@ -831,7 +855,8 @@
                 reasonFilter.appendChild(opt);
             });
             const campusFilter = document.getElementById('campus-filter');
-            const allCampuses = [...new Set(allBelow.map(s => s.campus || 'Unknown'))].sort();
+            const studentListAll = [...s12Below, ...warningStudents];
+            const allCampuses = [...new Set(studentListAll.map(s => s.campus || 'Unknown'))].sort();
             allCampuses.forEach(campus => {
                 const opt = document.createElement('option');
                 opt.value = campus;
@@ -931,7 +956,7 @@
                 const search = document.getElementById('student-search').value.toLowerCase();
                 const filter = reasonFilter.value;
                 const campusVal = campusFilter.value;
-                let filtered = allBelow;
+                let filtered = studentListAll;
                 if (filter !== 'all') filtered = filtered.filter(s => (s._tags || []).includes(filter));
                 if (campusVal !== 'all') filtered = filtered.filter(s => (s.campus || 'Unknown') === campusVal);
                 if (search) filtered = filtered.filter(s => s.name.toLowerCase().includes(search) || (s.email||'').toLowerCase().includes(search));
@@ -966,25 +991,32 @@
             renderStudentTable();
 
             // Update headings with counts
-            document.getElementById('student-list-heading').textContent = `Student List: Below Target — ${allBelow.length} students`;
+            document.getElementById('student-list-heading').textContent = `Student List: Below Target — ${s12Below.length} students (S1/S2) + ${newerBelow.length} newer cohort students with warning signs`;
 
             // Executive action summary (uses primary reason counts — mutually exclusive, sums to 53)
             const almostThere = allBelow.filter(s => s.grades_advanced === 1).length;
             const totalRushing = allBelow.filter(s => (s.rushing||{}).is_rusher).length;
+            // Count S3-S5 warning signs
+            const newerWithBarriers = newerBelow.filter(s => {
+                const tags = s._tags || [];
+                return tags.some(t => ['Not Spending Enough Time','Stuck in Testing Loop','Rushes Tests','Age Grade Below G3'].includes(t));
+            });
+
             document.getElementById('exec-summary-content').innerHTML = `
-                <p style="font-size:0.85rem;margin-bottom:0.75rem;"><strong>Result:</strong> 88% of full-year students hit the 2-grade target (first year of curriculum). ${allBelow.length} students across all cohorts have not yet reached it.</p>
-                <p style="font-size:0.83rem;margin-bottom:0.5rem;"><strong>Primary barrier breakdown</strong> (each student counted once, totals to ${allBelow.length}):</p>
+                <p style="font-size:0.85rem;margin-bottom:0.75rem;"><strong>Result:</strong> 88% of full-year students hit the 2-grade target (first year of curriculum). ${s12Below.length} students (S1/S2) did not.</p>
+                <p style="font-size:0.83rem;margin-bottom:0.5rem;"><strong>Primary barrier breakdown</strong> for the ${s12Below.length} below-target S1/S2 students:</p>
                 <ul style="font-size:0.83rem;line-height:2;padding-left:1.5rem;">
                     ${sortedReasons.map(([reason, count]) => {
                         const meta = REASON_META[reason] || {};
                         return '<li><strong>' + count + '</strong> ' + reason + ' → ' + (meta.action || '') + '</li>';
                     }).join('')}
                 </ul>
-                <p style="font-size:0.83rem;margin-top:0.75rem;"><strong>Additional signals</strong> (students may appear in multiple):</p>
+                <p style="font-size:0.83rem;margin-top:0.75rem;"><strong>Additional signals</strong> (S1/S2, may overlap):</p>
                 <ul style="font-size:0.83rem;line-height:2;padding-left:1.5rem;">
-                    <li><strong>${totalRushing}</strong> students rush tests (need Academics coaching on test-taking strategies)</li>
-                    <li><strong>${almostThere}</strong> at 1 grade advanced, close to 2 — prioritize for final push (4 weeks remain)</li>
+                    <li><strong>${totalRushing}</strong> rush tests — need Academics coaching on test-taking strategies</li>
+                    <li><strong>${almostThere}</strong> at 1 grade advanced — prioritize for final push (2 weeks remain)</li>
                 </ul>
+                <p style="font-size:0.83rem;margin-top:0.75rem;"><strong>Newer cohorts (S3-S5) early warning:</strong> ${newerWithBarriers.length} of ${newerBelow.length} newer students are showing active barriers (testing loops, rushing, or insufficient practice) that warrant early intervention.</p>
                 <p style="font-size:0.8rem;color:#555;margin-top:0.75rem;"><strong>Key finding:</strong> Of ${persistentStudents.length} below-target students with test data, ${grammarCount} show grammar mechanics errors, ${spellingCount} show spelling errors, and ${punctCount} show punctuation errors that AlphaWrite does not explicitly teach. This represents a curriculum gap requiring intervention outside the product.</p>
             `;
         });
