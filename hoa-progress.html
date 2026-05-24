@@ -257,7 +257,9 @@
         <div class="section-card">
             <p style="font-size:0.8rem;color:#666;margin-bottom:0.75rem;">Focused on S1/S2 students (224 total, had 5-10 months) who did not reach the target. Newer cohorts are excluded since they have not had enough time.</p>
             <div style="padding:0.75rem;background:#eff6ff;border-radius:6px;border-left:3px solid #3b82f6;margin-bottom:1rem;font-size:0.85rem;">
-                <strong>Universal finding:</strong> All below-target students show skill gaps on standardized tests (see <em>Persistent Skill Gaps: Detail</em> section). The chart below shows the <strong>primary actionable barrier</strong> preventing each student from progressing — what needs to change beyond continued practice.
+                <strong>Two layers of analysis:</strong><br>
+                <strong>1. Skill gaps (universal):</strong> All 53 below-target students show specific skill deficiencies on standardized tests. These are detailed in the <em>Persistent Skill Gaps</em> section below.<br>
+                <strong>2. Barriers to progress (shown in chart):</strong> Beyond skill gaps, each student has a <strong>primary operational barrier</strong> — the thing preventing them from building skills through practice. The chart below classifies each student by their primary barrier.
             </div>
             <div class="donut-section">
                 <div class="donut-container" id="donut-container"></div>
@@ -322,11 +324,11 @@
                     <tr>
                         <th>Student</th>
                         <th>Campus</th>
-                        <th>Grade</th>
-                        <th>Start</th>
-                        <th>Current</th>
-                        <th>Advanced</th>
-                        <th>Reasons</th>
+                        <th>Age Grade</th>
+                        <th>Started At</th>
+                        <th>Mastered To</th>
+                        <th>Grades +</th>
+                        <th>Barriers</th>
                     </tr>
                 </thead>
                 <tbody id="student-table-body"></tbody>
@@ -349,9 +351,9 @@
         },
         'Not Spending Enough Time': {
             desc: 'Lifetime XP/day is below target (S1: 25 XP/day, S2+: 12.5 XP/day) since initial Writing enrollment.',
-            fixable: 'partial',
-            fixLabel: 'Partially — needs more daily practice',
-            action: 'Student needs more consistent daily Writing practice. AlphaWrite works when used at the expected pace.',
+            fixable: 'ops',
+            fixLabel: 'Requires campus ops intervention',
+            action: 'Campus team to ensure student completes daily Writing practice at expected volume.',
             color: '#f97316',
         },
         'Stuck in Testing Loop': {
@@ -384,9 +386,9 @@
         },
         'Rushes Tests': {
             desc: '2+ tests taken too quickly (below time threshold for grade level). Rushing leads to avoidable failures.',
-            fixable: 'partial',
-            fixLabel: 'Partially — needs coaching',
-            action: 'Student needs to be coached by Academics on test-taking strategies and pacing.',
+            fixable: 'coaching',
+            fixLabel: 'Requires academic coaching',
+            action: 'Academics team to coach student on test-taking strategies and pacing.',
             color: '#f43f5e',
         },
         'On Track (may reach 2)': {
@@ -565,20 +567,20 @@
             const s1Trajectory = {};
             cohortOrder.forEach(sn => { s1Trajectory[sn] = s1PctAtCutoff(sessionEndDates[sn]); });
 
-            let trajHTML = '<p style="font-size:0.8rem;color:#666;margin-bottom:0.5rem;">Benchmark: S1 cohort reached 88% after a full year. How do newer cohorts compare at the same elapsed time?</p>';
-            trajHTML += '<table class="summary-table"><thead><tr><th>Cohort</th><th>Time in Program</th><th>Current %</th><th>Where S1 Was After Same Time</th><th>On Pace?</th></tr></thead><tbody>';
+            let trajHTML = '<table class="summary-table"><thead><tr><th>Cohort</th><th>Time in Program</th><th>Students</th><th>At 2-Grade Target</th></tr></thead><tbody>';
+            const totalEnrolled = cohortOrder.reduce((sum, k) => sum + (cohortNow[k]?.total || 0), 0);
             ['S2','S3','S4','S5'].forEach(sn => {
                 const d = cohortNow[sn];
                 if (!d) return;
-                const s1ref = s1Trajectory[sn];
-                const diff = d.pct - s1ref;
-                const status = diff >= -5 ? '<span class="badge badge-green">Yes</span>' : '<span class="badge badge-red">No</span>';
                 const cumulative = cohortOrder.slice(0, cohortOrder.indexOf(sn) + 1).reduce((sum, k) => sum + (cohortNow[k]?.total || 0), 0);
-                trajHTML += `<tr><td><strong>${sn}</strong> (${d.total} new, ${cumulative} total)</td><td>${sessionElapsed[sn]}</td><td><strong>${d.pct}%</strong> (${d.atTarget} of ${d.total})</td><td>${s1ref}%</td><td>${status}</td></tr>`;
+                trajHTML += `<tr><td><strong>${sn}</strong></td><td>${sessionElapsed[sn]}</td><td>${d.total} (${cumulative} cumulative)</td><td><strong>${d.pct}%</strong> (${d.atTarget} of ${d.total})</td></tr>`;
             });
             trajHTML += '</tbody></table>';
-            trajHTML += '<div style="margin-top:1rem;padding:0.75rem;background:#f8f9fa;border-radius:6px;font-size:0.8rem;border-left:3px solid #6b7280;">';
-            trajHTML += '<strong>Context:</strong> S1 students were predominantly from established Alpha campuses with prior exposure to the learning model. Later cohorts include more partner campuses (TSA, GT Anywhere) and students enrolling mid-year at lower readiness levels. Direct pace comparison may not be apples-to-apples. The key metric remains: does each cohort reach 88%+ given a full year of instruction?';
+            trajHTML += '<div style="margin-top:1rem;padding:0.75rem;background:#eff6ff;border-radius:6px;font-size:0.8rem;border-left:3px solid #3b82f6;">';
+            trajHTML += '<strong>Bottom line:</strong> Newer cohorts have lower target rates because they have had less time. S2 (5 months in) is at 48%, while S1 was at 35% after 2 months and needed a full year to reach 88%. This is expected — the question is whether S2-S5 reach 88%+ given a full year. We will know this by mid-2027 for S2 and later for subsequent cohorts.';
+            trajHTML += '</div>';
+            trajHTML += '<div style="margin-top:0.5rem;padding:0.75rem;background:#f8f9fa;border-radius:6px;font-size:0.75rem;color:#555;">';
+            trajHTML += '<strong>Note on cohort differences:</strong> S1 students were predominantly from established Alpha campuses. Later cohorts include more partner campuses (TSA, GT Anywhere) and students enrolling at lower readiness levels. Program growth from 158 to ' + totalEnrolled + ' students across the year.';
             trajHTML += '</div>';
             document.getElementById('trajectory-section').innerHTML = trajHTML;
 
@@ -642,22 +644,25 @@
                 `;
             }).join('');
 
-            // Fixable bar
-            let fixYes = 0, fixPartial = 0, fixNo = 0;
+            // Fixable bar (4 buckets: AlphaWrite, campus ops, academic coaching, not fixable)
+            let fixAW = 0, fixOps = 0, fixCoach = 0, fixNo = 0;
             s12Below.forEach(s => {
                 const meta = REASON_META[s._reason] || {};
-                if (meta.fixable === 'yes') fixYes++;
-                else if (meta.fixable === 'partial') fixPartial++;
+                if (meta.fixable === 'yes') fixAW++;
+                else if (meta.fixable === 'ops') fixOps++;
+                else if (meta.fixable === 'coaching') fixCoach++;
                 else fixNo++;
             });
             document.getElementById('fixable-bar').innerHTML = `
-                <div class="bar-segment" style="width:${100*fixYes/s12Below.length}%;background:#16a34a;">${fixYes}</div>
-                <div class="bar-segment" style="width:${100*fixPartial/s12Below.length}%;background:#f59e0b;">${fixPartial}</div>
+                <div class="bar-segment" style="width:${100*fixAW/s12Below.length}%;background:#16a34a;">${fixAW}</div>
+                <div class="bar-segment" style="width:${100*fixOps/s12Below.length}%;background:#f59e0b;">${fixOps}</div>
+                <div class="bar-segment" style="width:${100*fixCoach/s12Below.length}%;background:#8b5cf6;">${fixCoach}</div>
                 <div class="bar-segment" style="width:${100*fixNo/s12Below.length}%;background:#dc2626;">${fixNo}</div>
             `;
             document.getElementById('fixable-legend').innerHTML = `
-                <span style="color:#16a34a">■ AlphaWrite can fix (${fixYes})</span>
-                <span style="color:#f59e0b">■ Partially fixable (${fixPartial})</span>
+                <span style="color:#16a34a">■ AlphaWrite can fix (${fixAW})</span>
+                <span style="color:#f59e0b">■ Campus ops intervention (${fixOps})</span>
+                <span style="color:#8b5cf6">■ Academic coaching (${fixCoach})</span>
                 <span style="color:#dc2626">■ Not fixable by AlphaWrite (${fixNo})</span>
             `;
 
@@ -759,7 +764,7 @@
                 const bgColor = idx % 2 === 0 ? '#fff' : '#fafafa';
                 sgHTML += `<div style="border-bottom:1px solid #e5e7eb;background:${bgColor};">`;
                 sgHTML += `<div style="padding:0.6rem 1rem;cursor:pointer;display:flex;align-items:center;gap:1rem;" onclick="var d=document.getElementById('${detailId}');d.style.display=d.style.display==='none'?'block':'none';">`;
-                sgHTML += `<div style="min-width:140px;"><strong style="font-size:0.85rem;">${s.name}</strong><br><span style="font-size:0.7rem;color:#666;">G${s.age_grade||'?'} | HMG G${s.hmg||'?'}</span></div>`;
+                sgHTML += `<div style="min-width:140px;"><strong style="font-size:0.85rem;">${s.name}</strong><br><span style="font-size:0.7rem;color:#666;">Age G${s.age_grade||'?'} | Mastered G${s.hmg||'?'}</span></div>`;
                 sgHTML += `<div style="flex:1;font-size:0.78rem;color:#444;">${gapsPreview}${gapsPreview.length >= 100 ? '...' : ''}</div>`;
                 sgHTML += '<div style="color:#999;font-size:0.7rem;">expand</div>';
                 sgHTML += '</div>';
@@ -850,7 +855,7 @@
                 .filter(([,v]) => v.total >= 5)
                 .sort((a,b) => (b[1].atTarget/b[1].total) - (a[1].atTarget/a[1].total));
 
-            document.getElementById('campus-bars').innerHTML = '<p style="font-size:0.75rem;color:#666;margin-bottom:0.75rem;">Percentages reflect all enrolled students at each campus. Campuses with more S1 (full-year) students are expected to have higher rates. S1% shown for context.</p>' + sortedCampuses.map(([name, v]) => {
+            document.getElementById('campus-bars').innerHTML = '<p style="font-size:0.75rem;color:#666;margin-bottom:0.75rem;">Percentage of students at each campus who have reached the 2-grade target. <strong>Important:</strong> Campuses with a higher proportion of full-year (S1) students are expected to have higher rates — newer campuses enrolled students later and have not had a full year. The "S1%" column shows what percentage of each campus started in Session 1.</p>' + sortedCampuses.map(([name, v]) => {
                 const pct = Math.round(100 * v.atTarget / v.total);
                 const s1pct = Math.round(100 * v.s1Count / v.total);
                 return `<div class="campus-row">
