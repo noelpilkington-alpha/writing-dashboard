@@ -235,9 +235,9 @@
         </section>
 
         <!-- Section 2: Barriers -->
-        <h2 id="barriers">Why Did 53 Students Not Reach 2 Grades?</h2>
+        <h2 id="barriers">Students Who Have Not Yet Reached 2 Grades</h2>
         <div class="card">
-            <p style="font-size:0.83rem;color:var(--color-text-secondary);margin-bottom:1rem;">S1/S2 students (enrolled 5-10 months) classified by their primary barrier to progress.</p>
+            <p style="font-size:0.83rem;color:var(--color-text-secondary);margin-bottom:1rem;">All students across the program who have not yet hit the 2-grade target, classified by their primary barrier. Newer cohorts have had less time — the same barriers exist across all cohorts.</p>
             <div class="donut-section">
                 <div class="donut-wrap" id="donut" role="img" aria-label="Barrier breakdown donut chart"></div>
                 <div class="legend" id="donut-legend"></div>
@@ -262,10 +262,10 @@
             <div id="skill-gaps-content"></div>
         </div>
 
-        <!-- Section 5: Early Warning -->
-        <h2 id="early-warning">Early Warning: Newer Cohorts (S3-S5)</h2>
+        <!-- Section 5: Cohort Breakdown -->
+        <h2 id="early-warning">Barriers by Cohort</h2>
         <div class="card">
-            <p style="font-size:0.83rem;color:var(--color-text-secondary);margin-bottom:1rem;">Students in newer cohorts showing active barriers that warrant early intervention. Not failures — flags for proactive support.</p>
+            <p style="font-size:0.83rem;color:var(--color-text-secondary);margin-bottom:1rem;">The same barriers exist across all cohorts. Earlier cohorts have had more time to overcome them. This breakdown shows which barriers are most prevalent at each stage.</p>
             <div id="early-warning-content"></div>
         </div>
 
@@ -394,16 +394,13 @@
         const s1Total = s1.length;
         const s1AtTarget = s1.filter(s => (s.grades_advanced || 0) >= 2);
 
-        // Tag all students
-        students.forEach(s => {
-            s._tags = (s.grades_advanced || 0) >= 2 ? [] : tagStudent(s);
+        // Tag all below-target students
+        const allBelow = students.filter(s => (s.grades_advanced || 0) < 2);
+        allBelow.forEach(s => {
+            s._tags = tagStudent(s);
             s._reason = s._tags[0] || '';
         });
-
-        const s12 = students.filter(s => ['S1','S2'].includes(s.start_session));
-        const s12Below = s12.filter(s => (s.grades_advanced || 0) < 2);
-        const newerBelow = students.filter(s => !['S1','S2'].includes(s.start_session || '') && (s.grades_advanced || 0) < 2);
-        const warningStudents = newerBelow.filter(s => s._tags.some(t => ['Not Spending Enough Time','Stuck in Testing Loop','Rushes Tests','Age Grade Below G3'].includes(t)));
+        students.filter(s => (s.grades_advanced || 0) >= 2).forEach(s => { s._tags = []; s._reason = ''; });
 
         // === HERO ===
         const s1Adv = s1.map(s => s.grades_advanced || 0).sort((a,b) => a-b);
@@ -436,13 +433,13 @@
 
         // === ACTION SUMMARY ===
         const primaryCounts = {};
-        s12Below.forEach(s => { primaryCounts[s._reason] = (primaryCounts[s._reason]||0)+1; });
+        allBelow.forEach(s => { primaryCounts[s._reason] = (primaryCounts[s._reason]||0)+1; });
         const sortedReasons = Object.entries(primaryCounts).sort((a,b)=>b[1]-a[1]);
-        const totalRushing = s12Below.filter(s => (s.rushing||{}).is_rusher).length;
-        const almostThere = s12Below.filter(s => s.grades_advanced === 1).length;
+        const totalRushing = allBelow.filter(s => (s.rushing||{}).is_rusher).length;
+        const almostThere = allBelow.filter(s => s.grades_advanced === 1).length;
 
-        // Skill gap counts (compute early for action summary)
-        const persistentStudents = s12Below.filter(s => s.skill_gap_analysis && s.skill_gap_analysis.test_skill_gaps);
+        // Skill gap counts (from students with test analysis)
+        const persistentStudents = allBelow.filter(s => s.skill_gap_analysis && s.skill_gap_analysis.test_skill_gaps);
         const gapCounts = {fixable:{}, nonFixable:{}};
         persistentStudents.forEach(s => {
             const cf = (s.skill_gap_analysis.can_alphawrite_fix || '').toLowerCase();
@@ -457,38 +454,51 @@
         const spellingCount = gapCounts.nonFixable['Spelling'] || 0;
         const punctCount = gapCounts.nonFixable['Punctuation'] || 0;
 
-        let actionHTML = `<p style="margin-bottom:0.75rem;"><strong>Result:</strong> 88% of full-year students hit the 2-grade target. ${s12Below.length} students (S1/S2) did not.</p>`;
-        actionHTML += `<p style="margin-bottom:0.5rem;"><strong>Primary barriers</strong> (${s12Below.length} students, one per student):</p><ul style="padding-left:1.5rem;line-height:2;">`;
+        // Cohort breakdown for context
+        const sessionStarts = {S1:'2025-08-11',S2:'2025-10-20',S3:'2026-01-05',S4:'2026-02-21',S5:'2026-04-27'};
+        const now = new Date();
+        function monthsIn(start) { return Math.round((now - new Date(start)) / (30.44*24*60*60*1000)); }
+        const cohortBreakdown = {};
+        ['S1','S2','S3','S4','S5'].forEach(sn => {
+            const below = allBelow.filter(s => s.start_session === sn);
+            const total = students.filter(s => s.start_session === sn).length;
+            if (total) cohortBreakdown[sn] = {below: below.length, total, months: monthsIn(sessionStarts[sn])};
+        });
+
+        let actionHTML = `<p style="margin-bottom:0.75rem;"><strong>Result:</strong> ${pct}% of full-year students hit the 2-grade target. Across all cohorts, <strong>${allBelow.length} students</strong> have not yet reached it.</p>`;
+        actionHTML += '<p style="font-size:0.8rem;color:var(--color-text-secondary);margin-bottom:0.75rem;">Cohort context: ';
+        actionHTML += Object.entries(cohortBreakdown).map(([sn,d]) => `${sn}: ${d.below} of ${d.total} below target (${d.months} ${d.months===1?'month':'months'} in program)`).join(' | ');
+        actionHTML += '</p>';
+        actionHTML += `<p style="margin-bottom:0.5rem;"><strong>Primary barriers</strong> (${allBelow.length} students, one per student):</p><ul style="padding-left:1.5rem;line-height:2;">`;
         sortedReasons.forEach(([reason, count]) => {
             const meta = BARRIER_META[reason] || {};
             actionHTML += `<li><strong>${count}</strong> ${reason} — ${meta.action || ''}</li>`;
         });
         actionHTML += '</ul>';
-        actionHTML += `<p style="margin-top:0.75rem;"><strong>Additional signals</strong> (S1/S2, may overlap): <strong>${totalRushing}</strong> rush tests, <strong>${almostThere}</strong> at 1 grade (prioritize for final push).</p>`;
-        actionHTML += `<p style="margin-top:0.75rem;"><strong>Newer cohorts:</strong> ${warningStudents.length} of ${newerBelow.length} newer students showing active barriers.</p>`;
+        actionHTML += `<p style="margin-top:0.75rem;"><strong>Additional signals</strong> (all cohorts, may overlap): <strong>${totalRushing}</strong> rush tests, <strong>${almostThere}</strong> at 1 grade advanced.</p>`;
         actionHTML += `<div class="callout callout--warn" style="margin-top:1rem;"><strong>Key finding:</strong> Of ${persistentStudents.length} tested below-target students, ${grammarCount} show grammar errors, ${spellingCount} show spelling errors, and ${punctCount} show punctuation errors that AlphaWrite does not explicitly teach. This is a curriculum gap requiring intervention outside the product.</div>`;
         document.getElementById('action-summary').innerHTML = actionHTML;
 
-        // === DONUT ===
+        // === DONUT (all below-target students) ===
         const radius = 60, cx = 80, cy = 80, circ = 2 * Math.PI * radius;
         let offset = 0, svgPaths = '', legendHTML = '';
         sortedReasons.forEach(([reason, count]) => {
-            const pctSlice = count / s12Below.length;
+            const pctSlice = count / allBelow.length;
             const dash = pctSlice * circ;
             const color = COLORS.barriers[reason] || '#666';
             svgPaths += `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${color}" stroke-width="24" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})"/>`;
             offset += dash;
             legendHTML += `<div class="legend-item"><div class="legend-dot" style="background:${color}"></div><strong>${count}</strong> ${reason}</div>`;
         });
-        document.getElementById('donut').innerHTML = `<svg viewBox="0 0 160 160" aria-hidden="true">${svgPaths}</svg><div class="donut-center"><div class="donut-center-num">${s12Below.length}</div><div class="donut-center-label">below target</div></div>`;
+        document.getElementById('donut').innerHTML = `<svg viewBox="0 0 160 160" aria-hidden="true">${svgPaths}</svg><div class="donut-center"><div class="donut-center-num">${allBelow.length}</div><div class="donut-center-label">below target</div></div>`;
         document.getElementById('donut-legend').innerHTML = legendHTML;
 
         // === FIXABILITY ===
         let fixYes = 0, fixNo = 0;
-        s12Below.forEach(s => { if ((BARRIER_META[s._reason]||{}).fixable) fixYes++; else fixNo++; });
+        allBelow.forEach(s => { if ((BARRIER_META[s._reason]||{}).fixable) fixYes++; else fixNo++; });
         document.getElementById('fix-bar').innerHTML = `
-            <div class="bar-seg" style="width:${100*fixYes/s12Below.length}%;background:${COLORS.fix.yes}">${fixYes}</div>
-            <div class="bar-seg" style="width:${100*fixNo/s12Below.length}%;background:${COLORS.fix.no}">${fixNo}</div>
+            <div class="bar-seg" style="width:${100*fixYes/allBelow.length}%;background:${COLORS.fix.yes}">${fixYes}</div>
+            <div class="bar-seg" style="width:${100*fixNo/allBelow.length}%;background:${COLORS.fix.no}">${fixNo}</div>
         `;
         document.getElementById('fix-legend').innerHTML = `
             <span><span style="background:${COLORS.fix.yes};width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>Yes (${fixYes})</span>
@@ -535,25 +545,23 @@
             if (el) el.innerHTML = psHTML;
         }, 100);
 
-        // === EARLY WARNING ===
-        let ewHTML = `<p><strong>${warningStudents.length}</strong> of ${newerBelow.length} newer students showing active barriers:</p>`;
-        const ewCounts = {};
-        warningStudents.forEach(s => { ewCounts[s._reason] = (ewCounts[s._reason]||0)+1; });
-        if (warningStudents.length) {
-            ewHTML += '<table class="table" style="margin-top:0.75rem;"><thead><tr><th>Barrier</th><th>Students</th><th>Action</th></tr></thead><tbody>';
-            Object.entries(ewCounts).sort((a,b)=>b[1]-a[1]).forEach(([reason,count]) => {
-                ewHTML += `<tr><td>${reason}</td><td><strong>${count}</strong></td><td>${(BARRIER_META[reason]||{}).action||''}</td></tr>`;
-            });
-            ewHTML += '</tbody></table>';
-        } else {
-            ewHTML = '<p style="color:var(--color-success);">No active warning signs in newer cohorts.</p>';
-        }
+        // === BARRIERS BY COHORT ===
+        let ewHTML = '<table class="table"><thead><tr><th>Cohort</th><th>Time</th><th>Below Target</th><th>Not Spending Enough Time</th><th>Testing Loop</th><th>Rushes Tests</th><th>Other</th></tr></thead><tbody>';
+        ['S1','S2','S3','S4','S5'].forEach(sn => {
+            const cb = cohortBreakdown[sn];
+            if (!cb) return;
+            const cohortBelow = allBelow.filter(s => s.start_session === sn);
+            const nst = cohortBelow.filter(s => s._tags.includes('Not Spending Enough Time')).length;
+            const loop = cohortBelow.filter(s => s._tags.includes('Stuck in Testing Loop')).length;
+            const rush = cohortBelow.filter(s => s._tags.includes('Rushes Tests')).length;
+            const other = cb.below - Math.max(nst, loop, rush);
+            ewHTML += `<tr><td><strong>${sn}</strong></td><td>${cb.months} ${cb.months===1?'month':'months'}</td><td>${cb.below} of ${cb.total}</td><td>${nst}</td><td>${loop}</td><td>${rush}</td><td>${other > 0 ? other : '-'}</td></tr>`;
+        });
+        ewHTML += '</tbody></table>';
+        ewHTML += '<p style="font-size:0.8rem;color:var(--color-text-secondary);margin-top:0.75rem;">The same barriers appear across all cohorts. Newer cohorts show higher below-target counts because they have had less time, not because they have fundamentally different problems.</p>';
         document.getElementById('early-warning-content').innerHTML = ewHTML;
 
         // === COHORT STATUS ===
-        const sessionStarts = {S1:'2025-08-11',S2:'2025-10-20',S3:'2026-01-05',S4:'2026-02-21',S5:'2026-04-27'};
-        const now = new Date();
-        function monthsIn(start) { return Math.round((now - new Date(start)) / (30.44*24*60*60*1000)); }
 
         let cohortHTML = `<p style="font-size:0.83rem;color:var(--color-text-secondary);margin-bottom:0.75rem;">S1 reached 88% after ${monthsIn(sessionStarts.S1)} months. Newer cohorts status:</p>`;
         cohortHTML += '<table class="table"><thead><tr><th>Cohort</th><th>Time in Program</th><th>Students</th><th>At Target</th></tr></thead><tbody>';
@@ -597,22 +605,21 @@
         document.getElementById('campus-content').innerHTML = campHTML;
 
         // === STUDENT LIST ===
-        const studentListAll = [...s12Below, ...warningStudents];
-        document.getElementById('student-count').textContent = `${s12Below.length} students (S1/S2 below target) + ${warningStudents.length} newer students with warning signs = ${studentListAll.length} total`;
+        document.getElementById('student-count').textContent = `${allBelow.length} students have not yet reached the 2-grade target across all cohorts.`;
 
         const filterReason = document.getElementById('filter-reason');
         filterReason.innerHTML = '<option value="all">All barriers</option>';
-        [...new Set(studentListAll.map(s=>s._reason))].sort().forEach(r => { filterReason.innerHTML += `<option value="${r}">${r}</option>`; });
+        [...new Set(allBelow.map(s=>s._reason))].sort().forEach(r => { filterReason.innerHTML += `<option value="${r}">${r}</option>`; });
 
         const filterCampus = document.getElementById('filter-campus');
         filterCampus.innerHTML = '<option value="all">All campuses</option>';
-        [...new Set(studentListAll.map(s=>s.campus||'Unknown'))].sort().forEach(c => { filterCampus.innerHTML += `<option value="${c}">${c}</option>`; });
+        [...new Set(allBelow.map(s=>s.campus||'Unknown'))].sort().forEach(c => { filterCampus.innerHTML += `<option value="${c}">${c}</option>`; });
 
         function renderList() {
             const search = document.getElementById('search').value.toLowerCase();
             const rFilter = filterReason.value;
             const cFilter = filterCampus.value;
-            let list = studentListAll;
+            let list = allBelow;
             if (rFilter !== 'all') list = list.filter(s => s._tags.includes(rFilter));
             if (cFilter !== 'all') list = list.filter(s => (s.campus||'Unknown') === cFilter);
             if (search) list = list.filter(s => s.name.toLowerCase().includes(search));
