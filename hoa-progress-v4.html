@@ -717,17 +717,29 @@
         const startSession = s.start_session || '';
         const daysInactive = inactivity.days_inactive || 0;
         const neverStarted = inactivity.never_active_this_session || false;
-        const avgXpDay = xp.avg_xp_per_day_lifetime;
         const xpThreshold = 12.5;
 
-        // Too early to assess (< 14 available school days)
-        const availDays = xp.available_days || 0;
-        if (availDays < 14 && availDays >= 0) {
+        // Recalculate XP/day from true_writing_start (eligibility date)
+        const trueStart = xp.true_writing_start || '';
+        let trueAvgXp = xp.avg_xp_per_day_lifetime;
+        let trueDays = xp.available_days || 0;
+        if (trueStart) {
+            const startMs = new Date(trueStart).getTime();
+            const nowMs = new Date('2026-05-25').getTime();
+            const calDays = Math.round((nowMs - startMs) / (1000*60*60*24));
+            trueDays = Math.round(calDays * 5/7) - 15; // approx school days minus MAP
+            if (trueDays > 0 && xp.total) {
+                trueAvgXp = xp.total / trueDays;
+            }
+        }
+
+        // Too early to assess (< 14 school days since eligibility)
+        if (trueDays < 14 && trueDays >= 0) {
             tags.push('Too Early to Assess');
             return tags;
         }
 
-        if (neverStarted || daysInactive >= 14 || (avgXpDay !== undefined && avgXpDay < xpThreshold)) {
+        if (neverStarted || daysInactive >= 14 || (trueAvgXp !== undefined && trueAvgXp < xpThreshold)) {
             tags.push('Not Spending Enough Time');
         }
         if (dd.needed) tags.push('Stuck in Testing Loop');
@@ -1104,8 +1116,17 @@
                         desc += ` Started Writing: ${startDate}.`;
                     }
                     if (tag === 'Not Spending Enough Time') {
-                        const avgXp = (s.xp || {}).avg_xp_per_day_lifetime || 0;
-                        desc += ` Average XP/day: <strong>${avgXp.toFixed(1)}</strong> (target: 12.5).`;
+                        const xpData = s.xp || {};
+                        const ts = xpData.true_writing_start || '';
+                        let displayXp = xpData.avg_xp_per_day_lifetime || 0;
+                        if (ts && xpData.total) {
+                            const sd = new Date(ts).getTime();
+                            const nd = new Date('2026-05-25').getTime();
+                            const cd = Math.round((nd - sd) / (1000*60*60*24));
+                            const wd = Math.round(cd * 5/7) - 15;
+                            if (wd > 0) displayXp = xpData.total / wd;
+                        }
+                        desc += ` Average XP/day since eligibility: <strong>${displayXp.toFixed(1)}</strong> (target: 12.5).`;
                     }
                     html += `<p style="margin-bottom:0.4rem;"><span class="badge" style="background:${COLORS.barriers[tag]||'#666'}15;color:${COLORS.barriers[tag]||'#666'};border:1px solid ${COLORS.barriers[tag]||'#666'}40;">${tag}</span> ${desc}</p>`;
                 });
