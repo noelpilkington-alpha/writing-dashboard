@@ -916,7 +916,9 @@
             const reasonStudents = allBelow.filter(s => s._reason === reason);
             const studentListHTML = reasonStudents.map(s => {
                 const startDate = (s.xp||{}).true_writing_start || '';
-                return `<div style="display:flex;justify-content:space-between;align-items:center;padding:0.3rem 0.5rem;border-bottom:1px solid var(--color-border);font-size:0.8rem;"><span><strong>${s.name}</strong> <span style="color:var(--color-text-muted);">${s.campus||''}</span></span><span style="color:var(--color-text-muted);">G${s.age_grade||'?'} | +${s.grades_advanced||0}${startDate ? ' | started '+startDate : ''}</span></div>`;
+                const avgXp = (s.xp||{}).avg_xp_per_day_lifetime || 0;
+                const xpInfo = reason === 'Not Spending Enough Time' ? ` | ${avgXp.toFixed(1)} XP/day` : '';
+                return `<div style="display:flex;justify-content:space-between;align-items:center;padding:0.3rem 0.5rem;border-bottom:1px solid var(--color-border);font-size:0.8rem;"><span><strong>${s.name}</strong> <span style="color:var(--color-text-muted);">${s.campus||''}</span></span><span style="color:var(--color-text-muted);">G${s.age_grade||'?'} | +${s.grades_advanced||0}${xpInfo}${startDate ? ' | started '+startDate : ''}</span></div>`;
             }).join('');
             const expandId = 'fix-expand-' + idx;
             return `<tr style="cursor:pointer;" onclick="var el=document.getElementById('${expandId}');el.style.display=el.style.display==='none'?'table-row':'none';this.classList.toggle('expanded')"><td>▶ ${reason}</td><td><strong>${count}</strong></td><td>${badge}</td><td>${meta.action||''}</td></tr><tr id="${expandId}" style="display:none;"><td colspan="4" style="padding:0.75rem;background:var(--color-page);"><div style="max-height:300px;overflow-y:auto;">${studentListHTML}</div></td></tr>`;
@@ -1100,6 +1102,10 @@
                     let desc = meta.desc || '';
                     if ((tag === 'Still in Coursework' || tag === 'Too Early to Assess') && startDate) {
                         desc += ` Started Writing: ${startDate}.`;
+                    }
+                    if (tag === 'Not Spending Enough Time') {
+                        const avgXp = (s.xp || {}).avg_xp_per_day_lifetime || 0;
+                        desc += ` Average XP/day: <strong>${avgXp.toFixed(1)}</strong> (target: 12.5).`;
                     }
                     html += `<p style="margin-bottom:0.4rem;"><span class="badge" style="background:${COLORS.barriers[tag]||'#666'}15;color:${COLORS.barriers[tag]||'#666'};border:1px solid ${COLORS.barriers[tag]||'#666'}40;">${tag}</span> ${desc}</p>`;
                 });
