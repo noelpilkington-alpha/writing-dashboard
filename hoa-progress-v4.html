@@ -538,6 +538,7 @@
     <div class="container">
         <h1>AlphaWrite Progress Report</h1>
         <p class="subtitle">2025-2026 School Year (first year of writing curriculum)</p>
+        <p style="font-size:0.8rem;color:#94a3b8;max-width:700px;margin-bottom:1.5rem;">AlphaWrite is a self-paced, AI-driven writing curriculum where students practice daily and advance through grade-level courses by passing standardized tests. Target: 2 writing grade levels per year.</p>
 
         <!-- Section 1: Results -->
         <section id="results" aria-label="Full-year results">
@@ -566,19 +567,10 @@
     <!-- Zone 2: Analysis -->
     <div class="zone-analysis">
     <div class="container">
-        <!-- Section 2: Barriers -->
-        <h2 id="barriers">Students Who Have Not Yet Reached 2 Grades</h2>
-        <div class="card">
-            <p style="font-size:0.83rem;color:var(--color-text-secondary);margin-bottom:1rem;">All students across the program who have not yet hit the 2-grade target, classified by their primary barrier. Newer cohorts have had less time — the same barriers exist across all cohorts.</p>
-            <div class="donut-section">
-                <div class="donut-wrap" id="donut" role="img" aria-label="Barrier breakdown donut chart"></div>
-                <div class="legend" id="donut-legend"></div>
-            </div>
-        </div>
-
-        <!-- Section 3: Fixability -->
+        <!-- Section 2: Fixability (moved up — answers "what do we do?" immediately) -->
         <h2 id="fixability">Can AlphaWrite Fix It?</h2>
         <div class="card">
+            <p style="font-size:0.83rem;color:var(--color-text-secondary);margin-bottom:1rem;">Of the students below target, which barriers can AlphaWrite address through continued instruction, and which require action outside the product?</p>
             <div class="bar" id="fix-bar" role="img" aria-label="Fixability breakdown"></div>
             <div class="bar-legend" id="fix-legend"></div>
             <table class="table" style="margin-top:1rem;">
@@ -587,10 +579,20 @@
             </table>
         </div>
 
+        <!-- Section 3: Barriers detail -->
+        <h2 id="barriers">Barrier Breakdown</h2>
+        <div class="card">
+            <p style="font-size:0.83rem;color:var(--color-text-secondary);margin-bottom:1rem;">All students below target classified by their primary barrier. Newer cohorts have had less time — the same barriers exist across all cohorts.</p>
+            <div class="donut-section">
+                <div class="donut-wrap" id="donut" role="img" aria-label="Barrier breakdown donut chart"></div>
+                <div class="legend" id="donut-legend"></div>
+            </div>
+        </div>
+
         <!-- Section 4: Skill Gaps -->
         <h2 id="skill-gaps">Skill Gaps on Standardized Tests</h2>
         <div class="card">
-            <p style="font-size:0.83rem;color:var(--color-text-secondary);margin-bottom:1rem;">Analysis of test responses for S1/S2 below-target students. Shows what students cannot do without scaffolding, and whether AlphaWrite instruction addresses each gap.</p>
+            <p style="font-size:0.83rem;color:var(--color-text-secondary);margin-bottom:1rem;">Analysis of test responses for below-target students across all cohorts. Shows what students cannot do without scaffolding, and whether AlphaWrite instruction addresses each gap.</p>
             <div id="skill-gaps-content"></div>
         </div>
 
@@ -692,17 +694,17 @@
         },
         'Still in Coursework': {
             desc: 'Working through AlphaWrite courses (Sentences, Paragraphs, or Hole-Filling) but has not yet reached a testable milestone.',
-            fixable: true,
+            fixable: 'time',
             action: 'Continue instruction. Student will be tested when coursework is complete.',
         },
         'On Track (may reach 2)': {
             desc: 'At 1 grade advanced and progressing. May reach 2 by year end.',
-            fixable: true,
+            fixable: 'time',
             action: 'Continue current trajectory. 2 weeks remain.',
         },
         'Too Early to Assess': {
             desc: 'Started Writing fewer than 14 school days ago. Not enough data to classify.',
-            fixable: true,
+            fixable: 'time',
             action: 'Continue instruction. Reassess after 3+ weeks of practice.',
         },
     };
@@ -789,7 +791,7 @@
         }
         document.getElementById('hero-grid').innerHTML = `
             <div style="display:flex;flex-direction:column;align-items:center;">
-                ${ring(pct, 200, '#4ade80', 'Full-year students hit target', `${s1AtTarget.length} of ${s1Total} (S1 cohort)`)}
+                ${ring(pct, 200, '#4ade80', 'Full-year students hit target', `${s1AtTarget.length} of ${s1Total} (started Aug 2025)`)}
             </div>
             <div style="display:flex;flex-direction:column;align-items:center;">
                 ${ring(allPct, 150, '#60a5fa', 'All cohorts at target', `${allAtTarget.length} of ${students.length} students`)}
@@ -890,20 +892,27 @@
         document.getElementById('donut').innerHTML = `<svg viewBox="0 0 160 160" aria-hidden="true">${svgPaths}</svg><div class="donut-center"><div class="donut-center-num">${allBelow.length}</div><div class="donut-center-label">below target</div></div>`;
         document.getElementById('donut-legend').innerHTML = legendHTML;
 
-        // === FIXABILITY ===
-        let fixYes = 0, fixNo = 0;
-        allBelow.forEach(s => { if ((BARRIER_META[s._reason]||{}).fixable) fixYes++; else fixNo++; });
+        // === FIXABILITY (three tiers: active intervention / needs time / outside product) ===
+        let fixActive = 0, fixTime = 0, fixNo = 0;
+        allBelow.forEach(s => {
+            const f = (BARRIER_META[s._reason]||{}).fixable;
+            if (f === true) fixActive++;
+            else if (f === 'time') fixTime++;
+            else fixNo++;
+        });
         document.getElementById('fix-bar').innerHTML = `
-            <div class="bar-seg" style="width:${100*fixYes/allBelow.length}%;background:${COLORS.fix.yes}">${fixYes}</div>
-            <div class="bar-seg" style="width:${100*fixNo/allBelow.length}%;background:${COLORS.fix.no}">${fixNo}</div>
+            <div class="bar-seg" style="width:${100*fixActive/allBelow.length}%;background:#1d4ed8">${fixActive}</div>
+            <div class="bar-seg" style="width:${100*fixTime/allBelow.length}%;background:#0891b2">${fixTime}</div>
+            <div class="bar-seg" style="width:${100*fixNo/allBelow.length}%;background:#57534e">${fixNo}</div>
         `;
         document.getElementById('fix-legend').innerHTML = `
-            <span><span style="background:${COLORS.fix.yes};width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>Yes (${fixYes})</span>
-            <span><span style="background:${COLORS.fix.no};width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>No (${fixNo})</span>
+            <span><span style="background:#1d4ed8;width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>Yes — active intervention (${fixActive})</span>
+            <span><span style="background:#0891b2;width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>Needs more time (${fixTime})</span>
+            <span><span style="background:#57534e;width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>No — requires action outside AlphaWrite (${fixNo})</span>
         `;
         document.getElementById('fix-table').innerHTML = sortedReasons.map(([reason, count]) => {
             const meta = BARRIER_META[reason] || {};
-            const badge = meta.fixable ? '<span class="badge badge--yes">Yes</span>' : '<span class="badge badge--no">No</span>';
+            const badge = meta.fixable === true ? '<span class="badge badge--yes">Yes</span>' : meta.fixable === 'time' ? '<span class="badge badge--info">Needs Time</span>' : '<span class="badge badge--no">No</span>';
             return `<tr><td>${reason}</td><td><strong>${count}</strong></td><td>${badge}</td><td>${meta.action||''}</td></tr>`;
         }).join('') + `<tr style="border-top:2px solid var(--color-border);"><td colspan="4" style="padding-top:1rem;">
             <div class="callout callout--warn">
@@ -1063,7 +1072,7 @@
             list.sort((a,b) => (a.grades_advanced||0)-(b.grades_advanced||0) || a.name.localeCompare(b.name));
 
             let html = '';
-            list.slice(0, 150).forEach(s => {
+            list.forEach(s => {
                 const badges = s._tags.map((t,i) => {
                     const color = COLORS.barriers[t] || '#666';
                     const style = i===0 ? '' : 'opacity:0.6;font-size:0.65rem;';
@@ -1103,7 +1112,6 @@
                 }
                 html += '</div></details>';
             });
-            if (list.length > 150) html += `<p style="text-align:center;color:var(--color-text-muted);margin-top:1rem;">Showing 150 of ${list.length}. Use filters to narrow.</p>`;
             document.getElementById('student-list').innerHTML = html;
         }
 
