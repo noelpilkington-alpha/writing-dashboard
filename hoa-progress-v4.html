@@ -915,7 +915,7 @@
             const badge = meta.fixable === true ? '<span class="badge badge--yes">Yes</span>' : meta.fixable === 'time' ? '<span class="badge badge--info">Needs Time</span>' : '<span class="badge badge--no">No</span>';
             const reasonStudents = allBelow.filter(s => s._reason === reason);
             const studentListHTML = reasonStudents.map(s => {
-                const startDate = (s.xp||{}).first_activity_date || '';
+                const startDate = (s.xp||{}).true_writing_start || '';
                 return `<div style="display:flex;justify-content:space-between;align-items:center;padding:0.3rem 0.5rem;border-bottom:1px solid var(--color-border);font-size:0.8rem;"><span><strong>${s.name}</strong> <span style="color:var(--color-text-muted);">${s.campus||''}</span></span><span style="color:var(--color-text-muted);">G${s.age_grade||'?'} | +${s.grades_advanced||0}${startDate ? ' | started '+startDate : ''}</span></div>`;
             }).join('');
             const expandId = 'fix-expand-' + idx;
@@ -1085,7 +1085,7 @@
                     return `<span class="badge" style="background:${color}15;color:${color};border:1px solid ${color}40;${style}">${t}</span>`;
                 }).join(' ');
                 const cohort = s.start_session || '?';
-                const firstAct = (s.xp || {}).first_activity_date || '';
+                const firstAct = (s.xp || {}).true_writing_start || '';
                 const startInfo = firstAct ? ` | started ${firstAct}` : '';
                 html += `<details><summary tabindex="0"><span style="min-width:150px;display:inline-block;"><strong>${s.name}</strong></span> <span style="color:var(--color-text-muted);font-size:0.75rem;min-width:100px;display:inline-block;">${s.campus||''}</span> <span style="font-size:0.75rem;margin-right:0.5rem;">G${s.age_grade||'?'} | ${cohort} | +${s.grades_advanced||0}${startInfo}</span> ${badges}</summary>`;
                 html += '<div class="detail-body">';
@@ -1094,7 +1094,7 @@
                     html += '<div class="callout callout--warn"><strong>Note:</strong> Student is in Grade ' + s.age_grade + '. AlphaWrite is designed for Grade 3+.</div>';
                 }
                 // Tag explanations
-                const startDate = (s.xp || {}).first_activity_date || '';
+                const startDate = (s.xp || {}).true_writing_start || '';
                 s._tags.forEach(tag => {
                     const meta = BARRIER_META[tag] || {};
                     let desc = meta.desc || '';
