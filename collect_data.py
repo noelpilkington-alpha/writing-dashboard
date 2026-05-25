@@ -67,8 +67,13 @@ def _get_start_session(tests: list[dict], first_activity_date: str | None = None
     for sn, (start, end) in ALL_SESSIONS_DATES.items():
         if start <= first <= end:
             return sn
+    # Handle dates before S1 or in between-session gaps
     if first < "2025-10-18":
         return "S1"
+    if "2025-10-18" <= first < "2025-10-20":
+        return "S2"
+    if "2026-04-18" <= first < "2026-04-27":
+        return "S5"
     return None
 
 _UUID_RE = _re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", _re.I)
