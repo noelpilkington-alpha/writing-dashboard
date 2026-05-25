@@ -300,7 +300,7 @@
                 <dl style="font-size:0.8rem;">
                     <dt><strong>2-grade target</strong></dt><dd>Each student is expected to advance 2 writing grade levels per school year. A "grade level" = passing the standardized end-of-course test for that level (score 90%+).</dd>
                     <dt style="margin-top:0.5rem;"><strong>Full-year students (S1)</strong></dt><dd>Students who started AlphaWrite in Session 1 (August 2025) and have had the full school year.</dd>
-                    <dt style="margin-top:0.5rem;"><strong>Not Spending Enough Time</strong></dt><dd>Student's lifetime average practice volume is below the expected daily pace (25 XP/day for S1, 12.5 for S2+), OR they have been inactive for 14+ school days.</dd>
+                    <dt style="margin-top:0.5rem;"><strong>Not Spending Enough Time</strong></dt><dd>Student's lifetime average practice volume is below 12.5 XP/day, OR they have been inactive for 14+ school days. 12.5 XP/day is the minimum pace needed to advance 2 grades in a school year.</dd>
                     <dt style="margin-top:0.5rem;"><strong>Stuck in Testing Loop</strong></dt><dd>Student has failed 3+ end-of-course tests at the same grade level without advancing.</dd>
                     <dt style="margin-top:0.5rem;"><strong>Rushes Tests</strong></dt><dd>Student has taken 2+ tests below the minimum time threshold for their grade level (G3-G5: under 25 minutes, G6-G8: under 60 minutes).</dd>
                     <dt style="margin-top:0.5rem;"><strong>Age Grade Below G3</strong></dt><dd>Student is in school Grade 2 or below. AlphaWrite is designed for Grade 3+; younger students may lack the typing/reading readiness for the curriculum.</dd>
@@ -341,7 +341,7 @@
             action: 'Assign targeted remediation activities before retesting. Support with coaching calls.',
         },
         'Rushes Tests': {
-            desc: '2+ tests taken below time threshold. Rushing leads to avoidable failures.',
+            desc: '2+ tests taken below time threshold. Rushing is a risk factor for failure (not deterministic — many rushers still pass, but below-target students who rush have avoidable failures).',
             fixable: false,
             action: 'Academics team to coach student on test-taking strategies and pacing.',
         },
@@ -371,7 +371,7 @@
         const daysInactive = inactivity.days_inactive || 0;
         const neverStarted = inactivity.never_active_this_session || false;
         const avgXpDay = xp.avg_xp_per_day_lifetime;
-        const xpThreshold = (startSession === 'S1') ? 25 : 12.5;
+        const xpThreshold = 12.5;
 
         if (neverStarted || daysInactive >= 14 || (avgXpDay !== undefined && avgXpDay < xpThreshold)) {
             tags.push('Not Spending Enough Time');
@@ -394,8 +394,8 @@
         const s1Total = s1.length;
         const s1AtTarget = s1.filter(s => (s.grades_advanced || 0) >= 2);
 
-        // Tag all below-target students
-        const allBelow = students.filter(s => (s.grades_advanced || 0) < 2);
+        // Tag all below-target students (exclude 35 students with no session assignment — no classifiable start date)
+        const allBelow = students.filter(s => (s.grades_advanced || 0) < 2 && s.start_session);
         allBelow.forEach(s => {
             s._tags = tagStudent(s);
             s._reason = s._tags[0] || '';
@@ -545,16 +545,16 @@
             if (el) el.innerHTML = psHTML;
         }, 100);
 
-        // === BARRIERS BY COHORT ===
-        let ewHTML = '<table class="table"><thead><tr><th>Cohort</th><th>Time</th><th>Below Target</th><th>Not Spending Enough Time</th><th>Testing Loop</th><th>Rushes Tests</th><th>Other</th></tr></thead><tbody>';
+        // === BARRIERS BY COHORT (uses primary reason — consistent with donut) ===
+        let ewHTML = '<table class="table"><thead><tr><th>Cohort</th><th>Time</th><th>Below Target</th><th>Primary: Not Spending Enough Time</th><th>Primary: Testing Loop</th><th>Primary: Rushes Tests</th><th>Primary: Other</th></tr></thead><tbody>';
         ['S1','S2','S3','S4','S5'].forEach(sn => {
             const cb = cohortBreakdown[sn];
             if (!cb) return;
             const cohortBelow = allBelow.filter(s => s.start_session === sn);
-            const nst = cohortBelow.filter(s => s._tags.includes('Not Spending Enough Time')).length;
-            const loop = cohortBelow.filter(s => s._tags.includes('Stuck in Testing Loop')).length;
-            const rush = cohortBelow.filter(s => s._tags.includes('Rushes Tests')).length;
-            const other = cb.below - Math.max(nst, loop, rush);
+            const nst = cohortBelow.filter(s => s._reason === 'Not Spending Enough Time').length;
+            const loop = cohortBelow.filter(s => s._reason === 'Stuck in Testing Loop').length;
+            const rush = cohortBelow.filter(s => s._reason === 'Rushes Tests').length;
+            const other = cohortBelow.length - nst - loop - rush;
             ewHTML += `<tr><td><strong>${sn}</strong></td><td>${cb.months} ${cb.months===1?'month':'months'}</td><td>${cb.below} of ${cb.total}</td><td>${nst}</td><td>${loop}</td><td>${rush}</td><td>${other > 0 ? other : '-'}</td></tr>`;
         });
         ewHTML += '</tbody></table>';
