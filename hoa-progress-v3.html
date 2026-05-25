@@ -503,7 +503,7 @@
             if (total) cohortBreakdown[sn] = {below: below.length, total, months: monthsIn(sessionStarts[sn])};
         });
 
-        let actionHTML = `<p style="margin-bottom:0.75rem;"><strong>Result:</strong> ${pct}% of full-year students hit the 2-grade target. Across all cohorts, <strong>${allBelow.length} students</strong> have not yet reached it.</p>`;
+        let actionHTML = `<p style="margin-bottom:0.75rem;"><strong>Result:</strong> ${pct}% of full-year students (${s1AtTarget.length}/${s1Total}) hit the 2-grade target. Across all cohorts, ${allAtTarget.length} of ${students.length} students (${Math.round(100*allAtTarget.length/students.length)}%) have reached it. <strong>${allBelow.length} students</strong> have not yet reached the target.</p>`;
         actionHTML += '<p style="font-size:0.8rem;color:var(--color-text-secondary);margin-bottom:0.75rem;">Cohort context: ';
         actionHTML += Object.entries(cohortBreakdown).map(([sn,d]) => `${sn}: ${d.below} of ${d.total} below target (${d.months} ${d.months===1?'month':'months'} in program)`).join(' | ');
         actionHTML += '</p>';
@@ -641,7 +641,7 @@
 
         // === COHORT STATUS ===
 
-        let cohortHTML = `<p style="font-size:0.83rem;color:var(--color-text-secondary);margin-bottom:0.75rem;">S1 reached 88% after ${monthsIn(sessionStarts.S1)} months. Newer cohorts status:</p>`;
+        let cohortHTML = `<p style="font-size:0.83rem;color:var(--color-text-secondary);margin-bottom:0.75rem;">S1 reached ${pct}% after ${monthsIn(sessionStarts.S1)} months. Newer cohorts status:</p>`;
         cohortHTML += '<table class="table"><thead><tr><th>Cohort</th><th>Time in Program</th><th>Students</th><th>At Target</th></tr></thead><tbody>';
         ['S2','S3','S4','S5'].forEach(sn => {
             const cohort = students.filter(s => s.start_session === sn);
@@ -651,7 +651,7 @@
             cohortHTML += `<tr><td><strong>${sn}</strong></td><td>${m} ${m===1?'month':'months'}</td><td>${cohort.length}</td><td><strong>${Math.round(100*atT/cohort.length)}%</strong> (${atT})</td></tr>`;
         });
         cohortHTML += '</tbody></table>';
-        cohortHTML += '<div class="callout callout--info" style="margin-top:1rem;">S1 was 85% established Alpha campus students. Later cohorts are 43-53% partner campuses (TSA, GT) with students enrolling at lower readiness. The test is whether each cohort reaches 88%+ after a full year.</div>';
+        cohortHTML += `<div class="callout callout--info" style="margin-top:1rem;">S1 was 85% established Alpha campus students. Later cohorts are 43-53% partner campuses (TSA, GT) with students enrolling at lower readiness. The test is whether each cohort reaches ${pct}%+ after a full year.</div>`;
         document.getElementById('cohort-content').innerHTML = cohortHTML;
 
         // === CAMPUS ===
