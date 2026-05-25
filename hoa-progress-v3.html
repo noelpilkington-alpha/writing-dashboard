@@ -398,12 +398,15 @@
         if (dd.needed) tags.push('Stuck in Testing Loop');
         const rushing = s.rushing || {};
         if (rushing.is_rusher) tags.push('Rushes Tests');
-        if (typeof s.age_grade === 'number' && s.age_grade < 3) tags.push('Age Grade Below G3');
 
         if (tags.length === 0) {
             if (s.grades_advanced === 1) tags.push('On Track (may reach 2)');
             else tags.push('Still in Coursework');
         }
+
+        // Age grade below G3 is always secondary context (never the sole primary tag)
+        if (typeof s.age_grade === 'number' && s.age_grade < 3) tags.push('Age Grade Below G3');
+
         return tags;
     }
 
