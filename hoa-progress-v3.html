@@ -221,7 +221,7 @@
         <!-- Section 1: Results -->
         <section id="results" aria-label="Full-year results">
             <div class="card card-accent">
-                <h3>Full-Year Students (started August 2025, 158 students)</h3>
+                <h3 id="hero-heading">Full-Year Students</h3>
                 <div class="hero-grid" id="hero-grid"></div>
                 <div class="bar" id="progress-bar" role="img" aria-label="Grade advancement distribution"></div>
                 <div class="bar-legend" id="bar-legend"></div>
@@ -430,6 +430,7 @@
         const mean = (s1Adv.reduce((a,b)=>a+b,0)/s1Adv.length).toFixed(1);
         const pct = Math.round(100 * s1AtTarget.length / s1Total);
 
+        document.getElementById('hero-heading').textContent = `Full-Year Students (Session 1 Cohort — ${s1Total} students)`;
         document.getElementById('hero-grid').innerHTML = `
             <div class="hero-stat"><div class="hero-number hero-number--success">${pct}%</div><div class="hero-label">of full-year students hit the 2-grade target</div><div class="hero-detail">${s1AtTarget.length} of ${s1Total} students</div></div>
             <div class="hero-stat"><div class="hero-number">${median}</div><div class="hero-label">median grades advanced</div><div class="hero-detail">Mean: ${mean} | Target: 2/year</div></div>
