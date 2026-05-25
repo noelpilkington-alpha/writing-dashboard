@@ -716,16 +716,23 @@
                     return `<span class="badge" style="background:${color}15;color:${color};border:1px solid ${color}40;${style}">${t}</span>`;
                 }).join(' ');
                 const cohort = s.start_session || '?';
-                html += `<details><summary tabindex="0"><span style="min-width:150px;display:inline-block;"><strong>${s.name}</strong></span> <span style="color:var(--color-text-muted);font-size:0.75rem;min-width:100px;display:inline-block;">${s.campus||''}</span> <span style="font-size:0.75rem;margin-right:0.5rem;">G${s.age_grade||'?'} | ${cohort} | +${s.grades_advanced||0}</span> ${badges}</summary>`;
+                const firstAct = (s.xp || {}).first_activity_date || '';
+                const startInfo = firstAct ? ` | started ${firstAct}` : '';
+                html += `<details><summary tabindex="0"><span style="min-width:150px;display:inline-block;"><strong>${s.name}</strong></span> <span style="color:var(--color-text-muted);font-size:0.75rem;min-width:100px;display:inline-block;">${s.campus||''}</span> <span style="font-size:0.75rem;margin-right:0.5rem;">G${s.age_grade||'?'} | ${cohort} | +${s.grades_advanced||0}${startInfo}</span> ${badges}</summary>`;
                 html += '<div class="detail-body">';
                 // Age grade warning
                 if (typeof s.age_grade === 'number' && s.age_grade < 3) {
                     html += '<div class="callout callout--warn"><strong>Note:</strong> Student is in Grade ' + s.age_grade + '. AlphaWrite is designed for Grade 3+.</div>';
                 }
                 // Tag explanations
+                const startDate = (s.xp || {}).first_activity_date || '';
                 s._tags.forEach(tag => {
                     const meta = BARRIER_META[tag] || {};
-                    html += `<p style="margin-bottom:0.4rem;"><span class="badge" style="background:${COLORS.barriers[tag]||'#666'}15;color:${COLORS.barriers[tag]||'#666'};border:1px solid ${COLORS.barriers[tag]||'#666'}40;">${tag}</span> ${meta.desc||''}</p>`;
+                    let desc = meta.desc || '';
+                    if ((tag === 'Still in Coursework' || tag === 'Too Early to Assess') && startDate) {
+                        desc += ` Started Writing: ${startDate}.`;
+                    }
+                    html += `<p style="margin-bottom:0.4rem;"><span class="badge" style="background:${COLORS.barriers[tag]||'#666'}15;color:${COLORS.barriers[tag]||'#666'};border:1px solid ${COLORS.barriers[tag]||'#666'}40;">${tag}</span> ${desc}</p>`;
                 });
                 // Skill gap analysis
                 const analysis = s.skill_gap_analysis || {};
