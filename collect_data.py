@@ -25,11 +25,9 @@ from writing_automation.config import (
 from writing_automation.csv_loader import load_csv
 from writing_automation.deep_dive import detect_deep_dives
 from writing_automation.deep_dive_analysis import (
-    analyze_with_claude,
-    fetch_and_parse_tests,
     identify_deep_dive_tests,
     is_rushed,
-    _get_anthropic_client,
+    load_analysis_cache,
 )
 from writing_automation.enrollment_fetcher import (
     fetch_student_profiles,
@@ -48,6 +46,31 @@ import re as _re
 
 GRADEBOOK_BASE = "/ims/oneroster/gradebook/v1p2"
 
+ALL_SESSIONS_DATES = {
+    "S1": ("2025-08-11", "2025-10-17"),
+    "S2": ("2025-10-20", "2026-01-02"),
+    "S3": ("2026-01-05", "2026-02-20"),
+    "S4": ("2026-02-21", "2026-04-17"),
+    "S5": ("2026-04-27", "2026-06-05"),
+}
+
+
+def _get_start_session(tests: list[dict], first_activity_date: str | None = None) -> str | None:
+    """Determine which session a student started based on first activity or first test."""
+    # Prefer first_activity_date (from XP data) over first test date
+    first = first_activity_date
+    if not first:
+        dates = [t.get("date", "") for t in tests if t.get("date")]
+        if not dates:
+            return None
+        first = min(dates)
+    for sn, (start, end) in ALL_SESSIONS_DATES.items():
+        if start <= first <= end:
+            return sn
+    if first < "2025-10-18":
+        return "S1"
+    return None
+
 _UUID_RE = _re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", _re.I)
 
 
@@ -63,6 +86,26 @@ def _is_alphawrite(ali_sid: str) -> bool:
     - 'alphawrite:' (compositions/essays)
     """
     return ali_sid.startswith("alphawrite-") or ali_sid.startswith("alphawrite:")
+
+
+def _is_writing_activity(ali_sid: str, meta: dict) -> bool:
+    """Check if a result is Writing activity (broader than _is_alphawrite).
+
+    Covers standard AlphaWrite, SWF (Standardized Writing Fundamentals),
+    and Essays courses which use different ID formats.
+    """
+    if meta.get("subject") == "Writing":
+        return True
+    if _is_alphawrite(ali_sid):
+        return True
+    if meta.get("lessonType") == "powerpath-100":
+        return True
+    if ali_sid.startswith("cr_article_"):
+        return True
+    if ali_sid.startswith("unit_") and meta.get("lessonType") in ("quiz", "alpha-read-article", ""):
+        if meta.get("subject") in ("", "Writing"):
+            return True
+    return False
 
 
 ACCURACY_THRESHOLD = 80
@@ -119,158 +162,8 @@ def load_s1_writing_names(snapshot_path: str) -> set[str]:
     logger.info("Loaded %d S1 Writing students from snapshot", len(names))
     return names
 
-# ---------------------------------------------------------------------------
-# Session cookie helpers (interactive prompting on expiry)
-# ---------------------------------------------------------------------------
-
-def _load_session_cookie() -> str:
-    """Load the Alpha session cookie from .env, prompting if missing."""
-    from dotenv import load_dotenv
-    from writing_automation.config import ALPHA_SESSION_COOKIE_ENV, ENV_FILE
-
-    load_dotenv(ENV_FILE)
-    cookie = os.getenv(ALPHA_SESSION_COOKIE_ENV, "")
-    if not cookie:
-        cookie = _prompt_for_cookie(ENV_FILE, ALPHA_SESSION_COOKIE_ENV)
-    return cookie
 
 
-def _prompt_for_cookie(env_file, env_key: str) -> str:
-    """Prompt the user to paste a new session cookie and save it to .env."""
-    print("\n" + "=" * 60)
-    print("Session cookie required for test page fetching.")
-    print("Open Alpha in your browser, copy the 'session' cookie value,")
-    print("and paste it below.")
-    print("=" * 60)
-    cookie = input("Session cookie: ").strip()
-    if not cookie:
-        raise ValueError("No cookie provided. Cannot fetch test pages.")
-    _save_cookie_to_env(env_file, env_key, cookie)
-    os.environ[env_key] = cookie
-    return cookie
-
-
-def _save_cookie_to_env(env_file, env_key: str, cookie: str):
-    """Update or add the cookie in the .env file."""
-    env_path = Path(env_file)
-    if env_path.exists():
-        content = env_path.read_text(encoding="utf-8")
-        # Replace existing line or append
-        import re as _re2
-        pattern = _re2.compile(rf'^{_re2.escape(env_key)}=.*$', _re2.MULTILINE)
-        if pattern.search(content):
-            content = pattern.sub(f'{env_key}={cookie}', content)
-        else:
-            content = content.rstrip() + f'\n{env_key}={cookie}\n'
-        env_path.write_text(content, encoding="utf-8")
-    else:
-        env_path.write_text(f'{env_key}={cookie}\n', encoding="utf-8")
-    logger.info("Session cookie saved to %s", env_path)
-
-
-def _fetch_and_parse_with_retry(test_results, session_cookie: str) -> tuple[list[dict], str]:
-    """Fetch and parse tests, prompting for a new cookie on auth failure.
-
-    Returns (parsed_tests, final_cookie).
-    """
-    from writing_automation.config import ALPHA_SESSION_COOKIE_ENV, ENV_FILE
-
-    try:
-        parsed = fetch_and_parse_tests(test_results, session_cookie)
-        return parsed, session_cookie
-    except ValueError as e:
-        if "cookie expired" in str(e).lower():
-            logger.warning("Session cookie expired. Prompting for a new one...")
-            new_cookie = _prompt_for_cookie(ENV_FILE, ALPHA_SESSION_COOKIE_ENV)
-            parsed = fetch_and_parse_tests(test_results, new_cookie)
-            return parsed, new_cookie
-        raise
-
-
-def run_deep_dive_analysis(
-    deep_dive_tests: dict[tuple[str, int], list],
-    email_to_name: dict[str, str],
-) -> dict[tuple[str, int], dict]:
-    """Run Claude analysis for all deep dive student/grade combos.
-
-    Returns dict mapping (email, grade) -> analysis dict with keys:
-    questions_missed, error_analysis, root_causes, recommended_actions
-    """
-    if not deep_dive_tests:
-        return {}
-
-    total_tests = sum(len(v) for v in deep_dive_tests.values())
-    logger.info(
-        "Deep Dive Analysis: %d student/grade combos, %d tests to analyze",
-        len(deep_dive_tests), total_tests,
-    )
-
-    # Load cookie
-    session_cookie = _load_session_cookie()
-
-    # Init Claude client
-    client = _get_anthropic_client()
-
-    analyses = {}
-    for i, ((email, grade), test_list) in enumerate(sorted(deep_dive_tests.items()), 1):
-        name = email_to_name.get(email, email)
-        logger.info(
-            "  [%d/%d] Analyzing %s at G%d (%d tests)...",
-            i, len(deep_dive_tests), name, grade, len(test_list),
-        )
-
-        # Build rushing info
-        rushing_info = []
-        for r in test_list:
-            rushed = is_rushed(r.time_spent_seconds, grade)
-            rushing_info.append({
-                "test_name": r.test_name,
-                "time_seconds": r.time_spent_seconds,
-                "rushed": rushed,
-                "score": r.score,
-                "date": r.score_date,
-            })
-
-        # Fetch and parse test pages (with cookie retry)
-        try:
-            parsed_tests, session_cookie = _fetch_and_parse_with_retry(
-                test_list, session_cookie
-            )
-        except ValueError as e:
-            logger.error("  Cannot fetch tests for %s G%d: %s", name, grade, e)
-            analyses[(email, grade)] = {
-                "questions_missed": "",
-                "error_analysis": f"Could not fetch test pages: {e}",
-                "root_causes": "",
-                "recommended_actions": "",
-            }
-            continue
-
-        if not parsed_tests:
-            logger.warning("  No tests could be parsed for %s G%d", name, grade)
-            analyses[(email, grade)] = {
-                "questions_missed": "",
-                "error_analysis": "Could not fetch/parse test pages",
-                "root_causes": "",
-                "recommended_actions": "",
-            }
-            continue
-
-        # Analyze with Claude
-        try:
-            analysis = analyze_with_claude(client, name, grade, parsed_tests, rushing_info)
-            analyses[(email, grade)] = analysis
-            logger.info("  Analysis complete for %s G%d", name, grade)
-        except Exception as e:
-            logger.error("  Claude analysis failed for %s G%d: %s", name, grade, e)
-            analyses[(email, grade)] = {
-                "questions_missed": "",
-                "error_analysis": f"Analysis failed: {e}",
-                "root_causes": "",
-                "recommended_actions": "",
-            }
-
-    return analyses
 
 
 def load_effective_grades(csv_path: str) -> tuple[dict[str, int], dict[str, int]]:
@@ -598,17 +491,98 @@ def _resolve_activity_name(ali_sid: str, meta: dict) -> tuple[str, str] | None:
 _WRITING_TEST_RE = _re.compile(r"Writing\s+G\d|Alpha\s+Standardized\s+Writing", _re.I)
 _GRADE_SUB_RE = _re.compile(r"G(\d+)\.(\d+)")
 
+# Spreadsheet-based test type lookup for S1 tests (before API tagging was reliable)
+_SPREADSHEET_TYPES: dict[tuple[str, str], str] | None = None
 
-def _classify_unknown_test_types(tests: list[dict]) -> list[dict]:
+
+def _load_spreadsheet_types() -> dict[tuple[str, str], str]:
+    """Load test type classifications from Alpha Standardized Writing Tests Graded.xlsx.
+
+    Returns dict mapping (name_lower, date_str, test_sub) -> test_type.
+    Used for S1 tests where API metadata.testType is empty.
+    Also builds a name→email mapping from the Master Roster for better matching.
+    """
+    global _SPREADSHEET_TYPES
+    if _SPREADSHEET_TYPES is not None:
+        return _SPREADSHEET_TYPES
+
+    _SPREADSHEET_TYPES = {}
+    spreadsheet_path = Path(__file__).resolve().parent.parent / "Daily workflow" / "Alpha Standardized Writing Tests Graded.xlsx"
+    if not spreadsheet_path.exists():
+        logger.warning("Tests Graded spreadsheet not found at %s", spreadsheet_path)
+        return _SPREADSHEET_TYPES
+
+    import openpyxl
+    import csv as _csv
+    from datetime import datetime as _dt
+
+    type_map = {
+        "Mastery Test": "end of course",
+        "Retake": "end of course",
+        "Test-Out": "test out",
+        "Placement Test": "placement",
+    }
+
+    # Build name→email mapping from Master Roster for resolving spreadsheet names
+    roster_path = Path(__file__).resolve().parent.parent / "A&D Master Roster 25-26 - Master.csv"
+    name_to_email: dict[str, str] = {}
+    if roster_path.exists():
+        with open(roster_path, encoding="utf-8") as f:
+            reader = _csv.DictReader(f)
+            for row in reader:
+                email = row.get("Student Alpha Email", "").strip().lower()
+                first = row.get("First Name", "").strip().lower()
+                last = row.get("Last Name", "").strip().lower()
+                preferred = row.get("Preferred Name", "").strip().lower()
+                if email and first and last:
+                    name_to_email[f"{first} {last}"] = email
+                    if preferred:
+                        name_to_email[f"{preferred} {last}"] = email
+
+    wb = openpyxl.load_workbook(str(spreadsheet_path), read_only=True, data_only=True)
+    ws = wb["Tests Graded"]
+    for row in ws.iter_rows(min_row=2, values_only=True):
+        name = (row[0] or "").strip().lower()
+        date = row[2]
+        test = str(row[3] or "").strip()
+        test_type = row[4]
+        if not date or not isinstance(date, _dt) or not test_type:
+            continue
+        date_str = date.strftime("%Y-%m-%d")
+        mapped = type_map.get(test_type, test_type.lower())
+
+        # Store by original name
+        _SPREADSHEET_TYPES[(name, date_str, test)] = mapped
+        # Store by last name for fuzzy matching
+        parts = name.split()
+        if parts:
+            _SPREADSHEET_TYPES[(parts[-1], date_str, test)] = mapped
+        # Store by email (resolved via roster) for reliable matching
+        clean_name = _re.sub(r"\([^)]*\)", "", name).strip()
+        clean_name = _re.sub(r"\s+", " ", clean_name)
+        email = name_to_email.get(name) or name_to_email.get(clean_name)
+        if email:
+            _SPREADSHEET_TYPES[(email, date_str, test)] = mapped
+    wb.close()
+    logger.info("Loaded %d test type classifications from spreadsheet", len(_SPREADSHEET_TYPES))
+    return _SPREADSHEET_TYPES
+
+
+def _classify_unknown_test_types(tests: list[dict], student_name: str = "", student_email: str = "") -> list[dict]:
     """Retroactively classify tests with empty test_type.
 
-    Logic:
+    First tries spreadsheet lookup (authoritative for S1), then falls back to heuristic:
     - First ever test at G3.1 → 'placement'
     - .1 at a new grade after passing the previous grade → 'test out'
     - All other tests within a grade → 'end of course'
     """
     if not tests:
         return tests
+
+    # Try spreadsheet lookup for tests with empty type
+    sheet_types = _load_spreadsheet_types()
+    name_lower = student_name.lower().strip()
+    last_name = name_lower.split()[-1] if name_lower.split() else ""
 
     passed_grades: set[int] = set()
     first_test_seen = False
@@ -630,8 +604,19 @@ def _classify_unknown_test_types(tests: list[dict]) -> list[dict]:
 
         grade = int(m.group(1))
         sub = int(m.group(2))
+        test_sub = f"G{grade}.{sub}"
+        date = t.get("date", "")
 
-        if not first_test_seen and sub == 1 and grade == 3:
+        # Try spreadsheet lookup (authoritative for S1)
+        # Try by email first (most reliable), then name, then last name
+        sheet_type = (
+            sheet_types.get((student_email, date, test_sub))
+            or sheet_types.get((name_lower, date, test_sub))
+            or sheet_types.get((last_name, date, test_sub))
+        )
+        if sheet_type:
+            t["test_type"] = sheet_type
+        elif not first_test_seen and sub == 1 and grade == 3:
             t["test_type"] = "placement"
         elif sub == 1 and (grade - 1) in passed_grades:
             t["test_type"] = "test out"
@@ -646,7 +631,7 @@ def _classify_unknown_test_types(tests: list[dict]) -> list[dict]:
 
 
 def fetch_writing_test_results(
-    api: TimebackAPI, student_id: str
+    api: TimebackAPI, student_id: str, student_name: str = "", student_email: str = ""
 ) -> list[dict]:
     """Fetch standardized writing test results from the API for a student.
 
@@ -685,35 +670,37 @@ def fetch_writing_test_results(
                 "passed": (r.get("score") or 0) >= PASS_THRESHOLD,
             })
         results.sort(key=lambda x: x["date"])
-        return _classify_unknown_test_types(results)
+        return _classify_unknown_test_types(results, student_name, student_email)
     except Exception as e:
         logger.warning("Failed to fetch test results for %s: %s", student_id, e)
         return []
 
 
+YEAR_START = "2025-08-11"
+
+
 def fetch_activity_results(
     api: TimebackAPI, student_id: str, session_start: str, session_end: str
 ) -> list[dict]:
-    """Fetch per-activity assessment results for a student within a session.
+    """Fetch per-activity assessment results for a student for the full school year.
 
-    Extends the upper bound to max(session_end, today) so that post-session
-    activity (when the session hasn't been rolled over yet) is still captured.
+    Uses YEAR_START (2025-08-11) as the lower bound to capture lifetime activity,
+    enabling accurate XP/day calculations across all sessions.
     """
     today_str = datetime.now().strftime("%Y-%m-%d")
     upper = max(session_end, today_str)
     try:
-        data = api.get(
+        return api.get_paginated(
             f"{GRADEBOOK_BASE}/assessmentResults/",
             {
-                "limit": 3000,
                 "filter": (
                     f"student.sourcedId='{student_id}'"
-                    f" AND scoreDate>='{session_start}'"
+                    f" AND scoreDate>='{YEAR_START}'"
                     f" AND scoreDate<='{upper}'"
                 ),
             },
+            "assessmentResults",
         )
-        return data.get("assessmentResults", [])
     except Exception as e:
         logger.warning("Failed to fetch activities for %s: %s", student_id, e)
         return []
@@ -870,26 +857,35 @@ def extract_xp_and_details(raw_results: list[dict]) -> dict:
     - assessmentLineItem.sourcedId is an AlphaWrite activity (alphawrite- or alphawrite:)
 
     Returns dict with 'activity_xp', 'test_xp' lists, and XP totals.
+    Also counts ALL Writing activities (including 0-XP) for time-spent analysis.
     """
     activity_xp_items = []
     test_xp_items = []
     alphawrite_xp_total = 0.0
     mastery_track_xp_total = 0.0
     test_xp_total = 0.0
+    total_writing_activities = 0
+    writing_active_dates = set()
 
     for r in raw_results:
         meta = r.get("metadata", {})
+        ali_sid = r.get("assessmentLineItem", {}).get("sourcedId", "")
+
+        if not _is_writing_activity(ali_sid, meta):
+            continue
+
+        # Count ALL Writing activities (including 0-XP) for time-spent metric
+        total_writing_activities += 1
+        date = (r.get("scoreDate") or "")[:10]
+        if date:
+            writing_active_dates.add(date)
+
         xp = meta.get("xp", 0) or 0
         if xp <= 0:
             continue
 
-        ali_sid = r.get("assessmentLineItem", {}).get("sourcedId", "")
         subject = meta.get("subject", "")
         is_alphawrite = _is_alphawrite(ali_sid)
-
-        # Only include Writing-subject OR AlphaWrite activities
-        if subject != "Writing" and not is_alphawrite:
-            continue
 
         result_type = meta.get("resultType", "")
         lesson_type = meta.get("lessonType", "")
@@ -956,6 +952,10 @@ def extract_xp_and_details(raw_results: list[dict]) -> dict:
         "mastery_track_xp": mastery_track_xp_total,
         "test_xp_total": test_xp_total,
         "last_xp_date": last_xp_date,
+        "total_writing_activities": total_writing_activities,
+        "writing_active_days": len(writing_active_dates),
+        "writing_active_dates_set": writing_active_dates,  # excluded from JSON, used by caller
+        "first_writing_date": min(writing_active_dates) if writing_active_dates else None,
     }
 
 
@@ -999,15 +999,20 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
     deep_dives = detect_deep_dives(csv_results)
     deep_dive_tests = identify_deep_dive_tests(csv_results, deep_dives, session_name)
 
-    # 6b. Run Claude deep dive analysis for students in testing loops
+    # 6b. Load deep dive analyses from cache (written by writing_automation CLI)
     email_to_name = {}
     for r in csv_results:
         email_to_name[r.student_email] = r.student_name
     if skip_analysis:
-        logger.info("Skipping Claude deep dive analysis (--skip-analysis)")
+        logger.info("Skipping deep dive analysis (--skip-analysis)")
         dd_analyses = {}
     else:
-        dd_analyses = run_deep_dive_analysis(deep_dive_tests, email_to_name)
+        dd_analyses = load_analysis_cache()
+        cached_keys = set(dd_analyses.keys()) & set(deep_dive_tests.keys())
+        logger.info(
+            "Loaded %d/%d deep dive analyses from cache",
+            len(cached_keys), len(deep_dive_tests),
+        )
 
     # 6c. Load effective grades from CSV
     eg_by_name: dict[str, int] = {}
@@ -1062,7 +1067,46 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
         student_enrollments = enrollments.get(sid, [])
 
         # Fetch test history from API
-        api_tests = fetch_writing_test_results(api, sid)
+        student_full_name = f"{profile.given_name} {profile.family_name}"
+        api_tests = fetch_writing_test_results(api, sid, student_full_name, email)
+
+        # Override API test_type with CSV classification, then spreadsheet
+        # CSV is authoritative for S2+ (has "End of Course" type)
+        # Spreadsheet is authoritative for S1 (CSV has everything as "Test Out")
+        sheet_types = _load_spreadsheet_types()
+        for t in api_tests:
+            test_date = t.get("date", "")
+            csv_matches = [
+                r for r in csv_by_email.get(email, [])
+                if r.test_name == t["name"]
+                and r.score_date.strftime("%Y-%m-%d") == test_date
+            ]
+            if csv_matches:
+                r = csv_matches[0]
+                key = (email, r.test_name, r.score_date)
+                csv_type = classifications.get(key, r.csv_test_type)
+                csv_type_mapped = {
+                    "End of Course": "end of course",
+                    "Test Out": "test out",
+                    "Test-Out": "test out",
+                    "Placement": "placement",
+                    "Placement Test": "placement",
+                    "Mastery Test": "end of course",
+                    "Retake": "end of course",
+                }.get(csv_type, csv_type.lower().replace("-", " ") if csv_type else t["test_type"])
+                if csv_type_mapped:
+                    t["test_type"] = csv_type_mapped
+
+            # Spreadsheet override (authoritative for S1 where CSV lacks EOC distinction)
+            m = _GRADE_SUB_RE.search(t.get("name", ""))
+            if m:
+                test_sub = m.group(0)
+                sheet_type = (
+                    sheet_types.get((email, test_date, test_sub))
+                    or sheet_types.get((student_full_name.lower().strip(), test_date, test_sub))
+                )
+                if sheet_type:
+                    t["test_type"] = sheet_type
 
         # Skip students whose only enrollments are non-core courses
         # (unless they have test history, indicating they completed core courses)
@@ -1198,10 +1242,33 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
         break_xp = total_xp - school_xp
         avg_xp = round(school_xp / school_days, 1) if school_days else 0
 
-        # Compute inactivity (weekdays since last XP, up to today).
+        # XP/day metric (lifetime: from first Writing activity to today)
+        # Discount 15 school days for MAP testing weeks (3 weeks across the year)
+        today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        total_writing_activities = xp_result.get("total_writing_activities", 0)
+        writing_active_days = xp_result.get("writing_active_days", 0)
+        first_writing_date = xp_result.get("first_writing_date")
+        lifetime_xp = xp_result.get("alphawrite_xp", 0) + xp_result.get("mastery_track_xp", 0) + xp_result.get("test_xp_total", 0)
+        if first_writing_date:
+            first_dt = datetime.strptime(first_writing_date, "%Y-%m-%d")
+            lifetime_school_days = _count_weekdays(first_dt, today)
+            map_discount_days = 15
+            available_days = max(1, lifetime_school_days - map_discount_days)
+        else:
+            available_days = max(1, school_days - 5)
+        avg_xp_per_day = round(lifetime_xp / available_days, 1) if available_days > 0 else 0
+
+        # Compute inactivity (weekdays since last XP or test, up to today).
         # We don't clamp at session_end — if the session is over and a student
         # genuinely hasn't done anything post-session, that's real inactivity.
         last_xp_date_str = xp_details.get("last_xp_date")
+        # Also consider tests taken (students in HF/SWF courses may only take
+        # periodic tests without daily practice XP)
+        test_dates = [t.get("date", "") for t in api_tests if t.get("date")]
+        if test_dates:
+            last_test_date = max(test_dates)
+            if not last_xp_date_str or last_test_date > last_xp_date_str:
+                last_xp_date_str = last_test_date
         today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         session_start_dt = datetime.strptime(session_start, "%Y-%m-%d")
         inactivity_cutoff = today
@@ -1325,6 +1392,7 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
             "effective_grades_mastered": max(0, hmg - (eg_by_name.get(profile.full_name.lower(), hmg + 1) - 1)) if eg_by_name.get(profile.full_name.lower()) else None,
             "language_eg": lang_eg_by_name.get(profile.full_name.lower()),
             "s1_cohort": profile.full_name.lower() in s1_names if s1_names else None,
+            "start_session": _get_start_session(api_tests, first_writing_date),
             "completed_g8": completed_g8,
             "enrollments": student_enrollments,
             "still_enrolled": bool(student_enrollments),
@@ -1343,8 +1411,13 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
                 "avg_per_day": avg_xp,
                 "meets_goal": school_xp >= xp_goal,
                 "last_xp_date": xp_details.get("last_xp_date"),
+                "total_activities": total_writing_activities,
+                "active_days": writing_active_days,
+                "available_days": available_days,
+                "avg_xp_per_day_lifetime": avg_xp_per_day,
+                "first_activity_date": first_writing_date,
             },
-            "xp_details": xp_details,
+            "xp_details": {k: v for k, v in xp_details.items() if k != "writing_active_dates_set"},
             "session_tests": session_tests,
             "accuracy": {
                 "activities_below_threshold": low_accuracy,

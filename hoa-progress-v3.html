@@ -227,6 +227,12 @@
                 <div class="bar-legend" id="bar-legend"></div>
             </div>
 
+            <!-- Students who hit target -->
+            <details style="margin-bottom:1.5rem;">
+                <summary><strong>Students who earned 2+ grade levels</strong> — click to view by campus</summary>
+                <div class="detail-body" id="at-target-list"></div>
+            </details>
+
             <!-- Action Summary -->
             <div class="card card-info">
                 <h3>Action Summary</h3>
@@ -324,6 +330,7 @@
             'Age Grade Below G3': '#4338ca',
             'Slow Progress': '#475569',
             'On Track (may reach 2)': '#059669',
+            'Too Early to Assess': '#64748b',
         },
         fix: { yes: '#166534', no: '#991b1b' },
         progress: { g3plus: '#166534', g2: '#16a34a', g1: '#d97706', g0: '#dc2626' },
@@ -360,6 +367,11 @@
             fixable: true,
             action: 'Continue current trajectory. 2 weeks remain.',
         },
+        'Too Early to Assess': {
+            desc: 'Started Writing fewer than 14 school days ago. Not enough data to classify.',
+            fixable: true,
+            action: 'Continue instruction. Reassess after 3+ weeks of practice.',
+        },
     };
 
     function tagStudent(s) {
@@ -372,6 +384,13 @@
         const neverStarted = inactivity.never_active_this_session || false;
         const avgXpDay = xp.avg_xp_per_day_lifetime;
         const xpThreshold = 12.5;
+
+        // Too early to assess (< 14 available school days)
+        const availDays = xp.available_days || 0;
+        if (availDays < 14 && availDays >= 0) {
+            tags.push('Too Early to Assess');
+            return tags;
+        }
 
         if (neverStarted || daysInactive >= 14 || (avgXpDay !== undefined && avgXpDay < xpThreshold)) {
             tags.push('Not Spending Enough Time');
@@ -389,7 +408,10 @@
     }
 
     fetch('data.json').then(r => r.json()).then(data => {
-        const students = data.students || [];
+        // Exclude specific students flagged for removal
+        const EXCLUDE = ['adriana danieri','alan rodriguez','austin wong'].map(n => n.toLowerCase());
+        const students = (data.students || []).filter(s => !EXCLUDE.includes(s.name.toLowerCase()));
+
         const s1 = students.filter(s => s.start_session === 'S1');
         const s1Total = s1.length;
         const s1AtTarget = s1.filter(s => (s.grades_advanced || 0) >= 2);
@@ -430,6 +452,20 @@
             <span><span style="background:${COLORS.progress.g1};width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>1 grade (${g1})</span>
             <span><span style="background:${COLORS.progress.g0};width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>0 grades (${g0})</span>
         `;
+
+        // === AT-TARGET STUDENTS (by campus) ===
+        const atTarget = students.filter(s => (s.grades_advanced || 0) >= 2);
+        const byCampus = {};
+        atTarget.forEach(s => { const c = s.campus || 'Unknown'; if (!byCampus[c]) byCampus[c] = []; byCampus[c].push(s); });
+        let atHTML = `<p style="margin-bottom:0.75rem;">${atTarget.length} students across all cohorts have reached 2+ grade levels:</p>`;
+        Object.keys(byCampus).sort().forEach(campus => {
+            const list = byCampus[campus].sort((a,b) => (b.grades_advanced||0)-(a.grades_advanced||0));
+            atHTML += `<p style="font-weight:600;margin-top:0.75rem;">${campus} (${list.length})</p>`;
+            atHTML += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.25rem;font-size:0.8rem;">';
+            list.forEach(s => { atHTML += `<div>${s.name} <span style="color:var(--color-success);font-weight:600;">(+${s.grades_advanced})</span></div>`; });
+            atHTML += '</div>';
+        });
+        document.getElementById('at-target-list').innerHTML = atHTML;
 
         // === ACTION SUMMARY ===
         const primaryCounts = {};
