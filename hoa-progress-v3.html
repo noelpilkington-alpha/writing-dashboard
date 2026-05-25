@@ -338,7 +338,7 @@
 
     const BARRIER_META = {
         'Not Spending Enough Time': {
-            desc: 'Daily practice volume below target, or inactive 14+ school days.',
+            desc: 'Daily practice volume is below the expected target.',
             fixable: false,
             action: 'Campus team to ensure student completes daily Writing practice consistently.',
         },
@@ -412,7 +412,7 @@
 
     fetch('data.json').then(r => r.json()).then(data => {
         // Exclude specific students flagged for removal
-        const EXCLUDE = ['adriana danieri','alan rodriguez','austin wong','aaliyah oneal','charlotte gutierrez'].map(n => n.toLowerCase());
+        const EXCLUDE = ['adriana danieri','alan rodriguez','austin wong','aaliyah oneal','charlotte gutierrez','alice bateman','clara modlin'].map(n => n.toLowerCase());
         // Also exclude Vita High School campus entirely
         const EXCLUDE_CAMPUSES = ['Vita High School'];
         const students = (data.students || []).filter(s => !EXCLUDE.includes(s.name.toLowerCase()) && !EXCLUDE_CAMPUSES.includes(s.campus));
