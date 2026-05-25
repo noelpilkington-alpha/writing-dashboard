@@ -700,7 +700,7 @@
         'On Track (may reach 2)': {
             desc: 'At 1 grade advanced and progressing. May reach 2 by year end.',
             fixable: 'time',
-            action: 'Continue current trajectory. 2 weeks remain.',
+            action: 'Continue current trajectory. 1 week remains.',
         },
         'Too Early to Assess': {
             desc: 'Started Writing fewer than 14 school days ago. Not enough data to classify.',
@@ -910,10 +910,16 @@
             <span><span style="background:#0891b2;width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>Needs more time (${fixTime})</span>
             <span><span style="background:#57534e;width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>No — requires action outside AlphaWrite (${fixNo})</span>
         `;
-        document.getElementById('fix-table').innerHTML = sortedReasons.map(([reason, count]) => {
+        document.getElementById('fix-table').innerHTML = sortedReasons.map(([reason, count], idx) => {
             const meta = BARRIER_META[reason] || {};
             const badge = meta.fixable === true ? '<span class="badge badge--yes">Yes</span>' : meta.fixable === 'time' ? '<span class="badge badge--info">Needs Time</span>' : '<span class="badge badge--no">No</span>';
-            return `<tr><td>${reason}</td><td><strong>${count}</strong></td><td>${badge}</td><td>${meta.action||''}</td></tr>`;
+            const reasonStudents = allBelow.filter(s => s._reason === reason);
+            const studentListHTML = reasonStudents.map(s => {
+                const startDate = (s.xp||{}).first_activity_date || '';
+                return `<div style="display:flex;justify-content:space-between;align-items:center;padding:0.3rem 0.5rem;border-bottom:1px solid var(--color-border);font-size:0.8rem;"><span><strong>${s.name}</strong> <span style="color:var(--color-text-muted);">${s.campus||''}</span></span><span style="color:var(--color-text-muted);">G${s.age_grade||'?'} | +${s.grades_advanced||0}${startDate ? ' | started '+startDate : ''}</span></div>`;
+            }).join('');
+            const expandId = 'fix-expand-' + idx;
+            return `<tr style="cursor:pointer;" onclick="var el=document.getElementById('${expandId}');el.style.display=el.style.display==='none'?'table-row':'none';this.classList.toggle('expanded')"><td>▶ ${reason}</td><td><strong>${count}</strong></td><td>${badge}</td><td>${meta.action||''}</td></tr><tr id="${expandId}" style="display:none;"><td colspan="4" style="padding:0.75rem;background:var(--color-page);"><div style="max-height:300px;overflow-y:auto;">${studentListHTML}</div></td></tr>`;
         }).join('') + `<tr style="border-top:2px solid var(--color-border);"><td colspan="4" style="padding-top:1rem;">
             <div class="callout callout--warn">
                 <strong>Cross-cutting finding: Grammar, Punctuation & Spelling Gaps</strong><br>
