@@ -277,7 +277,23 @@
         .zone-executive .hero-number--success { color: #4ade80 !important; }
         .zone-executive .hero-label { color: #94a3b8; }
         .zone-executive .hero-detail { color: #e2e8f0; }
-        .zone-executive .hero-stat { background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); }
+        .zone-executive .hero-stat {
+            width: 200px; height: 200px; border-radius: 50%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: radial-gradient(circle, rgba(74,222,128,0.1) 0%, rgba(74,222,128,0.02) 50%, transparent 70%);
+            border: 3px solid rgba(74,222,128,0.4);
+            box-shadow: 0 0 40px rgba(74,222,128,0.15), inset 0 0 40px rgba(74,222,128,0.05);
+            padding: 1rem; transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .zone-executive .hero-stat:hover { transform: scale(1.05); box-shadow: 0 0 60px rgba(74,222,128,0.25), inset 0 0 40px rgba(74,222,128,0.1); }
+        .zone-executive .hero-stat:nth-child(2) {
+            width: 160px; height: 160px;
+            border-color: rgba(96,165,250,0.4);
+            background: radial-gradient(circle, rgba(96,165,250,0.1) 0%, rgba(96,165,250,0.02) 50%, transparent 70%);
+            box-shadow: 0 0 40px rgba(96,165,250,0.15), inset 0 0 40px rgba(96,165,250,0.05);
+        }
+        .zone-executive .hero-stat:nth-child(2) .hero-number { font-size: 2.2rem !important; color: #60a5fa !important; text-shadow: 0 0 30px rgba(96,165,250,0.4); }
+        .zone-executive #hero-grid { display: flex; align-items: center; justify-content: center; gap: 3rem; flex-wrap: wrap; }
         .zone-executive .bar { background: rgba(255,255,255,0.1); border-radius: 10px; }
         .zone-executive .bar-legend { color: #94a3b8; }
         .zone-executive .card-info {
