@@ -328,7 +328,7 @@
             'Stuck in Testing Loop': '#6d28d9',
             'Rushes Tests': '#be123c',
             'Age Grade Below G3': '#4338ca',
-            'Slow Progress': '#475569',
+            'Still in Coursework': '#475569',
             'On Track (may reach 2)': '#059669',
             'Too Early to Assess': '#64748b',
         },
@@ -357,10 +357,10 @@
             fixable: false,
             action: 'Student needs foundational typing and reading skills before writing instruction is effective.',
         },
-        'Slow Progress': {
-            desc: 'Practicing at adequate volume but advancing slower than expected.',
+        'Still in Coursework': {
+            desc: 'Working through AlphaWrite courses (Sentences, Paragraphs, or Hole-Filling) but has not yet reached a testable milestone.',
             fixable: true,
-            action: 'Continue instruction. May benefit from course placement review.',
+            action: 'Continue instruction. Student will be tested when coursework is complete.',
         },
         'On Track (may reach 2)': {
             desc: 'At 1 grade advanced and progressing. May reach 2 by year end.',
@@ -402,7 +402,7 @@
 
         if (tags.length === 0) {
             if (s.grades_advanced === 1) tags.push('On Track (may reach 2)');
-            else tags.push('Slow Progress');
+            else tags.push('Still in Coursework');
         }
         return tags;
     }
