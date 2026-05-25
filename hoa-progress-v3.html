@@ -544,17 +544,57 @@
             const meta = BARRIER_META[reason] || {};
             const badge = meta.fixable ? '<span class="badge badge--yes">Yes</span>' : '<span class="badge badge--no">No</span>';
             return `<tr><td>${reason}</td><td><strong>${count}</strong></td><td>${badge}</td><td>${meta.action||''}</td></tr>`;
-        }).join('');
+        }).join('') + `<tr style="border-top:2px solid var(--color-border);"><td colspan="4" style="padding-top:1rem;">
+            <div class="callout callout--warn">
+                <strong>Cross-cutting finding: Grammar, Punctuation & Spelling Gaps</strong><br>
+                In addition to the barriers above, test analysis reveals that most below-target students (where test data is available) show <strong>grammar mechanics</strong> (${grammarCount} students), <strong>spelling</strong> (${spellingCount}), and <strong>punctuation</strong> (${punctCount}) errors on standardized tests. These are skills AlphaWrite teaches implicitly through sentence-level instruction but does not target in isolation. For students with persistent errors in these areas, explicit instruction outside AlphaWrite is needed.
+            </div>
+        </td></tr>`;
 
         // === SKILL GAPS ===
+        const gapExplanations = {
+            'Sentence construction': {
+                what: 'Students cannot combine sentences using appositives, conjunctions, or subordinating clauses. They write simple sentences or create run-ons when attempting complex structures.',
+                aw: 'AlphaWrite directly teaches sentence combining, kernel expansion, and appositive construction through scaffolded activities. Students practice building complex sentences from simple ones.',
+                fix: 'Yes — this is core AlphaWrite instruction. Students may need to be reassigned to an earlier Sentences course level for more practice.',
+            },
+            'Paragraph skills': {
+                what: 'Students cannot organize paragraphs with topic sentences, supporting details, and concluding statements. They write single-sentence responses or unstructured lists.',
+                aw: 'AlphaWrite teaches paragraph structure through progressive activities: identifying topic sentences, writing supporting details, and composing full paragraphs with elaboration.',
+                fix: 'Yes — this is core AlphaWrite instruction. Students may need more time in Paragraphs courses before advancing.',
+            },
+            'Spelling': {
+                what: 'Students consistently misspell common words on tests (e.g., "somthing", "neatherlands", "trasformed"). These are not typos but repeated knowledge gaps.',
+                aw: 'AlphaWrite provides AI feedback on spelling errors after each submission, asking students to correct them. However, there are no isolated spelling drills or word study activities.',
+                fix: 'No — AlphaWrite flags spelling errors but does not explicitly teach spelling. Students who make persistent spelling errors need separate spelling instruction or word study activities.',
+            },
+            'Punctuation': {
+                what: 'Students omit or misuse punctuation marks — missing periods, incorrect comma placement, no quotation marks for dialogue.',
+                aw: 'AlphaWrite teaches punctuation implicitly through sentence-level activities (e.g., using question marks in question grammar). AI feedback highlights punctuation errors for correction.',
+                fix: 'Partially — implicit instruction covers basic cases. Students with persistent punctuation gaps beyond what sentence activities teach need targeted punctuation exercises.',
+            },
+            'Grammar mechanics': {
+                what: 'Students produce subject-verb agreement errors, incorrect tense usage, missing articles, and other grammatical mistakes across their writing.',
+                aw: 'AlphaWrite embeds grammar within sentence construction activities (e.g., correct question form). AI feedback identifies grammar errors for student correction.',
+                fix: 'Partially — grammar is taught implicitly through sentence skills. Persistent grammar errors that go beyond sentence-level instruction require explicit grammar lessons.',
+            },
+            'Run-ons / comma splices': {
+                what: 'Students join independent clauses with commas or no punctuation at all, creating run-on sentences and comma splices (e.g., "I like dogs, they are fun I have two").',
+                aw: 'AlphaWrite teaches sentence boundaries through sentence combining and identification activities. AI feedback flags run-ons for correction.',
+                fix: 'Partially — sentence combining activities address this indirectly. Students with persistent run-ons may need explicit instruction on recognizing and fixing sentence boundaries.',
+            },
+        };
+
         let sgHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">';
         sgHTML += '<div><h3 style="color:var(--color-success);">AlphaWrite Addresses</h3><p style="font-size:0.75rem;color:var(--color-text-secondary);margin-bottom:0.75rem;">Skills directly practiced in lessons. Students struggling here may need earlier course placement or more repetition.</p>';
         Object.entries(gapCounts.fixable).sort((a,b)=>b[1]-a[1]).forEach(([gap,count]) => {
-            sgHTML += `<div class="gap-row"><div class="gap-label"><strong>${count}</strong> of ${persistentStudents.length} — ${gap}</div><div class="gap-bar"><div class="gap-bar-fill" style="width:${100*count/persistentStudents.length}%;background:var(--color-success);"></div></div></div>`;
+            const expl = gapExplanations[gap] || {};
+            sgHTML += `<details style="margin-bottom:0.5rem;border:none;"><summary style="padding:0.4rem 0;border:none;"><div class="gap-label" style="margin:0;"><strong>${count}</strong> of ${persistentStudents.length} — ${gap}</div><div class="gap-bar"><div class="gap-bar-fill" style="width:${100*count/persistentStudents.length}%;background:var(--color-success);"></div></div></summary><div class="detail-body" style="font-size:0.8rem;padding:0.5rem 0;border:none;"><p><strong>What this means:</strong> ${expl.what||''}</p><p style="margin-top:0.4rem;"><strong>How AlphaWrite addresses it:</strong> ${expl.aw||''}</p><p style="margin-top:0.4rem;"><strong>Can AlphaWrite fix it?</strong> ${expl.fix||''}</p></div></details>`;
         });
         sgHTML += '</div><div><h3 style="color:var(--color-danger);">Beyond AlphaWrite Scope</h3><p style="font-size:0.75rem;color:var(--color-text-secondary);margin-bottom:0.75rem;">AlphaWrite teaches grammar implicitly through sentence skills, but these students show persistent errors requiring explicit, isolated instruction.</p>';
         Object.entries(gapCounts.nonFixable).sort((a,b)=>b[1]-a[1]).forEach(([gap,count]) => {
-            sgHTML += `<div class="gap-row"><div class="gap-label"><strong>${count}</strong> of ${persistentStudents.length} — ${gap}</div><div class="gap-bar"><div class="gap-bar-fill" style="width:${100*count/persistentStudents.length}%;background:var(--color-danger);"></div></div></div>`;
+            const expl = gapExplanations[gap] || {};
+            sgHTML += `<details style="margin-bottom:0.5rem;border:none;"><summary style="padding:0.4rem 0;border:none;"><div class="gap-label" style="margin:0;"><strong>${count}</strong> of ${persistentStudents.length} — ${gap}</div><div class="gap-bar"><div class="gap-bar-fill" style="width:${100*count/persistentStudents.length}%;background:var(--color-danger);"></div></div></summary><div class="detail-body" style="font-size:0.8rem;padding:0.5rem 0;border:none;"><p><strong>What this means:</strong> ${expl.what||''}</p><p style="margin-top:0.4rem;"><strong>How AlphaWrite addresses it:</strong> ${expl.aw||''}</p><p style="margin-top:0.4rem;"><strong>Can AlphaWrite fix it?</strong> ${expl.fix||''}</p></div></details>`;
         });
         sgHTML += '</div></div>';
         sgHTML += '<div class="callout callout--info"><strong>AlphaWrite vs Test context:</strong> In AlphaWrite, students choose topics with scaffolding and AI feedback. In tests, they write about assigned content without support. Some students perform adequately in practice but cannot transfer skills to unscaffolded test conditions.</div>';
