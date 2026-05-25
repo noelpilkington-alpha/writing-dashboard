@@ -770,9 +770,30 @@
 
         const allAtTarget = students.filter(s => (s.grades_advanced || 0) >= 2);
         document.getElementById('hero-heading').textContent = `Writing Progress: 2-Grade Target`;
+        const allPct = Math.round(100*allAtTarget.length/students.length);
+        function ring(pctVal, size, color, label, detail) {
+            const r = (size - 16) / 2;
+            const circ = 2 * Math.PI * r;
+            const offset = circ * (1 - pctVal / 100);
+            return `<div style="position:relative;width:${size}px;height:${size}px;">
+                <svg width="${size}" height="${size}" style="transform:rotate(-90deg);">
+                    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="12"/>
+                    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${offset}" style="filter:drop-shadow(0 0 8px ${color}40);transition:stroke-dashoffset 1.5s cubic-bezier(0.4,0,0.2,1);"/>
+                </svg>
+                <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+                    <div style="font-size:${size > 160 ? '2.8rem' : '1.8rem'};font-weight:800;letter-spacing:-0.03em;color:#f8fafc;">${pctVal}%</div>
+                    <div style="font-size:0.7rem;color:#94a3b8;max-width:${size-40}px;">${label}</div>
+                </div>
+            </div>
+            <div style="text-align:center;margin-top:0.5rem;font-size:0.8rem;color:#cbd5e1;">${detail}</div>`;
+        }
         document.getElementById('hero-grid').innerHTML = `
-            <div class="hero-stat"><div class="hero-number hero-number--success">${pct}%</div><div class="hero-label">of full-year students hit the target</div><div class="hero-detail">${s1AtTarget.length} of ${s1Total} (Session 1 cohort)</div></div>
-            <div class="hero-stat"><div class="hero-number">${allAtTarget.length}</div><div class="hero-label">students across all cohorts have earned 2+ grade levels</div><div class="hero-detail">${allAtTarget.length} of ${students.length} total (${Math.round(100*allAtTarget.length/students.length)}%)</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;">
+                ${ring(pct, 200, '#4ade80', 'Full-year students hit target', `${s1AtTarget.length} of ${s1Total} (S1 cohort)`)}
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;">
+                ${ring(allPct, 150, '#60a5fa', 'All cohorts at target', `${allAtTarget.length} of ${students.length} students`)}
+            </div>
         `;
 
         // Progress bar
