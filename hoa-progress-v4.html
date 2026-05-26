@@ -177,14 +177,46 @@
         .zone-executive .hero-number { font-size: 3.5rem; }
 
         /* Stacked bars */
-        .bar { height: 44px; border-radius: 10px; overflow: hidden; display: flex; margin: 0.75rem 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
+        .bar { height: 44px; border-radius: 10px; overflow: visible; display: flex; margin: 0.75rem 0; }
         .bar-seg {
             display: flex; align-items: center; justify-content: center;
             font-size: 0.75rem; font-weight: 600; color: white;
             min-width: 24px;
             border-right: 2px solid white;
+            position: relative;
+            cursor: pointer;
         }
-        .bar-seg:last-child { border-right: none; }
+        .bar-seg:first-child { border-radius: 10px 0 0 10px; }
+        .bar-seg:last-child { border-right: none; border-radius: 0 10px 10px 0; }
+        .bar-tooltip {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: #f1f5f9;
+            padding: 0.6rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 400;
+            white-space: nowrap;
+            max-width: 320px;
+            white-space: normal;
+            z-index: 50;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            line-height: 1.4;
+        }
+        .bar-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #1e293b;
+        }
+        .bar-seg:hover .bar-tooltip { display: block; }
         .bar-legend { display: flex; gap: 1rem; font-size: 0.8rem; color: var(--color-text-secondary); flex-wrap: wrap; }
         .bar-legend span::before { content: ''; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: middle; }
 
@@ -853,15 +885,35 @@
         `;
 
         // Progress bar
-        const g3 = s1.filter(s=>(s.grades_advanced||0)>=3).length;
-        const g2 = s1AtTarget.length - g3;
-        const g1 = s1.filter(s=>(s.grades_advanced||0)===1).length;
-        const g0 = s1.filter(s=>(s.grades_advanced||0)===0).length;
+        // Helper: build campus summary for at-target students
+        function campusSummary(studentList) {
+            const camps = {};
+            studentList.forEach(s => { const c = s.campus||'Unknown'; camps[c]=(camps[c]||0)+1; });
+            return Object.entries(camps).sort((a,b)=>b[1]-a[1]).map(([c,n])=>`${c}: ${n}`).join('<br>');
+        }
+        // Helper: build barrier summary for below-target students
+        function barrierSummary(studentList) {
+            const counts = {};
+            studentList.forEach(s => { const r = s._reason || 'Unclassified'; counts[r]=(counts[r]||0)+1; });
+            return Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([b,n])=>`${n} ${b}`).join('<br>');
+        }
+
+        const s1G3list = s1.filter(s=>(s.grades_advanced||0)>=3);
+        const s1G2list = s1.filter(s=>(s.grades_advanced||0)===2);
+        const s1G1list = s1.filter(s=>(s.grades_advanced||0)===1);
+        const s1G0list = s1.filter(s=>(s.grades_advanced||0)===0);
+        const g3 = s1G3list.length, g2 = s1G2list.length, g1 = s1G1list.length, g0 = s1G0list.length;
+
+        const s1G3tip = campusSummary(s1G3list);
+        const s1G2tip = campusSummary(s1G2list);
+        const s1G1tip = barrierSummary(s1G1list);
+        const s1G0tip = barrierSummary(s1G0list);
+
         document.getElementById('progress-bar').innerHTML = `
-            <div class="bar-seg" style="width:${100*g3/s1Total}%;background:${COLORS.progress.g3plus}">${g3}</div>
-            <div class="bar-seg" style="width:${100*g2/s1Total}%;background:${COLORS.progress.g2}">${g2}</div>
-            <div class="bar-seg" style="width:${100*g1/s1Total}%;background:${COLORS.progress.g1}">${g1}</div>
-            <div class="bar-seg" style="width:${100*g0/s1Total}%;background:${COLORS.progress.g0}">${g0}</div>
+            <div class="bar-seg" style="width:${100*g3/s1Total}%;background:${COLORS.progress.g3plus}">${g3}<div class="bar-tooltip"><strong>3+ grades by campus:</strong><br>${s1G3tip}</div></div>
+            <div class="bar-seg" style="width:${100*g2/s1Total}%;background:${COLORS.progress.g2}">${g2}<div class="bar-tooltip"><strong>2 grades by campus:</strong><br>${s1G2tip}</div></div>
+            <div class="bar-seg" style="width:${100*g1/s1Total}%;background:${COLORS.progress.g1}">${g1}<div class="bar-tooltip"><strong>1 grade — barriers:</strong><br>${s1G1tip}</div></div>
+            <div class="bar-seg" style="width:${100*g0/s1Total}%;background:${COLORS.progress.g0}">${g0}<div class="bar-tooltip"><strong>0 grades — barriers:</strong><br>${s1G0tip}</div></div>
         `;
         document.getElementById('bar-legend').innerHTML = `
             <span style="--dot:${COLORS.progress.g3plus}"><span style="background:${COLORS.progress.g3plus};width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>3+ grades (${g3})</span>
@@ -872,15 +924,22 @@
 
         // All cohorts progress bar
         const allTotal = students.length;
-        const allG3 = students.filter(s=>(s.grades_advanced||0)>=3).length;
-        const allG2 = students.filter(s=>(s.grades_advanced||0)===2).length;
-        const allG1 = students.filter(s=>(s.grades_advanced||0)===1).length;
-        const allG0 = students.filter(s=>(s.grades_advanced||0)===0).length;
+        const allG3list = students.filter(s=>(s.grades_advanced||0)>=3);
+        const allG2list = students.filter(s=>(s.grades_advanced||0)===2);
+        const allG1list = students.filter(s=>(s.grades_advanced||0)===1);
+        const allG0list = students.filter(s=>(s.grades_advanced||0)===0);
+        const allG3 = allG3list.length, allG2 = allG2list.length, allG1 = allG1list.length, allG0 = allG0list.length;
+
+        const allG3tip = campusSummary(allG3list);
+        const allG2tip = campusSummary(allG2list);
+        const allG1tip = barrierSummary(allG1list);
+        const allG0tip = barrierSummary(allG0list);
+
         document.getElementById('progress-bar-all').innerHTML = `
-            <div class="bar-seg" style="width:${100*allG3/allTotal}%;background:${COLORS.progress.g3plus}">${allG3}</div>
-            <div class="bar-seg" style="width:${100*allG2/allTotal}%;background:${COLORS.progress.g2}">${allG2}</div>
-            <div class="bar-seg" style="width:${100*allG1/allTotal}%;background:${COLORS.progress.g1}">${allG1}</div>
-            <div class="bar-seg" style="width:${100*allG0/allTotal}%;background:${COLORS.progress.g0}">${allG0}</div>
+            <div class="bar-seg" style="width:${100*allG3/allTotal}%;background:${COLORS.progress.g3plus}">${allG3}<div class="bar-tooltip"><strong>3+ grades by campus:</strong><br>${allG3tip}</div></div>
+            <div class="bar-seg" style="width:${100*allG2/allTotal}%;background:${COLORS.progress.g2}">${allG2}<div class="bar-tooltip"><strong>2 grades by campus:</strong><br>${allG2tip}</div></div>
+            <div class="bar-seg" style="width:${100*allG1/allTotal}%;background:${COLORS.progress.g1}">${allG1}<div class="bar-tooltip"><strong>1 grade — barriers:</strong><br>${allG1tip}</div></div>
+            <div class="bar-seg" style="width:${100*allG0/allTotal}%;background:${COLORS.progress.g0}">${allG0}<div class="bar-tooltip"><strong>0 grades — barriers:</strong><br>${allG0tip}</div></div>
         `;
         document.getElementById('bar-legend-all').innerHTML = `
             <span><span style="background:${COLORS.progress.g3plus};width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>3+ grades (${allG3})</span>
