@@ -964,32 +964,46 @@
         // === DONUT (all below-target students) ===
         const radius = 60, cx = 80, cy = 80, circ = 2 * Math.PI * radius;
         let offset = 0, svgPaths = '', legendHTML = '';
-        sortedReasons.forEach(([reason, count]) => {
+        sortedReasons.forEach(([reason, count], i) => {
             const pctSlice = count / allBelow.length;
             const dash = pctSlice * circ;
             const color = COLORS.barriers[reason] || '#666';
             const pctLabel = Math.round(100*count/allBelow.length);
-            svgPaths += `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${color}" stroke-width="24" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})" style="cursor:pointer;"><title>${reason}: ${count} students (${pctLabel}%)</title></circle>`;
+            svgPaths += `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${color}" stroke-width="24" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})" style="cursor:pointer;transition:stroke-width 0.15s,filter 0.15s;" data-tooltip="${reason}|${count}|${pctLabel}%" onmouseenter="this.style.strokeWidth='28';this.style.filter='brightness(1.2)'" onmouseleave="this.style.strokeWidth='24';this.style.filter=''"/>`;
             offset += dash;
             legendHTML += `<div class="legend-item"><div class="legend-dot" style="background:${color}"></div><strong>${count}</strong> ${reason}</div>`;
         });
-        document.getElementById('donut').innerHTML = `<svg viewBox="0 0 160 160">${svgPaths}</svg><div class="donut-center"><div class="donut-center-num">${allBelow.length}</div><div class="donut-center-label">below target</div></div>`;
+        document.getElementById('donut').innerHTML = `<svg viewBox="0 0 160 160">${svgPaths}</svg><div class="donut-center" id="donut-center"><div class="donut-center-num">${allBelow.length}</div><div class="donut-center-label">below target</div></div>`;
         document.getElementById('donut-legend').innerHTML = legendHTML;
 
         // Overlap donut (all barriers, students counted in each they have)
         const filteredTotal = sortedBarriers.reduce((sum,[,c]) => sum+c, 0);
         let offset2 = 0, svgPaths2 = '', legendHTML2 = '';
-        sortedBarriers.forEach(([reason, count]) => {
+        sortedBarriers.forEach(([reason, count], i) => {
             const pctSlice = count / filteredTotal;
             const dash = pctSlice * circ;
             const color = COLORS.barriers[reason] || '#666';
             const pctLabel2 = Math.round(100*count/allBelow.length);
-            svgPaths2 += `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${color}" stroke-width="24" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-offset2}" transform="rotate(-90 ${cx} ${cy})" style="cursor:pointer;"><title>${reason}: ${count} students (${pctLabel2}% of below-target)</title></circle>`;
+            svgPaths2 += `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${color}" stroke-width="24" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-offset2}" transform="rotate(-90 ${cx} ${cy})" style="cursor:pointer;transition:stroke-width 0.15s,filter 0.15s;" data-tooltip="${reason}|${count}|${pctLabel2}%" onmouseenter="this.style.strokeWidth='28';this.style.filter='brightness(1.2)'" onmouseleave="this.style.strokeWidth='24';this.style.filter=''"/>`;
             offset2 += dash;
             legendHTML2 += `<div class="legend-item"><div class="legend-dot" style="background:${color}"></div><strong>${count}</strong> ${reason}</div>`;
         });
-        document.getElementById('donut-overlap').innerHTML = `<svg viewBox="0 0 160 160">${svgPaths2}</svg><div class="donut-center"><div class="donut-center-num">${allBelow.length}</div><div class="donut-center-label">students</div></div>`;
+        document.getElementById('donut-overlap').innerHTML = `<svg viewBox="0 0 160 160">${svgPaths2}</svg><div class="donut-center" id="donut-overlap-center"><div class="donut-center-num">${allBelow.length}</div><div class="donut-center-label">students</div></div>`;
         document.getElementById('donut-overlap-legend').innerHTML = legendHTML2;
+
+        // Donut hover: show barrier info in center on hover
+        document.querySelectorAll('#donut circle, #donut-overlap circle').forEach(circle => {
+            const wrap = circle.closest('.donut-wrap');
+            const center = wrap.querySelector('.donut-center');
+            const origHTML = center.innerHTML;
+            circle.addEventListener('mouseenter', () => {
+                const [name, count, pct] = circle.dataset.tooltip.split('|');
+                center.innerHTML = `<div class="donut-center-num" style="font-size:1.4rem;">${count}</div><div class="donut-center-label" style="font-size:0.6rem;line-height:1.2;">${name}<br>${pct}</div>`;
+            });
+            circle.addEventListener('mouseleave', () => {
+                center.innerHTML = origHTML;
+            });
+        });
 
         // Complexity section with stacked expandable cards
         const complexityColors = {'1':'#059669','2':'#d97706','3':'#dc2626','4':'#7c2d12'};
