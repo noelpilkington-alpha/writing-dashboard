@@ -1013,23 +1013,35 @@
         });
 
         let actionHTML = `<p style="margin-bottom:0.75rem;"><strong>Result:</strong> ${pct}% of full-year students (${s1AtTarget.length}/${s1Total}) hit the 2-grade target. Across all cohorts, ${allAtTarget.length} of ${students.length} students (${Math.round(100*allAtTarget.length/students.length)}%) have reached it. <strong>${allBelow.length} students</strong> have not yet reached the target.</p>`;
-        actionHTML += '<p style="font-size:0.8rem;color:var(--color-text-secondary);margin-bottom:0.75rem;">Cohort context: ';
-        actionHTML += Object.entries(cohortBreakdown).map(([sn,d]) => `${sn}: ${d.below} of ${d.total} below target (${d.months} ${d.months===1?'month':'months'} in program)`).join(' | ');
-        actionHTML += '</p>';
+
+        // Cohort context as a mini table
+        actionHTML += '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0.5rem;margin-bottom:1.25rem;">';
+        Object.entries(cohortBreakdown).forEach(([sn,d]) => {
+            const belowPct = Math.round(100*d.below/d.total);
+            actionHTML += `<div style="text-align:center;padding:0.5rem;background:var(--color-neutral-bg);border-radius:8px;"><div style="font-weight:700;font-size:1rem;">${sn}</div><div style="font-size:0.75rem;color:var(--color-text-secondary);margin-top:0.2rem;">${d.below} of ${d.total} below</div><div style="font-size:0.7rem;color:var(--color-text-muted);">${d.months} mo in program</div></div>`;
+        });
+        actionHTML += '</div>';
+
         actionHTML += `<p style="margin-bottom:0.5rem;"><strong>Barriers</strong> (students can be affected by more than one):</p><ul style="padding-left:1.5rem;line-height:2;">`;
         sortedBarriers.forEach(([reason, count]) => {
             const meta = BARRIER_META[reason] || {};
             actionHTML += `<li><strong>${count}</strong> ${reason} — ${meta.action || ''}</li>`;
         });
         actionHTML += '</ul>';
-        // Barrier count distribution
+
+        // Barrier count distribution as inline chips
         const barrierCountDist = {};
         allBelow.forEach(s => {
             const n = s._tags.filter(t => t !== 'Age Grade Below G3').length;
             barrierCountDist[n] = (barrierCountDist[n]||0)+1;
         });
-        const distParts = Object.entries(barrierCountDist).sort((a,b)=>a[0]-b[0]).map(([n,c]) => `<strong>${c}</strong> with ${n} barrier${n==='1'?'':'s'}`);
-        actionHTML += `<p style="margin-top:0.75rem;font-size:0.83rem;color:var(--color-text-secondary);">Barrier complexity: ${distParts.join(', ')}.</p>`;
+        const complexityColors2 = {'1':'#059669','2':'#d97706','3':'#dc2626','4':'#7c2d12'};
+        actionHTML += '<div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.75rem;flex-wrap:wrap;"><span style="font-size:0.83rem;font-weight:600;">Barrier complexity:</span>';
+        Object.entries(barrierCountDist).sort((a,b)=>a[0]-b[0]).forEach(([n,c]) => {
+            const color = complexityColors2[n] || '#7c2d12';
+            actionHTML += `<span style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.25rem 0.6rem;border-radius:6px;background:${color}10;border:1px solid ${color}30;font-size:0.8rem;"><strong style="color:${color};">${c}</strong> <span style="color:var(--color-text-secondary);">× ${n} barrier${n==='1'?'':'s'}</span></span>`;
+        });
+        actionHTML += '</div>';
         document.getElementById('action-summary').innerHTML = actionHTML;
 
         // === DONUT (all below-target students) ===
