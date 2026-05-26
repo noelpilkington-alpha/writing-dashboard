@@ -755,7 +755,7 @@
 
     fetch('data.json?v=' + Date.now()).then(r => r.json()).then(data => {
         // Exclude specific students flagged for removal
-        const EXCLUDE = ['adriana danieri','alan rodriguez','austin wong','aaliyah oneal','charlotte gutierrez','alice bateman','clara modlin'].map(n => n.toLowerCase());
+        const EXCLUDE = ['adriana danieri','alan rodriguez','austin wong','aaliyah oneal','charlotte gutierrez','alice bateman','clara modlin','demo student'].map(n => n.toLowerCase());
         // Also exclude Vita High School campus entirely
         const EXCLUDE_CAMPUSES = ['Vita High School'];
         const students = (data.students || []).filter(s => !EXCLUDE.includes(s.name.toLowerCase()) && !EXCLUDE_CAMPUSES.includes(s.campus));
