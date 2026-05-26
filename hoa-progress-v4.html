@@ -191,21 +191,27 @@
         .bar-tooltip {
             display: none;
             position: absolute;
-            bottom: calc(100% + 8px);
+            bottom: calc(100% + 12px);
             left: 50%;
             transform: translateX(-50%);
-            background: #1e293b;
-            color: #f1f5f9;
-            padding: 0.6rem 0.8rem;
-            border-radius: 8px;
-            font-size: 0.75rem;
+            background: #ffffff;
+            color: #1e293b;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            font-size: 0.78rem;
             font-weight: 400;
-            white-space: nowrap;
-            max-width: 320px;
+            max-width: 350px;
+            min-width: 200px;
             white-space: normal;
             z-index: 50;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-            line-height: 1.4;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08);
+            line-height: 1.5;
+            border: 1px solid #e2e8f0;
+            animation: tooltipFade 0.15s ease;
+        }
+        @keyframes tooltipFade {
+            from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
         .bar-tooltip::after {
             content: '';
@@ -213,10 +219,16 @@
             top: 100%;
             left: 50%;
             transform: translateX(-50%);
-            border: 6px solid transparent;
-            border-top-color: #1e293b;
+            border: 7px solid transparent;
+            border-top-color: #ffffff;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.06));
         }
         .bar-seg:hover .bar-tooltip { display: block; }
+        .bar-seg:hover { filter: brightness(1.1); transform: scaleY(1.1); transition: all 0.15s ease; }
+        .tip-row { display: flex; justify-content: space-between; align-items: center; padding: 0.2rem 0; border-bottom: 1px solid #f1f5f9; }
+        .tip-row:last-child { border-bottom: none; }
+        .tip-row-label { color: #475569; }
+        .tip-row-val { font-weight: 600; color: #1e293b; }
         .bar-legend { display: flex; gap: 1rem; font-size: 0.8rem; color: var(--color-text-secondary); flex-wrap: wrap; }
         .bar-legend span::before { content: ''; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: middle; }
 
@@ -889,13 +901,13 @@
         function campusSummary(studentList) {
             const camps = {};
             studentList.forEach(s => { const c = s.campus||'Unknown'; camps[c]=(camps[c]||0)+1; });
-            return Object.entries(camps).sort((a,b)=>b[1]-a[1]).map(([c,n])=>`${c}: ${n}`).join('<br>');
+            return Object.entries(camps).sort((a,b)=>b[1]-a[1]).map(([c,n])=>`<div class="tip-row"><span class="tip-row-label">${c}</span><span class="tip-row-val">${n}</span></div>`).join('');
         }
         // Helper: build barrier summary for below-target students
         function barrierSummary(studentList) {
             const counts = {};
             studentList.forEach(s => { const r = s._reason || 'Unclassified'; counts[r]=(counts[r]||0)+1; });
-            return Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([b,n])=>`${n} ${b}`).join('<br>');
+            return Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([b,n])=>`<div class="tip-row"><span class="tip-row-label">${b}</span><span class="tip-row-val">${n}</span></div>`).join('');
         }
 
         const s1G3list = s1.filter(s=>(s.grades_advanced||0)>=3);
