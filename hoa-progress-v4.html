@@ -570,7 +570,7 @@
         <!-- Section 2: Fixability (moved up — answers "what do we do?" immediately) -->
         <h2 id="fixability">Can AlphaWrite Fix It?</h2>
         <div class="card">
-            <p style="font-size:0.83rem;color:var(--color-text-secondary);margin-bottom:1rem;">Of the students below target, which barriers can AlphaWrite address through continued instruction, and which require action outside the product?</p>
+            <p style="font-size:0.83rem;color:var(--color-text-secondary);margin-bottom:1rem;">Of the students below target, which barriers can AlphaWrite address through continued instruction, and which require action outside the product? Students affected by multiple barriers are counted in each relevant row.</p>
             <div class="bar" id="fix-bar" role="img" aria-label="Fixability breakdown"></div>
             <div class="bar-legend" id="fix-legend"></div>
             <table class="table" style="margin-top:1rem;">
@@ -861,6 +861,10 @@
         const primaryCounts = {};
         allBelow.forEach(s => { primaryCounts[s._reason] = (primaryCounts[s._reason]||0)+1; });
         const sortedReasons = Object.entries(primaryCounts).sort((a,b)=>b[1]-a[1]);
+        // Count ALL students affected by each barrier (including secondary tags)
+        const barrierCounts = {};
+        allBelow.forEach(s => { s._tags.forEach(t => { barrierCounts[t] = (barrierCounts[t]||0)+1; }); });
+        const sortedBarriers = Object.entries(barrierCounts).filter(([b]) => b !== 'Age Grade Below G3').sort((a,b)=>b[1]-a[1]);
         const totalRushing = allBelow.filter(s => (s.rushing||{}).is_rusher).length;
         const almostThere = allBelow.filter(s => s.grades_advanced === 1).length;
 
@@ -902,7 +906,6 @@
         });
         actionHTML += '</ul>';
         actionHTML += `<p style="margin-top:0.75rem;"><strong>Additional signals</strong> (all cohorts, may overlap): <strong>${totalRushing}</strong> rush tests, <strong>${almostThere}</strong> at 1 grade advanced.</p>`;
-        actionHTML += `<div class="callout callout--warn" style="margin-top:1rem;"><strong>Key finding:</strong> Of ${persistentStudents.length} tested below-target students, ${grammarCount} show grammar errors, ${spellingCount} show spelling errors, and ${punctCount} show punctuation errors that AlphaWrite does not explicitly teach. This is a curriculum gap requiring intervention outside the product.</div>`;
         document.getElementById('action-summary').innerHTML = actionHTML;
 
         // === DONUT (all below-target students) ===
@@ -937,10 +940,10 @@
             <span><span style="background:#0891b2;width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>Needs more time (${fixTime})</span>
             <span><span style="background:#57534e;width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>No — requires action outside AlphaWrite (${fixNo})</span>
         `;
-        document.getElementById('fix-table').innerHTML = sortedReasons.map(([reason, count], idx) => {
+        document.getElementById('fix-table').innerHTML = sortedBarriers.map(([reason, count], idx) => {
             const meta = BARRIER_META[reason] || {};
             const badge = meta.fixable === true ? '<span class="badge badge--yes">Yes</span>' : meta.fixable === 'time' ? '<span class="badge badge--info">Needs Time</span>' : '<span class="badge badge--no">No</span>';
-            const reasonStudents = allBelow.filter(s => s._reason === reason);
+            const reasonStudents = allBelow.filter(s => s._tags.includes(reason));
             const studentListHTML = reasonStudents.map(s => {
                 const startDate = (s.xp||{}).true_writing_start || '';
                 let avgXp = (s.xp||{}).avg_xp_per_day_lifetime || 0;
