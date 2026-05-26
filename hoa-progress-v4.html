@@ -944,6 +944,29 @@
             const meta = BARRIER_META[reason] || {};
             const badge = meta.fixable === true ? '<span class="badge badge--yes">Yes</span>' : meta.fixable === 'time' ? '<span class="badge badge--info">Needs Time</span>' : '<span class="badge badge--no">No</span>';
             const reasonStudents = allBelow.filter(s => s._tags.includes(reason));
+
+            // Helper: extract testing loop root causes for a student
+            function getTestingLoopCauses(s) {
+                const dd = s.deep_dive || {};
+                const sga = s.skill_gap_analysis || {};
+                let text = (sga.test_skill_gaps || '') + ' ' + (sga.can_alphawrite_fix || '');
+                (dd.details || []).forEach(d => {
+                    const a = d.analysis || {};
+                    text += ' ' + (a.error_analysis || '') + ' ' + (a.root_causes || '');
+                });
+                text = text.toLowerCase();
+                const causes = [];
+                if (/appositive|sentence combining|kernel expansion|compound sentence/.test(text)) causes.push('appositives');
+                if (/paragraph|topic sentence|supporting detail|elaborat/.test(text)) causes.push('paragraph dev');
+                if (/spelling|spell/.test(text)) causes.push('spelling');
+                if (/punctuation|apostrophe/.test(text)) causes.push('punctuation');
+                if (/run-on|fragment|comma splice/.test(text)) causes.push('run-ons');
+                if (/essay|extended writing|thesis/.test(text)) causes.push('essay');
+                if (/prompt|question requirements|off-topic/.test(text)) causes.push('prompt comprehension');
+                if (/rushed|time constraint|time management/.test(text)) causes.push('rushing');
+                return causes;
+            }
+
             const studentListHTML = reasonStudents.map(s => {
                 const startDate = (s.xp||{}).true_writing_start || '';
                 let avgXp = (s.xp||{}).avg_xp_per_day_lifetime || 0;
@@ -961,6 +984,10 @@
                     const lowAcc = ((s.accuracy||{}).activities_below_threshold||[]).length;
                     extraInfo = ` | ${avgXp.toFixed(1)} XP/day | ${lowAcc} failed activities`;
                 }
+                if (reason === 'Stuck in Testing Loop') {
+                    const causes = getTestingLoopCauses(s);
+                    if (causes.length) extraInfo = ` | ${causes.join(', ')}`;
+                }
                 return `<div style="display:flex;justify-content:space-between;align-items:center;padding:0.3rem 0.5rem;border-bottom:1px solid var(--color-border);font-size:0.8rem;"><span><strong>${s.name}</strong> <span style="color:var(--color-text-muted);">${s.campus||''}</span></span><span style="color:var(--color-text-muted);">G${s.age_grade||'?'} | +${s.grades_advanced||0}${extraInfo}${startDate ? ' | started '+startDate : ''}</span></div>`;
             }).join('');
             const expandId = 'fix-expand-' + idx;
@@ -969,6 +996,14 @@
                 const s5count = reasonStudents.filter(s => s.start_session === 'S5').length;
                 const s4count = reasonStudents.filter(s => s.start_session === 'S4').length;
                 annotation = `<div style="padding:0.4rem 0.5rem;font-size:0.78rem;color:var(--color-text-secondary);border-bottom:1px solid var(--color-border);"><em>${s5count} are S5 (started Apr 2026) and ${s4count} are S4 with recent Writing eligibility. These students have not been in the program long enough to classify.</em></div>`;
+            }
+            if (reason === 'Stuck in Testing Loop') {
+                const causeCounts = {};
+                reasonStudents.forEach(s => {
+                    getTestingLoopCauses(s).forEach(c => { causeCounts[c] = (causeCounts[c]||0)+1; });
+                });
+                const sorted = Object.entries(causeCounts).sort((a,b)=>b[1]-a[1]);
+                annotation = `<div style="padding:0.5rem;font-size:0.78rem;border-bottom:1px solid var(--color-border);background:#f8fafc;"><strong>Root causes (from test analysis):</strong><div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.3rem;">${sorted.map(([c,n])=>`<span style="background:#6d28d920;color:#6d28d9;padding:0.15rem 0.5rem;border-radius:4px;font-size:0.75rem;"><strong>${n}</strong> ${c}</span>`).join('')}</div></div>`;
             }
             return `<tr style="cursor:pointer;" onclick="var el=document.getElementById('${expandId}');el.style.display=el.style.display==='none'?'table-row':'none';this.classList.toggle('expanded')"><td>▶ ${reason}</td><td><strong>${count}</strong></td><td>${badge}</td><td>${meta.action||''}</td></tr><tr id="${expandId}" style="display:none;"><td colspan="4" style="padding:0.75rem;background:var(--color-page);"><div style="max-height:300px;overflow-y:auto;">${annotation}${studentListHTML}</div></td></tr>`;
         }).join('');
