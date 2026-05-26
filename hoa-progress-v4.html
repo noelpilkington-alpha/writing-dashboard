@@ -582,7 +582,8 @@
     <div class="container">
         <h1>AlphaWrite Progress Report</h1>
         <p class="subtitle">2025-2026 School Year (first year of writing curriculum)</p>
-        <p style="font-size:0.8rem;color:#94a3b8;max-width:700px;margin-bottom:1.5rem;">AlphaWrite is a self-paced, AI-driven writing curriculum where students practice daily and advance through grade-level courses by passing standardized tests. Target: 2 writing grade levels per year.</p>
+        <p style="font-size:0.8rem;color:#94a3b8;max-width:700px;margin-bottom:0.5rem;">AlphaWrite is a self-paced, AI-driven writing curriculum where students practice daily and advance through grade-level courses by passing standardized tests (90%+ to pass). Target: 2 writing grade levels per year. A "grade level" = one AlphaWrite course level (e.g., G3 → G4), not a school grade.</p>
+        <p style="font-size:0.75rem;color:#64748b;max-width:700px;margin-bottom:1.5rem;">Cohorts: S1 = full year (Aug 2025), S2 = Oct 2025, S3 = Jan 2026, S4 = Feb 2026, S5 = Apr 2026. Students are assigned to the cohort matching when they became eligible for Writing (passed G3 Language prerequisite).</p>
 
         <!-- Section 1: Results -->
         <section id="results" aria-label="Full-year results">
@@ -735,7 +736,7 @@
             action: 'Assign targeted remediation activities before retesting. Support with coaching calls.',
         },
         'Rushes Tests': {
-            desc: '2+ tests taken below time threshold. Rushing is a risk factor for failure (not deterministic — many rushers still pass, but below-target students who rush have avoidable failures).',
+            desc: '2+ tests completed under the minimum time threshold (G3-G5: under 25 minutes, G6-G8: under 60 minutes). Rushing correlates with avoidable test failures.',
             fixable: false,
             action: 'Academics team to coach student on test-taking strategies and pacing.',
         },
@@ -1014,6 +1015,15 @@
             if (total) cohortBreakdown[sn] = {below: below.length, total, months: monthsIn(sessionStarts[sn])};
         });
 
+        // Pre-compute fixability for use in action summary
+        let fixActive = 0, fixTime = 0, fixNo = 0;
+        allBelow.forEach(s => {
+            const f = (BARRIER_META[s._reason]||{}).fixable;
+            if (f === true) fixActive++;
+            else if (f === 'time') fixTime++;
+            else fixNo++;
+        });
+
         let actionHTML = `<p style="margin-bottom:0.75rem;"><strong>Result:</strong> ${pct}% of full-year students (${s1AtTarget.length}/${s1Total}) hit the 2-grade target. Across all cohorts, ${allAtTarget.length} of ${students.length} students (${Math.round(100*allAtTarget.length/students.length)}%) have reached it. <strong>${allBelow.length} students</strong> have not yet reached the target.</p>`;
 
         // Cohort context as a mini table
@@ -1024,7 +1034,9 @@
         });
         actionHTML += '</div>';
 
-        actionHTML += `<p style="margin-bottom:0.5rem;"><strong>Barriers</strong> (students can be affected by more than one):</p><ul style="padding-left:1.5rem;line-height:2;">`;
+        const topBarrier = sortedBarriers[0];
+        actionHTML += `<p style="margin-bottom:0.75rem;"><strong>Why haven't they reached target?</strong> The most common barrier is <strong>${topBarrier[0]}</strong> (${topBarrier[1]} students). Overall, ${fixActive} students can be helped through AlphaWrite intervention, ${fixTime} need more time in the program, and ${fixNo} require action outside the product.</p>`;
+        actionHTML += `<p style="margin-bottom:0.5rem;"><strong>All barriers</strong> (students can be affected by more than one):</p><ul style="padding-left:1.5rem;line-height:2;">`;
         sortedBarriers.forEach(([reason, count]) => {
             const meta = BARRIER_META[reason] || {};
             actionHTML += `<li><strong>${count}</strong> ${reason} — ${meta.action || ''}</li>`;
@@ -1125,13 +1137,6 @@
         document.getElementById('complexity-bar').innerHTML = complexHTML;
 
         // === FIXABILITY (three tiers: active intervention / needs time / outside product) ===
-        let fixActive = 0, fixTime = 0, fixNo = 0;
-        allBelow.forEach(s => {
-            const f = (BARRIER_META[s._reason]||{}).fixable;
-            if (f === true) fixActive++;
-            else if (f === 'time') fixTime++;
-            else fixNo++;
-        });
         document.getElementById('fix-bar').innerHTML = `
             <div class="bar-seg" style="width:${100*fixActive/allBelow.length}%;background:#1d4ed8">${fixActive}</div>
             <div class="bar-seg" style="width:${100*fixTime/allBelow.length}%;background:#0891b2">${fixTime}</div>
