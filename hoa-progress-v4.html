@@ -719,8 +719,9 @@
         const neverStarted = inactivity.never_active_this_session || false;
         const xpThreshold = 12.5;
 
-        // Recalculate XP/day from true_writing_start (eligibility date)
+        // Recalculate XP/day from true_writing_start using only AlphaWrite + Test XP (exclude mastery_track inflation)
         const trueStart = xp.true_writing_start || '';
+        const realXp = (xp.alphawrite || 0) + (xp.test || 0);
         let trueAvgXp = xp.avg_xp_per_day_lifetime;
         let trueDays = xp.available_days || 0;
         if (trueStart) {
@@ -728,8 +729,8 @@
             const nowMs = new Date('2026-05-25').getTime();
             const calDays = Math.round((nowMs - startMs) / (1000*60*60*24));
             trueDays = Math.round(calDays * 5/7) - 15; // approx school days minus MAP
-            if (trueDays > 0 && xp.total) {
-                trueAvgXp = xp.total / trueDays;
+            if (trueDays > 0) {
+                trueAvgXp = realXp / trueDays;
             }
         }
 
@@ -928,7 +929,15 @@
             const reasonStudents = allBelow.filter(s => s._reason === reason);
             const studentListHTML = reasonStudents.map(s => {
                 const startDate = (s.xp||{}).true_writing_start || '';
-                const avgXp = (s.xp||{}).avg_xp_per_day_lifetime || 0;
+                let avgXp = (s.xp||{}).avg_xp_per_day_lifetime || 0;
+                if (reason === 'Not Spending Enough Time' && startDate) {
+                    const rXp = ((s.xp||{}).alphawrite||0) + ((s.xp||{}).test||0);
+                    const sd2 = new Date(startDate).getTime();
+                    const nd2 = new Date('2026-05-25').getTime();
+                    const cd2 = Math.round((nd2-sd2)/(1000*60*60*24));
+                    const wd2 = Math.round(cd2*5/7)-15;
+                    if (wd2 > 0) avgXp = rXp / wd2;
+                }
                 const xpInfo = reason === 'Not Spending Enough Time' ? ` | ${avgXp.toFixed(1)} XP/day` : '';
                 return `<div style="display:flex;justify-content:space-between;align-items:center;padding:0.3rem 0.5rem;border-bottom:1px solid var(--color-border);font-size:0.8rem;"><span><strong>${s.name}</strong> <span style="color:var(--color-text-muted);">${s.campus||''}</span></span><span style="color:var(--color-text-muted);">G${s.age_grade||'?'} | +${s.grades_advanced||0}${xpInfo}${startDate ? ' | started '+startDate : ''}</span></div>`;
             }).join('');
@@ -1118,15 +1127,16 @@
                     if (tag === 'Not Spending Enough Time') {
                         const xpData = s.xp || {};
                         const ts = xpData.true_writing_start || '';
+                        const realXpVal = (xpData.alphawrite || 0) + (xpData.test || 0);
                         let displayXp = xpData.avg_xp_per_day_lifetime || 0;
-                        if (ts && xpData.total) {
+                        if (ts && realXpVal) {
                             const sd = new Date(ts).getTime();
                             const nd = new Date('2026-05-25').getTime();
                             const cd = Math.round((nd - sd) / (1000*60*60*24));
                             const wd = Math.round(cd * 5/7) - 15;
-                            if (wd > 0) displayXp = xpData.total / wd;
+                            if (wd > 0) displayXp = realXpVal / wd;
                         }
-                        desc += ` Average XP/day since eligibility: <strong>${displayXp.toFixed(1)}</strong> (target: 12.5).`;
+                        desc += ` Average AlphaWrite+Test XP/day since eligibility: <strong>${displayXp.toFixed(1)}</strong> (target: 12.5).`;
                     }
                     html += `<p style="margin-bottom:0.4rem;"><span class="badge" style="background:${COLORS.barriers[tag]||'#666'}15;color:${COLORS.barriers[tag]||'#666'};border:1px solid ${COLORS.barriers[tag]||'#666'}40;">${tag}</span> ${desc}</p>`;
                 });
