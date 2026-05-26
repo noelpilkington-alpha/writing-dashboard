@@ -966,20 +966,19 @@
         document.getElementById('donut-overlap').innerHTML = `<svg viewBox="0 0 160 160" aria-hidden="true">${svgPaths2}</svg><div class="donut-center"><div class="donut-center-num">${allBelow.length}</div><div class="donut-center-label">students</div></div>`;
         document.getElementById('donut-overlap-legend').innerHTML = legendHTML2;
 
-        // Complexity bar with expandable student lists
+        // Complexity section with stacked expandable cards
         const complexityColors = {'1':'#059669','2':'#d97706','3':'#dc2626','4':'#7c2d12'};
-        let complexHTML = '<div style="display:flex;gap:1rem;align-items:start;flex-wrap:wrap;margin-bottom:1.5rem;">';
+        let complexHTML = '';
         Object.entries(barrierCountDist).sort((a,b)=>a[0]-b[0]).forEach(([n,c]) => {
             const pct = Math.round(100*c/allBelow.length);
             const color = complexityColors[n] || '#7c2d12';
             const studentsWithN = allBelow.filter(s => s._tags.filter(t => t !== 'Age Grade Below G3').length === parseInt(n));
             const studentList = studentsWithN.sort((a,b) => a.name.localeCompare(b.name)).map(s => {
                 const barriers = s._tags.filter(t => t !== 'Age Grade Below G3').join(', ');
-                return `<div style="display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0.75rem;border-bottom:1px solid var(--color-border);font-size:0.8rem;gap:1rem;"><span><strong>${s.name}</strong> <span style="color:var(--color-text-muted);font-size:0.75rem;">${s.campus||''}</span></span><span style="color:var(--color-text-secondary);font-size:0.75rem;text-align:right;white-space:nowrap;">${barriers}</span></div>`;
+                return `<div style="display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0.75rem;border-bottom:1px solid var(--color-border);font-size:0.8rem;gap:1rem;"><span><strong>${s.name}</strong> <span style="color:var(--color-text-muted);font-size:0.75rem;">${s.campus||''}</span></span><span style="color:var(--color-text-secondary);font-size:0.75rem;text-align:right;">${barriers}</span></div>`;
             }).join('');
-            complexHTML += `<details style="flex:1;min-width:150px;"><summary style="cursor:pointer;text-align:center;list-style:none;padding:0.5rem;border-radius:8px;border:1px solid var(--color-border);background:var(--color-surface);"><div style="font-size:1.5rem;font-weight:700;color:${color};">${c}</div><div style="font-size:0.75rem;color:var(--color-text-secondary);">${n} barrier${n==='1'?'':'s'} (${pct}%)</div></summary><div style="max-height:300px;overflow-y:auto;margin-top:0.5rem;border:1px solid var(--color-border);border-radius:6px;background:var(--color-surface);">${studentList}</div></details>`;
+            complexHTML += `<details style="margin-bottom:0.5rem;"><summary style="cursor:pointer;display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;border-radius:8px;border:1px solid var(--color-border);background:var(--color-surface);list-style:none;"><span style="font-size:1.3rem;font-weight:700;color:${color};min-width:2.5rem;text-align:center;">${c}</span><span style="font-size:0.85rem;">students with <strong>${n}</strong> barrier${n==='1'?'':'s'} <span style="color:var(--color-text-muted);">(${pct}%)</span></span></summary><div style="max-height:300px;overflow-y:auto;margin-top:0.25rem;border:1px solid var(--color-border);border-radius:6px;background:var(--color-surface);">${studentList}</div></details>`;
         });
-        complexHTML += '</div>';
 
         // Barrier combinations ranked by frequency (only multi-barrier combos)
         const comboCounts = {};
@@ -990,7 +989,7 @@
             comboCounts[combo] = (comboCounts[combo]||0)+1;
         });
         const sortedCombos = Object.entries(comboCounts).sort((a,b)=>b[1]-a[1]);
-        complexHTML += '<p style="font-size:0.83rem;font-weight:600;margin-bottom:0.5rem;">Most common barrier combinations:</p>';
+        complexHTML += '<p style="font-size:0.83rem;font-weight:600;margin-top:1.5rem;margin-bottom:0.5rem;">Most common barrier combinations:</p>';
         complexHTML += '<div style="font-size:0.8rem;">';
         const maxCombo = sortedCombos[0] ? sortedCombos[0][1] : 1;
         sortedCombos.forEach(([combo, count]) => {
