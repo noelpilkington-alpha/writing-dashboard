@@ -953,17 +953,17 @@
         document.getElementById('donut-legend').innerHTML = legendHTML;
 
         // Overlap donut (all barriers, students counted in each they have)
-        const totalAffected = Object.values(barrierCounts).reduce((a,b)=>a+b,0);
+        const filteredTotal = sortedBarriers.reduce((sum,[,c]) => sum+c, 0);
         let offset2 = 0, svgPaths2 = '', legendHTML2 = '';
         sortedBarriers.forEach(([reason, count]) => {
-            const pctSlice = count / totalAffected;
+            const pctSlice = count / filteredTotal;
             const dash = pctSlice * circ;
             const color = COLORS.barriers[reason] || '#666';
             svgPaths2 += `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${color}" stroke-width="24" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-offset2}" transform="rotate(-90 ${cx} ${cy})"/>`;
             offset2 += dash;
             legendHTML2 += `<div class="legend-item"><div class="legend-dot" style="background:${color}"></div><strong>${count}</strong> ${reason}</div>`;
         });
-        document.getElementById('donut-overlap').innerHTML = `<svg viewBox="0 0 160 160" aria-hidden="true">${svgPaths2}</svg><div class="donut-center"><div class="donut-center-num">${totalAffected}</div><div class="donut-center-label">total barriers</div></div>`;
+        document.getElementById('donut-overlap').innerHTML = `<svg viewBox="0 0 160 160" aria-hidden="true">${svgPaths2}</svg><div class="donut-center"><div class="donut-center-num">${allBelow.length}</div><div class="donut-center-label">students</div></div>`;
         document.getElementById('donut-overlap-legend').innerHTML = legendHTML2;
 
         // Complexity bar with expandable student lists
@@ -973,11 +973,11 @@
             const pct = Math.round(100*c/allBelow.length);
             const color = complexityColors[n] || '#7c2d12';
             const studentsWithN = allBelow.filter(s => s._tags.filter(t => t !== 'Age Grade Below G3').length === parseInt(n));
-            const studentList = studentsWithN.map(s => {
+            const studentList = studentsWithN.sort((a,b) => a.name.localeCompare(b.name)).map(s => {
                 const barriers = s._tags.filter(t => t !== 'Age Grade Below G3').join(', ');
-                return `<div style="display:flex;justify-content:space-between;padding:0.25rem 0.5rem;border-bottom:1px solid var(--color-border);font-size:0.78rem;"><span><strong>${s.name}</strong> <span style="color:var(--color-text-muted);">${s.campus||''}</span></span><span style="color:var(--color-text-muted);">${barriers}</span></div>`;
+                return `<div style="display:flex;justify-content:space-between;align-items:center;padding:0.4rem 0.75rem;border-bottom:1px solid var(--color-border);font-size:0.8rem;gap:1rem;"><span><strong>${s.name}</strong> <span style="color:var(--color-text-muted);font-size:0.75rem;">${s.campus||''}</span></span><span style="color:var(--color-text-secondary);font-size:0.75rem;text-align:right;white-space:nowrap;">${barriers}</span></div>`;
             }).join('');
-            complexHTML += `<details style="flex:1;min-width:120px;"><summary style="cursor:pointer;text-align:center;list-style:none;"><div style="font-size:1.5rem;font-weight:700;color:${color};">${c}</div><div style="font-size:0.75rem;color:var(--color-text-secondary);">${n} barrier${n==='1'?'':'s'} (${pct}%)</div></summary><div style="max-height:250px;overflow-y:auto;margin-top:0.5rem;border:1px solid var(--color-border);border-radius:6px;">${studentList}</div></details>`;
+            complexHTML += `<details style="flex:1;min-width:150px;"><summary style="cursor:pointer;text-align:center;list-style:none;padding:0.5rem;border-radius:8px;border:1px solid var(--color-border);background:var(--color-surface);"><div style="font-size:1.5rem;font-weight:700;color:${color};">${c}</div><div style="font-size:0.75rem;color:var(--color-text-secondary);">${n} barrier${n==='1'?'':'s'} (${pct}%)</div></summary><div style="max-height:300px;overflow-y:auto;margin-top:0.5rem;border:1px solid var(--color-border);border-radius:6px;background:var(--color-surface);">${studentList}</div></details>`;
         });
         complexHTML += '</div>';
 
@@ -992,9 +992,11 @@
         const sortedCombos = Object.entries(comboCounts).sort((a,b)=>b[1]-a[1]);
         complexHTML += '<p style="font-size:0.83rem;font-weight:600;margin-bottom:0.5rem;">Most common barrier combinations:</p>';
         complexHTML += '<div style="font-size:0.8rem;">';
+        const maxCombo = sortedCombos[0] ? sortedCombos[0][1] : 1;
         sortedCombos.forEach(([combo, count]) => {
             const pct = Math.round(100*count/allBelow.length);
-            complexHTML += `<div style="display:flex;align-items:center;gap:0.5rem;padding:0.3rem 0;border-bottom:1px solid var(--color-border);"><strong style="min-width:2rem;text-align:right;">${count}</strong><div style="background:var(--color-neutral-bg);height:8px;border-radius:4px;flex:1;max-width:200px;"><div style="background:var(--color-info);height:8px;border-radius:4px;width:${100*count/sortedCombos[0][1]}%;"></div></div><span>${combo} <span style="color:var(--color-text-muted);">(${pct}%)</span></span></div>`;
+            const barWidth = Math.round(100*count/maxCombo);
+            complexHTML += `<div style="display:grid;grid-template-columns:2rem 150px 1fr;align-items:center;gap:0.5rem;padding:0.3rem 0;border-bottom:1px solid var(--color-border);"><strong style="text-align:right;">${count}</strong><div style="background:var(--color-neutral-bg);height:8px;border-radius:4px;width:150px;"><div style="background:var(--color-info);height:8px;border-radius:4px;width:${barWidth}%;"></div></div><span>${combo} <span style="color:var(--color-text-muted);">(${pct}%)</span></span></div>`;
         });
         complexHTML += '</div>';
         document.getElementById('complexity-bar').innerHTML = complexHTML;
