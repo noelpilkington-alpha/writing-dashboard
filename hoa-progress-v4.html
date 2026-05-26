@@ -748,20 +748,26 @@
         const rushing = s.rushing || {};
         if (rushing.is_rusher) tags.push('Rushes Tests');
 
-        if (tags.length === 0) {
-            if (s.grades_advanced === 1) tags.push('On Track (may reach 2)');
-            else tags.push('Still in Coursework');
-        }
-
-        // Secondary tags (never the sole primary tag — always additive context)
-        if (typeof s.age_grade === 'number' && s.age_grade < 3) tags.push('Age Grade Below G3');
-
         // Grammar/mechanics gaps detected from test analysis
-        const analysis = s.skill_gap_analysis || {};
-        const gapText = ((analysis.test_skill_gaps || '') + ' ' + (analysis.can_alphawrite_fix || '')).toLowerCase();
-        if (/grammar|mechanics|spelling|punctuation|run-on|comma splice/.test(gapText)) {
+        const sga = s.skill_gap_analysis || {};
+        const gapText = ((sga.test_skill_gaps || '') + ' ' + (sga.can_alphawrite_fix || '')).toLowerCase();
+        const hasGrammarGaps = /grammar|mechanics|spelling|punctuation|run-on|comma splice/.test(gapText);
+
+        if (tags.length === 0) {
+            if (s.grades_advanced === 1) {
+                tags.push('On Track (may reach 2)');
+            } else if (hasGrammarGaps) {
+                tags.push('Grammar & Mechanics Gaps');
+            } else {
+                tags.push('Still in Coursework');
+            }
+        }
+        if (hasGrammarGaps && tags[0] !== 'Grammar & Mechanics Gaps') {
             tags.push('Grammar & Mechanics Gaps');
         }
+
+        // Secondary context
+        if (typeof s.age_grade === 'number' && s.age_grade < 3) tags.push('Age Grade Below G3');
 
         return tags;
     }
@@ -955,13 +961,14 @@
                 return `<div style="display:flex;justify-content:space-between;align-items:center;padding:0.3rem 0.5rem;border-bottom:1px solid var(--color-border);font-size:0.8rem;"><span><strong>${s.name}</strong> <span style="color:var(--color-text-muted);">${s.campus||''}</span></span><span style="color:var(--color-text-muted);">G${s.age_grade||'?'} | +${s.grades_advanced||0}${extraInfo}${startDate ? ' | started '+startDate : ''}</span></div>`;
             }).join('');
             const expandId = 'fix-expand-' + idx;
-            return `<tr style="cursor:pointer;" onclick="var el=document.getElementById('${expandId}');el.style.display=el.style.display==='none'?'table-row':'none';this.classList.toggle('expanded')"><td>▶ ${reason}</td><td><strong>${count}</strong></td><td>${badge}</td><td>${meta.action||''}</td></tr><tr id="${expandId}" style="display:none;"><td colspan="4" style="padding:0.75rem;background:var(--color-page);"><div style="max-height:300px;overflow-y:auto;">${studentListHTML}</div></td></tr>`;
-        }).join('') + `<tr style="border-top:2px solid var(--color-border);"><td colspan="4" style="padding-top:1rem;">
-            <div class="callout callout--warn">
-                <strong>Cross-cutting finding: Grammar, Punctuation & Spelling Gaps</strong><br>
-                In addition to the barriers above, test analysis reveals that most below-target students (where test data is available) show <strong>grammar mechanics</strong> (${grammarCount} students), <strong>spelling</strong> (${spellingCount}), and <strong>punctuation</strong> (${punctCount}) errors on standardized tests. These are skills AlphaWrite teaches implicitly through sentence-level instruction but does not target in isolation. For students with persistent errors in these areas, explicit instruction outside AlphaWrite is needed.
-            </div>
-        </td></tr>`;
+            let annotation = '';
+            if (reason === 'Too Early to Assess') {
+                const s5count = reasonStudents.filter(s => s.start_session === 'S5').length;
+                const s4count = reasonStudents.filter(s => s.start_session === 'S4').length;
+                annotation = `<div style="padding:0.4rem 0.5rem;font-size:0.78rem;color:var(--color-text-secondary);border-bottom:1px solid var(--color-border);"><em>${s5count} are S5 (started Apr 2026) and ${s4count} are S4 with recent Writing eligibility. These students have not been in the program long enough to classify.</em></div>`;
+            }
+            return `<tr style="cursor:pointer;" onclick="var el=document.getElementById('${expandId}');el.style.display=el.style.display==='none'?'table-row':'none';this.classList.toggle('expanded')"><td>▶ ${reason}</td><td><strong>${count}</strong></td><td>${badge}</td><td>${meta.action||''}</td></tr><tr id="${expandId}" style="display:none;"><td colspan="4" style="padding:0.75rem;background:var(--color-page);"><div style="max-height:300px;overflow-y:auto;">${annotation}${studentListHTML}</div></td></tr>`;
+        }).join('');
 
         // === SKILL GAPS ===
         const gapExplanations = {
