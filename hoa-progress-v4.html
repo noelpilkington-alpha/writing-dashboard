@@ -545,8 +545,12 @@
             <div class="card card-accent">
                 <h3 id="hero-heading">Full-Year Students</h3>
                 <div class="hero-grid" id="hero-grid"></div>
+                <p style="font-size:0.78rem;color:#94a3b8;margin-bottom:0.25rem;margin-top:1rem;">Full-year students (S1):</p>
                 <div class="bar" id="progress-bar" role="img" aria-label="Grade advancement distribution"></div>
                 <div class="bar-legend" id="bar-legend"></div>
+                <p style="font-size:0.78rem;color:#94a3b8;margin-bottom:0.25rem;margin-top:1rem;">All cohorts:</p>
+                <div class="bar" id="progress-bar-all" role="img" aria-label="All cohorts grade advancement"></div>
+                <div class="bar-legend" id="bar-legend-all"></div>
             </div>
 
             <!-- Students who hit target -->
@@ -866,6 +870,25 @@
             <span><span style="background:${COLORS.progress.g0};width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>0 grades (${g0})</span>
         `;
 
+        // All cohorts progress bar
+        const allTotal = students.length;
+        const allG3 = students.filter(s=>(s.grades_advanced||0)>=3).length;
+        const allG2 = students.filter(s=>(s.grades_advanced||0)===2).length;
+        const allG1 = students.filter(s=>(s.grades_advanced||0)===1).length;
+        const allG0 = students.filter(s=>(s.grades_advanced||0)===0).length;
+        document.getElementById('progress-bar-all').innerHTML = `
+            <div class="bar-seg" style="width:${100*allG3/allTotal}%;background:${COLORS.progress.g3plus}">${allG3}</div>
+            <div class="bar-seg" style="width:${100*allG2/allTotal}%;background:${COLORS.progress.g2}">${allG2}</div>
+            <div class="bar-seg" style="width:${100*allG1/allTotal}%;background:${COLORS.progress.g1}">${allG1}</div>
+            <div class="bar-seg" style="width:${100*allG0/allTotal}%;background:${COLORS.progress.g0}">${allG0}</div>
+        `;
+        document.getElementById('bar-legend-all').innerHTML = `
+            <span><span style="background:${COLORS.progress.g3plus};width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>3+ grades (${allG3})</span>
+            <span><span style="background:${COLORS.progress.g2};width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>2 grades (${allG2})</span>
+            <span><span style="background:${COLORS.progress.g1};width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>1 grade (${allG1})</span>
+            <span><span style="background:${COLORS.progress.g0};width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>0 grades (${allG0})</span>
+        `;
+
         // === AT-TARGET STUDENTS (by campus) ===
         const atTarget = students.filter(s => (s.grades_advanced || 0) >= 2);
         const byCampus = {};
@@ -945,11 +968,12 @@
             const pctSlice = count / allBelow.length;
             const dash = pctSlice * circ;
             const color = COLORS.barriers[reason] || '#666';
-            svgPaths += `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${color}" stroke-width="24" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})"/>`;
+            const pctLabel = Math.round(100*count/allBelow.length);
+            svgPaths += `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${color}" stroke-width="24" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})" style="cursor:pointer;"><title>${reason}: ${count} students (${pctLabel}%)</title></circle>`;
             offset += dash;
             legendHTML += `<div class="legend-item"><div class="legend-dot" style="background:${color}"></div><strong>${count}</strong> ${reason}</div>`;
         });
-        document.getElementById('donut').innerHTML = `<svg viewBox="0 0 160 160" aria-hidden="true">${svgPaths}</svg><div class="donut-center"><div class="donut-center-num">${allBelow.length}</div><div class="donut-center-label">below target</div></div>`;
+        document.getElementById('donut').innerHTML = `<svg viewBox="0 0 160 160">${svgPaths}</svg><div class="donut-center"><div class="donut-center-num">${allBelow.length}</div><div class="donut-center-label">below target</div></div>`;
         document.getElementById('donut-legend').innerHTML = legendHTML;
 
         // Overlap donut (all barriers, students counted in each they have)
@@ -959,11 +983,12 @@
             const pctSlice = count / filteredTotal;
             const dash = pctSlice * circ;
             const color = COLORS.barriers[reason] || '#666';
-            svgPaths2 += `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${color}" stroke-width="24" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-offset2}" transform="rotate(-90 ${cx} ${cy})"/>`;
+            const pctLabel2 = Math.round(100*count/allBelow.length);
+            svgPaths2 += `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${color}" stroke-width="24" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-offset2}" transform="rotate(-90 ${cx} ${cy})" style="cursor:pointer;"><title>${reason}: ${count} students (${pctLabel2}% of below-target)</title></circle>`;
             offset2 += dash;
             legendHTML2 += `<div class="legend-item"><div class="legend-dot" style="background:${color}"></div><strong>${count}</strong> ${reason}</div>`;
         });
-        document.getElementById('donut-overlap').innerHTML = `<svg viewBox="0 0 160 160" aria-hidden="true">${svgPaths2}</svg><div class="donut-center"><div class="donut-center-num">${allBelow.length}</div><div class="donut-center-label">students</div></div>`;
+        document.getElementById('donut-overlap').innerHTML = `<svg viewBox="0 0 160 160">${svgPaths2}</svg><div class="donut-center"><div class="donut-center-num">${allBelow.length}</div><div class="donut-center-label">students</div></div>`;
         document.getElementById('donut-overlap-legend').innerHTML = legendHTML2;
 
         // Complexity section with stacked expandable cards
