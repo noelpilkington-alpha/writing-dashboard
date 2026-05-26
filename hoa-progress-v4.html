@@ -646,9 +646,8 @@
             'Rushes Tests': '#be123c',
             'Age Grade Below G3': '#4338ca',
             'Grammar & Mechanics Gaps': '#92400e',
-            'Still in Coursework': '#475569',
             'On Track (may reach 2)': '#059669',
-            'Too Early to Assess': '#64748b',
+            'Needs More Time in Program': '#64748b',
         },
         fix: { yes: '#166534', no: '#991b1b' },
         progress: { g3plus: '#166534', g2: '#16a34a', g1: '#d97706', g0: '#dc2626' },
@@ -680,20 +679,15 @@
             fixable: false,
             action: 'Student needs foundational typing and reading skills before writing instruction is effective.',
         },
-        'Still in Coursework': {
-            desc: 'Working through AlphaWrite courses (Sentences, Paragraphs, or Hole-Filling) but has not yet reached a testable milestone.',
-            fixable: 'time',
-            action: 'Continue instruction. Student will be tested when coursework is complete.',
-        },
         'On Track (may reach 2)': {
-            desc: 'At 1 grade advanced and progressing. May reach 2 by year end.',
+            desc: 'Student is at 1 grade advanced and making adequate progress toward 2.',
             fixable: 'time',
-            action: 'Continue current trajectory. 1 week remains.',
+            action: 'Continue current trajectory.',
         },
-        'Too Early to Assess': {
-            desc: 'Started Writing fewer than 14 school days ago. Not enough data to classify.',
+        'Needs More Time in Program': {
+            desc: 'Student is either too new to classify or working through coursework at adequate pace without other barriers.',
             fixable: 'time',
-            action: 'Continue instruction. Reassess after 3+ weeks of practice.',
+            action: 'Continue instruction. These students need more time in the program before reaching testable milestones.',
         },
         'Grammar & Mechanics Gaps': {
             desc: 'Test analysis shows gaps in grammar, punctuation, spelling, or sentence structure (run-ons/comma splices).',
@@ -727,9 +721,9 @@
             }
         }
 
-        // Too early to assess (< 14 school days since eligibility)
+        // Too early to assess (< 14 school days since eligibility) — needs more time
         if (trueDays < 14 && trueDays >= 0) {
-            tags.push('Too Early to Assess');
+            tags.push('Needs More Time in Program');
             return tags;
         }
 
@@ -759,7 +753,7 @@
             } else if (hasGrammarGaps) {
                 tags.push('Grammar & Mechanics Gaps');
             } else {
-                tags.push('Still in Coursework');
+                tags.push('Needs More Time in Program');
             }
         }
         if (hasGrammarGaps && tags[0] !== 'Grammar & Mechanics Gaps') {
@@ -992,10 +986,11 @@
             }).join('');
             const expandId = 'fix-expand-' + idx;
             let annotation = '';
-            if (reason === 'Too Early to Assess') {
+            if (reason === 'Needs More Time in Program') {
                 const s5count = reasonStudents.filter(s => s.start_session === 'S5').length;
                 const s4count = reasonStudents.filter(s => s.start_session === 'S4').length;
-                annotation = `<div style="padding:0.4rem 0.5rem;font-size:0.78rem;color:var(--color-text-secondary);border-bottom:1px solid var(--color-border);"><em>${s5count} are S5 (started Apr 2026) and ${s4count} are S4 with recent Writing eligibility. These students have not been in the program long enough to classify.</em></div>`;
+                const s3count = reasonStudents.filter(s => s.start_session === 'S3').length;
+                annotation = `<div style="padding:0.4rem 0.5rem;font-size:0.78rem;color:var(--color-text-secondary);border-bottom:1px solid var(--color-border);"><em>Includes ${s5count} S5 (started Apr 2026), ${s4count} S4, and ${s3count} S3 students. Most are too new or progressing through coursework normally.</em></div>`;
             }
             if (reason === 'Stuck in Testing Loop') {
                 const causeCounts = {};
@@ -1181,7 +1176,7 @@
                 s._tags.forEach(tag => {
                     const meta = BARRIER_META[tag] || {};
                     let desc = meta.desc || '';
-                    if ((tag === 'Still in Coursework' || tag === 'Too Early to Assess') && startDate) {
+                    if (tag === 'Needs More Time in Program' && startDate) {
                         desc += ` Started Writing: ${startDate}.`;
                     }
                     if (tag === 'Not Spending Enough Time' || tag === 'Struggling with Accuracy') {
