@@ -582,10 +582,27 @@
         <!-- Section 3: Barriers detail -->
         <h2 id="barriers">Barrier Breakdown</h2>
         <div class="card">
-            <p style="font-size:0.83rem;color:var(--color-text-secondary);margin-bottom:1rem;">All students below target classified by their primary barrier. Newer cohorts have had less time — the same barriers exist across all cohorts.</p>
-            <div class="donut-section">
-                <div class="donut-wrap" id="donut" role="img" aria-label="Barrier breakdown donut chart"></div>
-                <div class="legend" id="donut-legend"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;">
+                <div>
+                    <p style="font-size:0.83rem;font-weight:600;margin-bottom:0.5rem;">Primary Barrier (one per student)</p>
+                    <p style="font-size:0.78rem;color:var(--color-text-secondary);margin-bottom:1rem;">Each student assigned to their most pressing barrier.</p>
+                    <div class="donut-section">
+                        <div class="donut-wrap" id="donut" role="img" aria-label="Primary barrier donut chart"></div>
+                        <div class="legend" id="donut-legend"></div>
+                    </div>
+                </div>
+                <div>
+                    <p style="font-size:0.83rem;font-weight:600;margin-bottom:0.5rem;">All Barriers (with overlap)</p>
+                    <p style="font-size:0.78rem;color:var(--color-text-secondary);margin-bottom:1rem;">Total students affected by each barrier, including secondary.</p>
+                    <div class="donut-section">
+                        <div class="donut-wrap" id="donut-overlap" role="img" aria-label="All barriers donut chart"></div>
+                        <div class="legend" id="donut-overlap-legend"></div>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--color-border);">
+                <p style="font-size:0.83rem;font-weight:600;margin-bottom:0.5rem;">Barrier Complexity</p>
+                <div id="complexity-bar" style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;"></div>
             </div>
         </div>
 
@@ -934,6 +951,53 @@
         });
         document.getElementById('donut').innerHTML = `<svg viewBox="0 0 160 160" aria-hidden="true">${svgPaths}</svg><div class="donut-center"><div class="donut-center-num">${allBelow.length}</div><div class="donut-center-label">below target</div></div>`;
         document.getElementById('donut-legend').innerHTML = legendHTML;
+
+        // Overlap donut (all barriers, students counted in each they have)
+        const totalAffected = Object.values(barrierCounts).reduce((a,b)=>a+b,0);
+        let offset2 = 0, svgPaths2 = '', legendHTML2 = '';
+        sortedBarriers.forEach(([reason, count]) => {
+            const pctSlice = count / totalAffected;
+            const dash = pctSlice * circ;
+            const color = COLORS.barriers[reason] || '#666';
+            svgPaths2 += `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="${color}" stroke-width="24" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-offset2}" transform="rotate(-90 ${cx} ${cy})"/>`;
+            offset2 += dash;
+            legendHTML2 += `<div class="legend-item"><div class="legend-dot" style="background:${color}"></div><strong>${count}</strong> ${reason}</div>`;
+        });
+        document.getElementById('donut-overlap').innerHTML = `<svg viewBox="0 0 160 160" aria-hidden="true">${svgPaths2}</svg><div class="donut-center"><div class="donut-center-num">${totalAffected}</div><div class="donut-center-label">total barriers</div></div>`;
+        document.getElementById('donut-overlap-legend').innerHTML = legendHTML2;
+
+        // Complexity bar with expandable student lists
+        const complexityColors = {'1':'#059669','2':'#d97706','3':'#dc2626','4':'#7c2d12'};
+        let complexHTML = '<div style="display:flex;gap:1rem;align-items:start;flex-wrap:wrap;margin-bottom:1.5rem;">';
+        Object.entries(barrierCountDist).sort((a,b)=>a[0]-b[0]).forEach(([n,c]) => {
+            const pct = Math.round(100*c/allBelow.length);
+            const color = complexityColors[n] || '#7c2d12';
+            const studentsWithN = allBelow.filter(s => s._tags.filter(t => t !== 'Age Grade Below G3').length === parseInt(n));
+            const studentList = studentsWithN.map(s => {
+                const barriers = s._tags.filter(t => t !== 'Age Grade Below G3').join(', ');
+                return `<div style="display:flex;justify-content:space-between;padding:0.25rem 0.5rem;border-bottom:1px solid var(--color-border);font-size:0.78rem;"><span><strong>${s.name}</strong> <span style="color:var(--color-text-muted);">${s.campus||''}</span></span><span style="color:var(--color-text-muted);">${barriers}</span></div>`;
+            }).join('');
+            complexHTML += `<details style="flex:1;min-width:120px;"><summary style="cursor:pointer;text-align:center;list-style:none;"><div style="font-size:1.5rem;font-weight:700;color:${color};">${c}</div><div style="font-size:0.75rem;color:var(--color-text-secondary);">${n} barrier${n==='1'?'':'s'} (${pct}%)</div></summary><div style="max-height:250px;overflow-y:auto;margin-top:0.5rem;border:1px solid var(--color-border);border-radius:6px;">${studentList}</div></details>`;
+        });
+        complexHTML += '</div>';
+
+        // Barrier combinations ranked by frequency (only multi-barrier combos)
+        const comboCounts = {};
+        allBelow.forEach(s => {
+            const tags = s._tags.filter(t => t !== 'Age Grade Below G3');
+            if (tags.length < 2) return;
+            const combo = tags.sort().join(' + ');
+            comboCounts[combo] = (comboCounts[combo]||0)+1;
+        });
+        const sortedCombos = Object.entries(comboCounts).sort((a,b)=>b[1]-a[1]);
+        complexHTML += '<p style="font-size:0.83rem;font-weight:600;margin-bottom:0.5rem;">Most common barrier combinations:</p>';
+        complexHTML += '<div style="font-size:0.8rem;">';
+        sortedCombos.forEach(([combo, count]) => {
+            const pct = Math.round(100*count/allBelow.length);
+            complexHTML += `<div style="display:flex;align-items:center;gap:0.5rem;padding:0.3rem 0;border-bottom:1px solid var(--color-border);"><strong style="min-width:2rem;text-align:right;">${count}</strong><div style="background:var(--color-neutral-bg);height:8px;border-radius:4px;flex:1;max-width:200px;"><div style="background:var(--color-info);height:8px;border-radius:4px;width:${100*count/sortedCombos[0][1]}%;"></div></div><span>${combo} <span style="color:var(--color-text-muted);">(${pct}%)</span></span></div>`;
+        });
+        complexHTML += '</div>';
+        document.getElementById('complexity-bar').innerHTML = complexHTML;
 
         // === FIXABILITY (three tiers: active intervention / needs time / outside product) ===
         let fixActive = 0, fixTime = 0, fixNo = 0;
