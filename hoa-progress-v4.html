@@ -1029,8 +1029,7 @@
         // Cohort context as a mini table
         actionHTML += '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0.5rem;margin-bottom:1.25rem;">';
         Object.entries(cohortBreakdown).forEach(([sn,d]) => {
-            const belowPct = Math.round(100*d.below/d.total);
-            actionHTML += `<div style="text-align:center;padding:0.5rem;background:var(--color-neutral-bg);border-radius:8px;"><div style="font-weight:700;font-size:1rem;">${sn}</div><div style="font-size:0.75rem;color:var(--color-text-secondary);margin-top:0.2rem;">${d.below} of ${d.total} below</div><div style="font-size:0.7rem;color:var(--color-text-muted);">${d.months} mo in program</div></div>`;
+            actionHTML += `<div style="text-align:center;padding:0.5rem;background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;"><div style="font-weight:700;font-size:1rem;color:var(--color-text);">${sn}</div><div style="font-size:0.75rem;color:var(--color-text);margin-top:0.2rem;">${d.below} of ${d.total} below</div><div style="font-size:0.7rem;color:var(--color-text-secondary);">${d.months} mo in program</div></div>`;
         });
         actionHTML += '</div>';
 
