@@ -773,7 +773,7 @@
         return tags;
     }
 
-    fetch('data.json').then(r => r.json()).then(data => {
+    fetch('data.json?v=' + Date.now()).then(r => r.json()).then(data => {
         // Exclude specific students flagged for removal
         const EXCLUDE = ['adriana danieri','alan rodriguez','austin wong','aaliyah oneal','charlotte gutierrez','alice bateman','clara modlin'].map(n => n.toLowerCase());
         // Also exclude Vita High School campus entirely
