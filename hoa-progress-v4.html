@@ -905,13 +905,12 @@
         actionHTML += '<p style="font-size:0.8rem;color:var(--color-text-secondary);margin-bottom:0.75rem;">Cohort context: ';
         actionHTML += Object.entries(cohortBreakdown).map(([sn,d]) => `${sn}: ${d.below} of ${d.total} below target (${d.months} ${d.months===1?'month':'months'} in program)`).join(' | ');
         actionHTML += '</p>';
-        actionHTML += `<p style="margin-bottom:0.5rem;"><strong>Primary barriers</strong> (${allBelow.length} students, one per student):</p><ul style="padding-left:1.5rem;line-height:2;">`;
-        sortedReasons.forEach(([reason, count]) => {
+        actionHTML += `<p style="margin-bottom:0.5rem;"><strong>Barriers</strong> (students can be affected by more than one):</p><ul style="padding-left:1.5rem;line-height:2;">`;
+        sortedBarriers.forEach(([reason, count]) => {
             const meta = BARRIER_META[reason] || {};
             actionHTML += `<li><strong>${count}</strong> ${reason} — ${meta.action || ''}</li>`;
         });
         actionHTML += '</ul>';
-        actionHTML += `<p style="margin-top:0.75rem;"><strong>Additional signals</strong> (all cohorts, may overlap): <strong>${totalRushing}</strong> rush tests, <strong>${almostThere}</strong> at 1 grade advanced.</p>`;
         document.getElementById('action-summary').innerHTML = actionHTML;
 
         // === DONUT (all below-target students) ===
