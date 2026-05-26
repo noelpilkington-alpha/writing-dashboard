@@ -838,12 +838,14 @@
         const EXCLUDE_CAMPUSES = ['Vita High School'];
         const students = (data.students || []).filter(s => !EXCLUDE.includes(s.name.toLowerCase()) && !EXCLUDE_CAMPUSES.includes(s.campus));
 
-        // Reassign sessions for non-S1 students based on true_writing_start (Writing eligibility)
+        // Reassign sessions based on true_writing_start (Writing eligibility)
+        // S1 students only get reassigned if their Writing eligibility is AFTER S2 (Jan 2, 2026)
+        // (students who passed G3 Language within S1/S2 timeframe are still full-year students)
         const SESSION_DATES = {S2:['2025-10-20','2026-01-02'],S3:['2026-01-05','2026-02-20'],S4:['2026-02-21','2026-04-17'],S5:['2026-04-27','2026-06-05']};
         students.forEach(s => {
-            if (s.start_session === 'S1') return;
             const tws = (s.xp||{}).true_writing_start || '';
             if (!tws) return;
+            if (s.start_session === 'S1' && tws <= '2026-01-02') return;
             for (const [sn,[start,end]] of Object.entries(SESSION_DATES)) {
                 if (tws >= start && tws <= end) { s.start_session = sn; return; }
             }
