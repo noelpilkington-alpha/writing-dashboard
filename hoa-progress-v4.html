@@ -911,6 +911,14 @@
             actionHTML += `<li><strong>${count}</strong> ${reason} — ${meta.action || ''}</li>`;
         });
         actionHTML += '</ul>';
+        // Barrier count distribution
+        const barrierCountDist = {};
+        allBelow.forEach(s => {
+            const n = s._tags.filter(t => t !== 'Age Grade Below G3').length;
+            barrierCountDist[n] = (barrierCountDist[n]||0)+1;
+        });
+        const distParts = Object.entries(barrierCountDist).sort((a,b)=>a[0]-b[0]).map(([n,c]) => `<strong>${c}</strong> with ${n} barrier${n==='1'?'':'s'}`);
+        actionHTML += `<p style="margin-top:0.75rem;font-size:0.83rem;color:var(--color-text-secondary);">Barrier complexity: ${distParts.join(', ')}.</p>`;
         document.getElementById('action-summary').innerHTML = actionHTML;
 
         // === DONUT (all below-target students) ===
