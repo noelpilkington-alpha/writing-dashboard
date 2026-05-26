@@ -640,7 +640,8 @@
                 <dl style="font-size:0.8rem;">
                     <dt><strong>2-grade target</strong></dt><dd>Each student is expected to advance 2 writing grade levels per school year. A "grade level" = passing the standardized end-of-course test for that level (score 90%+).</dd>
                     <dt style="margin-top:0.5rem;"><strong>Full-year students (S1)</strong></dt><dd>Students who started AlphaWrite in Session 1 (August 2025) and have had the full school year.</dd>
-                    <dt style="margin-top:0.5rem;"><strong>Not Spending Enough Time</strong></dt><dd>Student's lifetime average practice volume is below 12.5 XP/day, OR they have been inactive for 14+ school days. 12.5 XP/day is the minimum pace needed to advance 2 grades in a school year.</dd>
+                    <dt style="margin-top:0.5rem;"><strong>Not Spending Enough Time</strong></dt><dd>Student is not logging in and completing activities consistently. Lifetime average is below 12.5 XP/day with low engagement.</dd>
+                    <dt style="margin-top:0.5rem;"><strong>Struggling with Accuracy</strong></dt><dd>Student is actively engaged (50%+ of available days) but scoring below 80% on activities, which means they earn 0 XP. They're doing the work but not getting credit because the content is too difficult.</dd>
                     <dt style="margin-top:0.5rem;"><strong>Stuck in Testing Loop</strong></dt><dd>Student has failed 3+ end-of-course tests at the same grade level without advancing.</dd>
                     <dt style="margin-top:0.5rem;"><strong>Rushes Tests</strong></dt><dd>Student has taken 2+ tests below the minimum time threshold for their grade level (G3-G5: under 25 minutes, G6-G8: under 60 minutes).</dd>
                     <dt style="margin-top:0.5rem;"><strong>Age Grade Below G3</strong></dt><dd>Student is in school Grade 2 or below. AlphaWrite is designed for Grade 3+; younger students may lack the typing/reading readiness for the curriculum.</dd>
@@ -660,6 +661,7 @@
     const COLORS = {
         barriers: {
             'Not Spending Enough Time': '#c2410c',
+            'Struggling with Accuracy': '#b45309',
             'Stuck in Testing Loop': '#6d28d9',
             'Rushes Tests': '#be123c',
             'Age Grade Below G3': '#4338ca',
@@ -673,9 +675,14 @@
 
     const BARRIER_META = {
         'Not Spending Enough Time': {
-            desc: 'Daily practice volume is below the expected target.',
+            desc: 'Student is not logging in and completing AlphaWrite activities consistently.',
             fixable: false,
             action: 'Campus team to ensure student completes daily Writing practice consistently.',
+        },
+        'Struggling with Accuracy': {
+            desc: 'Student is actively engaged but scoring below 80% on activities, earning 0 XP for their effort.',
+            fixable: true,
+            action: 'Student needs instructional support — content is too difficult at current level. Consider coaching or prerequisite review.',
         },
         'Stuck in Testing Loop': {
             desc: '3+ failed end-of-course tests at the same grade level.',
@@ -740,8 +747,16 @@
             return tags;
         }
 
-        if (neverStarted || daysInactive >= 14 || (trueAvgXp !== undefined && trueAvgXp < xpThreshold)) {
-            tags.push('Not Spending Enough Time');
+        if (neverStarted || (trueAvgXp !== undefined && trueAvgXp < xpThreshold)) {
+            // Distinguish: engaged students struggling with accuracy vs truly not spending time
+            const activeDays = xp.active_days || 0;
+            const lowAccCount = ((s.accuracy || {}).activities_below_threshold || []).length;
+            const engagement = trueDays > 0 ? activeDays / trueDays : 0;
+            if (!neverStarted && engagement >= 0.5 && lowAccCount >= 10) {
+                tags.push('Struggling with Accuracy');
+            } else {
+                tags.push('Not Spending Enough Time');
+            }
         }
         if (dd.needed) tags.push('Stuck in Testing Loop');
         const rushing = s.rushing || {};
@@ -930,7 +945,7 @@
             const studentListHTML = reasonStudents.map(s => {
                 const startDate = (s.xp||{}).true_writing_start || '';
                 let avgXp = (s.xp||{}).avg_xp_per_day_lifetime || 0;
-                if (reason === 'Not Spending Enough Time' && startDate) {
+                if ((reason === 'Not Spending Enough Time' || reason === 'Struggling with Accuracy') && startDate) {
                     const rXp = ((s.xp||{}).alphawrite||0) + ((s.xp||{}).test||0);
                     const sd2 = new Date(startDate).getTime();
                     const nd2 = new Date('2026-05-25').getTime();
@@ -938,8 +953,13 @@
                     const wd2 = Math.round(cd2*5/7)-15;
                     if (wd2 > 0) avgXp = rXp / wd2;
                 }
-                const xpInfo = reason === 'Not Spending Enough Time' ? ` | ${avgXp.toFixed(1)} XP/day` : '';
-                return `<div style="display:flex;justify-content:space-between;align-items:center;padding:0.3rem 0.5rem;border-bottom:1px solid var(--color-border);font-size:0.8rem;"><span><strong>${s.name}</strong> <span style="color:var(--color-text-muted);">${s.campus||''}</span></span><span style="color:var(--color-text-muted);">G${s.age_grade||'?'} | +${s.grades_advanced||0}${xpInfo}${startDate ? ' | started '+startDate : ''}</span></div>`;
+                let extraInfo = '';
+                if (reason === 'Not Spending Enough Time') extraInfo = ` | ${avgXp.toFixed(1)} XP/day`;
+                if (reason === 'Struggling with Accuracy') {
+                    const lowAcc = ((s.accuracy||{}).activities_below_threshold||[]).length;
+                    extraInfo = ` | ${avgXp.toFixed(1)} XP/day | ${lowAcc} failed activities`;
+                }
+                return `<div style="display:flex;justify-content:space-between;align-items:center;padding:0.3rem 0.5rem;border-bottom:1px solid var(--color-border);font-size:0.8rem;"><span><strong>${s.name}</strong> <span style="color:var(--color-text-muted);">${s.campus||''}</span></span><span style="color:var(--color-text-muted);">G${s.age_grade||'?'} | +${s.grades_advanced||0}${extraInfo}${startDate ? ' | started '+startDate : ''}</span></div>`;
             }).join('');
             const expandId = 'fix-expand-' + idx;
             return `<tr style="cursor:pointer;" onclick="var el=document.getElementById('${expandId}');el.style.display=el.style.display==='none'?'table-row':'none';this.classList.toggle('expanded')"><td>▶ ${reason}</td><td><strong>${count}</strong></td><td>${badge}</td><td>${meta.action||''}</td></tr><tr id="${expandId}" style="display:none;"><td colspan="4" style="padding:0.75rem;background:var(--color-page);"><div style="max-height:300px;overflow-y:auto;">${studentListHTML}</div></td></tr>`;
@@ -1124,7 +1144,7 @@
                     if ((tag === 'Still in Coursework' || tag === 'Too Early to Assess') && startDate) {
                         desc += ` Started Writing: ${startDate}.`;
                     }
-                    if (tag === 'Not Spending Enough Time') {
+                    if (tag === 'Not Spending Enough Time' || tag === 'Struggling with Accuracy') {
                         const xpData = s.xp || {};
                         const ts = xpData.true_writing_start || '';
                         const realXpVal = (xpData.alphawrite || 0) + (xpData.test || 0);
@@ -1137,6 +1157,10 @@
                             if (wd > 0) displayXp = realXpVal / wd;
                         }
                         desc += ` Average AlphaWrite+Test XP/day since eligibility: <strong>${displayXp.toFixed(1)}</strong> (target: 12.5).`;
+                        if (tag === 'Struggling with Accuracy') {
+                            const lowAcc = ((s.accuracy||{}).activities_below_threshold||[]).length;
+                            desc += ` <strong>${lowAcc}</strong> activities scored below 80% (earned 0 XP).`;
+                        }
                     }
                     html += `<p style="margin-bottom:0.4rem;"><span class="badge" style="background:${COLORS.barriers[tag]||'#666'}15;color:${COLORS.barriers[tag]||'#666'};border:1px solid ${COLORS.barriers[tag]||'#666'}40;">${tag}</span> ${desc}</p>`;
                 });
