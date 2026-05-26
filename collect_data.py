@@ -55,23 +55,44 @@ ALL_SESSIONS_DATES = {
 }
 
 
-def _get_start_session(tests: list[dict], first_activity_date: str | None = None) -> str | None:
-    """Determine which session a student started based on first activity or first test."""
-    # Prefer first_activity_date (from XP data) over first test date
-    first = first_activity_date
+def _load_s1_cohort_emails() -> set[str]:
+    """Load the spreadsheet-defined S1 Writing cohort emails."""
+    import json as _json
+    path = Path(__file__).resolve().parent.parent / "s1_writing_cohort_emails.json"
+    if path.exists():
+        with open(path, encoding="utf-8") as f:
+            return set(_json.load(f))
+    return set()
+
+
+_S1_COHORT_EMAILS = _load_s1_cohort_emails()
+
+
+def _get_start_session(tests: list[dict], first_activity_date: str | None = None, student_email: str = "") -> str | None:
+    """Determine which session a student started.
+
+    S1 is defined by the Session 1 Snapshot spreadsheet.
+    S2-S5 use first test date (preferred) or first alphawrite activity.
+    """
+    # S1 is spreadsheet-defined
+    if student_email.lower() in _S1_COHORT_EMAILS:
+        return "S1"
+
+    # For non-S1: use first test date, fallback to first activity
+    dates = [t.get("date", "") for t in tests if t.get("date")]
+    first = min(dates) if dates else first_activity_date
     if not first:
-        dates = [t.get("date", "") for t in tests if t.get("date")]
-        if not dates:
-            return None
-        first = min(dates)
+        return None
+
     for sn, (start, end) in ALL_SESSIONS_DATES.items():
         if start <= first <= end:
+            # If it lands in S1 but student isn't in S1 spreadsheet, bump to S2
+            if sn == "S1":
+                return "S2"
             return sn
     # Handle dates before S1 or in between-session gaps
-    if first < "2025-10-18":
-        return "S1"
-    if "2025-10-18" <= first < "2025-10-20":
-        return "S2"
+    if first < "2025-10-20":
+        return "S2"  # Not in S1 spreadsheet, so earliest possible is S2
     if "2026-04-18" <= first < "2026-04-27":
         return "S5"
     return None
@@ -1397,7 +1418,7 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
             "effective_grades_mastered": max(0, hmg - (eg_by_name.get(profile.full_name.lower(), hmg + 1) - 1)) if eg_by_name.get(profile.full_name.lower()) else None,
             "language_eg": lang_eg_by_name.get(profile.full_name.lower()),
             "s1_cohort": profile.full_name.lower() in s1_names if s1_names else None,
-            "start_session": _get_start_session(api_tests, first_writing_date),
+            "start_session": _get_start_session(api_tests, first_writing_date, profile.email if profile else ""),
             "completed_g8": completed_g8,
             "enrollments": student_enrollments,
             "still_enrolled": bool(student_enrollments),
