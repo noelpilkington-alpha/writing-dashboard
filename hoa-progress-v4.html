@@ -645,6 +645,7 @@
             'Stuck in Testing Loop': '#6d28d9',
             'Rushes Tests': '#be123c',
             'Age Grade Below G3': '#4338ca',
+            'Grammar & Mechanics Gaps': '#92400e',
             'Still in Coursework': '#475569',
             'On Track (may reach 2)': '#059669',
             'Too Early to Assess': '#64748b',
@@ -693,6 +694,11 @@
             desc: 'Started Writing fewer than 14 school days ago. Not enough data to classify.',
             fixable: 'time',
             action: 'Continue instruction. Reassess after 3+ weeks of practice.',
+        },
+        'Grammar & Mechanics Gaps': {
+            desc: 'Test analysis shows gaps in grammar, punctuation, spelling, or sentence structure (run-ons/comma splices).',
+            fixable: false,
+            action: 'Requires explicit instruction outside AlphaWrite. AlphaWrite teaches these implicitly but does not target them in isolation.',
         },
     };
 
@@ -747,8 +753,15 @@
             else tags.push('Still in Coursework');
         }
 
-        // Age grade below G3 is always secondary context (never the sole primary tag)
+        // Secondary tags (never the sole primary tag — always additive context)
         if (typeof s.age_grade === 'number' && s.age_grade < 3) tags.push('Age Grade Below G3');
+
+        // Grammar/mechanics gaps detected from test analysis
+        const analysis = s.skill_gap_analysis || {};
+        const gapText = ((analysis.test_skill_gaps || '') + ' ' + (analysis.can_alphawrite_fix || '')).toLowerCase();
+        if (/grammar|mechanics|spelling|punctuation|run-on|comma splice/.test(gapText)) {
+            tags.push('Grammar & Mechanics Gaps');
+        }
 
         return tags;
     }
@@ -1084,7 +1097,9 @@
 
         const filterReason = document.getElementById('filter-reason');
         filterReason.innerHTML = '<option value="all">All barriers</option>';
-        [...new Set(allBelow.map(s=>s._reason))].sort().forEach(r => { filterReason.innerHTML += `<option value="${r}">${r}</option>`; });
+        const allTags = new Set();
+        allBelow.forEach(s => s._tags.forEach(t => allTags.add(t)));
+        [...allTags].sort().forEach(r => { filterReason.innerHTML += `<option value="${r}">${r}</option>`; });
 
         const filterCampus = document.getElementById('filter-campus');
         filterCampus.innerHTML = '<option value="all">All campuses</option>';
@@ -1141,6 +1156,16 @@
                             const lowAcc = ((s.accuracy||{}).activities_below_threshold||[]).length;
                             desc += ` <strong>${lowAcc}</strong> activities scored below 80% (earned 0 XP).`;
                         }
+                    }
+                    if (tag === 'Grammar & Mechanics Gaps') {
+                        const sga = s.skill_gap_analysis || {};
+                        const gText = ((sga.test_skill_gaps || '') + ' ' + (sga.can_alphawrite_fix || '')).toLowerCase();
+                        const issues = [];
+                        if (/grammar|mechanics/.test(gText)) issues.push('grammar');
+                        if (/spelling/.test(gText)) issues.push('spelling');
+                        if (/punctuation/.test(gText)) issues.push('punctuation');
+                        if (/run-on|comma splice/.test(gText)) issues.push('run-ons/comma splices');
+                        if (issues.length) desc += ` Specific gaps: <strong>${issues.join(', ')}</strong>.`;
                     }
                     html += `<p style="margin-bottom:0.4rem;"><span class="badge" style="background:${COLORS.barriers[tag]||'#666'}15;color:${COLORS.barriers[tag]||'#666'};border:1px solid ${COLORS.barriers[tag]||'#666'}40;">${tag}</span> ${desc}</p>`;
                 });
