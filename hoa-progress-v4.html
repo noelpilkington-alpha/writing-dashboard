@@ -1034,7 +1034,7 @@
         actionHTML += '</div>';
 
         const topBarrier = sortedBarriers[0];
-        actionHTML += `<p style="margin-bottom:0.75rem;"><strong>Why haven't they reached target?</strong> The most common barrier is <strong>${topBarrier[0]}</strong> (${topBarrier[1]} students). Overall, ${fixActive} students can be helped through AlphaWrite intervention, ${fixTime} need more time in the program, and ${fixNo} require action outside the product.</p>`;
+        actionHTML += `<p style="margin-bottom:0.75rem;"><strong>Why haven't they reached target?</strong> The most common barrier is <strong>${topBarrier[0]}</strong> (${topBarrier[1]} students). AlphaWrite can address <strong>${fixActive + fixTime}</strong> of ${allBelow.length} students (${fixActive} with active intervention, ${fixTime} with more time). <strong>${fixNo}</strong> require action outside the product.</p>`;
         actionHTML += `<p style="margin-bottom:0.5rem;"><strong>All barriers</strong> (students can be affected by more than one):</p><ul style="padding-left:1.5rem;line-height:2;">`;
         sortedBarriers.forEach(([reason, count]) => {
             const meta = BARRIER_META[reason] || {};
@@ -1136,19 +1136,18 @@
         document.getElementById('complexity-bar').innerHTML = complexHTML;
 
         // === FIXABILITY (three tiers: active intervention / needs time / outside product) ===
+        const fixYes = fixActive + fixTime;
         document.getElementById('fix-bar').innerHTML = `
-            <div class="bar-seg" style="width:${100*fixActive/allBelow.length}%;background:#1d4ed8">${fixActive}</div>
-            <div class="bar-seg" style="width:${100*fixTime/allBelow.length}%;background:#0891b2">${fixTime}</div>
+            <div class="bar-seg" style="width:${100*fixYes/allBelow.length}%;background:#1d4ed8">${fixYes}</div>
             <div class="bar-seg" style="width:${100*fixNo/allBelow.length}%;background:#57534e">${fixNo}</div>
         `;
         document.getElementById('fix-legend').innerHTML = `
-            <span><span style="background:#1d4ed8;width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>Yes — active intervention (${fixActive})</span>
-            <span><span style="background:#0891b2;width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>Needs more time (${fixTime})</span>
+            <span><span style="background:#1d4ed8;width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>Yes — AlphaWrite can fix (${fixYes}): ${fixActive} with active intervention, ${fixTime} with more time</span>
             <span><span style="background:#57534e;width:10px;height:10px;display:inline-block;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>No — requires action outside AlphaWrite (${fixNo})</span>
         `;
         document.getElementById('fix-table').innerHTML = sortedBarriers.map(([reason, count], idx) => {
             const meta = BARRIER_META[reason] || {};
-            const badge = meta.fixable === true ? '<span class="badge badge--yes">Yes</span>' : meta.fixable === 'time' ? '<span class="badge badge--info">Needs Time</span>' : '<span class="badge badge--no">No</span>';
+            const badge = meta.fixable === true ? '<span class="badge badge--yes">Yes</span>' : meta.fixable === 'time' ? '<span class="badge badge--yes">Yes (needs time)</span>' : '<span class="badge badge--no">No</span>';
             const reasonStudents = allBelow.filter(s => s._tags.includes(reason));
 
             // Helper: extract testing loop root causes for a student
