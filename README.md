@@ -47,6 +47,8 @@ The dashboard is a static site. `years.json` lists the available school years (t
 
 Sessions, holidays and calendars live in `writing_automation/config.py` (`SCHOOL_YEARS`). SY26-27 has two campus calendars (A: Aug 12 start, B: Sep 8 start); `writing_automation/calendars.py` maps each roster campus to a calendar and counts school days (weekdays inside sessions, minus holidays). Virtual programs and campuses without a published calendar default to A with a logged warning.
 
+Writing XP rule: a result counts as Writing when its `metadata.subject` is Writing, its line item is an AlphaWrite item, or its course (`metadata.courseSourcedId`) is a Writing course. Lesson type alone is not evidence, because PowerPath quizzes and reading articles are shared with Math, Science and Reading hole-filling. Lesson names for rows without a title come from the component resource or line-item title; both lookups are cached in `_course_cache.json` and `_lesson_name_cache.json` (gitignored, safe to delete).
+
 Population = students with an active Writing enrollment in the API whose email appears in the A&D Master Roster as Enrolled with the `school_year_2026_2027` group tag (shadow, test, mock, guide and test-record rows are excluded). Former Legacy Dash campuses are included.
 
 ### Updating data
