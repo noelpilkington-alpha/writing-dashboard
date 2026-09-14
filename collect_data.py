@@ -46,6 +46,7 @@ from enrollment_grades import (
     is_excluded_enrollment as _is_excluded_enrollment,
     stale_enrollments,
 )
+from activity_resolution import CourseSubjects, LessonNames, is_writing_activity
 from identity import load_links, merge_activities, merge_tests
 from roster import EXCLUDED_EMAILS as _EXCLUDED_EMAILS
 from roster import classify_dashboard as _classify_dashboard
@@ -76,24 +77,17 @@ def _is_alphawrite(ali_sid: str) -> bool:
     return ali_sid.startswith("alphawrite-") or ali_sid.startswith("alphawrite:")
 
 
-def _is_writing_activity(ali_sid: str, meta: dict) -> bool:
-    """Check if a result is Writing activity (broader than _is_alphawrite).
+# Lookup helpers initialised in collect() once the API client exists. They are
+# disk-cached (_course_cache.json, _lesson_name_cache.json; both gitignored).
+_COURSE_SUBJECTS: CourseSubjects | None = None
+_LESSON_NAMES: LessonNames | None = None
 
-    Covers standard AlphaWrite, SWF (Standardized Writing Fundamentals),
-    and Essays courses which use different ID formats.
-    """
-    if meta.get("subject") == "Writing":
-        return True
-    if _is_alphawrite(ali_sid):
-        return True
-    if meta.get("lessonType") == "powerpath-100":
-        return True
-    if ali_sid.startswith("cr_article_"):
-        return True
-    if ali_sid.startswith("unit_") and meta.get("lessonType") in ("quiz", "alpha-read-article", ""):
-        if meta.get("subject") in ("", "Writing"):
-            return True
-    return False
+
+def _is_writing_activity(ali_sid: str, meta: dict) -> bool:
+    """Writing work = subject Writing, an AlphaWrite line item, or a record whose
+    course is a Writing course. Lesson type alone (powerpath-100, articles, quizzes)
+    is not evidence: those types are shared with Math/Science/Reading hole-filling."""
+    return is_writing_activity(ali_sid, meta, _COURSE_SUBJECTS)
 
 
 ACCURACY_THRESHOLD = 80
@@ -767,25 +761,35 @@ def extract_xp_and_details(raw_results: list[dict]) -> dict:
                 course = ""
                 alphawrite_xp_total += xp
             else:
-                # Non-AlphaWrite Writing activity (mastery track / external lesson)
+                # Non-AlphaWrite Writing activity (new-format AlphaWrite caliper rows,
+                # Writing-course PowerPath quizzes, external lessons). Prefer the real
+                # lesson title from the component resource / line item.
                 app_name = meta.get("appName", "")
                 test_name = meta.get("testName", "")
-                name = test_name or app_name or "Writing Activity"
                 course = ""
-                if name.startswith("caliper_") or name.startswith("Caliper_"):
-                    name = app_name or "Mastery Track Activity"
-                elif name.startswith("Nice_"):
-                    name = name.replace("Nice_", "").replace("_", " ").title()
-                elif _is_uuid(name):
-                    name = app_name or "Writing Activity"
-                mastery_track_xp_total += xp
+                looked_up = _LESSON_NAMES.resolve(ali_sid, meta) if _LESSON_NAMES else None
+                if looked_up:
+                    name = looked_up
+                else:
+                    name = test_name or app_name or "Writing Activity"
+                    if name.startswith("caliper_") or name.startswith("Caliper_"):
+                        name = app_name or "Mastery Track Activity"
+                    elif name.startswith("Nice_"):
+                        name = name.replace("Nice_", "").replace("_", " ").title()
+                    elif _is_uuid(name):
+                        name = app_name or "Writing Activity"
+                if app_name == "Alphawrite" or (meta.get("isAWTimeback2") or meta.get("isAWCaliper")):
+                    alphawrite_xp_total += xp
+                else:
+                    mastery_track_xp_total += xp
 
+            is_aw_caliper = meta.get("appName") == "Alphawrite" or bool(meta.get("isAWTimeback2") or meta.get("isAWCaliper"))
             activity_xp_items.append({
                 "name": name,
                 "course": course,
                 "xp": xp,
                 "date": date,
-                "type": "alphawrite" if (is_alphawrite or lesson_type == "powerpath-100") else (
+                "type": "alphawrite" if (is_alphawrite or is_aw_caliper or lesson_type == "powerpath-100") else (
                     "external" if lesson_type == "external-lesson" else "mastery_track"
                 ),
             })
@@ -862,9 +866,12 @@ def collect(
     csv_results = [r for r in load_csv(csv_path) if r.score_date < as_of_end]
     logger.info("Loaded %d CSV results on/before %s", len(csv_results), as_of_str)
 
-    # 3. Init API
+    # 3. Init API + cached lookup helpers for subject and lesson-name resolution
     logger.info("Initializing Timeback API...")
     api = TimebackAPI()
+    global _COURSE_SUBJECTS, _LESSON_NAMES
+    _COURSE_SUBJECTS = CourseSubjects(api, DASHBOARD_DIR / "_course_cache.json")
+    _LESSON_NAMES = LessonNames(api, DASHBOARD_DIR / "_lesson_name_cache.json")
 
     # 4. Fetch enrollments + profiles
     logger.info("Fetching Writing enrollments...")
@@ -1347,6 +1354,8 @@ def collect(
         })
 
     logger.info("Merged histories for %d students with linked accounts", merged_count)
+    _COURSE_SUBJECTS.save()
+    _LESSON_NAMES.save()
 
     # Calendars (sessions + holidays) for the frontend; all_sessions kept for compatibility
     primary_key = cal.calendar_keys(year)[0]
