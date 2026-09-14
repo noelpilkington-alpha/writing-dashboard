@@ -20,10 +20,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from writing_automation.api_client import TimebackAPI
 from writing_automation.config import (
     ALPHA_SESSION_COOKIE_ENV,
+    CURRENT_YEAR,
     ENV_FILE,
     PASS_THRESHOLD,
     RUSH_THRESHOLD,
-    SESSIONS,
+    SCHOOL_YEARS,
 )
 from writing_automation.deep_dive_analysis import is_rushed
 from writing_automation.test_fetcher import fetch_page, parse_test_page
@@ -35,8 +36,15 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 logger = logging.getLogger(__name__)
 
 GRADEBOOK_BASE = "/ims/oneroster/gradebook/v1p2"
-OUTPUT_PATH = Path(__file__).resolve().parent / "loop_data.json"
-DATA_PATH = Path(__file__).resolve().parent / "data.json"
+DASHBOARD_DIR = Path(__file__).resolve().parent
+
+
+def data_path_for(year: str) -> Path:
+    return DASHBOARD_DIR / "data" / year / "data.json"
+
+
+def output_path_for(year: str) -> Path:
+    return DASHBOARD_DIR / "data" / year / "loop_data.json"
 
 # Manual overrides — students who should be in the testing loop but aren't
 # auto-detected (e.g., test types are "test out" or "placement" instead of
@@ -111,8 +119,10 @@ def get_loop_students(data: dict) -> list[dict]:
     return loop
 
 
-def fetch_alphawrite_activities(api: TimebackAPI, student_id: str) -> list[dict]:
-    """Fetch all AlphaWrite activity results for a student (full school year)."""
+def fetch_alphawrite_activities(api: TimebackAPI, student_id: str, year: str) -> list[dict]:
+    """Fetch all AlphaWrite activity results for a student for the given school year."""
+    lower = SCHOOL_YEARS[year]["activity_start"]
+    upper = SCHOOL_YEARS[year]["year_end"]
     try:
         data = api.get(
             f"{GRADEBOOK_BASE}/assessmentResults/",
@@ -120,8 +130,8 @@ def fetch_alphawrite_activities(api: TimebackAPI, student_id: str) -> list[dict]
                 "limit": 3000,
                 "filter": (
                     f"student.sourcedId='{student_id}'"
-                    " AND scoreDate>='2025-08-01'"
-                    " AND scoreDate<='2026-06-30'"
+                    f" AND scoreDate>='{lower}'"
+                    f" AND scoreDate<='{upper}'"
                 ),
             },
         )
@@ -489,12 +499,14 @@ def run_claude_analysis(prompt: str) -> str:
 
 def main():
     parser = argparse.ArgumentParser(description="Collect testing loop data for dashboard")
-    parser.add_argument("--output", default=str(OUTPUT_PATH), help="Output JSON path")
+    parser.add_argument("--year", default=CURRENT_YEAR, choices=list(SCHOOL_YEARS.keys()))
+    parser.add_argument("--output", default=None, help="Output JSON path (default data/<year>/loop_data.json)")
     parser.add_argument("--skip-analysis", action="store_true",
                         help="Skip Claude analysis (faster, uses cached or empty)")
-    parser.add_argument("--data-json", default=str(DATA_PATH),
-                        help="Path to data.json")
+    parser.add_argument("--data-json", default=None, help="Path to data.json (default data/<year>/data.json)")
     args = parser.parse_args()
+    args.output = args.output or str(output_path_for(args.year))
+    args.data_json = args.data_json or str(data_path_for(args.year))
 
     load_dotenv(ENV_FILE)
     session_cookie = os.getenv(ALPHA_SESSION_COOKIE_ENV, "")
@@ -536,7 +548,7 @@ def main():
 
         # 4b. Fetch AlphaWrite activity data
         logger.info("  Fetching AlphaWrite activities...")
-        raw_activities = fetch_alphawrite_activities(api, sid)
+        raw_activities = fetch_alphawrite_activities(api, sid, args.year)
         skill_data = group_activities_by_skill(raw_activities)
         logger.info("  Found %d skills from %d activities", len(skill_data), len(raw_activities))
 

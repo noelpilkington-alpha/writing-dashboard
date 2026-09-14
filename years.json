@@ -1,0 +1,17 @@
+{
+  "default": "2026-27",
+  "years": {
+    "2025-26": {
+      "label": "2025-26",
+      "data": "data/2025-26/data.json",
+      "loop_data": "data/2025-26/loop_data.json",
+      "remediation_data": "data/2025-26/remediation_data.json"
+    },
+    "2026-27": {
+      "label": "2026-27",
+      "data": "data/2026-27/data.json",
+      "loop_data": "data/2026-27/loop_data.json",
+      "remediation_data": null
+    }
+  }
+}

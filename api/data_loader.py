@@ -18,8 +18,10 @@ def load_all():
     """Load data.json and loop_data.json, build indexes."""
     global _data, _loop_data, _students_by_id, _loop_students_by_id
 
-    data_path = ROOT / "data.json"
-    loop_path = ROOT / "loop_data.json"
+    years = json.loads((ROOT / "years.json").read_text(encoding="utf-8"))
+    year_cfg = years["years"][years["default"]]
+    data_path = ROOT / year_cfg["data"]
+    loop_path = ROOT / year_cfg["loop_data"]
 
     with open(data_path) as f:
         _data = json.load(f)
