@@ -14,14 +14,16 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from writing_automation.api_client import TimebackAPI
 from writing_automation.config import (
-    CURRENT_SESSION,
+    CURRENT_YEAR,
     GRADE_SEQUENCES,
     MINUTES_GOAL_PER_DAY,
     PASS_THRESHOLD,
     RUSH_THRESHOLD,
-    SESSIONS,
+    SCHOOL_YEARS,
+    TIMEBACK_ROOT,
     XP_GOAL_PER_DAY,
 )
+from writing_automation import calendars as cal
 from writing_automation.csv_loader import load_csv
 from writing_automation.deep_dive import detect_deep_dives
 from writing_automation.deep_dive_analysis import (
@@ -33,11 +35,22 @@ from writing_automation.enrollment_fetcher import (
     fetch_student_profiles,
     fetch_writing_enrollments,
 )
-from writing_automation.hmg_calculator import compute_all_hmg
 from writing_automation.student_progress import _get_level
 from writing_automation.student_progress import _count_weekdays
 from writing_automation.test_type_mapper import classify_test_types
 # XP is now computed per-student from raw activity results (not the bulk fetcher)
+
+# Dashboard-local modules (same directory as this script)
+from enrollment_grades import (
+    enrollment_mismatch as compute_enrollment_mismatch,
+    is_excluded_enrollment as _is_excluded_enrollment,
+    stale_enrollments,
+)
+from identity import load_links, merge_activities, merge_tests
+from roster import EXCLUDED_EMAILS as _EXCLUDED_EMAILS
+from roster import classify_dashboard as _classify_dashboard
+from roster import load_roster
+from year_metrics import compute_starting_hmg, hmg_from_tests, is_s1_cohort
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -45,36 +58,6 @@ logger = logging.getLogger(__name__)
 import re as _re
 
 GRADEBOOK_BASE = "/ims/oneroster/gradebook/v1p2"
-
-ALL_SESSIONS_DATES = {
-    "S1": ("2025-08-11", "2025-10-17"),
-    "S2": ("2025-10-20", "2026-01-02"),
-    "S3": ("2026-01-05", "2026-02-20"),
-    "S4": ("2026-02-21", "2026-04-17"),
-    "S5": ("2026-04-27", "2026-06-05"),
-}
-
-
-def _get_start_session(tests: list[dict], first_activity_date: str | None = None) -> str | None:
-    """Determine which session a student started based on first activity or first test."""
-    # Prefer first_activity_date (from XP data) over first test date
-    first = first_activity_date
-    if not first:
-        dates = [t.get("date", "") for t in tests if t.get("date")]
-        if not dates:
-            return None
-        first = min(dates)
-    for sn, (start, end) in ALL_SESSIONS_DATES.items():
-        if start <= first <= end:
-            return sn
-    # Handle dates before S1 or in between-session gaps
-    if first < "2025-10-18":
-        return "S1"
-    if "2025-10-18" <= first < "2025-10-20":
-        return "S2"
-    if "2026-04-18" <= first < "2026-04-27":
-        return "S5"
-    return None
 
 _UUID_RE = _re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", _re.I)
 
@@ -114,7 +97,12 @@ def _is_writing_activity(ali_sid: str, meta: dict) -> bool:
 
 
 ACCURACY_THRESHOLD = 80
-OUTPUT_PATH = Path(__file__).resolve().parent / "data.json"
+DASHBOARD_DIR = Path(__file__).resolve().parent
+IDENTITY_LINKS_PATH = DASHBOARD_DIR / "identity_links.json"
+
+
+def output_path_for(year: str) -> Path:
+    return DASHBOARD_DIR / "data" / year / "data.json"
 
 # Default paths for EG and S1 snapshot data
 DEFAULT_EG_CSV = Path(__file__).resolve().parent.parent / "Student_Progress_Tra_1773079782808.csv"
@@ -206,132 +194,20 @@ def load_effective_grades(csv_path: str) -> tuple[dict[str, int], dict[str, int]
     return writing_eg, language_eg
 
 
-def _school_days_to_date(session_name: str) -> int:
-    """Count school days from session school_start to yesterday.
+def _session_window(year: str, cal_key: str, as_of: datetime) -> dict:
+    """Current session for a calendar as of ``as_of``: name, start, end, school_start,
+    school_days_elapsed (school days from school_start to as_of - 1 day, capped at end).
 
     Because the dashboard is always updated the following day (due to timezone
-    differences), we use ``today - 1 day`` as the cutoff so we don't
-    under-track students.
+    differences), ``as_of - 1 day`` is the cutoff so we don't under-track students.
     """
-    session = SESSIONS[session_name]
-    start = datetime.strptime(session.get("school_start", session["start"]), "%Y-%m-%d")
-    end = datetime.strptime(session["end"], "%Y-%m-%d")
-    yesterday = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
-    cutoff = min(yesterday, end)
-    if cutoff < start:
-        return 0
-    return _count_weekdays(start, cutoff)
-
-# ---------------------------------------------------------------------------
-# A&D Master Roster — used as whitelist and source of truth for campus
-# ---------------------------------------------------------------------------
-
-ROSTER_PATH = Path(__file__).resolve().parent.parent / "A&D Master Roster 25-26 - Master.csv"
-
-# Student Group values that should be excluded
-_EXCLUDED_GROUPS = {"mock", "mock student", "shadow", "test", "guide"}
-
-# Individual student emails to exclude
-_EXCLUDED_EMAILS = {
-    "lincoln.thomas@alpha.school",
-    "luka.scaletta@alpha.school",
-    "elle.liemandt@alpha.school",
-}
-
-# Students whose roster status should be treated as "Enrolled" (e.g. transfers)
-_STATUS_OVERRIDES = {
-    "quinn.oneal@2hourlearning.com",
-    "robin.oneal@2hourlearning.com",
-    "atlas.kloiber@alpha.school",
-    "lincoln.kloiber@alpha.school",
-    "eva.quintero@2hourlearning.com",
-    "scarlett.oneal@2hourlearning.com",
-}
-
-# Legacy Dash campuses (case-insensitive matching via _normalise)
-_LEGACY_CAMPUSES = {
-    "alpha anywhere (homeschool)",
-    "novatio",
-    "unbound academy",
-    "kairos learning solutions",
-    "lipscomb academy accelerate",
-}
-
-# Campuses excluded from the Timeback page (but not Legacy Dash)
-_TIMEBACK_EXCLUDED_CAMPUSES = {
-    "2 hour learning",
-    "2 hour single user",
-    "alpha k-8",
-    "aie elite prep",
-    "alpha austin 25' ai summer camp",
-    "alpha international test school",
-    "alphalearn",
-    "beyond ai",
-    "guide school",
-    "high school sat prep",
-    "mock school org",
-    "speedrun",
-    "school in the hills",
-    "trilogy central support",
-    "centner academy",
-    "colearn academy",
-    "the st. james performance academy",
-}
-
-
-def _load_roster() -> dict[str, dict]:
-    """Load A&D Master Roster. Returns {email_lower: {campus, level, grade, group, name}}."""
-    import csv
-    roster: dict[str, dict] = {}
-    if not ROSTER_PATH.exists():
-        logger.warning("A&D Master Roster not found at %s", ROSTER_PATH)
-        return roster
-    with open(ROSTER_PATH, encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            email = row.get("Student Alpha Email", "").strip().lower()
-            status = row.get("Admission Status", "").strip()
-            group = row.get("Student Group", "").strip().lower()
-            campus = row.get("Campus", "").strip()
-            if not email or (status != "Enrolled" and email not in _STATUS_OVERRIDES):
-                continue
-            if group in _EXCLUDED_GROUPS:
-                continue
-            roster[email] = {
-                "campus": campus,
-                "level": row.get("Current Level", "").strip(),
-                "grade": row.get("Current Grade Level", "").strip(),
-                "name": row.get("Full Name", "").strip(),
-                "group": group,
-            }
-    logger.info("Loaded %d enrolled students from A&D Master Roster", len(roster))
-    return roster
-
-
-def _classify_dashboard(campus: str) -> str:
-    """Return 'legacy' or 'timeback' for a campus, or '' if excluded."""
-    c = campus.lower()
-    if c in _LEGACY_CAMPUSES:
-        return "legacy"
-    if c in _TIMEBACK_EXCLUDED_CAMPUSES:
-        return ""
-    return "timeback"
-
-
-_EXCLUDED_ENROLLMENT_PATTERNS = [
-    "manual xp",
-    "scribble",
-    "writing placement tests",
-    "remediation",
-    "frq mastery",
-    "ap english language",
-]
-
-
-def _is_excluded_enrollment(title: str) -> bool:
-    """Return True if an enrollment title is a non-core Writing course."""
-    t = title.lower()
-    return any(p in t for p in _EXCLUDED_ENROLLMENT_PATTERNS)
+    name = cal.current_session(year, cal_key, as_of)
+    s = cal.sessions(year, cal_key)[name]
+    school_start = s.get("school_start", s["start"])
+    cutoff = min(as_of - timedelta(days=1), datetime.strptime(s["end"], "%Y-%m-%d"))
+    days = cal.school_days(year, cal_key, school_start, cutoff)
+    return {"name": name, "start": s["start"], "end": s["end"], "school_start": school_start,
+            "school_days_elapsed": days}
 
 
 # ---------------------------------------------------------------------------
@@ -340,7 +216,7 @@ def _is_excluded_enrollment(title: str) -> bool:
 
 def _load_skill_plan() -> dict[str, tuple[str, str]]:
     """Load AlphaWrite skill plan from xlsx and return {skill_id: (name, course)} mapping."""
-    skill_plan_path = Path(__file__).resolve().parent.parent / "AlphaWrite Skill Plan 2025_2026 (1).xlsx"
+    skill_plan_path = Path(__file__).resolve().parent.parent / "AlphaWrite Skill Plan 2025_2026.xlsx"
     if not skill_plan_path.exists():
         logger.warning("AlphaWrite Skill Plan not found at %s", skill_plan_path)
         return {}
@@ -681,26 +557,17 @@ def fetch_writing_test_results(
         return []
 
 
-YEAR_START = "2025-08-11"
-
-
 def fetch_activity_results(
-    api: TimebackAPI, student_id: str, session_start: str, session_end: str
+    api: TimebackAPI, student_id: str, lower: str, upper: str
 ) -> list[dict]:
-    """Fetch per-activity assessment results for a student for the full school year.
-
-    Uses YEAR_START (2025-08-11) as the lower bound to capture lifetime activity,
-    enabling accurate XP/day calculations across all sessions.
-    """
-    today_str = datetime.now().strftime("%Y-%m-%d")
-    upper = max(session_end, today_str)
+    """Fetch per-activity assessment results for a student between two ISO dates (inclusive)."""
     try:
         return api.get_paginated(
             f"{GRADEBOOK_BASE}/assessmentResults/",
             {
                 "filter": (
                     f"student.sourcedId='{student_id}'"
-                    f" AND scoreDate>='{YEAR_START}'"
+                    f" AND scoreDate>='{lower}'"
                     f" AND scoreDate<='{upper}'"
                 ),
             },
@@ -805,24 +672,6 @@ def extract_repeated_activities(raw_results: list[dict]) -> list[dict]:
         })
 
     return repeated
-
-
-def compute_hmg_from_api_tests(api_tests: list[dict]) -> int:
-    """Compute HMG from API test results.
-
-    HMG = the grade of the highest Writing test the student has passed.
-    Passing any test at a grade level means that grade is mastered.
-    """
-    hmg = 2  # Pre-G3 baseline
-    for t in api_tests:
-        if not t.get("passed"):
-            continue
-        m = _re.search(r"G(\d+)", t.get("name", ""))
-        if m:
-            grade = int(m.group(1))
-            if grade > hmg:
-                hmg = grade
-    return hmg
 
 
 def infer_next_test(hmg: int, test_history: list[dict]) -> dict | None:
@@ -968,20 +817,50 @@ def extract_xp_and_details(raw_results: list[dict]) -> dict:
 # Main collector
 # ---------------------------------------------------------------------------
 
-def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, effective_grades_csv: str | None = None, s1_snapshot_path: str | None = None) -> dict:
-    """Collect all data and return the dashboard JSON structure."""
-    session = SESSIONS[session_name]
-    session_start = session["start"]
-    session_end = session["end"]
-    school_days = _school_days_to_date(session_name)
+def collect(
+    csv_path: str,
+    year: str,
+    as_of: datetime,
+    *,
+    skip_analysis: bool = False,
+    effective_grades_csv: str | None = None,
+    s1_snapshot_path: str | None = None,
+    limit: int | None = None,
+    prior_year_data: dict | None = None,
+) -> dict:
+    """Collect all data for one school year and return the dashboard JSON structure."""
+    year_cfg = SCHOOL_YEARS[year]
+    as_of = as_of.replace(hour=0, minute=0, second=0, microsecond=0)
+    as_of_str = as_of.strftime("%Y-%m-%d")
+    as_of_end = as_of + timedelta(days=1)          # exclusive upper bound for CSV timestamps
+    activity_lower = year_cfg["activity_start"]
+    activity_upper = max(year_cfg["year_end"], as_of_str)
 
-    # 1. Load A&D Master Roster (whitelist + campus source of truth)
-    roster = _load_roster()
+    # Current session + school days per calendar
+    windows = {k: _session_window(year, k, as_of) for k in cal.calendar_keys(year)}
+    logger.info("Year %s as of %s: %s", year, as_of_str,
+                ", ".join(f"{k}={w['name']} day {w['school_days_elapsed']}" for k, w in windows.items()))
 
-    # 2. Load CSV
+    # 1. Roster (whitelist + campus source of truth)
+    roster = load_roster(TIMEBACK_ROOT / year_cfg["roster"], require_group_token=year_cfg["roster_group_token"])
+
+    # 1b. Identity links (old -> new sourcedIds)
+    links = load_links(IDENTITY_LINKS_PATH)
+    logger.info("Loaded identity links for %d students", len(links))
+
+    # 1c. Prior-year EG carry-forward (26-27 only)
+    prior_eg: dict[str, dict] = {}
+    if prior_year_data:
+        for s in prior_year_data.get("students", []):
+            if s.get("effective_grade") is not None:
+                prior_eg[s["email"].lower()] = {"effective_grade": s["effective_grade"],
+                                                "language_eg": s.get("language_eg")}
+        logger.info("Carried forward EG for %d students from prior year", len(prior_eg))
+
+    # 2. Load CSV (rows after the as-of date are ignored so archives stay frozen)
     logger.info("Loading CSV: %s", csv_path)
-    csv_results = load_csv(csv_path)
-    logger.info("Loaded %d CSV results", len(csv_results))
+    csv_results = [r for r in load_csv(csv_path) if r.score_date < as_of_end]
+    logger.info("Loaded %d CSV results on/before %s", len(csv_results), as_of_str)
 
     # 3. Init API
     logger.info("Initializing Timeback API...")
@@ -996,18 +875,13 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
     logger.info("Fetching student profiles...")
     profiles = fetch_student_profiles(api, student_ids)
 
-    # 4. Compute HMG + classify
-    hmg_map = compute_all_hmg(csv_results)
+    # 5. Classify + deep dives (CSV-based; identify_deep_dive_tests collects all-time
+    # failures regardless of the session argument, so a constant is passed)
     classifications = classify_test_types(csv_results)
-
-    # 6. Detect deep dives
     deep_dives = detect_deep_dives(csv_results)
-    deep_dive_tests = identify_deep_dive_tests(csv_results, deep_dives, session_name)
+    deep_dive_tests = identify_deep_dive_tests(csv_results, deep_dives, "S1")
 
     # 6b. Load deep dive analyses from cache (written by writing_automation CLI)
-    email_to_name = {}
-    for r in csv_results:
-        email_to_name[r.student_email] = r.student_name
     if skip_analysis:
         logger.info("Skipping deep dive analysis (--skip-analysis)")
         dd_analyses = {}
@@ -1035,14 +909,14 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
     for r in csv_results:
         csv_by_email[r.student_email].append(r)
 
-    # 8. Goals
-    xp_goal = XP_GOAL_PER_DAY * school_days
-    minutes_goal = MINUTES_GOAL_PER_DAY * school_days
-
     # 9. Assemble per-student data
     students = []
+    merged_count = 0
     total = len(student_ids)
+    processed = 0
     for idx, sid in enumerate(sorted(student_ids), 1):
+        if limit is not None and processed >= limit:
+            break
         profile = profiles.get(sid)
         if not profile:
             continue
@@ -1061,19 +935,34 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
         # Use roster campus as source of truth
         roster_campus = roster_entry["campus"]
 
-        # Classify into dashboard group — only include Timeback students
+        # Classify into dashboard group — excluded campuses drop out here
         dash_group = _classify_dashboard(roster_campus)
         if dash_group != "timeback":
             continue
 
+        # Calendar-dependent session window and goals
+        cal_key = cal.resolve_calendar(year, roster_campus)
+        window = windows[cal_key]
+        session_start, session_end = window["start"], window["end"]
+        school_start_date = window["school_start"]
+        school_days = window["school_days_elapsed"]
+        xp_goal = XP_GOAL_PER_DAY * school_days
+
         logger.info("Processing student %d/%d: %s", idx, total, email)
+        processed += 1
 
         # Enrollments
         student_enrollments = enrollments.get(sid, [])
 
-        # Fetch test history from API
+        # Fetch test history from API (primary account + linked old accounts), bounded by as-of
         student_full_name = f"{profile.given_name} {profile.family_name}"
+        linked_ids = links.get(sid, [])
         api_tests = fetch_writing_test_results(api, sid, student_full_name, email)
+        if linked_ids:
+            extra_tests = [fetch_writing_test_results(api, old, student_full_name, email) for old in linked_ids]
+            api_tests = merge_tests(api_tests, extra_tests)
+            merged_count += 1
+        api_tests = [t for t in api_tests if (t.get("date") or "") <= as_of_str]
 
         # Override API test_type with CSV classification, then spreadsheet
         # CSV is authoritative for S2+ (has "End of Course" type)
@@ -1124,20 +1013,11 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
         # Level
         level = _get_level(profile.age_grade)
 
-        # HMG — computed from API test results (highest grade with a passed test)
-        hmg = compute_hmg_from_api_tests(api_tests)
-        # Starting HMG from placement tests in CSV
-        starting_hmg = 2
+        # HMG — lifetime, from (merged) API test results
+        hmg = hmg_from_tests(api_tests)
+        starting_hmg, starting_hmg_basis = compute_starting_hmg(
+            api_tests, mode=year_cfg["starting_hmg_mode"], year_start=year_cfg["year_start"])
         student_csv = csv_by_email.get(email, [])
-        if student_csv:
-            placement = [r for r in student_csv if r.csv_test_type == "Placement"]
-            if placement:
-                passed = {r.test_grade for r in placement if r.score >= PASS_THRESHOLD}
-                for g in range(3, 9):
-                    if g in passed:
-                        starting_hmg = g
-                    else:
-                        break
 
         # G8 completion check
         completed_g8 = hmg >= 8
@@ -1232,7 +1112,10 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
             })
 
         # Fetch activity results for accuracy analysis, XP details, and XP totals
-        raw_activities = fetch_activity_results(api, sid, session_start, session_end)
+        raw_activities = fetch_activity_results(api, sid, activity_lower, activity_upper)
+        if linked_ids:
+            extra_acts = [fetch_activity_results(api, old, activity_lower, activity_upper) for old in linked_ids]
+            raw_activities = merge_activities(raw_activities, extra_acts)
         xp_result = extract_xp_and_details(raw_activities)
         xp_details = xp_result
         alphawrite_xp = xp_result["alphawrite_xp"]
@@ -1241,7 +1124,6 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
         total_xp = alphawrite_xp + mastery_track_xp + test_xp_val
 
         # Split XP into school vs break periods for accurate goal tracking
-        school_start_date = session.get("school_start", session_start)
         all_xp_items = xp_result.get("activity_xp", []) + xp_result.get("test_xp", [])
         school_xp = sum(a["xp"] for a in all_xp_items if a.get("date", "") >= school_start_date)
         break_xp = total_xp - school_xp
@@ -1249,7 +1131,7 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
 
         # XP/day metric (lifetime: from first Writing activity to today)
         # Discount 15 school days for MAP testing weeks (3 weeks across the year)
-        today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        today = as_of
         total_writing_activities = xp_result.get("total_writing_activities", 0)
         writing_active_days = xp_result.get("writing_active_days", 0)
         first_writing_date = xp_result.get("first_writing_date")
@@ -1274,7 +1156,7 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
             last_test_date = max(test_dates)
             if not last_xp_date_str or last_test_date > last_xp_date_str:
                 last_xp_date_str = last_test_date
-        today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        today = as_of
         session_start_dt = datetime.strptime(session_start, "%Y-%m-%d")
         inactivity_cutoff = today
         if last_xp_date_str:
@@ -1303,23 +1185,16 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
             low_accuracy = []
             repeated = []
             enrollment_mismatch = None
+            stale = []
             insights = []
         else:
             low_accuracy = extract_low_accuracy_activities(raw_activities)
             repeated = extract_repeated_activities(raw_activities)
 
-            # Enrollment mismatch
-            enrollment_mismatch = None
-            if student_enrollments:
-                expected = hmg + 1
-                enrolled_grades = []
-                for e in student_enrollments:
-                    m = _re.search(r"G(\d+)", e)
-                    if m:
-                        enrolled_grades.append(int(m.group(1)))
-                if enrolled_grades and expected not in enrolled_grades:
-                    actual = ", ".join(f"G{g}" for g in enrolled_grades)
-                    enrollment_mismatch = f"Expected G{expected}, enrolled in {actual}"
+            # Enrollment mismatch: content grade vs HMG+1. SY26-27 "<Track> G# Class"
+            # titles carry the student's age grade, not a content grade, and are ignored.
+            enrollment_mismatch = compute_enrollment_mismatch(hmg, student_enrollments) if student_enrollments else None
+            stale = stale_enrollments(student_enrollments, year)
 
             # Build insights
             insights = []
@@ -1361,6 +1236,12 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
                     "severity": "medium",
                     "text": enrollment_mismatch,
                 })
+            if stale:
+                insights.append({
+                    "type": "stale_enrollment",
+                    "severity": "medium",
+                    "text": f"Still enrolled in last year's class: {', '.join(stale)}",
+                })
             if days_inactive >= 5 and student_enrollments:
                 if never_active_this_session:
                     inactive_text = f"No writing activity this session ({days_inactive} school days)"
@@ -1382,22 +1263,46 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
             "placement_passed": sum(1 for t in passed_tests if t["test_type"] == "placement"),
         }
 
+        # Effective grade: from the 25-26 export when given, else carried forward from the
+        # prior year's snapshot (labelled by date); S1 cohort from snapshot names when given,
+        # else from the first XP date of this year against the student's calendar.
+        name_key = profile.full_name.lower()
+        if eg_by_name:
+            eg_value, lang_eg_value = eg_by_name.get(name_key), lang_eg_by_name.get(name_key)
+            eg_as_of = "2026-03-09" if eg_value is not None else None
+        elif email.lower() in prior_eg:
+            eg_value = prior_eg[email.lower()]["effective_grade"]
+            lang_eg_value = prior_eg[email.lower()]["language_eg"]
+            eg_as_of = "2026-03-09"
+        else:
+            eg_value, lang_eg_value, eg_as_of = None, None, None
+        if s1_names:
+            s1_flag = name_key in s1_names
+        else:
+            s1_flag = is_s1_cohort(first_writing_date, year, cal_key)
+        first_date_for_session = first_writing_date or (api_tests[0]["date"] if api_tests else None)
+
         students.append({
             "id": sid,
             "name": profile.full_name,
             "email": email,
             "campus": roster_campus,
+            "calendar": cal_key,
             "dashboard": dash_group,
             "level": level,
             "age_grade": profile.age_grade,
             "hmg": hmg,
             "starting_hmg": starting_hmg,
+            "starting_hmg_basis": starting_hmg_basis,
             "grades_advanced": hmg - starting_hmg,
-            "effective_grade": eg_by_name.get(profile.full_name.lower()),
-            "effective_grades_mastered": max(0, hmg - (eg_by_name.get(profile.full_name.lower(), hmg + 1) - 1)) if eg_by_name.get(profile.full_name.lower()) else None,
-            "language_eg": lang_eg_by_name.get(profile.full_name.lower()),
-            "s1_cohort": profile.full_name.lower() in s1_names if s1_names else None,
-            "start_session": _get_start_session(api_tests, first_writing_date),
+            "linked_ids": linked_ids,
+            "stale_enrollments": stale,
+            "effective_grade": eg_value,
+            "effective_grades_mastered": (max(0, hmg - (eg_value - 1)) if eg_value else None),
+            "language_eg": lang_eg_value,
+            "eg_as_of": eg_as_of,
+            "s1_cohort": s1_flag,
+            "start_session": cal.session_for_date(year, cal_key, first_date_for_session) if first_date_for_session else None,
             "completed_g8": completed_g8,
             "enrollments": student_enrollments,
             "still_enrolled": bool(student_enrollments),
@@ -1441,26 +1346,27 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
             },
         })
 
-    # All session definitions for per-session metrics
-    all_sessions = {
-        "S1": {"start": "2025-08-11", "end": "2025-10-17", "label": "Session 1"},
-        "S2": {"start": "2025-10-20", "end": "2026-01-02", "label": "Session 2"},
-        "S3": {"start": "2026-01-05", "end": "2026-02-20", "label": "Session 3"},
-        "S4": {"start": "2026-02-21", "end": "2026-04-17", "label": "Session 4"},
-        "S5": {"start": "2026-04-27", "end": "2026-06-05", "label": "Session 5"},
+    logger.info("Merged histories for %d students with linked accounts", merged_count)
+
+    # Calendars (sessions + holidays) for the frontend; all_sessions kept for compatibility
+    primary_key = cal.calendar_keys(year)[0]
+    calendars_out = {
+        k: {"first_day": cal.get_calendar(year, k).get("first_day"),
+            "sessions": cal.sessions_with_labels(year, k),
+            "holidays": cal.get_calendar(year, k).get("holidays", [])}
+        for k in cal.calendar_keys(year)
     }
+    campus_calendar = {s["campus"]: s["calendar"] for s in students}
 
     # Top-level structure
     dashboard = {
         "generated_at": datetime.now().isoformat(timespec="seconds"),
-        "session": {
-            "name": session_name,
-            "start": session_start,
-            "end": session_end,
-            "school_start": session.get("school_start", session_start),
-            "school_days_elapsed": school_days,
-        },
-        "all_sessions": all_sessions,
+        "year": year,
+        "as_of": as_of_str,
+        "session": {**windows[primary_key], "by_calendar": windows},
+        "all_sessions": calendars_out[primary_key]["sessions"],
+        "calendars": calendars_out,
+        "campus_calendar": campus_calendar,
         "thresholds": {
             "xp_per_day": XP_GOAL_PER_DAY,
             "minutes_per_day": MINUTES_GOAL_PER_DAY,
@@ -1476,23 +1382,37 @@ def collect(csv_path: str, session_name: str, *, skip_analysis: bool = False, ef
 def main():
     parser = argparse.ArgumentParser(description="Collect Writing dashboard data")
     parser.add_argument("csv", help="Path to writing-results CSV")
-    parser.add_argument("--session", default=CURRENT_SESSION, choices=list(SESSIONS.keys()))
-    parser.add_argument("--output", default=str(OUTPUT_PATH), help="Output JSON path")
+    parser.add_argument("--year", default=CURRENT_YEAR, choices=list(SCHOOL_YEARS.keys()))
+    parser.add_argument("--as-of", default=None, help="YYYY-MM-DD; defaults to today")
+    parser.add_argument("--output", default=None, help="Output JSON path (default data/<year>/data.json)")
+    parser.add_argument("--limit", type=int, default=None, help="Process at most N students (smoke test)")
     parser.add_argument("--skip-analysis", action="store_true",
                         help="Skip Claude deep dive analysis (faster)")
-    parser.add_argument("--effective-grades",
-                        default=str(DEFAULT_EG_CSV) if DEFAULT_EG_CSV.exists() else None,
-                        help="Path to Student Progress Tracker CSV with effective grades")
-    parser.add_argument("--s1-snapshot",
-                        default=str(DEFAULT_S1_SNAPSHOT) if DEFAULT_S1_SNAPSHOT.exists() else None,
-                        help="Path to S1 Snapshot Excel for S1 cohort identification")
+    parser.add_argument("--effective-grades", default=None,
+                        help="Path to Student Progress Tracker CSV with effective grades (25-26)")
+    parser.add_argument("--s1-snapshot", default=None,
+                        help="Path to S1 Snapshot Excel for S1 cohort identification (25-26)")
+    parser.add_argument("--prior-year-data", default=None,
+                        help="Previous year's data.json for EG carry-forward (default data/2025-26/data.json when --year 2026-27)")
     args = parser.parse_args()
 
-    data = collect(args.csv, args.session, skip_analysis=args.skip_analysis,
-                   effective_grades_csv=args.effective_grades,
-                   s1_snapshot_path=args.s1_snapshot)
+    as_of = datetime.strptime(args.as_of, "%Y-%m-%d") if args.as_of else datetime.now()
+    output = Path(args.output) if args.output else output_path_for(args.year)
 
-    output = Path(args.output)
+    prior_year_data = None
+    prior_path = args.prior_year_data
+    if prior_path is None and args.year == "2026-27":
+        prior_path = str(output_path_for("2025-26"))
+    if prior_path and Path(prior_path).exists():
+        prior_year_data = json.loads(Path(prior_path).read_text(encoding="utf-8"))
+        logger.info("Loaded prior-year data from %s", prior_path)
+
+    data = collect(args.csv, args.year, as_of, skip_analysis=args.skip_analysis,
+                   effective_grades_csv=args.effective_grades,
+                   s1_snapshot_path=args.s1_snapshot,
+                   limit=args.limit, prior_year_data=prior_year_data)
+
+    output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
     logger.info("Dashboard data written to %s (%d students)", output, len(data["students"]))
 

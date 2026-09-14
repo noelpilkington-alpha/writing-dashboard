@@ -962,3 +962,30 @@ body {
     .header-meta { padding: 8px 16px; }
     .nav-links { flex-wrap: wrap; }
 }
+
+/* ── School-year toggle (header) ─────────────────────────────────────── */
+.year-toggle {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+    padding: 3px;
+    border-radius: 10px;
+    background: var(--indigo-light);
+}
+.year-toggle button {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.year-toggle button.active {
+    background: var(--indigo);
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(79,70,229,0.3);
+}
+.eg-asof-note { font-size: 0.78rem; color: var(--orange); margin-bottom: 12px; }

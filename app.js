@@ -3,6 +3,10 @@
 
   let DATA = null;
   let LOOP_DATA = null;
+  // Year manifest (years.json); this built-in copy is the fallback if the fetch fails.
+  let YEARS = { default: "2026-27", years: { "2026-27": { label: "2026-27", data: "data/2026-27/data.json", loop_data: "data/2026-27/loop_data.json", remediation_data: null } } };
+  let YEAR = null;
+  let groupWired = false;
   const filters = {
     timeback: { campus: "all", level: "all", status: "all", search: "" },
   };
@@ -10,22 +14,80 @@
   // ── Boot ──────────────────────────────────────────────────────────────
   async function init() {
     try {
-      const resp = await fetch("data.json");
+      const yresp = await fetch("years.json");
+      if (yresp.ok) YEARS = await yresp.json();
+    } catch { /* fall back to built-in default */ }
+    const requested = new URLSearchParams(location.search).get("year");
+    YEAR = requested && YEARS.years[requested] ? requested : YEARS.default;
+    renderYearToggle();
+    wireNav();
+    await loadYear(YEAR);
+  }
+
+  function yearCfg() { return YEARS.years[YEAR]; }
+
+  function showLoadError(msg) {
+    const main = document.getElementById("main-timeback");
+    if (main) main.innerHTML = `<div class="loading">${esc(msg)}</div>`;
+  }
+
+  async function loadYear(year) {
+    YEAR = year;
+    const url = new URL(location.href);
+    if (year === YEARS.default) url.searchParams.delete("year"); else url.searchParams.set("year", year);
+    history.replaceState(null, "", url);
+    try {
+      const resp = await fetch(yearCfg().data);
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       DATA = await resp.json();
-      renderMeta();
-      setupGroup("timeback");
-      wireNav();
-      handleRoute();
     } catch (e) {
-      document.getElementById("loading").textContent =
-        "Failed to load data.json: " + e.message;
+      renderYearToggle();
+      showLoadError(`Failed to load ${yearCfg().data}: ${e.message}`);
+      return;
     }
+    LOOP_DATA = null;
+    REMEDIATION_DATA = null;
+    resetRenderFlags();
+    renderYearToggle();
+    renderMeta();
+    setupGroup("timeback");
+    const remLink = document.querySelector('.nav-link[data-page="remediation"]');
+    if (remLink) remLink.style.display = yearCfg().remediation_data ? "" : "none";
+    handleRoute();
+  }
+
+  function renderYearToggle() {
+    const el = document.getElementById("year-toggle");
+    if (!el) return;
+    el.innerHTML = Object.keys(YEARS.years).sort().map((y) =>
+      `<button type="button" data-year="${esc(y)}" class="${y === YEAR ? "active" : ""}">${esc(YEARS.years[y].label || y)}</button>`
+    ).join("");
+    el.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => {
+      if (b.dataset.year !== YEAR) loadYear(b.dataset.year);
+    }));
+  }
+
+  function resetRenderFlags() {
+    egAnalysisRendered = false;
+    testResultsRendered = false;
+    testingLoopsRendered = false;
+    testAnalysisRendered = false;
+    cohortProfileRendered = false;
+    remediationRendered = false;
   }
 
   function studentsForGroup(group) {
     return DATA.students.filter((s) => s.dashboard === "timeback");
   }
+
+  /** Session table for a student: their campus calendar's sessions, else the year default. */
+  function sessionsFor(student) {
+    const cals = DATA.calendars || {};
+    const c = student && student.calendar && cals[student.calendar];
+    return (c && c.sessions) || DATA.all_sessions || {};
+  }
+
+  function isYear(y) { return (DATA && DATA.year ? DATA.year : "2025-26") === y; }
 
   // ── Routing ─────────────────────────────────────────────────────────
   const PAGES = ["timeback", "timeback-metrics", "eg-analysis", "test-results", "test-analysis", "testing-loops", "cohort-profile", "remediation", "inactive"];
@@ -72,16 +134,30 @@
   function renderMeta() {
     const s = DATA.session;
     const gen = new Date(DATA.generated_at).toLocaleString();
-    document.getElementById("header-meta").textContent =
-      `Session ${s.name} | Day ${s.school_days_elapsed} | Updated: ${gen}`;
+    const byCal = s.by_calendar || {};
+    const keys = Object.keys(byCal);
+    let days;
+    if (keys.length > 1) {
+      days = keys.map((k) => `Cal ${k}: ${byCal[k].name} Day ${byCal[k].school_days_elapsed}`).join(" | ");
+    } else {
+      days = `Session ${s.name} | Day ${s.school_days_elapsed}`;
+    }
+    const asOf = DATA.as_of ? ` | As of: ${DATA.as_of}` : "";
+    document.getElementById("header-meta").textContent = `${YEAR} | ${days}${asOf} | Updated: ${gen}`;
   }
 
   // ── Setup a group ────────────────────────────────────────────────────
   function setupGroup(group) {
     const students = studentsForGroup(group);
     populateDropdowns(group, students);
+    filters[group] = { campus: "all", level: "all", status: "all", search: "" };
+    document.getElementById("search-" + group).value = "";
+    document.getElementById("status-" + group).value = "all";
     renderCampusView(group, students);
-    wireGroupEvents(group);
+    if (!groupWired) {
+      wireGroupEvents(group);
+      groupWired = true;
+    }
   }
 
   function populateDropdowns(group, students) {
@@ -108,18 +184,19 @@
   }
 
   function wireGroupEvents(group) {
-    const f = filters[group];
+    // Read filters through a getter: setupGroup replaces the object on each year switch.
+    const f = () => filters[group];
 
     document.getElementById("campus-" + group).addEventListener("change", (e) => {
-      f.campus = e.target.value;
+      f().campus = e.target.value;
       applyFilters(group);
     });
     document.getElementById("level-" + group).addEventListener("change", (e) => {
-      f.level = e.target.value;
+      f().level = e.target.value;
       applyFilters(group);
     });
     document.getElementById("status-" + group).addEventListener("change", (e) => {
-      f.status = e.target.value;
+      f().status = e.target.value;
       applyFilters(group);
     });
 
@@ -127,7 +204,7 @@
     document.getElementById("search-" + group).addEventListener("input", (e) => {
       clearTimeout(timer);
       timer = setTimeout(() => {
-        f.search = e.target.value.toLowerCase().trim();
+        f().search = e.target.value.toLowerCase().trim();
         applyFilters(group);
       }, 200);
     });
@@ -731,6 +808,8 @@
     // Compute S4 weekly boundaries dynamically
     const currentSess = sessions[DATA.session.name];
     const s4Weeks = computeSessionWeeks(DATA.session.name, currentSess);
+    // Day before the current session starts (HMG baseline for the weekly view)
+    const beforeCurrentSess = new Date(new Date(currentSess.start + "T00:00:00").getTime() - 86400000).toISOString().slice(0, 10);
     const S4_WEEKS = {};
     for (const w of s4Weeks) S4_WEEKS[w.key] = { start: w.start, end: w.end, label: w.label };
     const weekOrder = s4Weeks.map(w => w.key);
@@ -744,15 +823,18 @@
 
     // Build both cohorts
     const cohorts = [
-      { key: "s1", label: "S1 Writing Cohort", students: allStudents.filter(s => s.s1_cohort === true) },
+      { key: "s1", label: isYear("2026-27") ? "SY26-27 S1 Starters" : "S1 Writing Cohort", students: allStudents.filter(s => s.s1_cohort === true) },
       { key: "all", label: "All Current Students", students: allStudents },
     ];
 
+    const egAsOf = (allStudents.find(s => s.eg_as_of) || {}).eg_as_of;
+    const carried = isYear("2026-27") && egAsOf;
     let html = `<h2 style="margin-bottom:16px">Effective Grade Analysis</h2>
-      <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:20px">
-        EG = R90 + 1 &middot; EGM = HMG &minus; (EG &minus; 1) &middot; Target: ${EG_TARGET} EGs/year by Spring MAP (${MAP_DATE})
+      <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:${carried ? 6 : 20}px">
+        EG = R90 + 1 &middot; EGM = HMG &minus; (EG &minus; 1) &middot; Target: ${EG_TARGET} EGs/year${isYear("2025-26") ? ` by Spring MAP (${MAP_DATE})` : ""}
         &middot; Curriculum cap: G${CURRICULUM_CAP}
       </div>
+      ${carried ? `<div class="eg-asof-note">Effective Grades shown are carried forward from the SY25-26 Progress Tracker export (as of ${esc(egAsOf)}). No SY26-27 Effective Grade source exists yet. The S1 cohort is students whose first SY26-27 Writing XP fell in Session 1 of their campus calendar.</div>` : ""}
       <div id="eg-drilldown" class="metric-drilldown hidden"></div>`;
 
     for (const cohort of cohorts) {
@@ -826,7 +908,7 @@
         }
 
         // S4 weekly (current session detail with break)
-        const hmgBeforeS4 = computeHmgAtDate(tests, "2026-02-20");
+        const hmgBeforeS4 = computeHmgAtDate(tests, beforeCurrentSess);
         let prevWkEgm = Math.max(0, hmgBeforeS4 - r90);
         for (const wk of weekOrder) {
           const w = S4_WEEKS[wk];
@@ -1206,10 +1288,11 @@
     let allTimeTaken = 0;
     students.forEach((s) => {
       const tests = s.all_tests || [];
+      const mySessions = sessionsFor(s);
       for (const t of tests) {
         const d = t.date;
         for (const sKey of sessionOrder) {
-          const sess = sessions[sKey];
+          const sess = mySessions[sKey] || sessions[sKey];
           if (d >= sess.start && d <= sess.end) {
             sessionTestStats[sKey].taken++;
             allTimeTaken++;
@@ -1680,6 +1763,8 @@
     const studentMap = {};
     students.forEach((s) => {
       studentMap[s.email] = s;
+      // Current-session window for this student's campus calendar
+      const sess = sessionsFor(s)[currentSession] || sessions[currentSession];
 
       // Group EoC tests by grade to determine attempt labels
       const eocByGrade = {};
@@ -2009,7 +2094,7 @@
   async function loadLoopData() {
     if (LOOP_DATA) return LOOP_DATA;
     try {
-      const resp = await fetch("loop_data.json");
+      const resp = await fetch(yearCfg().loop_data);
       if (!resp.ok) return null;
       LOOP_DATA = await resp.json();
       return LOOP_DATA;
@@ -2029,11 +2114,13 @@
     const sessions = DATA.all_sessions || {};
     const sessionOrder = Object.keys(sessions).sort();
 
-    function getSession(dateStr) {
+    function getSession(dateStr, student) {
       if (!dateStr) return null;
       const d = dateStr.slice(0, 10);
+      const table = student ? sessionsFor(student) : sessions;
       for (const sn of sessionOrder) {
-        if (d >= sessions[sn].start && d <= sessions[sn].end) return sn;
+        const w = table[sn] || sessions[sn];
+        if (d >= w.start && d <= w.end) return sn;
       }
       return null;
     }
@@ -2049,7 +2136,7 @@
     for (const s of allStudents) {
       for (const t of (s.all_tests || [])) {
         const tt = (t.test_type || "").toLowerCase();
-        const entry = { ...t, _email: s.email, _name: s.name, _grade: extractGrade(t.name || "") };
+        const entry = { ...t, _email: s.email, _name: s.name, _grade: extractGrade(t.name || ""), _student: s };
         if (tt === "end of course") allEoC.push(entry);
         else if (tt === "test out") allTO.push(entry);
       }
@@ -2084,7 +2171,7 @@
     for (const s of allStudents) {
       const tests = (s.all_tests || []).slice().sort((a, b) => (a.date || "").localeCompare(b.date || ""));
       if (tests.length > 0) {
-        const sess = getSession(tests[0].date);
+        const sess = getSession(tests[0].date, s);
         if (sess) studentCohort[s.email] = sess;
       }
     }
@@ -2254,7 +2341,7 @@
         <table class="metrics-table">${headers}`;
 
       for (const sn of sessionOrder) {
-        const sessTests = tests.filter(t => getSession(t.date) === sn);
+        const sessTests = tests.filter(t => getSession(t.date, t._student) === sn);
         if (sessTests.length === 0) continue;
         const sessPassed = sessTests.filter(t => (t.score || 0) >= 90).length;
         const sessPassRate = sessTests.length > 0 ? (100 * sessPassed / sessTests.length) : 0;
@@ -2271,14 +2358,14 @@
           const sessFirstGroups = {};
           for (const key in groups) {
             const first = groups[key].tests[0];
-            if (getSession(first.date) === sn) sessFirstGroups[key] = groups[key];
+            if (getSession(first.date, first._student) === sn) sessFirstGroups[key] = groups[key];
           }
           const fMetrics = computeMetrics(sessFirstGroups);
 
           const sessPassAttempts = [];
           for (const key in groups) {
             for (let i = 0; i < groups[key].tests.length; i++) {
-              if ((groups[key].tests[i].score || 0) >= 90 && getSession(groups[key].tests[i].date) === sn) {
+              if ((groups[key].tests[i].score || 0) >= 90 && getSession(groups[key].tests[i].date, groups[key].tests[i]._student) === sn) {
                 sessPassAttempts.push(i + 1);
                 break;
               }
@@ -2310,7 +2397,8 @@
     html += renderSessionTable("Test-Outs", allTO, sgTO, true);
     html += `</div>`;
 
-    // ── Section 3b: By Date-Based Cohort (matching spreadsheet) ──
+    // ── Section 3b: By Date-Based Cohort (matching spreadsheet) — SY25-26 only ──
+    if (isYear("2025-26")) {
     const dateCohorts = [
       { name: "Cohort 1 — Before Updates", start: "2025-08-01", end: "2025-10-14" },
       { name: "Cohort 2 — After Updates", start: "2025-10-15", end: "2026-04-17" },
@@ -2400,6 +2488,7 @@
     html += renderDateCohortTable("End of Course", allEoC, sg, false);
     html += renderDateCohortTable("Test-Outs", allTO, sgTO, true);
     html += `</div>`;
+    } // end SY25-26-only Section 3b
 
     // ── Section 4: By Cohort ──
     const renderStudentCohortTable = (label, groups, singleAttempt) => {
@@ -2488,7 +2577,7 @@
           for (const key in cohortGroups) {
             const g = cohortGroups[key];
             for (const t of g.tests) {
-              if (getSession(t.date) !== sessSn) continue;
+              if (getSession(t.date, t._student) !== sessSn) continue;
               attempts++;
               scores.push(t.score || 0);
               testedEmails.add(g.email);
@@ -2525,7 +2614,7 @@
             for (const key in cohortGroups) {
               if (cohortGroups[key].email !== email) continue;
               const testsUpToNow = cohortGroups[key].tests.filter(t => {
-                const s = getSession(t.date);
+                const s = getSession(t.date, t._student);
                 return s && sessionOrder.indexOf(s) <= sessionOrder.indexOf(sessSn);
               });
               if (testsUpToNow.length > 0) {
@@ -2891,7 +2980,7 @@
       for (const s of allStudents) {
         for (const t of (s.all_tests || [])) {
           const grade = extractGrade(t.name || "");
-          const session = getSession(t.date);
+          const session = getSession(t.date, s);
           if (!grade || !session) continue;
           allWritingTests.push({
             email: s.email,
@@ -3556,8 +3645,9 @@
 
   async function loadRemediationData() {
     if (REMEDIATION_DATA) return REMEDIATION_DATA;
+    if (!yearCfg().remediation_data) return null;
     try {
-      const resp = await fetch("remediation_data.json");
+      const resp = await fetch(yearCfg().remediation_data);
       if (!resp.ok) return null;
       REMEDIATION_DATA = await resp.json();
       return REMEDIATION_DATA;

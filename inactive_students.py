@@ -20,14 +20,22 @@ from collections import defaultdict
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).parent
-DATA_PATH = SCRIPT_DIR / "data.json"
-ROSTER_PATH = SCRIPT_DIR.parent / "A&D Master Roster 25-26 - Master.csv"
+sys.path.insert(0, str(SCRIPT_DIR.parent))
+from writing_automation.config import CURRENT_YEAR, SCHOOL_YEARS, TIMEBACK_ROOT  # noqa: E402
 
 
-def load_roster_advisors():
+def data_path_for(year: str) -> Path:
+    return SCRIPT_DIR / "data" / year / "data.json"
+
+
+def roster_path_for(year: str) -> Path:
+    return TIMEBACK_ROOT / SCHOOL_YEARS[year]["roster"]
+
+
+def load_roster_advisors(roster_path: Path):
     """email -> advisor name."""
     advisors = {}
-    with open(ROSTER_PATH, encoding="utf-8") as f:
+    with open(roster_path, encoding="utf-8-sig") as f:
         for row in csv.DictReader(f):
             email = row.get("Student Alpha Email", "").strip().lower()
             if email:
@@ -37,20 +45,25 @@ def load_roster_advisors():
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--year", default=CURRENT_YEAR, choices=list(SCHOOL_YEARS.keys()),
+                    help=f"School year (default: {CURRENT_YEAR})")
     ap.add_argument("--days", type=int, default=5,
                     help="Minimum weekdays of inactivity to flag (default: 5)")
     ap.add_argument("--csv", type=str, default=None,
                     help="Optional CSV output path")
-    ap.add_argument("--data", type=str, default=str(DATA_PATH),
-                    help="Path to dashboard data.json")
+    ap.add_argument("--data", type=str, default=None,
+                    help="Path to dashboard data.json (default data/<year>/data.json)")
     args = ap.parse_args()
 
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
-    with open(args.data, encoding="utf-8") as f:
+    data_path = Path(args.data) if args.data else data_path_for(args.year)
+    roster_path = roster_path_for(args.year)
+
+    with open(data_path, encoding="utf-8") as f:
         dash = json.load(f)
 
-    advisors = load_roster_advisors() if ROSTER_PATH.exists() else {}
+    advisors = load_roster_advisors(roster_path) if roster_path.exists() else {}
 
     flagged = []
     for s in dash["students"]:
