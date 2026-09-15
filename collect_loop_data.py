@@ -289,7 +289,11 @@ def fetch_and_parse_student_tests(student: dict, session_cookie: str) -> list[di
                 logger.error("  Session cookie expired!")
                 sys.exit(1)
 
-            parsed = parse_test_page(html)
+            try:
+                parsed = parse_test_page(html)
+            except Exception as e:  # one malformed page must not abort the whole run
+                logger.warning("  Failed to parse %s (%s): %s", test_name, test_id, e)
+                continue
             if parsed is None:
                 logger.warning("  Failed to parse %s", test_name)
                 continue
