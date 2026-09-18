@@ -60,6 +60,15 @@ import re as _re
 
 GRADEBOOK_BASE = "/ims/oneroster/gradebook/v1p2"
 
+# A student whose API fetch still fails after the client's retries is skipped for
+# the day (never written with an empty history). If more than this many students
+# fail, the API is having an outage and the run aborts without writing output.
+MAX_FETCH_FAILURES = 5
+
+
+class FetchError(RuntimeError):
+    """A student's API fetch failed after retries."""
+
 _UUID_RE = _re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", _re.I)
 
 
@@ -547,8 +556,7 @@ def fetch_writing_test_results(
         results.sort(key=lambda x: x["date"])
         return _classify_unknown_test_types(results, student_name, student_email)
     except Exception as e:
-        logger.warning("Failed to fetch test results for %s: %s", student_id, e)
-        return []
+        raise FetchError(f"test results for {student_id}: {e}") from e
 
 
 def fetch_activity_results(
@@ -568,8 +576,7 @@ def fetch_activity_results(
             "assessmentResults",
         )
     except Exception as e:
-        logger.warning("Failed to fetch activities for %s: %s", student_id, e)
-        return []
+        raise FetchError(f"activities for {student_id}: {e}") from e
 
 
 def extract_low_accuracy_activities(raw_results: list[dict]) -> list[dict]:
@@ -919,6 +926,7 @@ def collect(
     # 9. Assemble per-student data
     students = []
     merged_count = 0
+    failed_fetches: list[dict] = []
     total = len(student_ids)
     processed = 0
     for idx, sid in enumerate(sorted(student_ids), 1):
@@ -964,11 +972,16 @@ def collect(
         # Fetch test history from API (primary account + linked old accounts), bounded by as-of
         student_full_name = f"{profile.given_name} {profile.family_name}"
         linked_ids = links.get(sid, [])
-        api_tests = fetch_writing_test_results(api, sid, student_full_name, email)
-        if linked_ids:
-            extra_tests = [fetch_writing_test_results(api, old, student_full_name, email) for old in linked_ids]
-            api_tests = merge_tests(api_tests, extra_tests)
-            merged_count += 1
+        try:
+            api_tests = fetch_writing_test_results(api, sid, student_full_name, email)
+            if linked_ids:
+                extra_tests = [fetch_writing_test_results(api, old, student_full_name, email) for old in linked_ids]
+                api_tests = merge_tests(api_tests, extra_tests)
+                merged_count += 1
+        except FetchError as e:
+            logger.error("Skipping %s for today: %s", email, e)
+            failed_fetches.append({"email": email, "name": student_full_name, "error": str(e)})
+            continue
         api_tests = [t for t in api_tests if (t.get("date") or "") <= as_of_str]
 
         # Override API test_type with CSV classification, then spreadsheet
@@ -1119,10 +1132,15 @@ def collect(
             })
 
         # Fetch activity results for accuracy analysis, XP details, and XP totals
-        raw_activities = fetch_activity_results(api, sid, activity_lower, activity_upper)
-        if linked_ids:
-            extra_acts = [fetch_activity_results(api, old, activity_lower, activity_upper) for old in linked_ids]
-            raw_activities = merge_activities(raw_activities, extra_acts)
+        try:
+            raw_activities = fetch_activity_results(api, sid, activity_lower, activity_upper)
+            if linked_ids:
+                extra_acts = [fetch_activity_results(api, old, activity_lower, activity_upper) for old in linked_ids]
+                raw_activities = merge_activities(raw_activities, extra_acts)
+        except FetchError as e:
+            logger.error("Skipping %s for today: %s", email, e)
+            failed_fetches.append({"email": email, "name": student_full_name, "error": str(e)})
+            continue
         xp_result = extract_xp_and_details(raw_activities)
         xp_details = xp_result
         alphawrite_xp = xp_result["alphawrite_xp"]
@@ -1357,6 +1375,16 @@ def collect(
     _COURSE_SUBJECTS.save()
     _LESSON_NAMES.save()
 
+    if len(failed_fetches) > MAX_FETCH_FAILURES:
+        raise RuntimeError(
+            f"{len(failed_fetches)} students failed API fetch after retries (limit {MAX_FETCH_FAILURES}); "
+            f"the API is likely unavailable. Output NOT written. First: "
+            + ", ".join(f["email"] for f in failed_fetches[:5])
+        )
+    if failed_fetches:
+        logger.error("%d student(s) skipped today after fetch failures: %s",
+                     len(failed_fetches), ", ".join(f["email"] for f in failed_fetches))
+
     # Calendars (sessions + holidays) for the frontend; all_sessions kept for compatibility
     primary_key = cal.calendar_keys(year)[0]
     calendars_out = {
@@ -1383,6 +1411,7 @@ def collect(
             "pass_score": PASS_THRESHOLD,
         },
         "students": students,
+        "fetch_failures": failed_fetches,
     }
 
     return dashboard
