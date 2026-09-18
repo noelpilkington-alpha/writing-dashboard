@@ -30,6 +30,23 @@ def test_tidy_title_strips_prefixes():
     assert ar.tidy_title("  Write a Free-Form Paragraph ") == "Write a Free-Form Paragraph"
 
 
+def test_lookup_failures_are_not_cached(tmp_path):
+    # A 5xx/timeout during an outage must not be remembered as "not Writing" / "no title".
+    api = StubAPI({})   # every lookup raises
+    cs = ar.CourseSubjects(api, tmp_path / "courses.json")
+    assert cs.is_writing_course("swf3") is False
+    assert cs.is_writing_course("swf3") is False
+    assert api.calls.count("/ims/oneroster/rostering/v1p2/courses/swf3") == 2   # retried, not cached
+    cs.save()
+    assert "swf3" not in json.loads((tmp_path / "courses.json").read_text(encoding="utf-8"))
+    ln = ar.LessonNames(api, tmp_path / "names.json")
+    oid = "https://api.alpha-1edtech.ai/ims/oneroster/rostering/v1p2/courses/component-resources/crX"
+    assert ln.resolve("ali-1", {"originalObjectId": oid}) is None
+    assert ln.resolve("ali-1", {"originalObjectId": oid}) is None
+    assert api.calls.count("/ims/oneroster/rostering/v1p2/courses/component-resources/crX") == 2
+    assert api.calls.count("/ims/oneroster/gradebook/v1p2/assessmentLineItems/ali-1") == 2
+
+
 def test_course_subjects_classifies_and_caches(tmp_path):
     api = StubAPI({
         "/ims/oneroster/rostering/v1p2/courses/math1": {"course": {"title": "[Timeback] Math G6 hole-filling", "subjects": ["Math"]}},

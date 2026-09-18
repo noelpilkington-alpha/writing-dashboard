@@ -94,8 +94,9 @@ class CourseSubjects:
             c = c.get("course", c)
             entry = {"title": c.get("title"), "subjects": list(c.get("subjects") or [])}
         except Exception as e:
-            logger.debug("course %s lookup failed: %s", course_id, e)
-            entry = {"title": None, "subjects": []}
+            # Transient failure (outage, timeout): do NOT cache, so the next run retries.
+            logger.warning("course %s lookup failed (not cached): %s", course_id, e)
+            return {"title": None, "subjects": []}
         self._cache.data[course_id] = entry
         self._cache.touched()
         return entry
@@ -137,7 +138,8 @@ class LessonNames:
                     res = res.get("resource", res)
                     title = tidy_title(res.get("title") or "")
         except Exception as e:
-            logger.debug("component resource %s lookup failed: %s", cr_id, e)
+            logger.warning("component resource %s lookup failed (not cached): %s", cr_id, e)
+            return ""
         cache[cr_id] = title
         self._cache.touched()
         return title
@@ -152,7 +154,8 @@ class LessonNames:
             li = li.get("assessmentLineItem", li)
             title = tidy_title(li.get("title") or "")
         except Exception as e:
-            logger.debug("line item %s lookup failed: %s", ali_sid, e)
+            logger.warning("line item %s lookup failed (not cached): %s", ali_sid, e)
+            return ""
         cache[ali_sid] = title
         self._cache.touched()
         return title
