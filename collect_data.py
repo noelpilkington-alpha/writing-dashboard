@@ -61,9 +61,15 @@ import re as _re
 GRADEBOOK_BASE = "/ims/oneroster/gradebook/v1p2"
 
 # A student whose API fetch still fails after the client's retries is skipped for
-# the day (never written with an empty history). If more than this many students
-# fail, the API is having an outage and the run aborts without writing output.
-MAX_FETCH_FAILURES = 5
+# the day (never written with an empty history). If failures exceed
+# max(MIN_FETCH_FAILURES_TO_ABORT, MAX_FETCH_FAILURE_RATE x processed students),
+# the API is having an outage and the run aborts without writing output.
+MIN_FETCH_FAILURES_TO_ABORT = 10
+MAX_FETCH_FAILURE_RATE = 0.05
+
+
+def fetch_failure_limit(processed: int) -> int:
+    return max(MIN_FETCH_FAILURES_TO_ABORT, int(MAX_FETCH_FAILURE_RATE * processed))
 
 
 class FetchError(RuntimeError):
@@ -1375,10 +1381,11 @@ def collect(
     _COURSE_SUBJECTS.save()
     _LESSON_NAMES.save()
 
-    if len(failed_fetches) > MAX_FETCH_FAILURES:
+    limit_failures = fetch_failure_limit(processed)
+    if len(failed_fetches) > limit_failures:
         raise RuntimeError(
-            f"{len(failed_fetches)} students failed API fetch after retries (limit {MAX_FETCH_FAILURES}); "
-            f"the API is likely unavailable. Output NOT written. First: "
+            f"{len(failed_fetches)} students failed API fetch after retries (limit {limit_failures} "
+            f"for {processed} processed); the API is likely unavailable. Output NOT written. First: "
             + ", ".join(f["email"] for f in failed_fetches[:5])
         )
     if failed_fetches:
