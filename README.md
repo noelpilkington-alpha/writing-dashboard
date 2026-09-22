@@ -11,7 +11,7 @@ Internal dashboard for tracking AlphaWrite student progress across all campuses.
 - **EG Analysis** -- Expected Grade comparison between Session 1 and current session
 - **Test Results** -- Searchable table of all writing test attempts with scores, dates, and test types
 - **Test Analysis** -- Cohort breakdowns: by grade level, by session, before/after curriculum updates, cohort x session matrix, attempts distribution
-- **Testing Loops** -- Students stuck retaking the same test, with Claude-generated analysis of their test responses
+- **Testing Loops** -- Students stuck retaking the same test, with Claude-generated analysis of their test responses. Filter by name, loop grade, flag, and campus (multi-select); summary stats and grade tiles follow the selection
 
 ## Student Issue Flags
 

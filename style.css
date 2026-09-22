@@ -989,3 +989,30 @@ body {
     box-shadow: 0 1px 3px rgba(79,70,229,0.3);
 }
 .eg-asof-note { font-size: 0.78rem; color: var(--orange); margin-bottom: 12px; }
+
+/* ── Multi-select dropdown (Testing Loops campus filter) ─────────────── */
+.multi-select { position: relative; display: inline-block; }
+.multi-select-btn { cursor: pointer; text-align: left; }
+.multi-select-btn.active { border-color: var(--indigo); color: var(--indigo); font-weight: 600; }
+.multi-select-panel {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    z-index: 50;
+    min-width: 280px;
+    max-height: 320px;
+    overflow-y: auto;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+    padding: 8px 10px;
+}
+.multi-select-panel.hidden { display: none; }
+.multi-select-actions { font-size: 0.78rem; color: var(--text-muted); padding: 2px 4px 8px; border-bottom: 1px solid #f0f2f5; margin-bottom: 6px; }
+.multi-select-actions a { color: var(--indigo); text-decoration: none; }
+.multi-select-actions a:hover { text-decoration: underline; }
+.multi-select-option { display: flex; align-items: center; gap: 8px; padding: 5px 4px; font-size: 0.84rem; border-radius: 6px; cursor: pointer; }
+.multi-select-option:hover { background: var(--indigo-light); }
+.multi-select-option input { accent-color: var(--indigo); }
+.multi-select-option .ms-count { color: var(--text-muted); font-size: 0.78rem; margin-left: auto; }

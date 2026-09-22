@@ -3222,14 +3222,33 @@
       return m >= 3 && m < 5;
     });
 
-    // Grade distribution
-    const gradeCount = {};
-    students.forEach(s => {
-      (s.loop_details || []).forEach(d => {
-        const g = d.grade;
-        gradeCount[g] = (gradeCount[g] || 0) + 1;
+    // Grade distribution (recomputed for the current filter selection)
+    function gradeDistribution(list) {
+      const counts = {};
+      list.forEach(s => {
+        (s.loop_details || []).forEach(d => {
+          counts[d.grade] = (counts[d.grade] || 0) + 1;
+        });
       });
+      return counts;
+    }
+    function renderGradeDist(list) {
+      return Object.entries(gradeDistribution(list)).sort(([a],[b]) => a-b).map(([g, c]) =>
+        `<div class="metric-card" style="min-width:80px;text-align:center;padding:8px 12px">
+          <div style="font-size:1.3rem;font-weight:700">G${g}</div>
+          <div style="font-size:0.8rem;color:var(--text-muted)">${c} student${c>1?'s':''}</div>
+        </div>`
+      ).join("") || '<div style="font-size:0.85rem;color:var(--text-muted)">No students match the current filters.</div>';
+    }
+    const gradeCount = gradeDistribution(students);
+
+    // Campus distribution for the multi-select filter
+    const campusCount = {};
+    students.forEach(s => {
+      const c = s.campus || "Unknown";
+      campusCount[c] = (campusCount[c] || 0) + 1;
     });
+    const campusList = Object.keys(campusCount).sort((a, b) => a.localeCompare(b));
 
     const droppedNote = droppedCount > 0
       ? `<div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:8px">${droppedCount} student${droppedCount === 1 ? "" : "s"} removed: passed the grade they were looping in.</div>`
@@ -3239,24 +3258,20 @@
       <h2 style="margin-bottom:8px">Testing Loops Analysis</h2>
       ${droppedNote}
       <div class="tr-summary" style="margin-bottom:16px">
-        <span class="tr-stat"><strong>${totalStudents}</strong> students in loops</span>
-        <span class="tr-stat red"><strong>${totalRushing}</strong> with rushing</span>
-        <span class="tr-stat" style="color:var(--orange)"><strong>${totalDepreciating}</strong> with depreciating skills</span>
-        <span class="tr-stat" style="color:var(--purple,#9b59b6)"><strong>${totalWithMasteredGaps}</strong> with AlphaWrite/test gaps</span>
+        <span class="tr-stat"><strong id="loop-stat-total">${totalStudents}</strong> students in loops</span>
+        <span class="tr-stat red"><strong id="loop-stat-rushing">${totalRushing}</strong> with rushing</span>
+        <span class="tr-stat" style="color:var(--orange)"><strong id="loop-stat-deprec">${totalDepreciating}</strong> with depreciating skills</span>
+        <span class="tr-stat" style="color:var(--purple,#9b59b6)"><strong id="loop-stat-gap">${totalWithMasteredGaps}</strong> with AlphaWrite/test gaps</span>
+        <span class="tr-stat" id="loop-stat-scope" style="font-size:0.78rem"></span>
       </div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">
-        ${Object.entries(gradeCount).sort(([a],[b]) => a-b).map(([g, c]) =>
-          `<div class="metric-card" style="min-width:80px;text-align:center;padding:8px 12px">
-            <div style="font-size:1.3rem;font-weight:700">G${g}</div>
-            <div style="font-size:0.8rem;color:var(--text-muted)">${c} student${c>1?'s':''}</div>
-          </div>`
-        ).join("")}
+      <div id="loop-grade-dist" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+        ${renderGradeDist(students)}
       </div>`;
 
     // General trends section (if Claude analysis available)
     if (trends.common_skill_gaps) {
       html += `<div class="loop-trends" style="background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:20px">
-        <h3 style="margin-bottom:12px">General Trends</h3>`;
+        <h3 style="margin-bottom:12px">General Trends <span style="font-size:0.75rem;font-weight:500;color:var(--text-muted)">(across all ${totalStudents} loop students; not affected by filters)</span></h3>`;
       if (trends.common_skill_gaps) {
         html += `<div style="margin-bottom:8px"><strong>Common Skill Gaps:</strong><br>${esc(trends.common_skill_gaps)}</div>`;
       }
@@ -3289,8 +3304,20 @@
           <option value="depreciating">Depreciating Skills</option>
           <option value="aw-gap">AlphaWrite/Test Gap</option>
         </select>
+        <div class="multi-select" id="loop-campus-filter">
+          <button type="button" class="dropdown multi-select-btn" id="loop-campus-btn" aria-haspopup="listbox" aria-expanded="false">All Campuses &#9662;</button>
+          <div class="multi-select-panel hidden" id="loop-campus-panel" role="listbox" aria-multiselectable="true">
+            <div class="multi-select-actions">
+              <a href="#" data-act="all">Select all</a> &middot; <a href="#" data-act="none">Clear</a>
+            </div>
+            ${campusList.map(c => `<label class="multi-select-option"><input type="checkbox" value="${esc(c)}"> <span>${esc(c)}</span> <span class="ms-count">(${campusCount[c]})</span></label>`).join("")}
+          </div>
+        </div>
         <span class="tr-count" id="loop-count">${totalStudents} students</span>
       </div>`;
+
+    // Stable per-student key used to map filter results onto cards.
+    function loopKey(s) { return (s.email || s.id || s.name || "").toLowerCase(); }
 
     // Student cards — split into tiers by max tests at any still-loopy grade.
     function renderLoopCards(list) {
@@ -3307,11 +3334,11 @@
         const priorityCls = priority === "high" ? "priority-high" : priority === "medium" ? "priority-med" : "";
 
         inner += `
-          <div class="loop-card" data-name="${esc(s.name.toLowerCase())}" data-grades="${(s.loop_details||[]).map(d=>d.grade).join(",")}" data-flags="${s.flags?.rushing?'rushing ':'' }${s.flags?.depreciating_skills?.length?'depreciating ':'' }${s.flags?.mastered_in_alphawrite_not_tests?.length?'aw-gap':''}">
+          <div class="loop-card" data-key="${esc(loopKey(s))}" data-name="${esc(s.name.toLowerCase())}" data-grades="${(s.loop_details||[]).map(d=>d.grade).join(",")}" data-flags="${s.flags?.rushing?'rushing ':'' }${s.flags?.depreciating_skills?.length?'depreciating ':'' }${s.flags?.mastered_in_alphawrite_not_tests?.length?'aw-gap':''}">
             <div class="loop-card-header" onclick="this.parentElement.classList.toggle('expanded')">
               <div class="loop-card-summary">
                 <strong>${esc(s.name)}</strong>
-                <span class="loop-meta">HMG G${s.hmg} ${s.effective_grade ? `| EG G${s.effective_grade}` : ""} | Loop at ${loopGrades} | ${s.total_failed_tests} failed tests</span>
+                <span class="loop-meta">${esc(s.campus || "Unknown campus")} | HMG G${s.hmg} ${s.effective_grade ? `| EG G${s.effective_grade}` : ""} | Loop at ${loopGrades} | ${s.total_failed_tests} failed tests</span>
                 ${flagBadges.join(" ")}
                 ${priorityCls ? `<span class="loop-badge ${priorityCls}">${esc(priority)}</span>` : ""}
               </div>
@@ -3344,28 +3371,85 @@
 
     container.innerHTML = html;
 
-    // Wire filters
-    const loopFilters = { search: "", grade: "all", flag: "all" };
+    // Wire filters. Filters are evaluated on the student objects so the summary
+    // stats and grade tiles can be recomputed; cards are then shown/hidden by key.
+    const loopFilters = { search: "", grade: "all", flag: "all", campuses: new Set() };
+    function matchesLoopFilters(s) {
+      if (loopFilters.search && !(s.name || "").toLowerCase().includes(loopFilters.search)) return false;
+      if (loopFilters.grade !== "all" && !(s.loop_details || []).some(d => String(d.grade) === loopFilters.grade)) return false;
+      if (loopFilters.flag === "rushing" && !(s.flags && s.flags.rushing)) return false;
+      if (loopFilters.flag === "depreciating" && !(s.flags && s.flags.depreciating_skills && s.flags.depreciating_skills.length)) return false;
+      if (loopFilters.flag === "aw-gap" && !(s.flags && s.flags.mastered_in_alphawrite_not_tests && s.flags.mastered_in_alphawrite_not_tests.length)) return false;
+      if (loopFilters.campuses.size > 0 && !loopFilters.campuses.has(s.campus || "Unknown")) return false;
+      return true;
+    }
     function applyLoopFilters() {
+      const visibleStudents = students.filter(matchesLoopFilters);
+      const visibleKeys = new Set(visibleStudents.map(loopKey));
       const tierCounts = { five: 0, three: 0 };
       container.querySelectorAll(".loop-tier").forEach(tierEl => {
         const tier = tierEl.dataset.tier;
         tierEl.querySelectorAll(".loop-card").forEach(card => {
-          const nameMatch = !loopFilters.search || card.dataset.name.includes(loopFilters.search);
-          const gradeMatch = loopFilters.grade === "all" || card.dataset.grades.split(",").includes(loopFilters.grade);
-          const flagMatch = loopFilters.flag === "all" || card.dataset.flags.includes(loopFilters.flag);
-          const show = nameMatch && gradeMatch && flagMatch;
+          const show = visibleKeys.has(card.dataset.key);
           card.classList.toggle("hidden", !show);
           if (show) tierCounts[tier]++;
         });
       });
-      const visible = tierCounts.five + tierCounts.three;
+      const visible = visibleStudents.length;
       document.getElementById("loop-count").textContent = `${visible} of ${totalStudents} students`;
       const fiveCount = container.querySelector('.tr-count-inline[data-tier="five"]');
       const threeCount = container.querySelector('.tr-count-inline[data-tier="three"]');
       if (fiveCount) fiveCount.textContent = `(${tierCounts.five})`;
       if (threeCount) threeCount.textContent = `(${tierCounts.three})`;
+
+      // Summary stats and grade tiles follow the selection
+      document.getElementById("loop-stat-total").textContent = visible;
+      document.getElementById("loop-stat-rushing").textContent = visibleStudents.filter(s => s.flags && s.flags.rushing).length;
+      document.getElementById("loop-stat-deprec").textContent = visibleStudents.filter(s => s.flags && s.flags.depreciating_skills && s.flags.depreciating_skills.length > 0).length;
+      document.getElementById("loop-stat-gap").textContent = visibleStudents.filter(s => s.flags && s.flags.mastered_in_alphawrite_not_tests && s.flags.mastered_in_alphawrite_not_tests.length > 0).length;
+      const n = loopFilters.campuses.size;
+      document.getElementById("loop-stat-scope").textContent =
+        n === 0 ? "" : `filtered to ${n === 1 ? [...loopFilters.campuses][0] : n + " campuses"}`;
+      document.getElementById("loop-grade-dist").innerHTML = renderGradeDist(visibleStudents);
     }
+
+    // Campus multi-select
+    const campusBtn = document.getElementById("loop-campus-btn");
+    const campusPanel = document.getElementById("loop-campus-panel");
+    function updateCampusButton() {
+      const n = loopFilters.campuses.size;
+      campusBtn.innerHTML = (n === 0 ? "All Campuses" : n === 1 ? esc([...loopFilters.campuses][0]) : `${n} campuses`) + " &#9662;";
+      campusBtn.classList.toggle("active", n > 0);
+    }
+    campusBtn.addEventListener("click", e => {
+      e.stopPropagation();
+      const open = campusPanel.classList.toggle("hidden");
+      campusBtn.setAttribute("aria-expanded", String(!open));
+    });
+    campusPanel.addEventListener("click", e => e.stopPropagation());
+    document.addEventListener("click", () => {
+      campusPanel.classList.add("hidden");
+      campusBtn.setAttribute("aria-expanded", "false");
+    });
+    campusPanel.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener("change", () => {
+        if (cb.checked) loopFilters.campuses.add(cb.value); else loopFilters.campuses.delete(cb.value);
+        updateCampusButton();
+        applyLoopFilters();
+      });
+    });
+    campusPanel.querySelectorAll(".multi-select-actions a").forEach(a => {
+      a.addEventListener("click", e => {
+        e.preventDefault();
+        const all = a.dataset.act === "all";
+        campusPanel.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+          cb.checked = all;
+          if (all) loopFilters.campuses.add(cb.value); else loopFilters.campuses.delete(cb.value);
+        });
+        updateCampusButton();
+        applyLoopFilters();
+      });
+    });
 
     document.getElementById("loop-grade-filter").addEventListener("change", e => {
       loopFilters.grade = e.target.value;
