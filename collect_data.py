@@ -75,6 +75,20 @@ def fetch_failure_limit(processed: int) -> int:
 class FetchError(RuntimeError):
     """A student's API fetch failed after retries."""
 
+
+# A full writing-results export has thousands of rows (7,000+ in Sep 2026). A file far
+# below that is almost certainly a filtered export (e.g. a name typed in the analytics
+# page's search box), which would silently wipe deep dives and session tests.
+MIN_CSV_ROWS = 1000
+
+
+def check_csv_size(n_rows: int, allow_small: bool = False) -> None:
+    if n_rows < MIN_CSV_ROWS and not allow_small:
+        raise RuntimeError(
+            f"writing-results CSV has only {n_rows} rows (expected at least {MIN_CSV_ROWS}). "
+            "This looks like a filtered export; re-export the full file, or pass --allow-small-csv to override."
+        )
+
 _UUID_RE = _re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", _re.I)
 
 
@@ -844,6 +858,7 @@ def collect(
     s1_snapshot_path: str | None = None,
     limit: int | None = None,
     prior_year_data: dict | None = None,
+    allow_small_csv: bool = False,
 ) -> dict:
     """Collect all data for one school year and return the dashboard JSON structure."""
     year_cfg = SCHOOL_YEARS[year]
@@ -876,7 +891,9 @@ def collect(
 
     # 2. Load CSV (rows after the as-of date are ignored so archives stay frozen)
     logger.info("Loading CSV: %s", csv_path)
-    csv_results = [r for r in load_csv(csv_path) if r.score_date < as_of_end]
+    all_csv_rows = load_csv(csv_path)
+    check_csv_size(len(all_csv_rows), allow_small_csv)
+    csv_results = [r for r in all_csv_rows if r.score_date < as_of_end]
     logger.info("Loaded %d CSV results on/before %s", len(csv_results), as_of_str)
 
     # 3. Init API + cached lookup helpers for subject and lesson-name resolution
@@ -1439,6 +1456,8 @@ def main():
                         help="Path to S1 Snapshot Excel for S1 cohort identification (25-26)")
     parser.add_argument("--prior-year-data", default=None,
                         help="Previous year's data.json for EG carry-forward (default data/2025-26/data.json when --year 2026-27)")
+    parser.add_argument("--allow-small-csv", action="store_true",
+                        help=f"Proceed even if the CSV has fewer than {MIN_CSV_ROWS} rows (normally a sign of a filtered export)")
     args = parser.parse_args()
 
     as_of = datetime.strptime(args.as_of, "%Y-%m-%d") if args.as_of else datetime.now()
@@ -1455,7 +1474,8 @@ def main():
     data = collect(args.csv, args.year, as_of, skip_analysis=args.skip_analysis,
                    effective_grades_csv=args.effective_grades,
                    s1_snapshot_path=args.s1_snapshot,
-                   limit=args.limit, prior_year_data=prior_year_data)
+                   limit=args.limit, prior_year_data=prior_year_data,
+                   allow_small_csv=args.allow_small_csv)
 
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
