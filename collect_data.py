@@ -48,6 +48,12 @@ from enrollment_grades import (
 )
 from activity_resolution import CourseSubjects, LessonNames, is_writing_activity
 from identity import load_links, merge_activities, merge_tests
+from test_overrides import (
+    filter_invalidated_csv_rows,
+    filter_invalidated_tests,
+    load_overrides,
+    reasons_for,
+)
 from roster import EXCLUDED_EMAILS as _EXCLUDED_EMAILS
 from roster import classify_dashboard as _classify_dashboard
 from roster import load_roster
@@ -880,6 +886,11 @@ def collect(
     links = load_links(IDENTITY_LINKS_PATH)
     logger.info("Loaded identity links for %d students", len(links))
 
+    # 1d. Manual test invalidations (e.g. cheating) that must not count toward HMG
+    overrides = load_overrides(DASHBOARD_DIR / "test_overrides.json")
+    if overrides:
+        logger.info("Loaded %d test invalidation override(s)", len(overrides))
+
     # 1c. Prior-year EG carry-forward (26-27 only)
     prior_eg: dict[str, dict] = {}
     if prior_year_data:
@@ -894,6 +905,7 @@ def collect(
     all_csv_rows = load_csv(csv_path)
     check_csv_size(len(all_csv_rows), allow_small_csv)
     csv_results = [r for r in all_csv_rows if r.score_date < as_of_end]
+    csv_results = filter_invalidated_csv_rows(csv_results, overrides)
     logger.info("Loaded %d CSV results on/before %s", len(csv_results), as_of_str)
 
     # 3. Init API + cached lookup helpers for subject and lesson-name resolution
@@ -1006,6 +1018,9 @@ def collect(
             failed_fetches.append({"email": email, "name": student_full_name, "error": str(e)})
             continue
         api_tests = [t for t in api_tests if (t.get("date") or "") <= as_of_str]
+        api_tests, invalidated_names = filter_invalidated_tests(api_tests, email, overrides)
+        if invalidated_names:
+            logger.info("  %s: %d test(s) invalidated by override: %s", email, len(invalidated_names), ", ".join(invalidated_names))
 
         # Override API test_type with CSV classification, then spreadsheet
         # CSV is authoritative for S2+ (has "End of Course" type)
@@ -1290,6 +1305,12 @@ def collect(
                     "severity": "medium",
                     "text": f"Still enrolled in last year's class: {', '.join(stale)}",
                 })
+            if invalidated_names:
+                insights.append({
+                    "type": "invalidated_tests",
+                    "severity": "high",
+                    "text": f"{len(invalidated_names)} test(s) invalidated and excluded from HMG: " + "; ".join(reasons_for(email, overrides)),
+                })
             if days_inactive >= 5 and student_enrollments:
                 if never_active_this_session:
                     inactive_text = f"No writing activity this session ({days_inactive} school days)"
@@ -1345,6 +1366,7 @@ def collect(
             "grades_advanced": hmg - starting_hmg,
             "linked_ids": linked_ids,
             "stale_enrollments": stale,
+            "invalidated_tests": invalidated_names,
             "effective_grade": eg_value,
             "effective_grades_mastered": (max(0, hmg - (eg_value - 1)) if eg_value else None),
             "language_eg": lang_eg_value,
