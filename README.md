@@ -56,11 +56,12 @@ Population = students with an active Writing enrollment in the API whose email a
 Both scripts pull from the Timeback OneRoster API and require the `writing_automation` package in the parent directory.
 
 ```bash
-# From the dashboard/ directory:
-PYTHONIOENCODING=utf-8 python collect_data.py "../Daily workflow/writing-results-<date>.csv"   # data/2026-27/data.json
-PYTHONIOENCODING=utf-8 python collect_loop_data.py                                          # data/2026-27/loop_data.json
-python inactive_students.py                                                                 # 5+ weekday inactivity report
-python build_identity_links.py                                                              # refresh identity_links.json after a roster change
+# From the dashboard/ directory. Use the Python 3.14 environment (it has openpyxl, anthropic,
+# requests, pdfplumber); the `python` on PATH may be a bare 3.13 install.
+PYTHONIOENCODING=utf-8 py -3.14 collect_data.py "../Daily workflow/writing-results-<date>.csv"   # data/2026-27/data.json
+PYTHONIOENCODING=utf-8 py -3.14 collect_loop_data.py                                          # data/2026-27/loop_data.json
+py -3.14 inactive_students.py                                                                 # 5+ weekday inactivity report
+py -3.14 build_identity_links.py                                                              # refresh identity_links.json after a roster change
 ```
 
 Useful flags: `--year 2025-26 --as-of 2026-06-05` regenerates the archive; `--limit 5` runs a quick smoke test; `--output` overrides the destination.

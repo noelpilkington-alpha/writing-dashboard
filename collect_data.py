@@ -9,6 +9,19 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
 
+# Fail fast if this interpreter lacks the dashboard's dependencies. On 2026-10-06 the
+# `python` on PATH silently became a bare 3.13 install; without this check the run
+# spent seven minutes on API fetches before crashing inside a lazy import.
+try:
+    import openpyxl  # noqa: F401
+    import anthropic  # noqa: F401
+    import requests  # noqa: F401
+except ModuleNotFoundError as _e:
+    sys.exit(
+        f"{_e}. This interpreter ({sys.executable}) is missing the dashboard's dependencies; "
+        "run with the full environment, e.g. `py -3.14 collect_data.py ...` or /c/Python314/python."
+    )
+
 # Add parent dir to path so we can import writing_automation
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
