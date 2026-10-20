@@ -3523,7 +3523,7 @@
         // Show questions
         if (t.questions && t.questions.length > 0) {
           html += `<table class="metrics-table loop-q-table">
-            <thead><tr><th>Q#</th><th>Type</th><th>Result</th><th>Prompt</th><th>Student Answer</th></tr></thead>
+            <thead><tr><th>Q#</th><th>Type</th><th>Result</th><th>Prompt</th><th>Student Answer</th><th>Grader Feedback</th></tr></thead>
             <tbody>`;
           for (const q of t.questions) {
             const frac = q.correct_fraction;
@@ -3537,6 +3537,7 @@
               <td><span class="${resultCls}">${resultLabel}</span></td>
               <td class="loop-q-text">${esc(prompt)}${prompt.length >= 200 ? "..." : ""}</td>
               <td class="loop-q-text" style="${answer.length > 300 ? "white-space:pre-wrap" : ""}">${esc(answer)}</td>
+              <td class="loop-q-text">${esc(q.feedback || "")}</td>
             </tr>`;
           }
           html += `</tbody></table>`;

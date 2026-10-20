@@ -19,7 +19,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from writing_automation.api_client import TimebackAPI
 from writing_automation.config import (
-    ALPHA_SESSION_COOKIE_ENV,
     CURRENT_YEAR,
     ENV_FILE,
     PASS_THRESHOLD,
@@ -27,7 +26,7 @@ from writing_automation.config import (
     SCHOOL_YEARS,
 )
 from writing_automation.deep_dive_analysis import is_rushed
-from writing_automation.test_fetcher import fetch_page, parse_test_page
+from writing_automation.review_fetcher import fetch_review, parse_review_markdown
 
 from dotenv import load_dotenv
 
@@ -252,60 +251,49 @@ def group_activities_by_skill(activities: list[dict]) -> list[dict]:
     return skills
 
 
-def fetch_and_parse_student_tests(student: dict, session_cookie: str) -> list[dict]:
-    """Fetch and parse all failed Writing test pages for a loop student."""
+def fetch_and_parse_student_tests(student: dict) -> list[dict]:
+    """Fetch every failed test in a loop student's deep dives via the AlphaTest review API.
+
+    Uses the Timeback client token (no browser cookie). Reviews are disk-cached by
+    assignment id and refetched only when the recorded score/date changes (regrade).
+    Attempts the API no longer knows (404 = invalidated) are skipped.
+    """
     parsed_tests = []
 
     for dd in student.get("deep_dive", {}).get("details", []):
         grade = dd.get("grade")
         for t in dd.get("tests", []):
-            # We need the assignment_id and test_link from all_tests
             test_name = t.get("name", "")
             test_date = t.get("date", "")
             score = t.get("score", 0)
 
-            # Find matching entry in all_tests to get the URL
+            # Find the matching entry in all_tests for the AlphaTest assignment id
             match = None
             for at in student.get("all_tests", []):
                 if at.get("name") == test_name and at.get("date") == test_date:
                     match = at
                     break
-
-            if not match or not match.get("test_link") or not match.get("assignment_id"):
+            if not match or not match.get("assignment_id"):
                 continue
 
-            test_id = str(match["assignment_id"])
-            # Use timebackanalytics.com URL — the API's testLink points to
-            # alphatest.alpha.school which returns a Vite SPA stub, not the
-            # actual test page with question data.
-            url = f"https://timebackanalytics.com/test/{test_id}"
-
-            html, status = fetch_page(url, test_id, session_cookie)
-            if html is None:
-                logger.warning("  Failed to fetch %s: %s", test_name, status)
-                continue
-
-            if "accounts.google.com" in html[:500]:
-                logger.error("  Session cookie expired!")
-                sys.exit(1)
-
+            aid = match["assignment_id"]
             try:
-                parsed = parse_test_page(html)
-            except Exception as e:  # one malformed page must not abort the whole run
-                logger.warning("  Failed to parse %s (%s): %s", test_name, test_id, e)
+                md = fetch_review(aid, score=match.get("score"), score_date=match.get("date"))
+            except Exception as e:  # never let one attempt abort the run
+                logger.warning("  Review fetch failed for %s (%s): %s", test_name, aid, e)
                 continue
+            if md is None:
+                logger.info("  No review for %s (%s): invalidated, incomplete or unavailable", test_name, aid)
+                continue
+            parsed = parse_review_markdown(md)
             if parsed is None:
-                logger.warning("  Failed to parse %s", test_name)
+                logger.warning("  Could not parse review for %s (%s)", test_name, aid)
                 continue
 
             parsed["grade"] = grade
             parsed["csv_score"] = score
             parsed["csv_date"] = test_date
             parsed["rushed"] = t.get("rushed", False)
-
-            if status == "fetched":
-                time.sleep(0.3)
-
             parsed_tests.append(parsed)
 
     return parsed_tests
@@ -327,6 +315,7 @@ def build_test_analysis_data(parsed_tests: list[dict]) -> list[dict]:
                 "max_score": q.get("max_score", 1),
                 "actual_score": q.get("actual_score"),
                 "standards": q.get("standards", []),
+                "feedback": q.get("feedback", ""),
             })
 
         test_data.append({
@@ -337,7 +326,7 @@ def build_test_analysis_data(parsed_tests: list[dict]) -> list[dict]:
             "time_taken": pt.get("time_taken", ""),
             "rushed": pt.get("rushed", False),
             "questions": questions,
-            "total_questions": len(questions),
+            "total_questions": pt.get("total_questions") or len(questions),
             "incorrect_questions": [
                 q for q in questions
                 if q.get("correct_fraction") is not None and q["correct_fraction"] < 1.0
@@ -374,6 +363,8 @@ def build_student_analysis_prompt(student: dict, test_data: list[dict],
                     lines.append(f"    Prompt: {q['prompt'][:200]}")
                 if q["student_answer"]:
                     lines.append(f"    Answer: {q['student_answer'][:300]}")
+                if q.get("feedback"):
+                    lines.append(f"    Grader feedback: {q['feedback'][:300]}")
                 stds = q.get("standards", [])
                 if stds:
                     lines.append(f"    Standards: {'; '.join(s['label'] + ': ' + s['description'] for s in stds[:3])}")
@@ -513,10 +504,8 @@ def main():
     args.data_json = args.data_json or str(data_path_for(args.year))
 
     load_dotenv(ENV_FILE)
-    session_cookie = os.getenv(ALPHA_SESSION_COOKIE_ENV, "")
-    if not session_cookie:
-        logger.error(f"No session cookie. Set {ALPHA_SESSION_COOKIE_ENV} in .env")
-        sys.exit(1)
+    # Test content now comes from the AlphaTest review API with the Timeback token;
+    # the browser session cookie is no longer required.
 
     # 1. Load data.json
     logger.info("Loading data.json...")
@@ -546,7 +535,7 @@ def main():
 
         # 4a. Fetch and parse test pages
         logger.info("  Fetching test pages...")
-        parsed_tests = fetch_and_parse_student_tests(student, session_cookie)
+        parsed_tests = fetch_and_parse_student_tests(student)
         test_data = build_test_analysis_data(parsed_tests)
         logger.info("  Parsed %d tests", len(test_data))
 
