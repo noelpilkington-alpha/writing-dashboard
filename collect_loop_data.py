@@ -490,7 +490,7 @@ def run_claude_analysis(prompt: str) -> str:
         max_tokens=1500,
         messages=[{"role": "user", "content": prompt}],
     )
-    return message.content[0].text
+    return "".join(getattr(b, "text", "") for b in message.content)
 
 
 def main():
