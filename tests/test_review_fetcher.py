@@ -168,3 +168,40 @@ def test_fetch_review_409_and_network_error_return_none(monkeypatch, tmp_path):
     assert rf.fetch_review(4, score=None, score_date=None) is None
     _setup(monkeypatch, tmp_path, [requests.ConnectionError("boom")])
     assert rf.fetch_review(5, score=1, score_date=None) is None
+
+
+MCQ = """# Assessment review: Alpha Standardized Writing G7.5
+
+- Overall score recorded: 83%
+- Questions in the assessment: 30 (incorrect: 2)
+
+---
+
+## Question 2 of 30
+
+- Status: INCORRECT
+- Recorded result: Incorrect (0 of 1).
+- Question type: Multiple choice (single answer)
+
+### What the student saw
+Passage: "The Robotics Club That Changed a School" (Stimulus S1)
+
+What type of sentence is the following:
+
+***They did not win, but they earned an award for teamwork.***
+
+### Student response
+- B. Imperative
+
+The student selected option B, "Imperative."
+
+### Answer key
+- C. Compound
+"""
+
+
+def test_parse_review_markdown_cleans_mcq_restatements():
+    q = rf.parse_review_markdown(MCQ)["questions"][0]
+    assert q["prompt"].startswith("What type of sentence") and "Stimulus" not in q["prompt"]
+    assert q["student_answer"] == "B. Imperative"
+    assert q["correct_fraction"] == 0.0 and q["max_score"] == 1.0 and q["actual_score"] == 0.0
