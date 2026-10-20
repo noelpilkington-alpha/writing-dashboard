@@ -569,11 +569,15 @@ def fetch_writing_test_results(
                 "filter": (
                     f"student.sourcedId='{student_id}'"
                     " AND metadata.resultType='assessment'"
+                    " AND status='active'"          # tobedeleted = invalidated or superseded (regrade)
                 ),
             },
         )
         results = []
         for r in data.get("assessmentResults", []):
+            # Defence in depth: never count superseded/invalidated or ungraded placeholder rows.
+            if r.get("status") == "tobedeleted" or r.get("scoreStatus") == "not submitted" or r.get("score") is None:
+                continue
             meta = r.get("metadata", {})
             subject = meta.get("subject", "")
             test_name = meta.get("testName", "")
