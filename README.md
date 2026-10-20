@@ -78,7 +78,7 @@ After running, commit and push to update the GitHub Pages site.
   - `TIMEBACK_IDP_URL`
   - `ONEROSTER_BASE_URL`
 - `ANTHROPIC_API_KEY` environment variable (only needed for `collect_loop_data.py`)
-- `ALPHA_SESSION_COOKIE` in `.env` (only needed for `collect_loop_data.py` -- fetches test page content from timebackanalytics.com)
+- No browser cookie is needed any more: `collect_loop_data.py` reads failed-test content from the AlphaTest Assessment Review API with the same Timeback client token (`writing_automation/review_fetcher.py`, disk cache in `Fetch test data/review_cache/`, refetched when a result's score/date changes)
 
 ## REST API
 
@@ -98,4 +98,4 @@ All student data comes from the **Timeback OneRoster API** (`api.alpha-1edtech.a
 - **Enrollments**: `/ims/oneroster/rostering/v1p2/enrollments/` -- active Writing course enrollments
 - **Students**: `/ims/oneroster/rostering/v1p2/students/` -- student profiles and campus info
 - **Assessment results**: `/ims/oneroster/gradebook/v1p2/assessmentResults` -- test scores and activity completions
-- **Test page content**: `timebackanalytics.com/test/{assignmentId}` -- actual test questions and student responses (used for testing loop analysis)
+- **Test content**: AlphaTest Assessment Review API `GET /delivery/review/{assignmentId}/md?scope=incorrect` -- prompts, student responses, points and grader feedback for wrong questions (used for testing loop analysis; 404 = invalidated attempt). Sitting time still comes from the daily results CSV.
