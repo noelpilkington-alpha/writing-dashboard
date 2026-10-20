@@ -205,3 +205,97 @@ def test_parse_review_markdown_cleans_mcq_restatements():
     assert q["prompt"].startswith("What type of sentence") and "Stimulus" not in q["prompt"]
     assert q["student_answer"] == "B. Imperative"
     assert q["correct_fraction"] == 0.0 and q["max_score"] == 1.0 and q["actual_score"] == 0.0
+
+
+ESSAY = """# Assessment review: Alpha Standardized Writing G4.2
+
+- Overall score recorded: 71%
+- Questions in the assessment: 11 (incorrect: 1)
+
+---
+
+## Question 11 of 11
+
+- Status: INCORRECT
+- Recorded result: Incorrect (0.05 of 1). Score: 1 of 20.
+- Question type: Extended text (written response)
+
+### What the student saw
+**Prompt**
+
+Write a paragraph explaining the sculptures.
+
+### Student response
+Response text:
+
+> First line of the paragraph.
+>
+> Second line, with a "quoted" word.
+
+The student wrote one short paragraph of two lines.
+
+The grading system recorded this feedback: "Thank you for sharing. Right now your answer does not
+explain the sculptures."
+
+### Answer key
+Rubric.
+"""
+
+
+def test_parse_review_markdown_takes_blockquote_and_any_feedback_phrasing():
+    q = rf.parse_review_markdown(ESSAY)["questions"][0]
+    assert q["student_answer"] == 'First line of the paragraph.\n\nSecond line, with a "quoted" word.'
+    assert q["feedback"].startswith("Thank you for sharing.") and q["feedback"].endswith("explain the sculptures.")
+    assert q["correct_fraction"] == 0.05 and q["actual_score"] == 1.0 and q["max_score"] == 20.0
+    assert q["prompt"].startswith("**Prompt**")
+
+
+def _one_question(response_section: str) -> dict:
+    md = ("# Assessment review: Alpha Standardized Writing G3.1\n\n- Overall score recorded: 60%\n"
+          "- Questions in the assessment: 11 (incorrect: 1)\n\n---\n\n## Question 7 of 11\n\n"
+          "- Status: INCORRECT\n- Recorded result: Incorrect (0 of 1). Score: 0 of 3.\n"
+          "- Question type: Extended text (written response)\n\n### What the student saw\nTurn it into a question.\n\n"
+          "### Student response\n" + response_section + "\n\n### Answer key\nNone.\n")
+    return rf.parse_review_markdown(md)["questions"][0]
+
+
+def test_split_response_inline_quote_on_bullet_and_nested_quotes_in_feedback():
+    q = _one_question(
+        '- Response text (Text box 1): "why were the books sold?"\n\n'
+        'The student typed the sentence "why were the books sold?", which begins with a lowercase "w".\n\n'
+        'The grading system recorded this feedback: "Great job! Next time start with a capital letter: "Why were the books sold?" Keep it up!"')
+    assert q["student_answer"] == "why were the books sold?"
+    assert q["feedback"] == 'Great job! Next time start with a capital letter: "Why were the books sold?" Keep it up!'
+
+
+def test_split_response_indented_blockquote_under_bullet():
+    q = _one_question(
+        "- Response text (Text box 1):\n\n  > I would enjoy reading a book like this.\n\n"
+        "The student typed one sentence.\n\n"
+        'Feedback recorded by the grading system: "Add a reason."')
+    assert q["student_answer"] == "I would enjoy reading a book like this."
+    assert q["feedback"] == "Add a reason."
+
+
+def test_split_response_edge_layouts():
+    # empty text box with a parenthetical note + HTML-empty feedback -> no feedback, prose fallback
+    q = _one_question('- Text box 1: "" (empty, no text recorded)\n'
+                      '- Feedback recorded by the grading system: "<p><br></p>" (contains no text)\n\n'
+                      'The student submitted no written text for this question.')
+    assert q["feedback"] == "" and q["student_answer"] == "The student submitted no written text for this question."
+    # feedback label buried mid-line after the restatement, nested quote, trailing sentence after the close
+    q = _one_question('- Response text: "as"\n\n'
+                      'The student typed the two letters "as". The grading system recorded this feedback: '
+                      '"Try combining both ideas. For example: "My family has two dogs, Lucy and Rocket." Keep practicing!" '
+                      'The stored score is 0 out of a maximum of 2.')
+    assert q["student_answer"] == "as"
+    assert q["feedback"] == 'Try combining both ideas. For example: "My family has two dogs, Lucy and Rocket." Keep practicing!'
+
+
+def test_split_response_feedback_as_blockquote_is_not_part_of_answer():
+    q = _one_question(
+        "Response text:\n\n> Always pick up after your dog.\n\n"
+        "The student typed one sentence that names a rule.\n\n"
+        "Feedback recorded by the grading system:\n\n> \"Great job giving a rule! Next time, explain why.\"")
+    assert q["student_answer"] == "Always pick up after your dog."
+    assert q["feedback"] == "Great job giving a rule! Next time, explain why."
