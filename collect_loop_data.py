@@ -19,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from writing_automation.api_client import TimebackAPI
 from writing_automation.config import (
+    BEDROCK_MODEL_ID,
     CURRENT_YEAR,
     ENV_FILE,
     PASS_THRESHOLD,
@@ -485,7 +486,7 @@ def run_claude_analysis(prompt: str) -> str:
         aws_region=os.environ.get("AWS_REGION", "us-east-1"),
     )
     message = client.messages.create(
-        model="us.anthropic.claude-sonnet-4-20250514-v1:0",
+        model=BEDROCK_MODEL_ID,
         max_tokens=1500,
         messages=[{"role": "user", "content": prompt}],
     )
