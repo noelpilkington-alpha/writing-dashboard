@@ -459,7 +459,7 @@ def parse_student_analysis(text: str) -> dict:
     }
     for key, pattern in patterns.items():
         m = re.search(pattern, text, re.DOTALL)
-        fields[key] = m.group(1).strip() if m else ""
+        fields[key] = m.group(1).strip().strip("*").strip() if m else ""   # tolerate **LABEL:** bold
     return fields
 
 
@@ -475,7 +475,7 @@ def parse_trends_analysis(text: str) -> dict:
     }
     for key, pattern in patterns.items():
         m = re.search(pattern, text, re.DOTALL)
-        fields[key] = m.group(1).strip() if m else ""
+        fields[key] = m.group(1).strip().strip("*").strip() if m else ""   # tolerate **LABEL:** bold
     return fields
 
 
@@ -487,7 +487,7 @@ def run_claude_analysis(prompt: str) -> str:
     )
     message = client.messages.create(
         model=BEDROCK_MODEL_ID,
-        max_tokens=1500,
+        max_tokens=4000,   # 1500 left long (10+ test) students with an empty, unparseable reply
         messages=[{"role": "user", "content": prompt}],
     )
     return "".join(getattr(b, "text", "") for b in message.content)
@@ -566,6 +566,12 @@ def main():
                 prompt = build_student_analysis_prompt(student, test_data, skill_data)
                 response = run_claude_analysis(prompt)
                 analysis = parse_student_analysis(response)
+                if not any(analysis.values()):      # empty/unparseable reply: retry once
+                    logger.warning("  Empty analysis reply (%d chars); retrying once", len(response))
+                    response = run_claude_analysis(prompt)
+                    analysis = parse_student_analysis(response)
+                    if not any(analysis.values()):
+                        logger.error("  Analysis still empty after retry; reply head: %r", response[:200])
             except Exception as e:
                 logger.error("  Claude analysis failed: %s", e)
                 analysis = {"pattern_summary": f"Analysis failed: {e}"}
